@@ -1,0 +1,8 @@
+﻿  CMap.cpp
+C:\Users\hiram\OneDrive\デスクトップ\ゲーム制作２\Git\ゲーム制作３\3Dプログラミング応用\ゲームプログラミング実習2021_vs2019\GameProgramming\CModelX.h(68,21): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\hiram\OneDrive\デスクトップ\ゲーム制作２\Git\ゲーム制作３\3Dプログラミング応用\ゲームプログラミング実習2021_vs2019\GameProgramming\CModelX.h(149,21): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\hiram\OneDrive\デスクトップ\ゲーム制作２\Git\ゲーム制作３\3Dプログラミング応用\ゲームプログラミング実習2021_vs2019\GameProgramming\CModelX.h(220,21): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\hiram\OneDrive\デスクトップ\ゲーム制作２\Git\ゲーム制作３\3Dプログラミング応用\ゲームプログラミング実習2021_vs2019\GameProgramming\CModelX.h(224,21): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\hiram\OneDrive\デスクトップ\ゲーム制作２\Git\ゲーム制作３\3Dプログラミング応用\ゲームプログラミング実習2021_vs2019\GameProgramming\CModelX.h(225,1): warning C4150: 'CMaterial' 型を削除するため delete 演算子が呼び出されましたが、定義がありません。
+C:\Users\hiram\OneDrive\デスクトップ\ゲーム制作２\Git\ゲーム制作３\3Dプログラミング応用\ゲームプログラミング実習2021_vs2019\GameProgramming\CModelX.h(16): message : 'CMaterial' の宣言を確認してください
+  GameProgramming.vcxproj -> C:\Users\hiram\OneDrive\デスクトップ\ゲーム制作２\Git\ゲーム制作３\3Dプログラミング応用\ゲームプログラミング実習2021_vs2019\Debug\GameProgramming.exe
