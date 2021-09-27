@@ -1,7 +1,0 @@
-﻿  CSceneGame.cpp
-C:\Users\hiram\OneDrive\デスクトップ\ゲーム制作２\Git\ゲーム制作３\16Hiramoto\制作 平本\GameProgramming\CTriangle.h(1,1): warning C4067: プリプロセッサ ディレクティブの後に余分な文字がありました - 改行が必要です
-C:\Users\hiram\OneDrive\デスクトップ\ゲーム制作２\Git\ゲーム制作３\16Hiramoto\制作 平本\GameProgramming\CSound.h(66,4): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Users\hiram\OneDrive\デスクトップ\ゲーム制作２\Git\ゲーム制作３\16Hiramoto\制作 平本\GameProgramming\CSound.h(101,50): warning C4101: 'cnt': ローカル変数は 1 度も使われていません。
-C:\Users\hiram\OneDrive\デスクトップ\ゲーム制作２\Git\ゲーム制作３\16Hiramoto\制作 平本\GameProgramming\CSound.h(100,24): warning C4101: 'state': ローカル変数は 1 度も使われていません。
-C:\Users\hiram\OneDrive\デスクトップ\ゲーム制作２\Git\ゲーム制作３\16Hiramoto\制作 平本\GameProgramming\CSound.h(101,87): warning C4101: 'dw': ローカル変数は 1 度も使われていません。
-  GameProgramming.vcxproj -> C:\Users\hiram\OneDrive\デスクトップ\ゲーム制作２\Git\ゲーム制作３\16Hiramoto\制作 平本\Debug\GameProgramming.exe
