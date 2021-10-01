@@ -12,6 +12,7 @@
 
 #define JUMP 4.0f
 #define G 0.1f
+
 CModel CEnemy2::mModel;//モデルデータ作成
 //デフォルトコンストラクタ
 CEnemy2::CEnemy2()
@@ -176,7 +177,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 					if (mEnemyDamage % 10 == 0) {
 						new CEffect(o->mpParent->mPosition, 3.0f, 3.0f, "Attack.tga", 2, 6, 2);
 					}
-					
+					CPlayer::mSpAttack +=1;
 					mJump = JUMP;
 					mJump2 = JUMP;
 					mHp--;

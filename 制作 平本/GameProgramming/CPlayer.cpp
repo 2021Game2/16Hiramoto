@@ -13,7 +13,7 @@
 #include"CEnemy2.h"
 #include"CSceneGame.h"
 #define G 1.0f
-
+#define JUMP 30.0f
 CMatrix Matrix;
 int CPlayer::mAction1 = 60;//１回目の攻撃の動く時間
 int CPlayer::mAction2 = 60;//２回目の攻撃の動く時間
@@ -23,12 +23,14 @@ int CPlayer::mSpaceCount2 = 0;//２回目攻撃後のクールタイム
 int CPlayer::mSpaceCount3 = 0;//３回目攻撃後のクールタイム
 int CPlayer::mStamina =   400;
 int CPlayer::mWeaponCount = 0;
+int CPlayer::mSpAttack = 0;
 CPlayer::CPlayer()
 //線分コライダの設定（親、親行列、頂点１、頂点２）
 	:mLine(this, &mMatrix, CVector(0.0f, 9.0f, -7.0f), CVector(0.0f, 9.0f, 10.0f)) //前後の線分コライダ
 	, mLine2(this, &mMatrix, CVector(0.0f, 12.0f, -4.0f), CVector(0.0f, 6.0f, -4.0f))  //上下の線分コライダ
 	, mLine3(this, &mMatrix, CVector(7.0f, 9.0f, -4.0f), CVector(-7.0f, 9.0f, -4.0f))  //左右の線分コライダ
 	,mCollider(this,&mMatrix,CVector(0.0f,9.0f,0.0f),1.0f)
+	, mCollider2(this, &mMatrix, CVector(0.0f, -1.0f, 0.0f), 5.0f)
 	, mRotationCountFirst(1)
 	,mRotationCount(0)
 	,mRotationCount2(0)
@@ -37,6 +39,7 @@ CPlayer::CPlayer()
 	, mColliderCount(0)
 	,mChild(this)
 	,mHp(10)
+	,mJump(0)
 {
 //テクスチャファイルの読み込み(１行６４列）
 mText.LoadTexture("FontWhite.tga", 1, 64);
@@ -79,6 +82,17 @@ void CPlayer::Update() {
 				mSpaceCount1 = 0;
 			}
 		}
+	}
+	if (mSpAttack >= 30) {
+
+		if (CKey::Once('N')) {
+			mJump =JUMP;
+			mPosition.mY += mJump;
+			mSpAttack -= 30;
+		}
+	}
+	if (mJump > 0) {
+		mJump--;
 	}
 	//攻撃後のクールタイム
 	if (mSpaceCount1 > 0) {
@@ -454,6 +468,10 @@ void CPlayer::Render() {
 	//文字列の設定（体力）
 	sprintf(buf, "LIFE:%10d", mHp);
 	mText.DrawString(buf, -350, -180, 8, 16);
+	//文字列の設定（体力）
+	sprintf(buf, "SPECIAL:%10d", mSpAttack);
+	mText.DrawString(buf, -350, -210, 8, 16);
+
 	}
 	else if (CSceneGame::mEnemyCount <= 0) {
 		sprintf(buf,"GAMECLEAR");

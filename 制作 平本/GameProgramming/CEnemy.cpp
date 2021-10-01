@@ -5,9 +5,13 @@
 #include"CEffect.h"
 #include"CBullet.h"
 #include"CCollisionManager.h"
+#include"CPlayer.h"
 #define COLLISIONRANGE 30
 #define HP 500
 #define VELOCITY 0.1f //マクロ
+
+
+
 //コンストラクタ
 //CEnemy（モデル、位置、回転、拡縮)
 //&mMatrix=敵
@@ -137,6 +141,7 @@ void CEnemy::Collision(CCollider* m, CCollider* o) {
 					//if (mDamageCount = 0) {
 						mHp--;
 						mDamageCount = 1;
+						CPlayer::mSpAttack +=1;
 					//}
 					
 				}

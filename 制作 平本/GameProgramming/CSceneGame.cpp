@@ -90,7 +90,7 @@ Bgm.Repeat();
    //CEnemy（モデル、位置、回転、拡縮)
    //&,,,ポインタ取得
    new CItem(CVector(-5.0f, 1.0f, -10.0f) * mBackGroundMatrix,
-       CVector(), CVector(0.0f, 0.0f, 0.0f));
+       CVector(), CVector(1.0f, 1.0f, 1.0f));
    //敵の生成
    new CEnemy(&mModelc5,
        CVector(-50.0f, 1.0f, -10.0f) * mBackGroundMatrix,

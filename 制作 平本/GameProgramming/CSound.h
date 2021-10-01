@@ -27,9 +27,12 @@ class CSound {
 	char	 file[100];
 public:
 
+
 	CSound()
 		: mpSourceVoice(0)
 		, g_hmmio(0)
+
+
 	{
 		file[0] = 0;
 		if (mNum == 0) {
@@ -45,7 +48,7 @@ public:
 			hr = mpXAudio->CreateMasteringVoice(&mpMasterVoice, XAUDIO2_DEFAULT_CHANNELS, XAUDIO2_DEFAULT_SAMPLERATE, 0, 0, NULL);
 			if (FAILED(hr))
 			{
-				if (mpXAudio != NULL){ mpXAudio->Release(); }
+				if (mpXAudio != NULL) { mpXAudio->Release(); }
 				mpXAudio = 0;
 				mpMasterVoice = 0;
 				CoUninitialize();
@@ -54,6 +57,7 @@ public:
 		}
 		mNum++;
 	}
+
 
 	/*
 	ƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ
