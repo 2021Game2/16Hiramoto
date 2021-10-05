@@ -8,7 +8,9 @@
 #define MTL "eyeball.mtl"
 CModel CEnemySummon::mModel;
 CEnemySummon::CEnemySummon()
-:mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
+    :mHp(0)
+	, mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
+
 {
    
 
@@ -20,8 +22,8 @@ CEnemySummon::CEnemySummon()
 	}
 }
 CEnemySummon::CEnemySummon(const CVector& position, const CVector& rotation, const CVector& scale)
-	:mHp(0)
-
+	:CEnemySummon()
+	
 {
 	mHp = 10;
  mPosition = position;
@@ -42,8 +44,7 @@ void CEnemySummon::Update() {
 }
 //Collision(コライダ１、コライダ２）
 void CEnemySummon::Collision(CCollider* m, CCollider* o) {
-	switch (m->mType) {
-	case CCollider::ESPHERE:
+	if (m->mType == CCollider::ESPHERE) {
 		if (o->mType == CCollider::ESPHERE) {
 			if (o->mpParent->mTag == EWEAPON) {
 				//衝突しているとき
