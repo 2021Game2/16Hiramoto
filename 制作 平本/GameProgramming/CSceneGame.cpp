@@ -75,7 +75,7 @@ Bgm.Load("BGM.wav");
     //あらかじめ準備されたテクスチャのファイルを設定
     mModel.Load("Player.obj", "Player.mtl");
     mBackGround.Load("sky.obj", "sky.mtl");
-    mModelI.Load("Coca_Cola.obj", "Coca_Cola.mtl");
+    mModelI.Load("Item.obj", "Item.mtl");
     CMatrix matrix;
     matrix.Print();
  //mBackGroundMatrix.Translate(0.0f, 0.0f, -500.0f);
@@ -90,12 +90,12 @@ Bgm.Load("BGM.wav");
    mPlayer.mRotation = CVector(0.0f, 180.0f, 0.0f);
    new CEnemySummon(CVector(-20.0f, 1.0f, -10.0f) * mBackGroundMatrix,
        CVector(), CVector(3.5f, 3.5f, 3.5f));
-   if (mSpawn >= 0) {
+  /* if (mSpawn >= 0) {
       new CEnemy2(&mModelc5,
       mEnemySummon.mPosition * mBackGroundMatrix,
        CVector(), CVector(0.5f, 0.5f, 0.5f));
       mSpawn--;
-   }
+   }*/
  
 
  
