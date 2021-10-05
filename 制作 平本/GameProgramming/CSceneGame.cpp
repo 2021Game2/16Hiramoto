@@ -30,7 +30,7 @@ void CSceneGame::Init()
 //サウンド(wav)ファイルの読み込み
 Bgm.Load("BGM.wav");
 //サウンドファイルの繰り返し再生
-Bgm.Repeat();
+//Bgm.Repeat();
 
     mBackGroundMatrix.Translate(0.0f, 0.0f, -500.0f);
     mBackGroundMatrix = mBackGroundMatrix * CMatrix().Scale(0.3f, 0.3f, 0.3f);
@@ -40,26 +40,31 @@ Bgm.Repeat();
 
         int  map[10][10] =
         {
-            {0,0,0,0,0,0,0,0,0,0},
-            {0,1,1,1,1,1,1,1,1,0},
-            {0,1,1,1,1,1,1,1,1,0},
-            {0,1,1,1,1,1,1,1,1,0},
-            {0,1,1,1,1,1,1,1,1,0},
-            {0,1,1,1,1,1,1,1,1,0},
-            {0,1,1,1,1,1,1,1,1,0},
+
             {0,0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0,0},
+            {0,1,1,1,1,1,1,1,1,0},
+            {0,1,1,1,1,1,1,1,1,0},
+            {0,1,1,1,1,1,1,1,1,0},
+            {0,1,1,1,1,1,1,1,1,0},
             {0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0},
+
         };
 
         for (int j = 0; j < 10; j++) {
             for (int i = 0; i < 10; i++) {
                 if (map[i][j] == 1) {
 
-                   
-                    new CEnemy2(CVector(i * 10.0f, 10.0f, j * 10.0f) * mBackGroundMatrix,
+              
+                         new CEnemy2(CVector(i * 10.0f, 5.0f, j * 10.0f) * mBackGroundMatrix,
                         CVector(), CVector(0.5f, 0.5f, 0.5f));
+                
+                   
                    mEnemyCount++;
+
                 }
             }
         }
@@ -83,14 +88,23 @@ Bgm.Repeat();
    mPlayer.mPosition = CVector(0.0f, 1.0f, 1.0f) *mBackGroundMatrix;
     //回転行列
    mPlayer.mRotation = CVector(0.0f, 180.0f, 0.0f);
+   new CEnemySummon(CVector(-20.0f, 1.0f, -10.0f) * mBackGroundMatrix,
+       CVector(), CVector(3.5f, 3.5f, 3.5f));
+   if (mSpawn >= 0) {
+      new CEnemy2(&mModelc5,
+      mEnemySummon.mPosition * mBackGroundMatrix,
+       CVector(), CVector(0.5f, 0.5f, 0.5f));
+      mSpawn--;
+   }
+ 
 
  
    //mModelc5.Load("Car.obj", "Car.mtl");
    //敵機のインスタンス作成
    //CEnemy（モデル、位置、回転、拡縮)
    //&,,,ポインタ取得
-   new CItem(CVector(-5.0f, 1.0f, -10.0f) * mBackGroundMatrix,
-       CVector(), CVector(1.0f, 1.0f, 1.0f));
+   new CItem(CVector(-20.0f, 1.0f, -10.0f) * mBackGroundMatrix,
+       CVector(), CVector(0.5f,0.5f, 0.5f));
    //敵の生成
    new CEnemy(&mModelc5,
        CVector(-50.0f, 1.0f, -10.0f) * mBackGroundMatrix,

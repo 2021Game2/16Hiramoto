@@ -8,9 +8,10 @@ public:
 	  CTask* mpPrev;//前のポインタ
 	  int mPriority;//優先度
 	  bool mEnabled;//有効フラグ
+	  bool mRenderEnabled;//表示フラグ
 	  //デフォルトコンストラクタ
 	  CTask() :
-		  mpNext(0), mpPrev(0), mPriority(0), mEnabled(true) {}
+		  mpNext(0), mpPrev(0), mPriority(0), mEnabled(true) ,mRenderEnabled(true){}
 	  virtual ~CTask() {}
 	  //更新
 	  virtual void Update() {}

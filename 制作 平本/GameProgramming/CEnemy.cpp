@@ -74,10 +74,10 @@ void CEnemy::Update() {
 	//¶‰E•ûŒü‚Ö‰ñ“]
 
 	if (dx > margin) {
-		mRotation.mY += 1.0f;//¶‚Ö‰ñ“]
+		mRotation.mY -= 1.0f;//¶‚Ö‰ñ“]
 	}
 	else if (dx < -margin) {
-		mRotation.mY -= 1.0f;//‰E‚Ö‰ñ“]
+		mRotation.mY += 1.0f;//‰E‚Ö‰ñ“]
 	}
 	
 	//ˆÚ“®‚·‚é

@@ -1,5 +1,5 @@
 #include "CXEnemy.h"
-
+#define WORK CVector(0.0f,0.0f,1.0f)
 CXEnemy::CXEnemy()
 	: mColSphereBody(this, nullptr, CVector(0.5f, -1.0f, 0.0f), 1.0f)
 	, mColSphereHead(this, nullptr, CVector(0.0f, 1.f, 0.0f), 1.5f)
@@ -11,6 +11,7 @@ CXEnemy::CXEnemy()
 
 void CXEnemy::Init(CModelX* model)
 {
+	mPosition = mPosition + WORK;
 	CXCharacter::Init(model);
 	//çáê¨çsóÒÇÃê›íË
 	mColSphereBody.mpMatrix = &mpCombinedMatrix[1];

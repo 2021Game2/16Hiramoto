@@ -20,6 +20,7 @@ CSceneGame::~CSceneGame() {
 }
 
 void CSceneGame::Init() {
+	
 	//テキストフォントの読み込みと設定
 	mFont.LoadTexture("FontG.png", 1, 4096 / 64);
 
@@ -43,9 +44,13 @@ void CSceneGame::Init() {
 	//敵の初期設定
 	mEnemy.Init(&CRes::sKnight);
 	mEnemy.mAnimationFrameSize = 1024;
+
 	//敵の配置
 	mEnemy.mPosition = CVector(7.0f, 0.0f, 0.0f);
-	mEnemy.ChangeAnimation(2, true, 200);
+	
+
+
+	mEnemy.ChangeAnimation(7, true, 200);
 
 }
 
@@ -75,6 +80,7 @@ void CSceneGame::Update() {
 
 	//X軸＋回転
 	if (CKey::Push('K')) {
+
 		Matrix = Matrix * CMatrix().RotateX(1);
 	}
 	if (CKey::Push('I')) {

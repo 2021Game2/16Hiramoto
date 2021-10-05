@@ -27,7 +27,7 @@ void CMyShader::Render(CModelX* model, CMesh* mesh, CMatrix* pCombinedMatrix) {
 	for (int i = 0; i < mesh->mSkinWeights.size(); i++) {
 		//スキンメッシュの行列配列を設定する
 		model->mpSkinningMatrix[mesh->mSkinWeights[i]->mFrameIndex]
-			//			= pCombinedMatrix[mesh->mSkinWeights[i]->mFrameIndex] * mesh->mSkinWeights[i]->mOffset;
+			//= pCombinedMatrix[mesh->mSkinWeights[i]->mFrameIndex] * mesh->mSkinWeights[i]->mOffset;
 			= mesh->mSkinWeights[i]->mOffset * pCombinedMatrix[mesh->mSkinWeights[i]->mFrameIndex];
 	}
 

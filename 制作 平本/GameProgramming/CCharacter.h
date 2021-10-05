@@ -28,6 +28,7 @@ public:
 		EITEM,//アイテム
 		EBULLETPLAYER,//プレイヤーの弾
 		EBULLETENEMY,//敵の弾
+		EENEMYSUMMON
 	};
 	ETag mTag;
 	

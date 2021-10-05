@@ -62,11 +62,16 @@ void CTaskManager::Update() {
 	}
 }
 void CTaskManager::Render() {
+
 	//æ“ª‚©‚çÅŒã‚Ü‚ÅŒJ‚è•Ô‚µ
 	CTask* task = mHead.mpNext;
 	while (task->mpNext) {
-		//•`‰æˆ—‚ðŒÄ‚Ô
-		task->Render();
+		if (task->mRenderEnabled ) {
+			//•`‰æˆ—‚ðŒÄ‚Ô
+			task->Render();
+		}
+		
+
 		//ŽŸ‚Ö
 		task = task->mpNext;
 	}

@@ -13,6 +13,8 @@
 #include"CColliderTriangle.h"
 #include"CColliderMesh.h"
 #include"CSound.h"
+#include"CEnemySummon.h"
+
 /*
 ゲームのシーン
 */
@@ -28,6 +30,7 @@ public:
 	CMatrix mBackGroundMatrix;
 	CPlayer mPlayer;
 	CSound Bgm;
+	CEnemySummon mEnemySummon;
 	//モデルからコライダ生成
       CColliderMesh mColliderMesh;
 	  int mMapCount;
@@ -41,7 +44,7 @@ public:
 	CColliderTriangle mColliderTriangle;
 	CColliderTriangle mColliderTriangle2;
 
-	
+	int mSpawn;
 
 	//初期化処理のオーバーライド
 

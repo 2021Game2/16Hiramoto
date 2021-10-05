@@ -9,6 +9,7 @@
 */
 class CTriangle {
 public:
+	CTriangle();
 	CVector mUv[3]; //テクスチャマッピング
 	int mMaterialIdx; //マテリアル番号
 	CVector mV[3]; //頂点座標

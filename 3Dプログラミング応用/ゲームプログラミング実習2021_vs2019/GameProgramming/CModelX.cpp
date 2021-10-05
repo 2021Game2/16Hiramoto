@@ -83,6 +83,27 @@ void CModelX::Load(char* file)
 	mShader.Load("skinmesh.vert", "skinmesh.flag");
 
 }
+CModelX::CModelX()
+	: mpPointer(nullptr)
+	, mpSkinningMatrix(nullptr)
+{
+	memset(mToken, 0, sizeof(mToken));
+}
+CModelX::~CModelX() {
+	if (mFrame.size() > 0)
+	{
+		delete mFrame[0];
+	}
+	for (int i = 0; i < mAnimationSet.size(); i++) {
+		delete mAnimationSet[i];
+	}
+	//マテリアルの解放
+	for (int i = 0; i < mMaterial.size(); i++) {
+		delete mMaterial[i];
+	}
+	SAFE_DELETE_ARRAY(mpSkinningMatrix);
+}
+
 /*
 GetToken
 文字列データから、単語を1つ取得する
@@ -429,7 +450,10 @@ CSkinWeights::CSkinWeights(CModelX* model)
 	model->GetToken();	// }
 }
 CAnimationSet::CAnimationSet()
-	:mpName(nullptr)
+	: mpName(nullptr)
+	, mTime(0)
+	, mWeight(0.0f)
+	, mMaxTime(0)
 {
 }
 /*
@@ -438,7 +462,7 @@ CAnimationSet
 CAnimationSet::CAnimationSet(CModelX* model)
 	: mpName(nullptr)
 	, mTime(0)
-	, mWeight(0)
+	, mWeight(0.0f)
 	, mMaxTime(0)
 {
 	model->mAnimationSet.push_back(this);
@@ -478,6 +502,9 @@ CModelXFrame* CModelX::FindFrame(char* name) {
 }
 CAnimation::CAnimation()
 	:mpFrameName(nullptr)
+	,mFrameIndex(0)
+	,mKeyNum(0)
+	,mpKey(nullptr)
 {
 }
 CAnimation::CAnimation(CModelX* model)
@@ -885,4 +912,8 @@ void CMesh::CreateVertexBuffer() {
 		delete[] vec;
 		pmyVertex = NULL;
 	}
+	
 }
+CAnimationKey::CAnimationKey()
+		: mTime(0)
+{}

@@ -30,7 +30,7 @@ CPlayer::CPlayer()
 	, mLine2(this, &mMatrix, CVector(0.0f, 12.0f, -4.0f), CVector(0.0f, 6.0f, -4.0f))  //上下の線分コライダ
 	, mLine3(this, &mMatrix, CVector(7.0f, 9.0f, -4.0f), CVector(-7.0f, 9.0f, -4.0f))  //左右の線分コライダ
 	,mCollider(this,&mMatrix,CVector(0.0f,9.0f,0.0f),1.0f)
-	, mCollider2(this, &mMatrix, CVector(0.0f, -1.0f, 0.0f), 5.0f)
+	, mCollider2(this, &mMatrix, CVector(0.0f, -20.0f, 0.0f), 5.0f)
 	, mRotationCountFirst(1)
 	,mRotationCount(0)
 	,mRotationCount2(0)
@@ -40,15 +40,20 @@ CPlayer::CPlayer()
 	,mChild(this)
 	,mHp(10)
 	,mJump(0)
+	,mGravity(0)
+	,mGravity2(0)
 {
+	
 //テクスチャファイルの読み込み(１行６４列）
 mText.LoadTexture("FontWhite.tga", 1, 64);
 mCollider.mTag = CCollider::EPLAYERCOLLIDER;//タグの設定
+mCollider2.mTag == EWEAPON;
 mTag = EPLAYER;
 mModelW.Load("Weapon.obj", "Weapon.mtl");
+mGravity2 = 0.98f;
 } 
 void CPlayer::Update() {
-
+	
 	//スペースキー入力で武器
 	if (CKey::Once(VK_SPACE)) {
 		if (mHp > 0) {
@@ -83,16 +88,16 @@ void CPlayer::Update() {
 			}
 		}
 	}
-	if (mSpAttack >= 30) {
 
-		if (CKey::Once('N')) {
-			mJump =JUMP;
-			mPosition.mY += mJump;
-			mSpAttack -= 30;
-		}
-	}
+	
 	if (mJump > 0) {
 		mJump--;
+		
+		mCollider2.mRenderEnabled = true;
+	
+	}
+    else {
+		mCollider2.mRenderEnabled = false;
 	}
 	//攻撃後のクールタイム
 	if (mSpaceCount1 > 0) {
@@ -281,7 +286,7 @@ void CPlayer::Update() {
 				}
 			}
 		}
-}
+    }
    
 	//右回転
 	if (CKey::Push('D')) {
@@ -318,9 +323,22 @@ void CPlayer::Update() {
 		//mPosition.mY += mColliderCount;
 		mPosition = mPosition + mCollisionEnemy* mColliderCount;
 	}
+	if (mSpAttack >= 30) {
+		if (CKey::Once('N')) {
+			mJump = JUMP;
+			mPosition.mY += mJump;
+			mSpAttack -= 30;
+		}
+	}
+    mPosition.mY -= mGravity;
 	//重力
 	if (mPosition.mY > 0.0f) {
-		mPosition.mY -= G;
+		 mGravity =0.98;
+	}
+	else
+	{
+		mPosition.mY = 0.0f;
+		mGravity = 0;
 	}
 	
 	//CCharacterの更新
@@ -338,7 +356,7 @@ void CPlayer::Collision(CCollider* m, CCollider* o) {
 			CCollider::CollisionTriangleLine(o, m, &adjust);
 			//位置の更新（mPosition+adjust)
 			mPosition = mPosition - adjust * -1;
-			mPosition.mY = 0.0f;
+			//mPosition.mY = 0.0f;
 			//行列の更新
 			CTransform::Update();
 		}
@@ -393,12 +411,16 @@ void CPlayer::TaskCollision() {
 	mLine2.ChangePriority();
 	mLine3.ChangePriority();
 	mCollider.ChangePriority();
+	mCollider2.ChangePriority();
 	
 	//	衝突処理を実行
 	CCollisionManager::Get()->Collision(&mLine, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mLine2, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mLine3, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mCollider, COLLISIONRANGE);
+	if (mJump > 0) {
+		CCollisionManager::Get()->Collision(&mCollider2, COLLISIONRANGE);
+	}
 }
 void CPlayer::Render() {
 	//親の描画処理

@@ -21,6 +21,7 @@ class CMaterial;	//クラスの宣言
 */
 class CAnimationKey {
 public:
+	CAnimationKey();
 	//時間
 	float mTime;
 	//行列
@@ -200,33 +201,16 @@ class CModelX {
 public:
 	//シェーダー用スキンマトリックス
 	CMatrix* mpSkinningMatrix;
-	char* mpPointer;
-	char mToken[1024];
+	 char* mpPointer;
+     char mToken[1024];
 	std::vector<CModelXFrame*> mFrame;	//フレームの配列
 	//アニメーションセットの配列
 	std::vector<CAnimationSet*> mAnimationSet;
 	std::vector<CMaterial*> mMaterial;	//マテリアルの配列
 
-	CModelX()
-		: mpPointer(nullptr)
-		, mpSkinningMatrix(nullptr)
-	{}
+	CModelX();
 
-	~CModelX() {
-		if (mFrame.size() > 0)
-		{
-			delete mFrame[0];
-		}
-		for (int i = 0; i < mAnimationSet.size(); i++) {
-			delete mAnimationSet[i];
-		}
-		//マテリアルの解放
-		for (int i = 0; i < mMaterial.size(); i++) {
-			delete mMaterial[i];
-		}
-		SAFE_DELETE_ARRAY(mpSkinningMatrix);
-	}
-
+	~CModelX();
 	void Load(char* file);
 
 	//単語の取り出し

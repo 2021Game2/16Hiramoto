@@ -32,6 +32,8 @@ public:
     int mRotationCount2;
     int mRotationCount3;
     int mRotationCount4;
+    int mGravity;
+    int mGravity2;
     static  int mStamina;
     static int mSpaceCount1;
     static int mSpaceCount2;
