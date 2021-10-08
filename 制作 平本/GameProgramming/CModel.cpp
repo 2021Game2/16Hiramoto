@@ -173,7 +173,10 @@ void CModel::Load(char* obj, char* mtl) {//変数のアドレス
 				CTriangle t;
 				t.SetVertex(vertex[v[0] - 1], vertex[v[1] - 1], vertex[v[2] - 1]);
 				//法線ベクトルの追加
-				t.SetNormal(normal[n[0] - 1], normal[n[1] - 1], normal[n[2] - 1]);
+			
+				if (normal.size()!=0) {
+					t.SetNormal(normal[n[0] - 1], normal[n[1] - 1], normal[n[2] - 1]);
+				}
 				//mMaterialIdxにidxを代入
 				t.mMaterialIdx = idx;
 				//可変長列ｍTrianglesに三角形を追加
@@ -193,8 +196,9 @@ void CModel::Load(char* obj, char* mtl) {//変数のアドレス
 				CTriangle t;
 				//配列の１番目は０からなので１減算して０からカウントする
 				t.SetVertex(vertex[v[0] - 1], vertex[v[1] - 1], vertex[v[2] - 1]);
-				//法線ベクトルの追加
-				t.SetNormal(normal[n[0] - 1], normal[n[1] - 1], normal[n[2] - 1]);
+				if (normal.size() != 0) {
+					t.SetNormal(normal[n[0] - 1], normal[n[1] - 1], normal[n[2] - 1]);
+				}
 				//テクスチャマッピングの設定
 				t.mUv[0] = uv[u[0] - 1];
 				t.mUv[1] = uv[u[1] - 1];

@@ -36,6 +36,8 @@ CItem::CItem()
 }
 void CItem::Update() {
 mRotation.mY++;
+//CCharacterの更新
+CTransform::Update();
 }
 void CItem::Collision(CCollider* m, CCollider* o) {
 	switch (m->mType) {
@@ -53,6 +55,10 @@ void CItem::Collision(CCollider* m, CCollider* o) {
 		}
 	}
 	
+}
+void CItem::Render() {
+	//親の描画処理
+	CCharacter::Render();
 }
 void CItem::TaskCollision() {
 	//コライダの優先度変更

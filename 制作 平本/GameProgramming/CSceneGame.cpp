@@ -35,9 +35,6 @@ Bgm.Load("BGM.wav");
     mBackGroundMatrix.Translate(0.0f, 0.0f, -500.0f);
     mBackGroundMatrix = mBackGroundMatrix * CMatrix().Scale(0.3f, 0.3f, 0.3f);
     mModelc5.Load("mini.obj", "mini.mtl");
-   
-
-
         int  map[10][10] =
         {
 
@@ -51,24 +48,17 @@ Bgm.Load("BGM.wav");
             {0,0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0,0},
-
         };
 
         for (int j = 0; j < 10; j++) {
             for (int i = 0; i < 10; i++) {
                 if (map[i][j] == 1) {
-
-              
                          new CEnemy2(CVector(i * 10.0f, 5.0f, j * 10.0f) * mBackGroundMatrix,
                         CVector(), CVector(0.5f, 0.5f, 0.5f));
-                
-                   
                    mEnemyCount++;
-
                 }
             }
         }
-    
     //初期化・・・あらかじめ値を代入しておくこと
     mEye = CVector(1.0f, 2.0f, 3.0f);//X軸、Y軸、Z軸の初期化（右斜め上）
     //モデルファイルの入力
@@ -203,7 +193,7 @@ void CSceneGame::Update() {
     Camera.Render();
     
   //タスクリストの削除
-  CTaskManager::Get()->Delete();
+ // CTaskManager::Get()->Delete();
   
     //背景の描画
     mBackGround.Render(mBackGroundMatrix);

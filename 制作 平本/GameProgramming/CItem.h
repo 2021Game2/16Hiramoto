@@ -19,7 +19,7 @@ public:
 	//Collision(コライダ１、コライダ２）
 	void Collision(CCollider* m, CCollider* o);
 	void TaskCollision();
-	
+	void Render();
 	
 };
 #endif
