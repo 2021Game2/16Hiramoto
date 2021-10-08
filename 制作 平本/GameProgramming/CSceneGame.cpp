@@ -93,8 +93,8 @@ Bgm.Load("BGM.wav");
    //敵機のインスタンス作成
    //CEnemy（モデル、位置、回転、拡縮)
    //&,,,ポインタ取得
-   new CItem(CVector(-20.0f, 1.0f, -10.0f) * mBackGroundMatrix,
-       CVector(), CVector(0.5f,0.5f, 0.5f));
+   new CItem(CVector(-20.0f, 5.0f, -10.0f) * mBackGroundMatrix,
+       CVector(), CVector(1.5f,1.5f, 1.5f));
    //敵の生成
    new CEnemy(&mModelc5,
        CVector(-50.0f, 1.0f, -10.0f) * mBackGroundMatrix,
@@ -193,7 +193,7 @@ void CSceneGame::Update() {
     Camera.Render();
     
   //タスクリストの削除
- // CTaskManager::Get()->Delete();
+ CTaskManager::Get()->Delete();
   
     //背景の描画
     mBackGround.Render(mBackGroundMatrix);
