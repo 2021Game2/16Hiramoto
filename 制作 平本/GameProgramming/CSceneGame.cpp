@@ -1,6 +1,9 @@
 #include "CSceneGame.h"
 //OpenGL
 #include"glut.h"
+
+#include"CUtil.h"
+#include"CText.h"
 #include "CVector.h"
 #include"CTriangle.h"
 #include "CKey.h"
@@ -22,6 +25,7 @@
 #include"CWeapon.h"
 #include"CItem.h"
 #include"CSound.h"
+
 int CSceneGame::mEnemyCount = 0;
 
 void CSceneGame::Init()
@@ -29,11 +33,12 @@ void CSceneGame::Init()
 {
 //サウンド(wav)ファイルの読み込み
 Bgm.Load("BGM.wav");
+Texture.Load("Map.tga");
 //サウンドファイルの繰り返し再生
 //Bgm.Repeat();
 
     mBackGroundMatrix.Translate(0.0f, 0.0f, -500.0f);
-    mBackGroundMatrix = mBackGroundMatrix * CMatrix().Scale(0.3f, 0.3f, 0.3f);
+    mBackGroundMatrix = mBackGroundMatrix * CMatrix().Scale(0.3f, 0.3f, 0.3f);                
     mModelc5.Load("mini.obj", "mini.mtl");
         int  map[10][10] =
         {
@@ -66,26 +71,23 @@ Bgm.Load("BGM.wav");
     mModel.Load("Player.obj", "Player.mtl");
     mBackGround.Load("sky.obj", "sky.mtl");
     mModelI.Load("Item.obj", "Item.mtl");
+    mModelE.Load("eyeball.obj" ,"eyeball.mtl");
     CMatrix matrix;
     matrix.Print();
  //mBackGroundMatrix.Translate(0.0f, 0.0f, -500.0f);
    
     //プレイヤーモデル
     mPlayer.mpModel = &mModel;
+
     //拡大縮小行列
    mPlayer.mScale = CVector(0.1f, 0.1f, 0.1f);
    //位置座標
    mPlayer.mPosition = CVector(0.0f, 1.0f, 1.0f) *mBackGroundMatrix;
     //回転行列
    mPlayer.mRotation = CVector(0.0f, 180.0f, 0.0f);
-   new CEnemySummon(CVector(-20.0f, 1.0f, -10.0f) * mBackGroundMatrix,
-       CVector(), CVector(3.5f, 3.5f, 3.5f));
-  /* if (mSpawn >= 0) {
-      new CEnemy2(&mModelc5,
-      mEnemySummon.mPosition * mBackGroundMatrix,
+    mpEnemySummon=new CEnemySummon(CVector(-150.0f, 1.0f, -10.0f) * mBackGroundMatrix,
        CVector(), CVector(0.5f, 0.5f, 0.5f));
-      mSpawn--;
-   }*/
+   
  
 
  
@@ -125,7 +127,16 @@ Bgm.Load("BGM.wav");
 
 //頂点１，頂点２，頂点３，法線データの作成
 void CSceneGame::Update() { 
-   
+    if (mSpawn >= 0) {
+        mSpawn--;
+    }
+    if (mSpawn <= 0) {
+        new CEnemy2(
+            mpEnemySummon->mPosition,
+            CVector(), CVector(0.5f, 0.5f, 0.5f));
+        mEnemyCount++;
+        mSpawn = 20;
+    }
     //タスクマネージャー（弾）の更新
   CTaskManager::Get()->Update();
 
@@ -204,4 +215,12 @@ void CSceneGame::Update() {
     CCollisionManager::Get()->Render();
     //タスクマネージャーの描画
   CTaskManager::Get()->Render();
+}
+void CSceneGame::Render() {
+    //2Dの描画開始
+    CUtil::Start2D(-400, 400, -300, 300);
+    //描画色の設定（緑色の半透明）
+    glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
+    //文字列編集エリアの作成
+    char buf[64];
 }

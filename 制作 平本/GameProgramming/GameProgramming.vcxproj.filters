@@ -218,5 +218,8 @@
     <ClInclude Include="CEnemySummon.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="CMiniMap.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

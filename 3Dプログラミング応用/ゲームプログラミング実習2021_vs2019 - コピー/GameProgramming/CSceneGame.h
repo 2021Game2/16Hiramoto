@@ -4,6 +4,7 @@
 #include "CXPlayer.h"
 #include "CXEnemy.h"
 #include"CMap.h"
+#include"CEnemySummon.h"
 /*
 ゲームのシーン
 */
@@ -14,7 +15,9 @@ public:
 	CXPlayer mPlayer;
 	//敵のインスタンス
 	CXEnemy mEnemy;
-
+	int mSpawn;
+	CEnemySummon* mpEnemySummon;
+	static int mEnemyCount;
 	~CSceneGame();
 	//初期化処理のオーバーライド
 	void Init();

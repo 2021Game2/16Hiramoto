@@ -118,7 +118,7 @@ void CEnemy2::Update() {
 		}
 		CTransform::Update();
 	}
-	if (mHp <= -100) {
+	if (mHp <= -70) {
 		mEnabled = false;
 		CSceneGame::mEnemyCount -= 1;
 	}
@@ -139,12 +139,14 @@ void CEnemy2::Update() {
 		mJump2--;
 	}
 	if (mPosition.mY > 1.0f) {
+
       mPosition.mY -= G;
       
 	}
 	if (mPosition.mY > 4.0f) {
      mRotation.mX += 20.0f;
 	}
+
 }
 //Collision(コライダ１，コライダ２，）
 void CEnemy2::Collision(CCollider* m, CCollider* o) {
@@ -175,7 +177,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 					mCollisionEnemy = mCollisionEnemy.Normalize();
 					//15フレームごとにエフェクト
 					if (mEnemyDamage % 10 == 0) {
-						new CEffect(o->mpParent->mPosition, 3.0f, 3.0f, "Attack.tga", 2, 6, 2);
+						//new CEffect(o->mpParent->mPosition, 3.0f, 3.0f, "Attack.tga", 2, 6, 2);
 					}
 					CPlayer::mSpAttack +=1;
 					mJump = JUMP;

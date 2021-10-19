@@ -12,9 +12,10 @@
 //
 #include "CCollisionManager.h"
 
+#include"CEnemy2.h"
 
 CMatrix Matrix;
-
+int CSceneGame::mEnemyCount = 0;
 CSceneGame::~CSceneGame() {
 
 }
@@ -40,10 +41,14 @@ void CSceneGame::Init() {
 
 	//キャラクターにモデルを設定
 	mPlayer.Init(&CRes::sModelX);
+	mpEnemySummon = new CEnemySummon(CVector(0.0f, 0.0f, 0.0f),
+		CVector(), CVector(0.5f, 0.5f, 0.5f));
+
 
 	//敵の初期設定
 	mEnemy.Init(&CRes::sKnight);
 	mEnemy.mAnimationFrameSize = 1024;
+	//mEnemy2 = new CXEnemy();
 
 	//敵の配置
 	mEnemy.mPosition = CVector(7.0f, 0.0f, 0.0f);
@@ -61,7 +66,16 @@ void CSceneGame::Update() {
 	mPlayer.Update();
 	//敵の更新
 	mEnemy.Update();
-	
+	if (mSpawn >= 0) {
+		mSpawn--;
+	}
+	if (mSpawn <= 0) {
+		new CEnemy2(
+			mpEnemySummon->mPosition,
+			CVector(), CVector(0.5f, 0.5f, 0.5f));
+		mEnemyCount++;
+		mSpawn = 20;
+	}
 	//衝突処理
 	CCollisionManager::Get()->Collision();
 

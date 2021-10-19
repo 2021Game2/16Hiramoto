@@ -14,7 +14,7 @@
 #include"CColliderMesh.h"
 #include"CSound.h"
 #include"CEnemySummon.h"
-
+#include"CTexture.h"
 /*
 ゲームのシーン
 */
@@ -29,8 +29,9 @@ public:
 	CMatrix mMatrix;//合成行列
 	CMatrix mBackGroundMatrix;
 	CPlayer mPlayer;
+	CTexture Texture;
 	CSound Bgm;
-	CEnemySummon mEnemySummon;
+	CEnemySummon* mpEnemySummon;
 	//モデルからコライダ生成
       CColliderMesh mColliderMesh;
 	  int mMapCount;
@@ -39,7 +40,7 @@ public:
 	CModel mModelC5;
 	CModel mModelc5;
 	CModel mModelI;
-	
+	CModel mModelE;
 	//三角コライダの作成
 	CColliderTriangle mColliderTriangle;
 	CColliderTriangle mColliderTriangle2;
@@ -52,6 +53,7 @@ public:
 	
 	//更新処理のオーバーライド
 	void Update();
+	void Render();
 };
 
 #endif

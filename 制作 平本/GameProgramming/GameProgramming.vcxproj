@@ -135,6 +135,7 @@
     <ClInclude Include="CItem.h" />
     <ClInclude Include="CKey.h" />
     <ClInclude Include="CMatrix.h" />
+    <ClInclude Include="CMiniMap.h" />
     <ClInclude Include="CModel.h" />
     <ClInclude Include="CParent.h" />
     <ClInclude Include="CPlayer.h" />

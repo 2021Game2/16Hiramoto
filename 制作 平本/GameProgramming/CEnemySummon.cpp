@@ -55,6 +55,10 @@ void CEnemySummon::Collision(CCollider* m, CCollider* o) {
 		}
 	}
 }
+void CEnemySummon::Render() {
+	//親の描画処理
+	CCharacter::Render();
+}
 void CEnemySummon::TaskCollision() {
 	//コライダの優先度変更
 	mCollider.ChangePriority();

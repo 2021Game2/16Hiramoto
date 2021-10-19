@@ -330,9 +330,10 @@ void CPlayer::Update() {
 			mSpAttack -= 30;
 		}
 	}
-    mPosition.mY -= mGravity;
+    
 	//d—Í
 	if (mPosition.mY > 0.0f) {
+         mPosition.mY --;
 		 mGravity =0.98;
 	}
 	else

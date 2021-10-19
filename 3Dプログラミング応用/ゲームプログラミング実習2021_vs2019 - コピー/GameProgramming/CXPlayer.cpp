@@ -249,15 +249,16 @@ void CXPlayer::Update()
 				mPosition = CVector(0.0f, 0.0f, 0.1f) * mMatrix;
 			}
 
-			if (CKey::Push(' '))
-			{
-				ChangeAnimation(3, true, 30);
-			}
-
+			
 		}
 		else {
 			ChangeAnimation(0, true, 60);
 		}
+		if (CKey::Push(' '))
+			{
+				ChangeAnimation(3, true, 30);
+			}
+
 	}
 	CXCharacter::Update();
 }

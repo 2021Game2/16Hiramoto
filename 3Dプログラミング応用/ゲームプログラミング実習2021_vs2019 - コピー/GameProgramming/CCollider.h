@@ -15,6 +15,8 @@ public:
 		EBODY,		//本体
 		ESEARCH,	//サーチ用
 		ESWORD,	//剣
+        EENEMYSUMMON,
+		EENEMY2COLLIDER,
 	};
 	ETag mTag;
 	//コライダタイプ
@@ -22,6 +24,7 @@ public:
 		ESPHERE,//球コライダ
 		ETRIANGLE,//三角コライダ
 		ELINE, //線分コライダ
+		
 	};
 	EType mType;//コライダタイプ
 	//頂点
