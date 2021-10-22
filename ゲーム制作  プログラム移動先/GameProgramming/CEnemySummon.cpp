@@ -51,7 +51,7 @@ void CEnemySummon::Collision(CCollider* m, CCollider* o) {
 				if(o->mTag==CCollider::ESWORD)
 				//Õ“Ë‚µ‚Ä‚¢‚é‚Æ‚«
 				if (CCollider::Collision(m, o)) {
-					mHp--;
+				//	mHp--;
 				}
 			}
 		}

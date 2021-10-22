@@ -54,10 +54,14 @@ void CTaskManager::Update() {
 	//æ“ª‚©‚çÅŒã‚Ü‚ÅŒJ‚è•Ô‚µ
 	CTask *task = mHead.mpNext;
 	while (task->mpNext) {
+		CTask* del = task;
 		//XVˆ—‚ðŒÄ‚Ô
 		task->Update();
 		//ŽŸ‚Ö
 		task = task->mpNext;
+		if (del->mEnabled == false) {
+			delete del;
+		}
 	}
 }
 //•`‰æ
@@ -65,8 +69,12 @@ void CTaskManager::Render() {
 	//æ“ª‚©‚çÅŒã‚Ü‚ÅŒJ‚è•Ô‚µ
 	CTask *task = mHead.mpNext;
 	while (task->mpNext) {
+		if (task->mRenderEnabled) {
+			//•`‰æˆ—‚ðŒÄ‚Ô
+			task->Render();
+		}
 		//•`‰æˆ—‚ðŒÄ‚Ô
-		task->Render();
+		//task->Render();
 		//ŽŸ‚Ö
 		task = task->mpNext;
 	}

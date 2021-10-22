@@ -5,14 +5,21 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #define JUMP 30.0f
+#include"CItem.h"
 CXPlayer::CXPlayer()
+
 	: mColSphereBody(this, nullptr, CVector(), 0.5f)
 	, mColSphereHead(this, nullptr, CVector(0.0f, 5.0f, -3.0f), 0.5f)
-	, mColSphereSword(this, nullptr, CVector(-10.0f, 10.0f, 50.0f), 1.0f)
-
+	, mColSphereSword(this, nullptr, CVector(-10.0f, 10.0f, 50.0f), 0.7f)
+	, mColSphereFoot(this, nullptr, CVector(0.0f, 0.0f, -3.0f), 0.5f)
 	, mJump(0.0f)
-	,mSpAttack(0)
-	,mHp(0)
+	, mSpAttack(0)
+	, mHp(0)
+	, mStamina(400)
+	, mGravity(0.0f)
+	,mSpaceCount1(0)
+	,mSpaceCount2(0)
+	,mSpaceCount3(0)
 {
 	//タグにプレイヤーを設定します
 	mTag = EPLAYER;
@@ -28,36 +35,59 @@ void CXPlayer::Init(CModelX* model)
 	mColSphereHead.mpMatrix = &mpCombinedMatrix[12];
 	//剣
 	mColSphereSword.mpMatrix = &mpCombinedMatrix[22];
-
+	//合成行列の設定
+	mColSphereFoot.mpMatrix = &mpCombinedMatrix[3];
 	mRotation.mY = 0.01f;
 }
 
 void CXPlayer::Update()
 {
-	if (mAnimationIndex == 3)
-	{
+	switch (mAnimationIndex) {
+	case(3):
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
 			ChangeAnimation(4, false, 30);
+			mSpaceCount1 = 60;
 		}
-	}
-	else if (mAnimationIndex == 4)
-	{
+		break;
+	case(4):
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
 			ChangeAnimation(0, true, 60);
 		}
-	}
-	else
-	{
-		if (mSpAttack >= 30) {
-			if (CKey::Once('N')) {
-				mJump = JUMP;
-				mPosition.mY += mJump;
-				mSpAttack -= 30;
-			}
+		break;
+	case(5):
+		if (mAnimationFrame >= mAnimationFrameSize)
+		{
+			ChangeAnimation(6, false, 30);
 		}
-
+		break;
+	case(6):
+		if (mAnimationFrame >= mAnimationFrameSize)
+		{
+			ChangeAnimation(0, true, 60);
+		}
+		break;
+	case(7):
+		if (mAnimationFrame >= mAnimationFrameSize)
+		{
+			ChangeAnimation(8, false, 30);
+		}
+		break;
+	case(8):
+		if (mAnimationFrame >= mAnimationFrameSize)
+		{
+			ChangeAnimation(0, true, 60);
+		}
+		break;
+    default:
+		break;
+	}
+	
+	
+	
+	
+		
 		//回転移動 通称バイオ移動
 		//if (CKey::Push('A'))
 		//{
@@ -100,32 +130,84 @@ void CXPlayer::Update()
 		{
 			//			mRotation.mY += 2.0f;
 			Move -= SideVec;
+			if (mStamina > 0) {
+				if (CKey::Push('C')) {
+					speed = 0.30f;
+					mStamina--;
+					ChangeAnimation(1, true, 30);
+				}
+				
+			}
 		}
 		else if (CKey::Push('D'))
 		{
 			//			mRotation.mY -= 2.0f;
 			Move += SideVec;
+			if (mStamina > 0) {
+				if (CKey::Push('C')) {
+					speed = 0.30f;
+					mStamina--;
+					ChangeAnimation(1, true, 30);
+				}
+				
+			}
 		}
 		if (CKey::Push('W'))
 		{
 			Move += FrontVec;
 			//			mPosition += CVector(0.0f, 0.0f, 0.1f) * mMatrixRotate;
+			if (mStamina > 0) {
+				if (CKey::Push('C')) {
+					speed = 0.30f;
+					mStamina--;
+					ChangeAnimation(1, true, 30);
+				}
+				
+			}
 		}
 		else if (CKey::Push('S'))
 		{
 			Move -= FrontVec;
 			//			mPosition += CVector(0.0f, 0.0f, 0.1f) * mMatrixRotate;
+			if (mStamina > 0) {
+				if (CKey::Push('C')) {
+					speed = 0.30f;
+					mStamina--;
+					ChangeAnimation(1, true, 30);
+				}
+				
+			}
 		}
 
 		if (CKey::Push(' '))
 		{
 			ChangeAnimation(3, true, 30);
-		}else if (Move.Length() != 0.0f){
-			ChangeAnimation(1, true, 60);
-		}else {
-			ChangeAnimation(0, true, 60);
+			
+			
 		}
-
+		 if (mSpaceCount1 > 1) {
+			if (CKey::Push(' ')) {
+			ChangeAnimation(7, true, 30);
+		    }
+		}
+		else if (Move.Length() != 0.0f){
+			ChangeAnimation(1, true, 60);
+		}
+		else {
+			ChangeAnimation(0, true, 60);
+		} 
+		 if (mSpaceCount1 > 0) {
+			 mSpaceCount1--;
+		 }
+		 if (mSpaceCount2 > 0) {
+			 mSpaceCount2--;
+		 }
+		 if (mSpaceCount3 > 0) {
+			 mSpaceCount3--;
+		 }
+		 if (mStamina < 400) {
+			 mStamina++;
+		 }
 		//移動量正規化　これをしないと斜め移動が早くなってしまうので注意
 		//ジャンプ時などはY軸を正規化しないよう注意
 		Move.Normalize();
@@ -155,6 +237,28 @@ void CXPlayer::Update()
 		mPosition += Move;
 
 
+	
+	if (mSpAttack >= 30) {
+		if (CKey::Once('N')) {
+			mJump = JUMP;
+			mPosition.mY += mJump;
+			mSpAttack -= 30;
+		}
+	}
+	mPosition.mY -= mGravity;
+	//重力
+	if (mPosition.mY > 0.0f) {
+		
+		mGravity = 0.98;
+
+	}
+	else
+	{
+		mPosition.mY = 0.0f;
+		mGravity = 0;
+	}
+	if (CItem::mItemCount > 0) {
+		mColSphereSword.mRadius = 1.5f;
 	}
 	//注視点設定
 	Camera.SetTarget(mPosition);

@@ -5,6 +5,7 @@
 
 CBillBoard::CBillBoard()
 {
+
 }
 
 CBillBoard::CBillBoard(CVector pos, float w, float h)

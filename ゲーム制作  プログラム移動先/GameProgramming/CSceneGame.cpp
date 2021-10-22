@@ -69,7 +69,7 @@ void CSceneGame::Update() {
 			mpEnemySummon->mPosition,
 			CVector(), CVector(0.5f, 0.5f, 0.5f));
 		mEnemyCount++;
-		mSpawn = 20;
+		mSpawn = 10;
 	}
 	if (CKey::Push(VK_ESCAPE)) {
 		exit(0);

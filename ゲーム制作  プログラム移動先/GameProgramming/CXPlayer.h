@@ -11,7 +11,13 @@ public:
 	CCollider mColSphereBody;	//‘Ì
 	CCollider mColSphereHead;	//“ª
 	CCollider mColSphereSword;	//Œ•
+	CCollider  mColSphereFoot;
+	int mSpaceCount1;
+	int mSpaceCount2;
+	int mSpaceCount3;
+	int mStamina;
 	float mJump;
+	float mGravity;
 	CXPlayer();
 	int mSpAttack;
 	int mColliderCount;
