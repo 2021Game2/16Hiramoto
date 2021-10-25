@@ -92,9 +92,7 @@ void CPlayer::Update() {
 	
 	if (mJump > 0) {
 		mJump--;
-		
 		mCollider2.mRenderEnabled = true;
-	
 	}
     else {
 		mCollider2.mRenderEnabled = false;
