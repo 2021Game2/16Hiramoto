@@ -4,6 +4,7 @@
 #include "CXCharacter.h"
 #include "CCollider.h"
 #include"CVector.h"
+
 class CXPlayer : public CXCharacter
 {
 public:
@@ -12,15 +13,19 @@ public:
 	CCollider mColSphereHead;	//“ª
 	CCollider mColSphereSword;	//Œ•
 	CCollider  mColSphereFoot;
+	CCollider mCollider2;
 	int mSpaceCount1;
 	int mSpaceCount2;
 	int mSpaceCount3;
-	int mStamina;
+	static int mStamina;
 	float mJump;
 	float mGravity;
 	CXPlayer();
-	int mSpAttack;
+
+	static int mSpAttack;
+	 
 	int mColliderCount;
+	
 	CVector mCollisionEnemy;
 	int mHp;
 	/*

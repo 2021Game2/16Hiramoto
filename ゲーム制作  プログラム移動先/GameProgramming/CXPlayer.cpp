@@ -4,18 +4,20 @@
 #include "CUtil.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
-#define JUMP 30.0f
+#define JUMP 60.0f
 #include"CItem.h"
+int CXPlayer::mSpAttack = 0;
+int CXPlayer::mStamina = 0;
 CXPlayer::CXPlayer()
 
 	: mColSphereBody(this, nullptr, CVector(), 0.5f)
 	, mColSphereHead(this, nullptr, CVector(0.0f, 5.0f, -3.0f), 0.5f)
 	, mColSphereSword(this, nullptr, CVector(-10.0f, 10.0f, 50.0f), 0.7f)
-	, mColSphereFoot(this, nullptr, CVector(0.0f, 0.0f, -3.0f), 0.5f)
+	, mColSphereFoot(this, nullptr, CVector(0.0f, -10.0f, -3.0f), 1.5f)
+	, mCollider2(this, &mMatrix, CVector(0.0f, -5.0f, 0.0f), 5.0f)
 	, mJump(0.0f)
-	, mSpAttack(0)
+	
 	, mHp(0)
-	, mStamina(400)
 	, mGravity(0.0f)
 	,mSpaceCount1(0)
 	,mSpaceCount2(0)
@@ -24,6 +26,8 @@ CXPlayer::CXPlayer()
 	//タグにプレイヤーを設定します
 	mTag = EPLAYER;
 	mColSphereSword.mTag = CCollider::ESWORD;
+	mCollider2.mTag = CCollider::EPLAYER;
+	CXPlayer::mStamina = 400;
 }
 
 void CXPlayer::Init(CModelX* model)
@@ -36,7 +40,7 @@ void CXPlayer::Init(CModelX* model)
 	//剣
 	mColSphereSword.mpMatrix = &mpCombinedMatrix[22];
 	//合成行列の設定
-	mColSphereFoot.mpMatrix = &mpCombinedMatrix[3];
+	mColSphereFoot.mpMatrix = &mpCombinedMatrix[1];
 	mRotation.mY = 0.01f;
 }
 
@@ -80,6 +84,19 @@ void CXPlayer::Update()
 			ChangeAnimation(0, true, 60);
 		}
 		break;
+	case(9):
+		if (mAnimationFrame >= mAnimationFrameSize)
+		{
+			ChangeAnimation(10, false, 30);
+		}
+		break;
+	case(10):
+		if (mAnimationFrame >= mAnimationFrameSize)
+		{
+			ChangeAnimation(0, true, 60);
+		}
+		break;
+
     default:
 		break;
 	}
@@ -133,10 +150,13 @@ void CXPlayer::Update()
 			if (mStamina > 0) {
 				if (CKey::Push('C')) {
 					speed = 0.30f;
-					mStamina--;
+					mStamina-=2;
 					ChangeAnimation(1, true, 30);
 				}
 				
+			}
+			else {
+				speed = 0.05f;
 			}
 		}
 		else if (CKey::Push('D'))
@@ -146,10 +166,13 @@ void CXPlayer::Update()
 			if (mStamina > 0) {
 				if (CKey::Push('C')) {
 					speed = 0.30f;
-					mStamina--;
+					mStamina-=2;
 					ChangeAnimation(1, true, 30);
 				}
 				
+			}
+			else {
+				speed = 0.05f;
 			}
 		}
 		if (CKey::Push('W'))
@@ -159,10 +182,13 @@ void CXPlayer::Update()
 			if (mStamina > 0) {
 				if (CKey::Push('C')) {
 					speed = 0.30f;
-					mStamina--;
+					mStamina-=2;
 					ChangeAnimation(1, true, 30);
 				}
 				
+			}
+			else {
+				speed = 0.05f;
 			}
 		}
 		else if (CKey::Push('S'))
@@ -172,30 +198,55 @@ void CXPlayer::Update()
 			if (mStamina > 0) {
 				if (CKey::Push('C')) {
 					speed = 0.30f;
-					mStamina--;
+					mStamina-=2;
 					ChangeAnimation(1, true, 30);
 				}
 				
+			}
+			else {
+				speed = 0.05f;
 			}
 		}
 
 		if (CKey::Push(' '))
 		{
-			ChangeAnimation(3, true, 30);
-			
-			
+			ChangeAnimation(3, true, 60);
+			mSpaceCount1 = 60;
 		}
-		 if (mSpaceCount1 > 1) {
+	
+		if (mSpaceCount1 > 1) {
 			if (CKey::Push(' ')) {
-			ChangeAnimation(7, true, 30);
+			ChangeAnimation(5, true, 60);
+			mSpaceCount2 = 60;
+			mSpaceCount1 = 0;
 		    }
 		}
-		else if (Move.Length() != 0.0f){
+		if (mSpaceCount2 > 1) {
+			if (CKey::Push(' ')) {
+				ChangeAnimation(7, true, 60);
+				mSpaceCount3 = 60;
+				mSpaceCount1 = 0;
+			}
+		}
+		else if (mHp <= 0) {
+			ChangeAnimation(9, true, 60);
+		}
+		else if (Move.Length() != 0.0f) {
 			ChangeAnimation(1, true, 60);
 		}
 		else {
 			ChangeAnimation(0, true, 60);
-		} 
+		}
+		 
+		if (mSpAttack >= 30) {
+			if (CKey::Once('N')) {
+				mJump = JUMP;
+				mPosition.mY += mJump;
+				mSpAttack -= 30;
+				ChangeAnimation(7, true, 80);
+
+			}
+		}
 		 if (mSpaceCount1 > 0) {
 			 mSpaceCount1--;
 		 }
@@ -206,7 +257,7 @@ void CXPlayer::Update()
 			 mSpaceCount3--;
 		 }
 		 if (mStamina < 400) {
-			 mStamina++;
+			mStamina++;
 		 }
 		//移動量正規化　これをしないと斜め移動が早くなってしまうので注意
 		//ジャンプ時などはY軸を正規化しないよう注意
@@ -238,19 +289,18 @@ void CXPlayer::Update()
 
 
 	
-	if (mSpAttack >= 30) {
-		if (CKey::Once('N')) {
-			mJump = JUMP;
-			mPosition.mY += mJump;
-			mSpAttack -= 30;
-		}
+	
+	if (mJump > 0) {
+		mJump--;
+		mCollider2.mRenderEnabled = true;
+	}
+	else {
+		mCollider2.mRenderEnabled = false;
 	}
 	mPosition.mY -= mGravity;
 	//重力
 	if (mPosition.mY > 0.0f) {
-		
-		mGravity = 0.98;
-
+		mGravity = 0.98f;
 	}
 	else
 	{
@@ -260,9 +310,12 @@ void CXPlayer::Update()
 	if (CItem::mItemCount > 0) {
 		mColSphereSword.mRadius = 1.5f;
 	}
+	
+
+
+
 	//注視点設定
 	Camera.SetTarget(mPosition);
-
 	CXCharacter::Update();
 }
 
@@ -285,31 +338,31 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 	case CCollider::ESPHERE:
 
 		if (o->mType == CCollider::ESPHERE) {
-
-			 if (o->mpParent->mTag == EENEMY2) {
-				if (o->mTag == CCollider::EENEMY2COLLIDER) {
-					//衝突しているとき
-					CVector adjust;//調整用ベクトル
-					if (CCollider::Collision(m, o)) {
-						mColliderCount = 5;
-						mCollisionEnemy = mPosition - o->mpParent->mPosition;
-						mCollisionEnemy.mY = 0;
-						mCollisionEnemy = mCollisionEnemy.Normalize();
-						mHp--;
+			if (m->mType == CCollider::EPLAYER) {
+				if (o->mpParent->mTag == EENEMY2) {
+					if (o->mTag  == CCollider::EENEMY2COLLIDER) {
+						//衝突しているとき
+						CVector adjust;//調整用ベクトル
+						if (CCollider::Collision(m, o)) {
+							mColliderCount = 5;
+							mCollisionEnemy = mPosition - o->mpParent->mPosition;
+							mCollisionEnemy.mY = 0;
+							mCollisionEnemy = mCollisionEnemy.Normalize();
+							mHp--;
+						}
 					}
 				}
-
-
 			}
-
-
+			 if (m->mTag == CCollider::ESWORD) {
+				 if (o->mTag == CCollider::EENEMY2COLLIDER) {
+					 mSpAttack++;
+				 }
+			 }
 
 		}
-
-
 	}
-
-
-
-
 }
+
+	
+
+

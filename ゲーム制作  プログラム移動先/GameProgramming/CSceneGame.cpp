@@ -54,7 +54,7 @@ void CSceneGame::Init() {
 		CVector(), CVector(1.5f, 1.5f, 1.5f));
 	//ÉJÉÅÉâèâä˙âª
 	Camera.Init();
-	mpEnemySummon = new CEnemySummon(CVector(0.0f, 1.0f, 0.0f),
+	mpEnemySummon = new CEnemySummon(CVector(70.0f, 1.0f, 0.0f),
 		CVector(), CVector(0.5f, 0.5f, 0.5f));
 
 }
@@ -69,7 +69,7 @@ void CSceneGame::Update() {
 			mpEnemySummon->mPosition,
 			CVector(), CVector(0.5f, 0.5f, 0.5f));
 		mEnemyCount++;
-		mSpawn = 10;
+		mSpawn = 120;
 	}
 	if (CKey::Push(VK_ESCAPE)) {
 		exit(0);
@@ -116,6 +116,12 @@ void CSceneGame::Render() {
 	CUtil::Start2D(0, 800, 0, 600);
 
 	mFont.DrawString("3D PROGRAMMING", 20, 20, 10, 12);
+	char buf[64];
+
+	sprintf(buf, "SPECIAL:%10d", CXPlayer::mSpAttack);
+	mFont.DrawString(buf, 20, 100, 8, 16);
+	sprintf(buf, "STAMINA:%10d", CXPlayer::mStamina);
+	mFont.DrawString(buf, 20, 150, 8, 16);
 
 	//2DÇÃï`âÊèIóπ
 	CUtil::End2D();

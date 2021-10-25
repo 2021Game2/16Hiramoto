@@ -17,7 +17,7 @@ public:
 		ESWORD,	//Œ•
 		EENEMYSUMMON,
 		EENEMY2COLLIDER,
-		
+		EPLAYER,
 		EITEMCCOLLIDER,
 	};
 	ETag mTag;
