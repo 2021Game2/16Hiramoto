@@ -235,7 +235,7 @@ void CXPlayer::Update()
 			ChangeAnimation(1, true, 60);
 		}
 		else {
-			ChangeAnimation(0, true, 60);
+			//ChangeAnimation(0, true, 60);
 		}
 		 
 		if (mSpAttack >= 30) {
