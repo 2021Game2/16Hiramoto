@@ -19,6 +19,7 @@ public:
 		EENEMY2COLLIDER,
 		EPLAYER,
 		EITEMCCOLLIDER,
+		EROCKCOLLIDER,
 	};
 	ETag mTag;
 	//コライダタイプ

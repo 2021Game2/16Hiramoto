@@ -1,2 +1,7 @@
-﻿  CXPlayer.cpp
-  GameProgramming.vcxproj -> C:\Users\hiram\OneDrive\デスクトップ\ゲーム制作２\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\Debug\GameProgramming.exe
+﻿  CEnemy2.cpp
+  CSceneGame.cpp
+  CSceneManager.cpp
+  CXEnemy.cpp
+  CXPlayer.cpp
+  コードを生成中...
+  GameProgramming.vcxproj -> C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\Debug\GameProgramming.exe

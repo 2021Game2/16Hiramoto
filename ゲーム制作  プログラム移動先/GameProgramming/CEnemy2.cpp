@@ -8,7 +8,7 @@
 #define OBJ "mini.obj"//モデルのファイル
 #define MTL "mini.mtl"//モデルのマテリアルファイル
 #define HP 1
-#define VELOCITY 0.5f //マクロ
+#define VELOCITY 0.2f //マクロ
 
 #define JUMP 4.0f
 #define G 0.1f
@@ -144,7 +144,7 @@ void CEnemy2::Update() {
       mPosition.mY -= G;
       
 	}
-	if (mPosition.mY > 4.0f) {
+	if (mPosition.mY > 3.0f) {
      mRotation.mX += 20.0f;
 	}
 
@@ -173,17 +173,17 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 				if(o->mTag== CCollider::ESWORD)
 				//衝突しているとき
 				if (CCollider::Collision(m, o)) {
-					mColliderCount = 5;
-					mCollisionEnemy = mPosition - o->mpParent->mPosition;
-					mCollisionEnemy.mY = 0;
-					mCollisionEnemy = mCollisionEnemy.Normalize();
-					//15フレームごとにエフェクト
-					if (mEnemyDamage % 10 == 0) {
-						//new CEffect(o->mpParent->mPosition, 3.0f, 3.0f, "Attack.tga", 2, 6, 2);
+					if (CXPlayer::mAttackCount > 0) {
+						mColliderCount = 5;
+						mCollisionEnemy = mPosition - o->mpParent->mPosition;
+						mCollisionEnemy.mY = 0;
+						mCollisionEnemy = mCollisionEnemy.Normalize();
+						
+						mJump = JUMP;
+						mJump2 = JUMP;
+						mHp--;
 					}
-					mJump = JUMP;
-					mJump2 = JUMP;
-					mHp--;
+					
 				}
 			}
 		}
@@ -194,11 +194,11 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 			if (CCollider::CollisionTriangleSphere(o, m, &adjust))
 			{
 				if (mPosition.mX + mPosition.mZ > 0) {
-                //衝突しない位置まで戻す
-				mPosition = mPosition - adjust;
-				if (mJump > 0) {
-					mPosition = mPosition - adjust ;
-				}
+					//衝突しない位置まで戻す
+					mPosition = mPosition - adjust;
+					if (mJump > 0) {
+						mPosition = mPosition - adjust ;
+					}
 				}
 				else {
 					//衝突しない位置まで戻す

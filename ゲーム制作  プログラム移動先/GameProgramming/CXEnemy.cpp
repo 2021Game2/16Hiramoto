@@ -29,7 +29,6 @@ void CXEnemy::Init(CModelX* model)
 	mColSphereSword.mpMatrix = &mpCombinedMatrix[21];
 	*/
 }
-
 void CXEnemy::Collision(CCollider* m, CCollider* o)
 {
 	if (m->mType == CCollider::ESPHERE)

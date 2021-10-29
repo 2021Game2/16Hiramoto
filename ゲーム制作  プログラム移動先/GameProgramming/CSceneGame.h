@@ -9,6 +9,7 @@
 #include"CEnemySummon.h"
 #include"CEnemy2.h"
 #include"CBillBoard2.h"
+#include"CRock.h"
 /*
 ゲームのシーン
 */
@@ -19,6 +20,8 @@ class CSceneGame : public CScene {
 public:
 	//マップのインスタンス
 	CMap mMap;
+	CModel mModelC5;
+	CRock*mpRock;
 	int mSpawn;
 	CEnemySummon* mpEnemySummon;
 	static int mEnemyCount;

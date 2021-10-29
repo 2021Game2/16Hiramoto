@@ -13,6 +13,7 @@
 #include "CCollisionManager.h"
 #include"CEnemy2.h"
 #include"CItem.h"
+#include"CRock.h"
 //CMatrix Matrix;
 int CSceneGame::mEnemyCount = 0;
 CSceneGame::~CSceneGame() {
@@ -50,12 +51,24 @@ void CSceneGame::Init() {
 	//“G‚Ì”z’u
 	mEnemy.mPosition = CVector(7.0f, 0.0f, 0.0f);
 	mEnemy.ChangeAnimation(2, true, 200);
-	new CItem(CVector(-20.0f, 2.0f, -10.0f) ,
-		CVector(), CVector(1.5f, 1.5f, 1.5f));
+	
 	//ƒJƒƒ‰‰Šú‰»
 	Camera.Init();
-	mpEnemySummon = new CEnemySummon(CVector(70.0f, 1.0f, 0.0f),
+
+	new CItem(CVector(-20.0f, 2.0f, -10.0f) ,
+		CVector(), CVector(1.5f, 1.5f, 1.5f));
+	mpEnemySummon = new CEnemySummon(CVector(-40.0f, 1.0f, 0.0f),
 		CVector(), CVector(0.5f, 0.5f, 0.5f));
+	mpRock=new CRock(CVector(-100.0f, 50.0f, 50.0f),
+		CVector(), CVector(50.0f, 50.0f, 50.0f));
+	mpRock = new CRock(CVector(-100.0f, 50.0f, -100.0f),
+		CVector(), CVector(50.0f, 50.0f, 50.0f));
+	mpRock = new CRock(CVector(100.0f, 50.0f, 50.0f),
+		CVector(), CVector(50.0f, 50.0f, 50.0f));
+	mpRock = new CRock(CVector(100.0f, 50.0f, -100.0f),
+		CVector(), CVector(50.0f, 50.0f, 50.0f));
+
+
 
 }
 
@@ -69,7 +82,7 @@ void CSceneGame::Update() {
 			mpEnemySummon->mPosition,
 			CVector(), CVector(0.5f, 0.5f, 0.5f));
 		mEnemyCount++;
-		mSpawn = 120;
+		mSpawn = 60;
 	}
 	if (CKey::Push(VK_ESCAPE)) {
 		exit(0);

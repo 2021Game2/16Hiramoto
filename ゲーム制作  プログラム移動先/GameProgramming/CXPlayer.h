@@ -12,22 +12,28 @@ public:
 	CCollider mColSphereBody;	//体
 	CCollider mColSphereHead;	//頭
 	CCollider mColSphereSword;	//剣
+
+
+
 	CCollider  mColSphereFoot;
 	CCollider mCollider2;
+    CVector mCollisionEnemy;
 	int mSpaceCount1;
 	int mSpaceCount2;
 	int mSpaceCount3;
 	static int mStamina;
+	int mDamageCount;
 	float mJump;
 	float mGravity;
-	CXPlayer();
-
-	static int mSpAttack;
-	 
+    static int mSpAttack;
+	static int mAttackCount;
 	int mColliderCount;
-	
-	CVector mCollisionEnemy;
+    
 	int mHp;
+	CXPlayer();
+	
+	
+	
 	/*
 	初期化(Xモデルクラスのポインタ)
 	*/
