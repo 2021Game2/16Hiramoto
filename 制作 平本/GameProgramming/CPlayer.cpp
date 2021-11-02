@@ -14,6 +14,7 @@
 #include"CSceneGame.h"
 #define G 1.0f
 #define JUMP 30.0f
+
 CMatrix Matrix;
 int CPlayer::mAction1 = 60;//‚P‰ñ–Ú‚ÌUŒ‚‚Ì“®‚­ŠÔ
 int CPlayer::mAction2 = 60;//‚Q‰ñ–Ú‚ÌUŒ‚‚Ì“®‚­ŠÔ
