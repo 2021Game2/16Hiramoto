@@ -4,7 +4,7 @@
 #include "CUtil.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
-#define JUMP 5.0f
+#define JUMP 3.0f
 #define JUMP2 10.0f
 #define STEP 10.0f
 #include"CItem.h"
@@ -268,23 +268,20 @@ void CXPlayer::Update()
 		 if (mSpAttack >= 0) {
 			 if (CKey::Once('F')) {
 				 mJump = JUMP;
-				 //mPosition.mY += mJump;
-				 mSpAttack -= 30;
+				
+				// mSpAttack -= 30;
 				 mAnimationCount = 80;//0になるまでアニメーションが変わらない
-				 ChangeAnimation(7, true, 80);
+				 ChangeAnimation(7, true, 50);
 				 mAttackCount = 80;//当たり判定が適用される時間
 				 mTime = 1;
 				 mPosition.mY = 1.0f;// mJump* mTime - 0.5 * mGravity * mTime * mTime;
 			 }
 		 }
-		 
-		else if (mHp <= 0) {
-			ChangeAnimation(11, false, 60);
+			else if (mHp <= 0) {
+				ChangeAnimation(11, false, 60);
 
-		}
-	
-       
-		 else if (Move.Length() != 0.0f) {
+			}
+		  if (Move.Length() != 0.0f) {
 			 if (mAttackCount <= 0) {
 				 mAnimationCount = 1;
                  ChangeAnimation(1, true, 60);
@@ -292,13 +289,10 @@ void CXPlayer::Update()
 					 ChangeAnimation(1, true, 30);
 				 }
 			 }
-				
-			 
-
-		 }
-		else if(mAnimationCount=0) {
-			ChangeAnimation(0, true, 60);
-		}
+		  }
+			else if(mAnimationCount=0) {
+				ChangeAnimation(0, true, 60);
+			}
 		 
 		
 		//移動量正規化　これをしないと斜め移動が早くなってしまうので注意
@@ -306,18 +300,13 @@ void CXPlayer::Update()
 		Move.Normalize();
 		//平行移動量
 		Move = Move*speed;
-
-		
 		//普通に3次元ベクトル計算で算出したほうが正確だが計算量を懸念する場合は擬似計算で軽量化
 		//擬似ベクトル計算
 		Check tCheck = CUtil::GetCheck2D(Move.mX,Move.mZ,0,0, mRotation.mY*(M_PI/180.0f));
-		
 		//回転速度　degreeに直す
 		float turnspeed = (180.0f / M_PI)*0.5f;
-
 		//急な振り返りを抑制
 		if (tCheck.turn > 1.5f) tCheck.turn =1.5f;
-
 		//移動方向へキャラを向かせる
 		if (tCheck.cross > 0.0f) {
 			mRotation.mY += tCheck.turn * turnspeed;
@@ -325,16 +314,20 @@ void CXPlayer::Update()
 		if (tCheck.cross < 0.0f) {
 			mRotation.mY -= tCheck.turn * turnspeed;
 		}
-
 		//座標移動
 		mPosition += Move;
 
+
+
          if (mStep > 0) {
 			 mStep--;
+			 Move += FrontVec;
+			 speed = 1.0f;
 		 }
+
 		 if (mAnimationCount > 0) {
 			 mAnimationCount--;
-		}
+	     }
 		 if (mSpaceCount1 > 0) {
 			 mSpaceCount1--;
 		 }
@@ -353,36 +346,28 @@ void CXPlayer::Update()
 		 if (mDamageCount > 0) {
 			 mDamageCount--;
 		 }
-
-
-	if (mJump > 0) {
-		//mJump--;
-		mCollider2.mRenderEnabled = true;
-	}
-
-	else {
-		mPosition.mY = 0.0f;
-		mCollider2.mRenderEnabled = false;
-	}
-	
-  
-	//重力
-	if (mJump>0) {
-		mPosition.mY =mJump*mTime- 0.5 * mGravity * mTime * mTime;
-	}
-    
-	
-    mTime++;
-	if (CItem::mItemCount > 0) {
-		mColSphereSword.mRadius = 2.5f;
-	}
-	//吹き飛ぶ
-	if (mColliderCount > 0) {
-		mColliderCount--;
-		mPosition = mPosition + mCollisionEnemy * mColliderCount;
-		ChangeAnimation(4, false, 10);
-		
-	}
+		if (mPosition.mY > 0) {
+			//mJump--;
+			mCollider2.mRenderEnabled = true;
+		}
+		else {
+			mPosition.mY = 0.0f;
+			mCollider2.mRenderEnabled = false;
+		}
+		//重力
+		if (mPosition.mY>0) {
+			mPosition.mY =mJump*mTime- 0.5 * mGravity * mTime * mTime;
+		}
+		mTime++;
+		if (CItem::mItemCount > 0) {
+			mColSphereSword.mRadius = 2.5f;
+		}
+		//吹き飛ぶ
+		if (mColliderCount > 0) {
+			mColliderCount--;
+			mPosition = mPosition + mCollisionEnemy * mColliderCount;
+			ChangeAnimation(4, false, 10);
+		}
 
 
 
