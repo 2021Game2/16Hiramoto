@@ -4,7 +4,7 @@
 #include "CUtil.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
-#define JUMP 60.0f
+#define JUMP 5.0f
 #define JUMP2 10.0f
 #define STEP 10.0f
 #include"CItem.h"
@@ -29,6 +29,7 @@ CXPlayer::CXPlayer()
 	,mAnimationCount(0)
 	,mStep(0.0f)
 	,mTime(0.0f)
+	,mV0(0)
 {
 	//タグにプレイヤーを設定します
 	mTag = EPLAYER;
@@ -51,6 +52,8 @@ void CXPlayer::Init(CModelX* model)
 	//合成行列の設定
 	mColSphereFoot.mpMatrix = &mpCombinedMatrix[1];
 	mRotation.mY = 0.01f;
+	mGravity = 0.20f;
+	
 	
 }
 
@@ -225,9 +228,9 @@ void CXPlayer::Update()
 		     if (CKey::Once(' '))
 		     {
 				ChangeAnimation(3,false, 10);
-				mSpaceCount1 = 20;
-				mAttackCount = 20;
-				mAnimationCount = 10;
+				mSpaceCount1 = 20;//１回めの攻撃の総フレーム
+				mAttackCount = 20;//当たり判定が適用される時間
+				mAnimationCount = 10;//0になるまでアニメーションが変わらない
 
                 mStep = STEP;
 				//mPosition.mX -= mStep;
@@ -239,10 +242,10 @@ void CXPlayer::Update()
 			 if (mSpaceCount1 < 15) {
 				if (CKey::Once(' ')) {
 				ChangeAnimation(5, true, 10);
-				mSpaceCount2 = 20;
+				mSpaceCount2 = 20;//２回めの攻撃の総フレーム
 				mSpaceCount1 = 0;
-				mAttackCount = 20;
-				mAnimationCount = 10;
+				mAttackCount = 20;//当たり判定が適用される時間
+				mAnimationCount = 10;//0になるまでアニメーションが変わらない
 				mStep = STEP;
 				//mPosition.mX -= mStep;
 		        }
@@ -253,25 +256,27 @@ void CXPlayer::Update()
 			 if (mSpaceCount2 < 15) {
 				 if (CKey::Push(' ')) {
 					 ChangeAnimation(7, true, 10);
-					 mAnimationCount = 10;
-					 mSpaceCount3 = 20;
+					 mAnimationCount = 10;//0になるまでアニメーションが変わらない
+					 mSpaceCount3 = 20;//３回めの攻撃の総フレーム
 					 mSpaceCount1 = 0;
-					 mAttackCount = 20;
+					 mAttackCount = 20;//当たり判定が適用される時間
 					 mStep = STEP;
 					// mPosition.mX -= mStep;
 				 }
 			 }
 		}
-	       else if (mSpAttack >= 30) {
- 				if (CKey::Once('F')) {
-						mJump = JUMP;
-						mPosition.mY += mJump;
-						mSpAttack -= 30;
-						mAnimationCount = 80;
-						ChangeAnimation(7, true, 80);
-				    	mAttackCount = 80;
-				}
-			}
+		 if (mSpAttack >= 0) {
+			 if (CKey::Once('F')) {
+				 mJump = JUMP;
+				 //mPosition.mY += mJump;
+				 mSpAttack -= 30;
+				 mAnimationCount = 80;//0になるまでアニメーションが変わらない
+				 ChangeAnimation(7, true, 80);
+				 mAttackCount = 80;//当たり判定が適用される時間
+				 mTime = 1;
+				 mPosition.mY = 1.0f;// mJump* mTime - 0.5 * mGravity * mTime * mTime;
+			 }
+		 }
 		 
 		else if (mHp <= 0) {
 			ChangeAnimation(11, false, 60);
@@ -295,30 +300,7 @@ void CXPlayer::Update()
 			ChangeAnimation(0, true, 60);
 		}
 		 
-		 if (mStep > 0) {
-			 mStep--;
-		 }
-		 if (mAnimationCount > 0) {
-			 mAnimationCount--;
-		}
-		 if (mSpaceCount1 > 0) {
-			 mSpaceCount1--;
-		 }
-		 if (mSpaceCount2 > 0) {
-			 mSpaceCount2--;
-		 }
-		 if (mSpaceCount3 > 0) {
-			 mSpaceCount3--;
-		 }
-		 if (mStamina < 400) {
-			mStamina++;
-		 }
-		 if (mAttackCount > 0) {
-			 mAttackCount--;
-		 }
-		 if (mDamageCount > 0) {
-			 mDamageCount--;
-		 }
+		
 		//移動量正規化　これをしないと斜め移動が早くなってしまうので注意
 		//ジャンプ時などはY軸を正規化しないよう注意
 		Move.Normalize();
@@ -347,27 +329,50 @@ void CXPlayer::Update()
 		//座標移動
 		mPosition += Move;
 
+         if (mStep > 0) {
+			 mStep--;
+		 }
+		 if (mAnimationCount > 0) {
+			 mAnimationCount--;
+		}
+		 if (mSpaceCount1 > 0) {
+			 mSpaceCount1--;
+		 }
+		 if (mSpaceCount2 > 0) {
+			 mSpaceCount2--;
+		 }
+		 if (mSpaceCount3 > 0) {
+			 mSpaceCount3--;
+		 }
+		 if (mStamina < 400) {
+			mStamina++;
+		 }
+		 if (mAttackCount > 0) {
+			 mAttackCount--;
+		 }
+		 if (mDamageCount > 0) {
+			 mDamageCount--;
+		 }
+
+
 	if (mJump > 0) {
-		mJump--;
+		//mJump--;
 		mCollider2.mRenderEnabled = true;
 	}
 
 	else {
+		mPosition.mY = 0.0f;
 		mCollider2.mRenderEnabled = false;
 	}
 	
-   mGravity = 0.98f;
+  
 	//重力
-	if (mPosition.mY > 3.0f) {
-		
-		mPosition.mY -= 0.5 * mGravity * mTime * mTime;
-		mTime++;
+	if (mJump>0) {
+		mPosition.mY =mJump*mTime- 0.5 * mGravity * mTime * mTime;
 	}
-	else
-	{
-		mPosition.mY = 0.0f;
-		mTime = 0;
-	}
+    
+	
+    mTime++;
 	if (CItem::mItemCount > 0) {
 		mColSphereSword.mRadius = 2.5f;
 	}
@@ -420,8 +425,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 									mCollisionEnemy = mCollisionEnemy.Normalize();
 									mHp--;
 									mDamageCount = 180;
-									}
-									
+									}	
 								}
 							}
 						}
@@ -432,16 +436,14 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 						 if (o->mTag == CCollider::EENEMY2COLLIDER) {
 							 if (CCollider::Collision(m, o)) {
 								 if (mAttackCount > 0) {
-									 mSpAttack++;
+									 mSpAttack+=5;
 									 break;
 								 }
 							 }
 						 }
 					 }
 				 }
-
 			}
-			 
 		}
 	}
 }

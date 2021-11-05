@@ -33,6 +33,7 @@ public:
 	int mAnimationCount;
 	int mHp;
 	float mTime;
+	int mV0;
 	CXPlayer();
 	
 	
