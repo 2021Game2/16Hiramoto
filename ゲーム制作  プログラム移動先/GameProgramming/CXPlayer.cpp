@@ -4,9 +4,9 @@
 #include "CUtil.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
-#define JUMP 3.0f
+#define JUMP 5.0f
 #define JUMP2 10.0f
-#define STEP 10.0f
+#define STEP 30.0f
 #include"CItem.h"
 int CXPlayer::mSpAttack = 0;
 int CXPlayer::mStamina = 0;
@@ -267,14 +267,16 @@ void CXPlayer::Update()
 		}
 		 if (mSpAttack >= 0) {
 			 if (CKey::Once('F')) {
-				 mJump = JUMP;
-				
-				// mSpAttack -= 30;
-				 mAnimationCount = 80;//0になるまでアニメーションが変わらない
-				 ChangeAnimation(7, true, 50);
-				 mAttackCount = 80;//当たり判定が適用される時間
-				 mTime = 1;
-				 mPosition.mY = 1.0f;// mJump* mTime - 0.5 * mGravity * mTime * mTime;
+				 if (mAttackCount <= 0) {
+					 mJump = JUMP;
+
+					 // mSpAttack -= 30;
+					 mAnimationCount = 80;//0になるまでアニメーションが変わらない
+					 ChangeAnimation(7, true, 50);
+					 mAttackCount = 50;//当たり判定が適用される時間
+					 mTime = 1;
+					 mPosition.mY = 1.0f;// mJump* mTime - 0.5 * mGravity * mTime * mTime;
+				 }
 			 }
 		 }
 			else if (mHp <= 0) {
@@ -347,7 +349,7 @@ void CXPlayer::Update()
 			 mDamageCount--;
 		 }
 		if (mPosition.mY > 0) {
-			//mJump--;
+			
 			mCollider2.mRenderEnabled = true;
 		}
 		else {
@@ -409,7 +411,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 									mCollisionEnemy.mY = 0;
 									mCollisionEnemy = mCollisionEnemy.Normalize();
 									mHp--;
-									mDamageCount = 180;
+									mDamageCount = 60;
 									}	
 								}
 							}

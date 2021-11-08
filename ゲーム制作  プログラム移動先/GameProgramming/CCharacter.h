@@ -26,6 +26,7 @@ public:
 		EENEMY2,
 		EITEM,
 		EROCK,
+		ETREE,
 	};
 	ETag mTag;
 	CModel *mpModel; //モデルのポインタ

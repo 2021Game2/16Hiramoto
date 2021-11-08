@@ -67,7 +67,8 @@ void CSceneGame::Init() {
 		CVector(), CVector(50.0f, 50.0f, 50.0f));
 	mpRock = new CRock(CVector(100.0f, 50.0f, -100.0f),
 		CVector(), CVector(50.0f, 50.0f, 50.0f));
-
+	mpTree = new CTree(CVector(0.0f, 0.0f, 0.0f),
+		CVector(), CVector(50.0f, 50.0f, 50.0f));
 
 
 }

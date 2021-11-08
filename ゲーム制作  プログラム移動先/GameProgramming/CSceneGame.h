@@ -10,6 +10,7 @@
 #include"CEnemy2.h"
 #include"CBillBoard2.h"
 #include"CRock.h"
+#include"CTree.h"
 /*
 ÉQÅ[ÉÄÇÃÉVÅ[Éì
 */
@@ -22,6 +23,7 @@ public:
 	CMap mMap;
 	CModel mModelC5;
 	CRock*mpRock;
+	CTree* mpTree;
 	int mSpawn;
 	CEnemySummon* mpEnemySummon;
 	static int mEnemyCount;
