@@ -69,9 +69,6 @@
     <ClCompile Include="CEnemy.cpp">
       <Filter>ソース ファイル\Lib</Filter>
     </ClCompile>
-    <ClCompile Include="CEnemy2.cpp">
-      <Filter>ソース ファイル\Lib</Filter>
-    </ClCompile>
     <ClCompile Include="CKey.cpp">
       <Filter>ソース ファイル\Lib</Filter>
     </ClCompile>
@@ -160,6 +157,12 @@
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
     <ClCompile Include="CTree.cpp">
+      <Filter>ソース ファイル\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="CEnemy3.cpp">
+      <Filter>ソース ファイル\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="CEnemy2.cpp">
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
   </ItemGroup>
@@ -303,6 +306,9 @@
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="CTree.h">
+      <Filter>ヘッダー ファイル\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="CEnemy3.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
   </ItemGroup>

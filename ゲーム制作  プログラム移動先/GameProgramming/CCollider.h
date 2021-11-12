@@ -14,12 +14,14 @@ public:
 	{
 		EBODY,		//本体
 		ESEARCH,	//サーチ用
+		ESEARCH2,	//サーチ用
 		ESWORD,	//剣
 		EENEMYSUMMON,
 		EENEMY2COLLIDER,
 		EPLAYER,
-		EITEMCCOLLIDER,
+		EITEMCOLLIDER,
 		EROCKCOLLIDER,
+		EENEMY3COLLIDER,
 	};
 	ETag mTag;
 	//コライダタイプ

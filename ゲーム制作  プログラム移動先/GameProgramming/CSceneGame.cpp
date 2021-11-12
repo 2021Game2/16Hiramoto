@@ -69,7 +69,8 @@ void CSceneGame::Init() {
 		CVector(), CVector(50.0f, 50.0f, 50.0f));
 	mpTree = new CTree(CVector(0.0f, 0.0f, 0.0f),
 		CVector(), CVector(50.0f, 50.0f, 50.0f));
-
+	mpEnemy3=new CEnemy3(CVector(20.0f, 5.0f, 20.0f),
+		CVector(), CVector(0.5f, 0.5f, 0.5f));
 
 }
 

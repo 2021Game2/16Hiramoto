@@ -11,6 +11,7 @@
 #include"CBillBoard2.h"
 #include"CRock.h"
 #include"CTree.h"
+#include"CEnemy3.h"
 /*
 ゲームのシーン
 */
@@ -32,7 +33,7 @@ public:
 	CXPlayer mPlayer;
 	//敵のインスタンス
 	CXEnemy mEnemy;
-
+	CEnemy3* mpEnemy3;
 	~CSceneGame();
 	//初期化処理のオーバーライド
 	void Init();

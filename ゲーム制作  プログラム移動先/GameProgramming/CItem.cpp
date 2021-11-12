@@ -14,7 +14,7 @@ CItem::CItem(const CVector& position, const CVector& rotation, const CVector& sc
 	mPosition = position;
 	mRotation = rotation;
 	mScale = scale;
-	mCollider.mTag = CCollider::EITEMCCOLLIDER;
+	mCollider.mTag = CCollider::EITEMCOLLIDER;
 	mTag = EITEM;
 	CTransform::Update();//行列の更新
 	//優先度を１に変更する
