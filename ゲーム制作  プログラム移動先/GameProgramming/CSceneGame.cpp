@@ -69,8 +69,8 @@ void CSceneGame::Init() {
 		CVector(), CVector(50.0f, 50.0f, 50.0f));
 	mpTree = new CTree(CVector(0.0f, 0.0f, 0.0f),
 		CVector(), CVector(50.0f, 50.0f, 50.0f));
-	mpEnemy3=new CEnemy3(CVector(100.0f, 5.0f, 100.0f),
-		CVector(), CVector(2.5f, 2.5f, 2.5f));
+	mpEnemy3=new CEnemy3(CVector(50.0f, 5.0f, 100.0f),
+		CVector(), CVector(0.5f, 0.5f, 0.5f));
 
 }
 
@@ -137,6 +137,8 @@ void CSceneGame::Render() {
 	mFont.DrawString(buf, 20, 100, 8, 16);
 	sprintf(buf, "STAMINA:%10d", CXPlayer::mStamina);
 	mFont.DrawString(buf, 20, 150, 8, 16);
+	sprintf(buf, "MOVE:%10d", CEnemy3::mMoveCount);
+	mFont.DrawString(buf, 20, 200, 8, 16);
 
 	//2DÇÃï`âÊèIóπ
 	CUtil::End2D();

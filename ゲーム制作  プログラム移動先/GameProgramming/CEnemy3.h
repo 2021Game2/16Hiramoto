@@ -5,6 +5,7 @@
 //コライダクラスのインクルード
 #include"CCollider.h"
 #include"CText.h"
+#include"CBullet.h"
 /*エネミークラス
 キャラクタクラスを継承	*/
 class CEnemy3 :public CCharacter {
@@ -13,6 +14,7 @@ public:
 	static CModel mModel;
 	//コライダ
 	CCollider mCollider;
+	CBullet* mpBullet;
 	//コンストラクタ	
 	CEnemy3();
 	CVector mPoint;//目標地点
@@ -20,7 +22,7 @@ public:
 	int mJump;
 	int mJump2;
 	CText mText;
-	int mMoveCount;
+	static int mMoveCount;
 	int mMove2;
 	int mColliderCount;
 	int mCount;

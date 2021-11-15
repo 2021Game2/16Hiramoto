@@ -5,8 +5,8 @@
 #include"CSceneGame.h"
 #include"CUtil.h"
 #include"CText.h"
-#define OBJ "mini.obj"//モデルのファイル
-#define MTL "mini.mtl"//モデルのマテリアルファイル
+#define OBJ "BEE.obj"//モデルのファイル
+#define MTL "BEE.mtl"//モデルのマテリアルファイル
 #define HP 1
 #define VELOCITY 0.05f //マクロ
 #define VELOCITY2 0.1f
@@ -14,7 +14,7 @@
 #define VELOCITY3 0.2f
 #define JUMP 4.0f
 #define G 0.1f
-
+int CEnemy3::mMoveCount = 0;
 CModel CEnemy3::mModel;//モデルデータ作成
 //デフォルトコンストラクタ
 CEnemy3::CEnemy3()
@@ -27,7 +27,7 @@ CEnemy3::CEnemy3()
 	, mJump(0)
 	, mJump2(0)
 	, mEnemyDamage(60)
-	, mMoveCount(0)
+	
 	, mMove2(0)
 	, mColliderCount(0)
 	,mCount(0)
@@ -121,12 +121,13 @@ void CEnemy3::Update() {
 		break;
 		//移動２（右後ろに移動）
 	case(2):
-		if (mCount <= 60) {
-			mPosition.mX += 1.5f;
+		if (mCount <= 10) {
+			mPosition.mX += 3.0f;
 			mPosition.mZ -= 1.5f;
+			mPosition.mY += 2.0f;
 			//mPosition = mPosition + CVector(1.5f, 0.0f,-1.5) * mMatrixRotate;
 		}
-		if (mCount >= 30) {
+		if (mCount >= 10) {
             mMoveCount = 3;
 			mCount = 0;
 			
@@ -134,12 +135,12 @@ void CEnemy3::Update() {
 		break;
 		//移動３（左に移動）
 	case(3):
-		if (mCount <= 60) {
-			mPosition.mX -= 3.0f;
-			
+		if (mCount <= 10) {
+			mPosition.mX -= 6.0f;
+			mPosition.mY -= 1.0f;
 			//mPosition = mPosition + CVector(-3.0f, 0.0f, 0.0f) * mMatrixRotate;
 		}
-		if (mCount >= 30) {
+		if (mCount >= 10) {
             mMoveCount = 4;
 			mCount = 0;
 			
@@ -147,13 +148,14 @@ void CEnemy3::Update() {
 		break;
 		//移動４（右前に移動（元の位置に戻る）
 	case(4):
-		if (mCount <= 120) {
+		if (mCount <= 60) {
 			mPosition.mX += 1.5f;
-			mPosition.mZ += 0.75f;
+			mPosition.mZ += 0.5f;
+			mPosition.mY -= 0.3f;
 			//mPosition = mPosition + CVector(1.5f, 0.0f, VELOCITY) * mMatrixRotate;
 		}
 		if (mCount >= 60) {
-           mMoveCount = 1;
+           mMoveCount = 0;
 			mCount = 0;
 			
 		}
@@ -174,6 +176,7 @@ void CEnemy3::Update() {
 		}
 		else {
 			mPoint = mPoint * CMatrix().RotateY(80);
+			//mPoint = mPoint * CMatrix().RotateX(80);
 		}
 	}
 	mpPlayer = 0;
@@ -229,15 +232,16 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 					//プレイヤーのポインタ設定
 					mpPlayer = o->mpParent;
 					if (mMoveCount<= 0) {
-                       mMoveCount = 1;
+                          mMoveCount = 1;
 						
                      
 					}
 					
 				}
 				
-				else {
-					//mMoveCount = 0;
+				else if(mMoveCount==4){
+					
+					mMoveCount = 0;
 				}
 			}
 		}
@@ -252,7 +256,11 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 				if (CCollider::Collision(m, o)) {
 					//プレイヤーのポインタ設定
 					mpPlayer = o->mpParent;
-					//mMoveCount = 2;
+					mpBullet = new CBullet;
+					mpBullet->mPosition = mPosition;
+						
+					mpBullet->mScale = CVector(2.5f, 2.5f, 2.5f);
+					
 				}
 				
 			}
