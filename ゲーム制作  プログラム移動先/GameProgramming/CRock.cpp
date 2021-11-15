@@ -3,8 +3,8 @@
 #include"CEffect.h"
 #include"CCollisionManager.h"
 #include"CRock.h"
-#define OBJ "Rock.obj"
-#define MTL "Rock.mtl"
+#define OBJ "Rock1.obj"
+#define MTL "Rock1.mtl"
 CModel CRock::mModel;//モデルデータ作成
 CRock::CRock(const CVector& position, const CVector& rotation, const CVector& scale)
 	: CRock()
