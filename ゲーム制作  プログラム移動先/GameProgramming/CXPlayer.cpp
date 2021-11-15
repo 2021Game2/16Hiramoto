@@ -60,7 +60,7 @@ void CXPlayer::Init(CModelX* model)
 void CXPlayer::Update()
 {
 	switch (mAnimationIndex) {
-	case(3):
+	case(3): 
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
 			ChangeAnimation(4, false, 30);
@@ -265,12 +265,12 @@ void CXPlayer::Update()
 				 }
 			 }
 		}
-		 if (mSpAttack >= 0) {
+		 if (mSpAttack >= 30) {
 			 if (CKey::Once('F')) {
 				 if (mAttackCount <= 0) {
 					 mJump = JUMP;
 
-					 // mSpAttack -= 30;
+					  mSpAttack -= 30;
 					 mAnimationCount = 80;//0になるまでアニメーションが変わらない
 					 ChangeAnimation(7, true, 50);
 					 mAttackCount = 50;//当たり判定が適用される時間

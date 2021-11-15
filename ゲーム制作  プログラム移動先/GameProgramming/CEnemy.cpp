@@ -50,7 +50,7 @@ void CEnemy::Update() {
 		CTransform::Update();	//行列更新
 		return;	//呼び元へ戻す
 	}
-
+	
 	//行列を更新
 	CTransform::Update();
 	//位置を移動

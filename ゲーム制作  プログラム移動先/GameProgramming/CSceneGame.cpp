@@ -17,14 +17,16 @@
 //CMatrix Matrix;
 int CSceneGame::mEnemyCount = 0;
 CSceneGame::~CSceneGame() {
-
+	
 }
 
 void CSceneGame::Init() {
+	//サウンド(wav)ファイルの読み込み
+	Bgm.Load("BGM.wav");
 	mJump.Load("jump.wav");
-
+    Sleep(2000);
 	//mBillBoard.Set(CVector(0.0f, 5.0f, 0.0f), 1.0f, 1.0f);
-
+	Bgm.Repeat();
 	//テキストフォントの読み込みと設定
 	mFont.LoadTexture("FontG.png", 1, 4096 / 64);
 
@@ -59,18 +61,18 @@ void CSceneGame::Init() {
 		CVector(), CVector(1.5f, 1.5f, 1.5f));
 	mpEnemySummon = new CEnemySummon(CVector(-40.0f, 1.0f, 0.0f),
 		CVector(), CVector(0.5f, 0.5f, 0.5f));
-	mpRock=new CRock(CVector(-100.0f, 50.0f, 50.0f),
+	mpRock=new CRock(CVector(-100.0f, 0.0f, 50.0f),
 		CVector(), CVector(50.0f, 50.0f, 50.0f));
-	mpRock = new CRock(CVector(-100.0f, 50.0f, -100.0f),
+	mpRock = new CRock(CVector(-100.0f, 0.0f, -100.0f),
 		CVector(), CVector(50.0f, 50.0f, 50.0f));
-	mpRock = new CRock(CVector(100.0f, 50.0f, 50.0f),
+	mpRock = new CRock(CVector(100.0f, 0.0f, 50.0f),
 		CVector(), CVector(50.0f, 50.0f, 50.0f));
-	mpRock = new CRock(CVector(100.0f, 50.0f, -100.0f),
+	mpRock = new CRock(CVector(100.0f, 0.0f, -100.0f),
 		CVector(), CVector(50.0f, 50.0f, 50.0f));
-	mpTree = new CTree(CVector(0.0f, 0.0f, 0.0f),
+	mpTree = new CTree(CVector(70.0f, 0.0f, 0.0f),
 		CVector(), CVector(50.0f, 50.0f, 50.0f));
-	mpEnemy3=new CEnemy3(CVector(50.0f, 5.0f, 100.0f),
-		CVector(), CVector(0.5f, 0.5f, 0.5f));
+	mpEnemy3=new CEnemy3(CVector(-20.0f, 5.0f, 100.0f),
+		CVector(), CVector(1000.5f, 1000.5f, 1000.5f));
 
 }
 

@@ -5,8 +5,8 @@
 #include"CSceneGame.h"
 #include"CUtil.h"
 #include"CText.h"
-#define OBJ "BEE.obj"//モデルのファイル
-#define MTL "BEE.mtl"//モデルのマテリアルファイル
+#define OBJ "Bee\\BEE1.obj"//モデルのファイル
+#define MTL "Bee\\BEE1.mtl"//モデルのマテリアルファイル
 #define HP 1
 #define VELOCITY 0.05f //マクロ
 #define VELOCITY2 0.1f
@@ -19,9 +19,9 @@ CModel CEnemy3::mModel;//モデルデータ作成
 //デフォルトコンストラクタ
 CEnemy3::CEnemy3()
 //コライダの設定
-	:mCollider(this, &mMatrix, CVector(-0.5f, 0.0f, -1.0f), 1.0f)
-	, mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 50.0f)
-	, mColSearch2(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f),25.0f)
+	:mCollider(this, &mMatrix, CVector(50.5f, 0.0f, -100.0f), 200.0f)
+	, mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 70.0f)
+	, mColSearch2(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f),35.0f)
 	, mpPlayer(0)
 	, mHp(HP)
 	, mJump(0)
@@ -32,6 +32,7 @@ CEnemy3::CEnemy3()
 	, mColliderCount(0)
 	,mCount(0)
 {
+	mRotation.mY += 90.0f;
 	mTag = EENEMY3;
 	//モデルが無いときは読み込む
 	if (mModel.mTriangles.size() == 0) {
@@ -112,6 +113,9 @@ void CEnemy3::Update() {
 	case(1):
 		if (mCount < 180) {
 			mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
+			if (mPosition.mY > 3.0f) {
+				mPosition.mY -= 0.1f;
+			}
 		}
 		if (mCount >= 180) {
 			mMoveCount = 2;
@@ -148,13 +152,15 @@ void CEnemy3::Update() {
 		break;
 		//移動４（右前に移動（元の位置に戻る）
 	case(4):
-		if (mCount <= 60) {
+		if (mCount <= 30) {
 			mPosition.mX += 1.5f;
 			mPosition.mZ += 0.5f;
-			mPosition.mY -= 0.3f;
+            mPosition.mY += 0.1f;
+			
+			
 			//mPosition = mPosition + CVector(1.5f, 0.0f, VELOCITY) * mMatrixRotate;
 		}
-		if (mCount >= 60) {
+		if (mCount >= 30) {
            mMoveCount = 0;
 			mCount = 0;
 			
@@ -192,10 +198,7 @@ void CEnemy3::Update() {
 			mPosition.mY += mJump;
 			mJump2--;
 		}
-		//重力
-		/*if (mPosition.mY > 1.0f) {
-			mPosition.mY -= G;
-		}*/
+		
 		//回転
 		if (mPosition.mY > 3.0f) {
 			mRotation.mX += 20.0f;
@@ -237,11 +240,6 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
                      
 					}
 					
-				}
-				
-				else if(mMoveCount==4){
-					
-					mMoveCount = 0;
 				}
 			}
 		}

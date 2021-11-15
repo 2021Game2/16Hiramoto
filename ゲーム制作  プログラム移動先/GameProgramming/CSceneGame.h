@@ -12,6 +12,7 @@
 #include"CRock.h"
 #include"CTree.h"
 #include"CEnemy3.h"
+#include"CSound.h"
 /*
 ゲームのシーン
 */
@@ -28,7 +29,7 @@ public:
 	int mSpawn;
 	CEnemySummon* mpEnemySummon;
 	static int mEnemyCount;
-
+	CSound Bgm;
 	//キャラクタのインスタンス
 	CXPlayer mPlayer;
 	//敵のインスタンス

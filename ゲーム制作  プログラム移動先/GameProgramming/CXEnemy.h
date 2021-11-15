@@ -3,9 +3,12 @@
 
 #include "CXCharacter.h"
 #include "CCollider.h"
-
+#include"CPlayer.h"
 class CXEnemy : public CXCharacter
 {
+	int mMove;
+	CCharacter* mpPlayer;//プレイヤーのポインタ
+	CVector mPoint;//目標地点
 	CCollider mColSphereSword0;	//剣
 	CCollider mColSphereSword1;	//剣
 	CCollider mColSphereSword2;	//剣
@@ -16,6 +19,7 @@ public:
 //	CCollider mColSphereSword;	//剣
 
 	CXEnemy();
+	void Update();
 	/*
 	初期化(Xモデルクラスのポインタ)
 	*/

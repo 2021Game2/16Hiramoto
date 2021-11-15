@@ -27,25 +27,17 @@ class CSound {
 	char	 file[100];
 public:
 
+
 	CSound()
 		: mpSourceVoice(0)
 		, g_hmmio(0)
-		, buf(nullptr)
+
+
 	{
-		memset(&g_datachunkinfo, 0, sizeof(g_datachunkinfo));
-		memset(&g_riffchunkinfo, 0, sizeof(g_riffchunkinfo));
-		memset(&g_mmioinfo, 0, sizeof(g_mmioinfo));
-		memset(&mBufinfo, 0, sizeof(mBufinfo));
-		memset(&g_wfx, 0, sizeof(g_wfx));
 		file[0] = 0;
 		if (mNum == 0) {
 			HRESULT hr;
-			hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
-			if (FAILED(hr))
-			{
-				mpXAudio = 0;
-				return;
-			}
+			CoInitializeEx(NULL, COINIT_MULTITHREADED);
 			hr = XAudio2Create(&mpXAudio, 0, XAUDIO2_DEFAULT_PROCESSOR);
 			if (FAILED(hr))
 			{
@@ -56,7 +48,7 @@ public:
 			hr = mpXAudio->CreateMasteringVoice(&mpMasterVoice, XAUDIO2_DEFAULT_CHANNELS, XAUDIO2_DEFAULT_SAMPLERATE, 0, 0, NULL);
 			if (FAILED(hr))
 			{
-				if (mpXAudio != NULL){ mpXAudio->Release(); }
+				if (mpXAudio != NULL) { mpXAudio->Release(); }
 				mpXAudio = 0;
 				mpMasterVoice = 0;
 				CoUninitialize();
@@ -65,6 +57,7 @@ public:
 		}
 		mNum++;
 	}
+
 
 	/*
 	ÉtÉ@ÉCÉãÇÃì«Ç›çûÇ›
@@ -77,7 +70,6 @@ public:
 			strcpy(file, filename);
 			MMCKINFO mmckinfo; PCMWAVEFORMAT pcmwf; MMRESULT mmret;
 			memset(&g_mmioinfo, 0x00, sizeof(g_mmioinfo));
-			memset(&pcmwf, 0x00, sizeof(pcmwf));
 			g_hmmio = mmioOpen(const_cast<TCHAR *>(filename), &g_mmioinfo, MMIO_READ);
 			if (g_hmmio == NULL) return false;
 			memset(&g_riffchunkinfo, 0x00, sizeof(g_riffchunkinfo));
@@ -109,8 +101,8 @@ public:
 			//return true;
 
 
-//			XAUDIO2_VOICE_STATE state;
-			unsigned char /**buf, */ *ptr; UINT32 buflen/*, cnt*/; LONG readlen; HRESULT hr; //DWORD dw;
+			XAUDIO2_VOICE_STATE state;
+			unsigned char /**buf, */ *ptr; UINT32 buflen, cnt; LONG readlen; HRESULT hr; DWORD dw;
 
 			hr = mpXAudio->CreateSourceVoice(&mpSourceVoice, &g_wfx, XAUDIO2_VOICE_NOPITCH /*| XAUDIO2_VOICE_MUSIC*/, XAUDIO2_DEFAULT_FREQ_RATIO, NULL, NULL, NULL);
 			if (FAILED(hr))
