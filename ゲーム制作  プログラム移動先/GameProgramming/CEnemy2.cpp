@@ -3,6 +3,7 @@
 #include"CCollisionManager.h"
 #include"CBullet.h"
 #include"CSceneGame.h"
+#include"CXCharacter.h"
 #include"CUtil.h"
 #include"CText.h"
 #define OBJ "mini.obj"//モデルのファイル
@@ -29,12 +30,7 @@ CEnemy2::CEnemy2()
 	, mColliderCount(0)
 {
 	mTag = EENEMY2;
-	//モデルが無いときは読み込む
-	if (mModel.mTriangles.size() == 0) {
-		//mModel.Load(OBJ, MTL);
-	}
-	//モデルのポインタ設定
-	mpModel = &mModel;
+	
 	mTag = EENEMY2;
 	mColSearch.mTag = CCollider::ESEARCH;//タグ設定
 	mCollider.mTag = CCollider::EENEMY2COLLIDER;
@@ -146,8 +142,8 @@ void CEnemy2::Update() {
 	}
 	//吹き飛んでいる間回転
 	if (mPosition.mY > 3.0f) {
-     mRotation.mX += 20.0f;
-	}
+     mRotation.mX += 20.0f;   
+	} 
 	//当たり判定が適用される時間
 	if (mEnemy2AttackCount > 0) {
 		mEnemy2AttackCount--;
@@ -159,21 +155,11 @@ void CEnemy2::Init(CModelX* model)
 {
 	CXCharacter::Init(model);
 	//合成行列の設定
-	mColSphereBody.mpMatrix = &mpCombinedMatrix[1];
+	mCollider.mpMatrix = &mpCombinedMatrix[1];
 	//頭
-	mColSphereHead.mpMatrix = &mpCombinedMatrix[1];
-	//剣
-	mColSphereSword0.mpMatrix = &mpCombinedMatrix[26];
-	mColSphereSword1.mpMatrix = &mpCombinedMatrix[26];
-	mColSphereSword2.mpMatrix = &mpCombinedMatrix[26];
+	//mColSphereHead.mpMatrix = &mpCombinedMatrix[1];
+	
 
-	/*
-	mColSphereBody.mpMatrix = &mpCombinedMatrix[8];
-	//頭
-	mColSphereHead.mpMatrix = &mpCombinedMatrix[11];
-	//剣
-	mColSphereSword.mpMatrix = &mpCombinedMatrix[21];
-	*/
 }
 //Collision(コライダ１，コライダ２，）
 void CEnemy2::Collision(CCollider* m, CCollider* o) {

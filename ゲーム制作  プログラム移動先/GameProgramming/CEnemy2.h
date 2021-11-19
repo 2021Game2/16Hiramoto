@@ -2,12 +2,14 @@
 #define CENEMY2_H
 //キャラクタクラスのインクルード
 #include"CCharacter.h"
+
+#include "CXCharacter.h"
 //コライダクラスのインクルード
 #include"CCollider.h"
 #include"CText.h"
 /*エネミークラス
 キャラクタクラスを継承	*/
-class CEnemy2 :public CCharacter {
+class CEnemy2 :public CXCharacter {
 public:
 	//モデルデータ
 	static CModel mModel;
