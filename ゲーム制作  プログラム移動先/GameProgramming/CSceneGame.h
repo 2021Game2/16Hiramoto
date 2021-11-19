@@ -28,6 +28,7 @@ public:
 	CTree* mpTree;
 	int mSpawn;
 	CEnemySummon* mpEnemySummon;
+	CEnemy2 mEnemy2;
 	static int mEnemyCount;
 	CSound Bgm;
 	//キャラクタのインスタンス

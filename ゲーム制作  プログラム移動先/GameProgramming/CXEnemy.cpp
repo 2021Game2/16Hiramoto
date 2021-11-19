@@ -60,7 +60,7 @@ void CXEnemy::Update() {
 		}
 	}
 	mpPlayer = 0;
-	
+	CXCharacter::Update();
 }
 void CXEnemy::Init(CModelX* model)
 {

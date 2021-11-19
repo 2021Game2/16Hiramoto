@@ -31,7 +31,7 @@ CEnemy2::CEnemy2()
 	mTag = EENEMY2;
 	//モデルが無いときは読み込む
 	if (mModel.mTriangles.size() == 0) {
-		mModel.Load(OBJ, MTL);
+		//mModel.Load(OBJ, MTL);
 	}
 	//モデルのポインタ設定
 	mpModel = &mModel;
@@ -153,6 +153,27 @@ void CEnemy2::Update() {
 		mEnemy2AttackCount--;
 	}
 
+}
+
+void CEnemy2::Init(CModelX* model)
+{
+	CXCharacter::Init(model);
+	//合成行列の設定
+	mColSphereBody.mpMatrix = &mpCombinedMatrix[1];
+	//頭
+	mColSphereHead.mpMatrix = &mpCombinedMatrix[1];
+	//剣
+	mColSphereSword0.mpMatrix = &mpCombinedMatrix[26];
+	mColSphereSword1.mpMatrix = &mpCombinedMatrix[26];
+	mColSphereSword2.mpMatrix = &mpCombinedMatrix[26];
+
+	/*
+	mColSphereBody.mpMatrix = &mpCombinedMatrix[8];
+	//頭
+	mColSphereHead.mpMatrix = &mpCombinedMatrix[11];
+	//剣
+	mColSphereSword.mpMatrix = &mpCombinedMatrix[21];
+	*/
 }
 //Collision(コライダ１，コライダ２，）
 void CEnemy2::Collision(CCollider* m, CCollider* o) {
