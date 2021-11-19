@@ -44,7 +44,7 @@ void CSceneGame::Init() {
 	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//10:ダミー
 	CRes::sKnight.SeparateAnimationSet(0, 1160, 1260, "death1");//11:ダウン
 
-	CRes::sScorp.Load("scorpid - monster - X - animated.X");
+	CRes::sScorp.Load("scorpid-monster-X-animated.X");
 	//キャラクターにモデルを設定
 	mPlayer.Init(&CRes::sModelX);
 
@@ -55,7 +55,7 @@ void CSceneGame::Init() {
 	mEnemy.mPosition = CVector(7.0f, 0.0f, 0.0f);
 	mEnemy.ChangeAnimation(2, true, 200);
 	
-	mEnemy2.Init(&CRes::sScorp);
+	//mEnemy2.Init(&CRes::sScorp);
 	//カメラ初期化
 	Camera.Init();
 
@@ -84,9 +84,11 @@ void CSceneGame::Update() {
 		mSpawn--;
 	}
 	if (mSpawn <= 0) {
-		mEnemy2=new CEnemy2(
-			mpEnemySummon->mPosition,
-			CVector(), CVector(0.5f, 0.5f, 0.5f));
+		mpEnemy2 = new CEnemy2(mpEnemySummon->mPosition, CVector(0.0f, 0.0f, 0.0f),
+			CVector(10.5f, 10.5f, 10.5f));
+		mpEnemy2->Init(&CRes::sScorp);
+		
+	  
 		mEnemyCount++;
 		mSpawn = 60;
 	}
