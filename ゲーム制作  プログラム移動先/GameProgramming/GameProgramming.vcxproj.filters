@@ -206,9 +206,6 @@
     <ClInclude Include="CEnemy.h">
       <Filter>ヘッダー ファイル\Lib</Filter>
     </ClInclude>
-    <ClInclude Include="CEnemy2.h">
-      <Filter>ヘッダー ファイル\Lib</Filter>
-    </ClInclude>
     <ClInclude Include="CKey.h">
       <Filter>ヘッダー ファイル\Lib</Filter>
     </ClInclude>
@@ -309,6 +306,9 @@
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="CEnemy3.h">
+      <Filter>ヘッダー ファイル\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="CEnemy2.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
   </ItemGroup>

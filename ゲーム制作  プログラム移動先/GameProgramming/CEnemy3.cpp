@@ -19,7 +19,7 @@ CModel CEnemy3::mModel;//モデルデータ作成
 //デフォルトコンストラクタ
 CEnemy3::CEnemy3()
 //コライダの設定
-	:mCollider(this, &mMatrix, CVector(50.5f, 0.0f, -100.0f), 200.0f)
+	:mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 20.0f)
 	, mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 70.0f)
 	, mColSearch2(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f),35.0f)
 	, mpPlayer(0)
@@ -41,8 +41,8 @@ CEnemy3::CEnemy3()
 	//モデルのポインタ設定
 	mpModel = &mModel;
 	mTag = EENEMY2;
+    mCollider.mTag = CCollider::EENEMY3COLLIDER;
 	mColSearch.mTag = CCollider::ESEARCH;//タグ設定
-	mCollider.mTag = CCollider::EENEMY3COLLIDER;
 	mColSearch2.mTag = CCollider::ESEARCH2;//タグ設定
 }
 
@@ -256,7 +256,6 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 					mpPlayer = o->mpParent;
 					mpBullet = new CBullet;
 					mpBullet->mPosition = mPosition;
-						
 					mpBullet->mScale = CVector(2.5f, 2.5f, 2.5f);
 					
 				}

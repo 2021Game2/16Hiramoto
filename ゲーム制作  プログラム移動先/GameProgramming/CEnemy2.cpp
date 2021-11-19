@@ -12,7 +12,7 @@
 
 #define JUMP 4.0f
 #define G 0.1f
-
+int CEnemy2::mEnemy2AttackCount = 0;
 CModel CEnemy2::mModel;//モデルデータ作成
 //デフォルトコンストラクタ
 CEnemy2::CEnemy2()
@@ -85,11 +85,12 @@ void CEnemy2::Update() {
 	CTransform::Update();//行列更新
 	
 		if (mMove <= 300) {
-       
 		mMove++;
 		}
 		if (mMove >= 180) {
         //移動する
+			//動いている時間だけ当たり判定
+			mEnemy2AttackCount = 3;
 		mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
 		}
 		if (mMove >= 300) {
@@ -128,24 +129,28 @@ void CEnemy2::Update() {
      //mPosition.mZ -= mJump;
 	 mJump--;
 	}
-	//吹き飛ぶ
+	//吹き飛ぶ（X,Z軸)
 	if (mColliderCount > 0) {
 		mColliderCount--;
-		
 		mPosition = mPosition + mCollisionEnemy * mColliderCount;
 	}
+	//吹き飛ぶ（Y軸）
 	if (mJump2 > 0) {
 		mPosition.mY += mJump;
-		
 		mJump2--;
 	}
+	//重力
 	if (mPosition.mY > 1.0f) {
-
       mPosition.mY -= G;
       
 	}
+	//吹き飛んでいる間回転
 	if (mPosition.mY > 3.0f) {
      mRotation.mX += 20.0f;
+	}
+	//当たり判定が適用される時間
+	if (mEnemy2AttackCount > 0) {
+		mEnemy2AttackCount--;
 	}
 
 }

@@ -26,7 +26,7 @@ void CSceneGame::Init() {
 	mJump.Load("jump.wav");
     Sleep(2000);
 	//mBillBoard.Set(CVector(0.0f, 5.0f, 0.0f), 1.0f, 1.0f);
-	Bgm.Repeat();
+	//Bgm.Repeat();
 	//テキストフォントの読み込みと設定
 	mFont.LoadTexture("FontG.png", 1, 4096 / 64);
 

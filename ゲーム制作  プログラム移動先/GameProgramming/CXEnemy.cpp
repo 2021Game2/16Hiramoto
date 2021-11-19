@@ -10,6 +10,7 @@ CXEnemy::CXEnemy()
 {
 }
 void CXEnemy::Update() {
+	
 	//if(mPosition.mY<=mpPlayer->mPosition.mY)
 	//左向き（X軸）のベクトルを求める
 	CVector vx = CVector(1.0f, 0.0f, 0.0f) * mMatrixRotate;
@@ -59,6 +60,7 @@ void CXEnemy::Update() {
 		}
 	}
 	mpPlayer = 0;
+	
 }
 void CXEnemy::Init(CModelX* model)
 {
