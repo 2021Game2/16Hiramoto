@@ -86,9 +86,9 @@ void CSceneGame::Update() {
 	if (mSpawn <= 0) {
 		mpEnemy2 = new CEnemy2(mpEnemySummon->mPosition, CVector(0.0f, 0.0f, 0.0f),
 			CVector(10.5f, 10.5f, 10.5f));
+	  
 		mpEnemy2->Init(&CRes::sScorp);
 		
-	  
 		mEnemyCount++;
 		mSpawn = 60;
 	}
