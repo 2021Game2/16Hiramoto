@@ -5,10 +5,13 @@
 #include"CSceneGame.h"
 #include"CUtil.h"
 #include"CText.h"
+#include"CXCharacter.h"
 #define OBJ "Bee\\BEE1.obj"//モデルのファイル
 #define MTL "Bee\\BEE1.mtl"//モデルのマテリアルファイル
 #define HP 1
-#define VELOCITY 0.05f //マクロ
+#define VELOCITY 0.05f //行動１
+#define VELOCITY1  -0.1f//行動１
+
 #define VELOCITY2 0.1f
 
 #define VELOCITY3 0.2f
@@ -114,7 +117,8 @@ void CEnemy3::Update() {
 		if (mCount < 180) {
 			mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
 			if (mPosition.mY > 3.0f) {
-				mPosition.mY -= 0.1f;
+				mPosition = mPosition + CVector(0.0f,-0.1f , VELOCITY) * mMatrixRotate;
+				//mPosition.mY -= 0.1f;
 			}
 		}
 		if (mCount >= 180) {
@@ -126,10 +130,11 @@ void CEnemy3::Update() {
 		//移動２（右後ろに移動）
 	case(2):
 		if (mCount <= 10) {
-			mPosition.mX += 3.0f;
-			mPosition.mZ -= 1.5f;
-			mPosition.mY += 2.0f;
-			//mPosition = mPosition + CVector(1.5f, 0.0f,-1.5) * mMatrixRotate;
+
+			//mPosition.mX += 3.0f;
+			//mPosition.mZ -= 1.5f;
+			//mPosition.mY += 2.0f;
+			mPosition = mPosition + CVector(3.0f, 2.0f,-1.5f) * mMatrixRotate;
 		}
 		if (mCount >= 10) {
             mMoveCount = 3;
@@ -140,9 +145,9 @@ void CEnemy3::Update() {
 		//移動３（左に移動）
 	case(3):
 		if (mCount <= 10) {
-			mPosition.mX -= 6.0f;
-			mPosition.mY -= 1.0f;
-			//mPosition = mPosition + CVector(-3.0f, 0.0f, 0.0f) * mMatrixRotate;
+			//mPosition.mX -= 6.0f;
+			//mPosition.mY -= 1.0f;
+			mPosition = mPosition + CVector(-6.0f, -1.0f, 0.0f) * mMatrixRotate;
 		}
 		if (mCount >= 10) {
             mMoveCount = 4;
@@ -153,12 +158,12 @@ void CEnemy3::Update() {
 		//移動４（右前に移動（元の位置に戻る）
 	case(4):
 		if (mCount <= 30) {
-			mPosition.mX += 1.5f;
-			mPosition.mZ += 0.5f;
-            mPosition.mY += 0.1f;
+			//mPosition.mX += 1.5f;
+			//mPosition.mZ += 0.5f;
+           // mPosition.mY += 0.1f;
 			
 			
-			//mPosition = mPosition + CVector(1.5f, 0.0f, VELOCITY) * mMatrixRotate;
+			mPosition = mPosition + CVector(1.5f,VELOCITY ,0.5f ) * mMatrixRotate;
 		}
 		if (mCount >= 30) {
            mMoveCount = 0;
@@ -168,9 +173,7 @@ void CEnemy3::Update() {
 		break;
 	}
 	mCount++;
-		//移動する
-		//mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
-	
+		
 
 	int r = rand() % 60; //rand()は整数の乱数を返す
 
@@ -219,7 +222,15 @@ void CEnemy3::Update() {
 	if (mJump > 0) {
 		mJump--;
 	}
-	
+
+	//CTransform::Update();
+
+	//CMatrix mMatrixCol;
+	//CModel cube;
+	//cube.Load("cube.obj", "cube.mtl");
+	//CColliderMesh.Set(this, &mMatrix, mpModel);
+	//mMatrixCol = CMatrix().Scale(10.0f,10.0f,10.0f)* mMatrix;
+	//ColliderMesh.Set(this, &mMatrixCol, &cube);
 
 }
 //Collision(コライダ１，コライダ２，）

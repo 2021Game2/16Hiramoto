@@ -28,23 +28,28 @@ void CXEnemy::Update() {
 	float dz = vp.Dot(vz);
 	float margin = 0.1f;
 	//左右方向へ回転
+  
 	if (dx > margin) {
-		mRotation.mY += 1.0f;//左へ回転
+		mRotation.mY +=1.0f;//左へ回転
 	}
 	else if (dx < -margin) {
 		mRotation.mY -= 1.0f;//右へ回転
 	}
-	if (mMove <= 300) {
 
+	CTransform::Update();//行列更新
+	if (mMove <= 300) {
+    
 		mMove++;
 	}
+	
 	if (mMove >= 180) {
 		//移動する
-		ChangeAnimation(1, true,60);//1:移動
+		//ChangeAnimation(0, true,60);//1:移動
 		mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
+
 	}
 	if (mMove >= 300) {
-		ChangeAnimation(0, true, 60);//待機
+		//ChangeAnimation(0, true, 60);//待機
 		mMove = 0;
 	}
 	int r = rand() % 60; //rand()は整数の乱数を返す
@@ -61,6 +66,7 @@ void CXEnemy::Update() {
 	}
 	mpPlayer = 0;
 	CXCharacter::Update();
+	CTransform::Update();
 }
 void CXEnemy::Init(CModelX* model)
 {

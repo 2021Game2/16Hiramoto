@@ -27,6 +27,10 @@ public:
 	int mColliderCount;
 	static int mEnemy2AttackCount;
 	void Init(CModelX* model);
+	CCollider mColSphereHead;
+	CCollider mColSphereRight;
+	CCollider mColSphereLeft;
+
 	CVector mCollisionEnemy;
 	//CEnemy2(à íuÅAâÒì]ÅAägèkÅj
 	CEnemy2(const CVector& position, const CVector& rotation, const CVector& scale);

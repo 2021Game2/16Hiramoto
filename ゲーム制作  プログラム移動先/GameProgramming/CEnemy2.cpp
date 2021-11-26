@@ -20,6 +20,9 @@ CEnemy2::CEnemy2()
 //コライダの設定
 	:mCollider(this,&mMatrix,CVector(-0.5f,0.0f,-1.0f),1.0f)
 	,mColSearch(this,&mMatrix,CVector(0.0f,0.0f,0.0f),500.0f)
+	,mColSphereHead(this,&mMatrix,CVector(0.0f,0.5f,-1.0f),1.0f)
+	, mColSphereRight(this, &mMatrix, CVector(3.0f, 0.5f, 0.0f), 1.0f)
+	, mColSphereLeft(this, &mMatrix, CVector(-1.0f, 0.5f, -1.0f), 1.0f)
 	,mpPlayer(0)
 	,mHp(HP)
 	,mJump(0)
@@ -54,6 +57,7 @@ CEnemy2::CEnemy2(const CVector& position, const CVector& rotation, const CVector
 }
 //更新処理
 void CEnemy2::Update() {
+	ChangeAnimation(8, true, 60);
 	//if(mPosition.mY<=mpPlayer->mPosition.mY)
 	//左向き（X軸）のベクトルを求める
 	CVector vx = CVector(1.0f, 0.0f, 0.0f)*mMatrixRotate;
@@ -148,7 +152,7 @@ void CEnemy2::Update() {
 	if (mEnemy2AttackCount > 0) {
 		mEnemy2AttackCount--;
 	}
-
+	CXCharacter::Update();
 }
 
 void CEnemy2::Init(CModelX* model)
@@ -157,7 +161,9 @@ void CEnemy2::Init(CModelX* model)
 	//合成行列の設定
 	mCollider.mpMatrix = &mpCombinedMatrix[1];
 	//頭
-	//mColSphereHead.mpMatrix = &mpCombinedMatrix[1];
+	mColSphereHead.mpMatrix = &mpCombinedMatrix[10];
+	mColSphereRight.mpMatrix = &mpCombinedMatrix[18];
+	mColSphereLeft.mpMatrix = &mpCombinedMatrix[20];
 	
 
 }
@@ -227,11 +233,17 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 	}
 }
 void CEnemy2::TaskCollision() {
-	mColSearch.ChangePriority();
+    //コライダの優先度変更
+    mCollider.ChangePriority();
+    mColSearch.ChangePriority();
+	mColSphereHead.ChangePriority();
+	mColSphereRight.ChangePriority();
+	mColSphereLeft.ChangePriority();
 	//衝突処理を実行
+
+	CCollisionManager::Get()->Collision(&mColSphereRight, COLLISIONRANGE);
+	CCollisionManager::Get()->Collision(&mColSphereLeft, COLLISIONRANGE);
+	CCollisionManager::Get()->Collision(&mColSphereHead, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSearch, COLLISIONRANGE);
-	//コライダの優先度変更
-	mCollider.ChangePriority();
-	//衝突処理を実行
 	CCollisionManager::Get()->Collision(&mCollider, COLLISIONRANGE);
 }

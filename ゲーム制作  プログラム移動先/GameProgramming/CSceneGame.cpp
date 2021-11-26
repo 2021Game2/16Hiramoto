@@ -29,11 +29,12 @@ void CSceneGame::Init() {
 	//Bgm.Repeat();
 	//テキストフォントの読み込みと設定
 	mFont.LoadTexture("FontG.png", 1, 4096 / 64);
-
+	 
 	CRes::sModelX.Load(MODEL_FILE);
 	CRes::sKnight.Load("knight\\knight_low.x");
-	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//1:移動
+    CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//1:移動
 	CRes::sKnight.SeparateAnimationSet(0, 1530, 1830, "idle1");//2:待機
+
 	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//3:ダミー
 	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//4:ダミー
 	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//5:ダミー
@@ -43,8 +44,6 @@ void CSceneGame::Init() {
 	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//9:ダミー
 	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//10:ダミー
 	CRes::sKnight.SeparateAnimationSet(0, 1160, 1260, "death1");//11:ダウン
-
-	CRes::sScorp.Load("scorpid-monster-X-animated.X");
 	//キャラクターにモデルを設定
 	mPlayer.Init(&CRes::sModelX);
 
@@ -54,11 +53,26 @@ void CSceneGame::Init() {
 	//敵の配置
 	mEnemy.mPosition = CVector(7.0f, 0.0f, 0.0f);
 	mEnemy.ChangeAnimation(2, true, 200);
-	
+
 	//mEnemy2.Init(&CRes::sScorp);
 	//カメラ初期化
 	Camera.Init();
 
+
+
+    CRes::sScorp.Load("scorpid-monster-X-animated.X");
+	CRes::sScorp.SeparateAnimationSet(0, 0, 72, "walk");
+	CRes::sScorp.SeparateAnimationSet(0, 72, 120, "strafe left");
+	CRes::sScorp.SeparateAnimationSet(0, 120, 168, "strafe right");
+	CRes::sScorp.SeparateAnimationSet(0, 168, 220, "attack");
+	CRes::sScorp.SeparateAnimationSet(0, 292, 350, "attack2");
+	CRes::sScorp.SeparateAnimationSet(0, 350, 440, "attack3");
+	CRes::sScorp.SeparateAnimationSet(0, 220,292, "death");
+	CRes::sScorp.SeparateAnimationSet(0, 660,760, "idle");
+	CRes::sScorp.SeparateAnimationSet(0, 761, 849, "idle2");
+	CRes::sScorp.SeparateAnimationSet(0, 850, 880, "gethit");
+	CRes::sScorp.SeparateAnimationSet(0, 880, 950, "gethit2");
+	CRes::sScorp.SeparateAnimationSet(0, 951, 1015, "jump");
 	new CItem(CVector(-20.0f, 2.0f, -10.0f) ,
 		CVector(), CVector(1.5f, 1.5f, 1.5f));
 	mpEnemySummon = new CEnemySummon(CVector(-40.0f, 1.0f, 0.0f),
@@ -80,12 +94,13 @@ void CSceneGame::Init() {
 
 
 void CSceneGame::Update() {
+	//敵のスポーン間隔
 	if (mSpawn >= 0) {
 		mSpawn--;
 	}
 	if (mSpawn <= 0) {
 		mpEnemy2 = new CEnemy2(mpEnemySummon->mPosition, CVector(0.0f, 0.0f, 0.0f),
-			CVector(10.5f, 10.5f, 10.5f));
+			CVector(1.5f, 1.5f, 1.5f));
 	  
 		mpEnemy2->Init(&CRes::sScorp);
 		

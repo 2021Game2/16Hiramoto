@@ -6,7 +6,7 @@
 #include <math.h>
 #define JUMP 5.0f
 #define JUMP2 10.0f
-#define STEP  10.0f
+#define STEP  5.0f
 #include"CItem.h"
 int CXPlayer::mSpAttack = 0;
 int CXPlayer::mStamina = 0;
