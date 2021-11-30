@@ -26,6 +26,7 @@ public:
 	int mMove2;
 	int mColliderCount;
 	static int mEnemy2AttackCount;
+	int mEnemy2StopCount;//ƒvƒŒƒCƒ„[‚ÌESTOPPER‚É“–‚½‚Á‚Ä‚¢‚éŠÔ‘‰Á
 	void Init(CModelX* model);
 	CCollider mColSphereHead;
 	CCollider mColSphereRight;
