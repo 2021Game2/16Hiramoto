@@ -279,8 +279,8 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 		if (o->mType == CCollider::ESPHERE) {
 			//‘ŠŽè‚ª•Ší‚Ì‚Æ‚«A
 			if (o->mpParent->mTag == EPLAYER) {
-				if (o->mTag == CCollider::ESWORD)
-					//Õ“Ë‚µ‚Ä‚¢‚é‚Æ‚«
+				if (o->mTag == CCollider::ESWORD) {
+                     //Õ“Ë‚µ‚Ä‚¢‚é‚Æ‚«
 					if (CCollider::Collision(m, o)) {
 						if (CXPlayer::mAttackCount > 0) {
 							mColliderCount = 5;
@@ -294,6 +294,8 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 						}
 
 					}
+				}
+					
 			}
 		}
 		if (o->mType == CCollider::ETRIANGLE) {

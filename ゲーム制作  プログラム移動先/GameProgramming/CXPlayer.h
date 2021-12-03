@@ -33,7 +33,22 @@ public:
 	int mAnimationCount;//アニメーションが途中で変わらないようにする
 	int mHp;//体力
 	float mTime;//ジャンプする時の時間を計測
-	
+
+	void Idle();		//待機処理
+	void AutoMove();	//移動処理
+	void Attack_1();	//攻撃1処理
+	void Damaged();		//被弾処理
+	void Death();		//死亡処理
+	//敵の状態
+	enum EPLAYERState
+	{
+		EIDLE,		//待機
+		EAUTOMOVE,	//移動
+		EATTACK_1,	//攻撃1
+		EDAMAGED,	//被弾
+		EDEATH,		//死亡
+	};
+	EPLAYERState mState;
 	CXPlayer();
 	
 	

@@ -99,13 +99,13 @@ void CSceneGame::Update() {
 		mSpawn--;
 	}
 	if (mSpawn <= 0) {
-		mpEnemy2 = new CEnemy2(mpEnemySummon->mPosition, CVector(0.0f, 0.0f, 0.0f),
+		mpEnemy2 = new CEnemy2(mpEnemySummon->mPosition, CVector(0.0f, 0.1f, 0.0f),
 			CVector(1.5f, 1.5f, 1.5f));
 	  
 		mpEnemy2->Init(&CRes::sScorp);
 		
 		mEnemyCount++;
-		mSpawn = 60;
+		mSpawn = 120;
 	}
 	if (CKey::Push(VK_ESCAPE)) {
 		exit(0);

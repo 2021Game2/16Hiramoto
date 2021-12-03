@@ -19,13 +19,15 @@ public:
 	CEnemy2();
 	CVector mPoint;//目標地点
 	int mHp;//体力
-	int mJump;
+	float mJump;
 	int mJump2;
 	CText mText;
 	int mMove;
 	int mMove2;
-	int mColliderCount;
+	float mColliderCount;
 	static int mEnemy2AttackCount;
+	float mGravity;//重力
+	float mTime;//ジャンプする時の時間を計測
 	int mEnemy2StopCount;//プレイヤーのESTOPPERに当たっている間増加
 	void Init(CModelX* model);
 	CCollider mColSphereHead;
@@ -44,5 +46,21 @@ public:
 	void TaskCollision();
 	CCharacter* mpPlayer;//プレイヤーのポインタ
 	int mEnemyDamage;
+
+	void Idle();		//待機処理
+	void AutoMove();	//移動処理
+	void Attack_1();	//攻撃1処理
+	void Damaged();		//被弾処理
+	void Death();		//死亡処理
+	//敵の状態
+	enum EEnemy2State
+	{
+		EIDLE,		//待機
+		EAUTOMOVE,	//移動
+		EATTACK_1,	//攻撃1
+		EDAMAGED,	//被弾
+		EDEATH,		//死亡
+	};
+	EEnemy2State mState;
 };
 #endif

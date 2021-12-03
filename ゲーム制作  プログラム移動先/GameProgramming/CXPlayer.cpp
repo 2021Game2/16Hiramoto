@@ -18,8 +18,8 @@ CXPlayer::CXPlayer()
 	, mColSphereSword(this, nullptr, CVector(-10.0f, 10.0f, 50.0f), 5.7f)
 
 	, mColSphereFoot(this, nullptr, CVector(0.0f, -10.0f, -3.0f), 1.0f)
-	,mCollider(this, &mMatrix, CVector(0.0f, 0.0f, -0.0f), 10.0f)
-	, mCollider2(this, &mMatrix, CVector(0.0f, -5.0f, 0.0f), 5.0f)
+	,mCollider(this, &mMatrix, CVector(0.0f, 0.0f, -0.0f), 5.0f)
+	, mCollider2(this, &mMatrix, CVector(0.0f, -5.0f, 0.0f), 4.0f)
 	, mJump(0.0f)
 	, mHp(10)
 	, mGravity(0.0f)
@@ -61,6 +61,25 @@ void CXPlayer::Init(CModelX* model)
 
 void CXPlayer::Update()
 {
+
+	//処理を行動ごとに分割
+	switch (mState) {
+	case EIDLE:	//待機
+		Idle();
+		break;
+	case EAUTOMOVE://移動
+		AutoMove();
+		break;
+	case EATTACK_1://攻撃
+		Attack_1();
+		break;
+	case EDAMAGED://ダメージ
+		Damaged();
+		break;
+	case EDEATH://死亡
+		Death();
+		break;
+	}
 	switch (mAnimationIndex) {
 	case(3): 
 		if (mAnimationFrame >= mAnimationFrameSize)
@@ -114,30 +133,6 @@ void CXPlayer::Update()
 	
 	
 	
-	
-		
-		//回転移動 通称バイオ移動
-		//if (CKey::Push('A'))
-		//{
-		//	mRotation.mY += 2.0f;
-		//}
-		//if (CKey::Push('D'))
-		//{
-		//	mRotation.mY -= 2.0f;
-		//}
-		//if (CKey::Push(' '))
-		//{
-		//	ChangeAnimation(3, true, 30);
-		//}
-		//else if (CKey::Push('W'))
-		//{
-		//	ChangeAnimation(1, true, 60);
-		//	mPosition += CVector(0.0f, 0.0f, 0.1f) * mMatrixRotate;
-		//}
-		//else {
-		//	ChangeAnimation(0, true, 60);
-		//}
-
 		//カメラ視点移動　通称無双移動
 
 		//カメラの左右と前後のベクトルを取得
@@ -371,7 +366,7 @@ void CXPlayer::Update()
 		 }
 		//アイテム取得時に武器の当たり判定拡大
 		 if (CItem::mItemCount > 0) {
-			mColSphereSword.mRadius = 2.5f;
+			mColSphereSword.mRadius = 7.5f;
 		 }
 		 //吹き飛ぶ
 		 if (mColliderCount > 0) {
@@ -409,7 +404,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 			if (m->mpParent->mTag == EPLAYER) {
 				if (m->mTag == CCollider::EBODY) {
 					if (o->mpParent->mTag == EENEMY2) {
-						if (o->mTag == CCollider::EENEMY2COLLIDER) {
+						if (o->mTag == CCollider::EENEMY2COLLIDERATTACK) {
 							//衝突しているとき
 							CVector adjust;//調整用ベクトル
 							if (CCollider::Collision(m, o)) {
