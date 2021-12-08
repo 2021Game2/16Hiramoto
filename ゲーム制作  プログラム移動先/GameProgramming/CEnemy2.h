@@ -49,7 +49,7 @@ public:
 
 	void Idle();		//‘Ò‹@ˆ—
 	void AutoMove();	//ˆÚ“®ˆ—
-	void Attack_1();	//UŒ‚1ˆ—
+	void Attack();	//UŒ‚ˆ—
 	void Damaged();		//”í’eˆ—
 	void Death();		//€–Sˆ—
 	//“G‚Ìó‘Ô
@@ -57,7 +57,7 @@ public:
 	{
 		EIDLE,		//‘Ò‹@
 		EAUTOMOVE,	//ˆÚ“®
-		EATTACK_1,	//UŒ‚1
+		EATTACK,	//UŒ‚
 		EDAMAGED,	//”í’e
 		EDEATH,		//€–S
 	};

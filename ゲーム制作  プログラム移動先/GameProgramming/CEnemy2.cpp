@@ -85,7 +85,7 @@ void CEnemy2::Idle() {
 			//60溜まった状態でアニメーションが終わると攻撃処理に移行
 			if (mAnimationFrame >= mAnimationFrameSize)
 			{
-				mState = EATTACK_1;
+				mState = EATTACK;
 			}
 		}
 		//60溜まる前にアニメーションが終わったら移動処理に移行
@@ -140,7 +140,7 @@ void CEnemy2::AutoMove() {
 	mpPlayer = 0;
 }	
 //攻撃処理
-void CEnemy2::Attack_1() {
+void CEnemy2::Attack() {
 	    //攻撃アニメーション
 		ChangeAnimation(4, false, 120);//+５番目のアニメーションフレーム１２０
 		
@@ -150,7 +150,7 @@ void CEnemy2::Attack_1() {
 		}
 		//攻撃のあとは移動処理に移行
 		if(mEnemy2AttackCount<=0){
-			if (mState == EATTACK_1) {
+			if (mState == EATTACK) {
 				mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
 				mState = EAUTOMOVE;
 			}
@@ -232,8 +232,8 @@ void CEnemy2::Update() {
 		case EAUTOMOVE://移動
 			AutoMove();
 			break;
-		case EATTACK_1://攻撃
-			Attack_1();
+		case EATTACK://攻撃
+			Attack();
 			break;
 		case EDAMAGED://ダメージ
 			Damaged();
@@ -290,7 +290,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 					if (o->mTag == CCollider::ESTOPPER) {
 						
 						if (CCollider::Collision(m, o)) {
-                            if (mState != EATTACK_1) {
+                            if (mState != EATTACK) {
 								if (mState != EIDLE) {
                                  mState = EIDLE;
 								}
