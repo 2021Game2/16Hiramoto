@@ -8,6 +8,8 @@ CXEnemy::CXEnemy()
 	, mColSphereSword2(this, nullptr, CVector(0.3f, 1.5f, -0.2f), 0.5f)
 	,mMove(0)
 {
+	ChangeAnimation(2, true, 200);
+	mRotation.mX += 180;
 }
 void CXEnemy::Update() {
 	
@@ -44,7 +46,7 @@ void CXEnemy::Update() {
 	
 	if (mMove >= 180) {
 		//移動する
-		//ChangeAnimation(0, true,60);//1:移動
+		ChangeAnimation(1, true,60);//1:移動
 		mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
 
 	}
@@ -101,7 +103,7 @@ void CXEnemy::Collision(CCollider* m, CCollider* o)
 					if (CCollider::Collision(m, o))
 					{
 						//30フレームかけてダウンし、繰り返さない
-						ChangeAnimation(11, false, 30);
+						//ChangeAnimation(11, false, 30);
 					}
 				}
 			}

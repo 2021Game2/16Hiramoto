@@ -25,7 +25,7 @@ public:
 	int mMove;
 	int mMove2;
 	float mColliderCount;
-	static int mEnemy2AttackCount;
+	 int mBossAttackCount;
 	float mGravity;//d—Í
 	float mTime;//ƒWƒƒƒ“ƒv‚·‚é‚ÌŠÔ‚ğŒv‘ª
 	int mEnemy2StopCount;//ƒvƒŒƒCƒ„[‚ÌESTOPPER‚É“–‚½‚Á‚Ä‚¢‚éŠÔ‘‰Á
@@ -33,7 +33,7 @@ public:
 	CCollider mColSphereHead;
 	CCollider mColSphereRight;
 	CCollider mColSphereLeft;
-
+	int mAttackPercent;
 	CVector mCollisionEnemy;
 	//CEnemy2(ˆÊ’uA‰ñ“]AŠgkj
 	CBoss(const CVector& position, const CVector& rotation, const CVector& scale);
@@ -52,6 +52,7 @@ public:
 	void Attack();	//UŒ‚ˆ—
 	void Damaged();		//”í’eˆ—
 	void Death();		//€–Sˆ—
+	void Attack2();
 	//“G‚Ìó‘Ô
 	enum EBossState
 	{
@@ -60,6 +61,7 @@ public:
 		EATTACK,	//UŒ‚
 		EDAMAGED,	//”í’e
 		EDEATH,		//€–S
+		EATTACK2,
 	};
 	EBossState mState;
 };

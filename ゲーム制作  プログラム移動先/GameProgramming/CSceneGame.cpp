@@ -31,10 +31,9 @@ void CSceneGame::Init() {
 	mFont.LoadTexture("FontG.png", 1, 4096 / 64);
 	 
 	CRes::sModelX.Load(MODEL_FILE);
-	CRes::sKnight.Load("knight\\knight_low.x");
+	CRes::sKnight.Load("3DModel\\knight\\knight_low.x");
     CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//1:移動
 	CRes::sKnight.SeparateAnimationSet(0, 1530, 1830, "idle1");//2:待機
-
 	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//3:ダミー
 	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//4:ダミー
 	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//5:ダミー
@@ -52,16 +51,14 @@ void CSceneGame::Init() {
 	mEnemy.mAnimationFrameSize = 1024;
 	//敵の配置
 	mEnemy.mPosition = CVector(7.0f, 0.0f, 0.0f);
-	mEnemy.ChangeAnimation(2, true, 200);
+
 	
 
 	//mEnemy2.Init(&CRes::sScorp);
 	//カメラ初期化
 	Camera.Init();
 
-
-    
-    CRes::sScorp.Load("scorpid-monster-X-animated.X");
+    CRes::sScorp.Load("3DModel\\scopid\\scorpid-monster-X-animated.X");
 	CRes::sScorp.SeparateAnimationSet(0, 0, 72, "walk");
 	CRes::sScorp.SeparateAnimationSet(0, 72, 120, "strafe left");
 	CRes::sScorp.SeparateAnimationSet(0, 120, 168, "strafe right");
@@ -79,7 +76,7 @@ void CSceneGame::Init() {
 	mBoss.Init(&CRes::sBoss);
 	//ボスの配置
 	mBoss.mPosition = CVector(70.0f, 0.0f, 70.0f);
-	CRes::sBoss.Load("monster-animated-character-X.X");
+	CRes::sBoss.Load("3DModel\\Boss\\monster-animated-character-X.X");
 	CRes::sBoss.SeparateAnimationSet(0, 0, 30, "walk");
 	CRes::sBoss.SeparateAnimationSet(0, 0, 120, "walk");
 	CRes::sBoss.SeparateAnimationSet(0, 150, 190, "run");
