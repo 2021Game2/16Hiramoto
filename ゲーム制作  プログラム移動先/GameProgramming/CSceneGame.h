@@ -13,6 +13,7 @@
 #include"CTree.h"
 #include"CEnemy3.h"
 #include"CSound.h"
+#include"CBoss.h"
 /*
 ゲームのシーン
 */
@@ -29,6 +30,7 @@ public:
 	int mSpawn;
 	CEnemySummon* mpEnemySummon;
 	CEnemy2* mpEnemy2;
+	CBoss mBoss;
 	static int mEnemyCount;
 	CSound Bgm;
 	//キャラクタのインスタンス

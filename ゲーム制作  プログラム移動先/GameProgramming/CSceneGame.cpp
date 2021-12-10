@@ -53,13 +53,14 @@ void CSceneGame::Init() {
 	//敵の配置
 	mEnemy.mPosition = CVector(7.0f, 0.0f, 0.0f);
 	mEnemy.ChangeAnimation(2, true, 200);
+	
 
 	//mEnemy2.Init(&CRes::sScorp);
 	//カメラ初期化
 	Camera.Init();
 
 
-
+    
     CRes::sScorp.Load("scorpid-monster-X-animated.X");
 	CRes::sScorp.SeparateAnimationSet(0, 0, 72, "walk");
 	CRes::sScorp.SeparateAnimationSet(0, 72, 120, "strafe left");
@@ -73,6 +74,24 @@ void CSceneGame::Init() {
 	CRes::sScorp.SeparateAnimationSet(0, 850, 880, "gethit");
 	CRes::sScorp.SeparateAnimationSet(0, 880, 950, "gethit2");
 	CRes::sScorp.SeparateAnimationSet(0, 951, 1015, "jump");
+
+
+	mBoss.Init(&CRes::sBoss);
+	//ボスの配置
+	mBoss.mPosition = CVector(70.0f, 0.0f, 70.0f);
+	CRes::sBoss.Load("monster-animated-character-X.X");
+	CRes::sBoss.SeparateAnimationSet(0, 0, 30, "walk");
+	CRes::sBoss.SeparateAnimationSet(0, 0, 120, "walk");
+	CRes::sBoss.SeparateAnimationSet(0, 150, 190, "run");
+	CRes::sBoss.SeparateAnimationSet(0, 150, 210, "run");
+	CRes::sBoss.SeparateAnimationSet(0, 250, 333, "attack - 01");
+	CRes::sBoss.SeparateAnimationSet(0, 320, 400, "attack - 02");
+	CRes::sBoss.SeparateAnimationSet(0, 390, 418, "death - 01");
+	CRes::sBoss.SeparateAnimationSet(0, 478, 500, "growl");
+	CRes::sBoss.SeparateAnimationSet(0, 500, 550, "death - 02" );
+	CRes::sBoss.SeparateAnimationSet(0, 565, 650, "death - 03");
+
+
 	new CItem(CVector(-20.0f, 2.0f, -10.0f) ,
 		CVector(), CVector(1.5f, 1.5f, 1.5f));
 	mpEnemySummon = new CEnemySummon(CVector(-40.0f, 1.0f, 0.0f),

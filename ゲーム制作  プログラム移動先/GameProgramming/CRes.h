@@ -7,6 +7,7 @@ public:
 	static CModelX sModelX;
 	static CModelX sKnight;
 	static CModelX sScorp;
+	static CModelX sBoss;
 };
 
 #endif

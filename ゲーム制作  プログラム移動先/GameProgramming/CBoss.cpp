@@ -1,4 +1,4 @@
-#include"CEnemy2.h"
+#include"CBoss.h"
 #include"CEffect.h"
 #include"CCollisionManager.h"
 #include"CBullet.h"
@@ -6,46 +6,46 @@
 #include"CXCharacter.h"
 #include"CUtil.h"
 #include"CText.h"
+
 #define HP 10
 #define VELOCITY 0.2f //マクロ
 
 #define JUMP 5.0f
 #define G 0.5f
-int CEnemy2::mEnemy2AttackCount = 0;
-CModel CEnemy2::mModel;//モデルデータ作成
+int CBoss::mEnemy2AttackCount = 0;
+CModel CBoss::mModel;//モデルデータ作成
 //デフォルトコンストラクタ
-CEnemy2::CEnemy2()
+CBoss::CBoss()
 //コライダの設定
-	:mCollider(this,&mMatrix,CVector(-0.5f,0.0f,-1.0f),1.0f)
-	,mColSearch(this,&mMatrix,CVector(0.0f,0.0f,0.0f),200.0f)
-	,mColSphereHead(this,&mMatrix,CVector(0.0f,0.5f,-1.0f),3.0f)
+	:mCollider(this, &mMatrix, CVector(-0.5f, 0.0f, -1.0f), 1.0f)
+	, mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 200.0f)
+	, mColSphereHead(this, &mMatrix, CVector(0.0f, 0.5f, -1.0f), 3.0f)
 	, mColSphereRight(this, &mMatrix, CVector(1.5f, 3.0f, 0.5f), 2.0f)
 	, mColSphereLeft(this, &mMatrix, CVector(-1.0f, 0.5f, 0.0f), 2.0f)
-	,mpPlayer(0)
-	,mHp(HP)
-	,mJump(0.0f)
-	,mJump2(0)
+	, mpPlayer(0)
+	, mHp(HP)
+	, mJump(0.0f)
+	, mJump2(0)
 	, mEnemyDamage(60)
-	,mMove(0)
-	,mMove2(0)
+	, mMove(0)
+	, mMove2(0)
 	, mColliderCount(0.0f)
-	,mGravity(0.0f)
-	,mTime(0.0f)
+	, mGravity(0.0f)
+	, mTime(0.0f)
 {
-	
+
 	mGravity = 0.20f;
-	mTag = EENEMY2;
+	mTag = EBOSS;
 	mColSearch.mTag = CCollider::ESEARCH;//タグ設定
-	//mCollider.mTag = CCollider::EENEMY2COLLIDER;
-	mColSphereHead.mTag= CCollider::EENEMY2COLLIDER;
-		mColSphereRight.mTag= CCollider::EENEMY2COLLIDERATTACK;
-		mColSphereLeft.mTag= CCollider::EENEMY2COLLIDERATTACK;
-		mGravity = 0.20f;
+	mColSphereHead.mTag = CCollider::EBOSSCOLLIDER;
+	mColSphereRight.mTag = CCollider::EBOSSCOLLIDERATTACK;
+	mColSphereLeft.mTag = CCollider::EBOSSCOLLIDERATTACK;
+	mGravity = 0.20f;
 }
 
 //CEnemy(位置、回転、拡縮）
-CEnemy2::CEnemy2(const CVector& position, const CVector& rotation, const CVector& scale)
-:CEnemy2()
+CBoss::CBoss(const CVector& position, const CVector& rotation, const CVector& scale)
+	:CBoss()
 {
 	//位置、回転、拡縮を設定する
 	mPosition = position;//位置の設定
@@ -53,14 +53,14 @@ CEnemy2::CEnemy2(const CVector& position, const CVector& rotation, const CVector
 	mScale = scale;//拡縮の設定
 	CTransform::Update();//行列の更新
 	//目標地点の設定
-	mPoint =mPosition + CVector(0.0f, 0.0f, 100.0f) * mMatrixRotate;
+	mPoint = mPosition + CVector(0.0f, 0.0f, 100.0f) * mMatrixRotate;
 	//優先度を１に変更する
 	mPriority = 1;
 	CTaskManager::Get()->Remove(this);//削除して
 	CTaskManager::Get()->Add(this);//追加する
 }
 
-void CEnemy2::Init(CModelX* model)
+void CBoss::Init(CModelX* model)
 {
 	CXCharacter::Init(model);
 	//合成行列の設定
@@ -69,36 +69,36 @@ void CEnemy2::Init(CModelX* model)
 	mColSphereHead.mpMatrix = &mpCombinedMatrix[10];
 	mColSphereRight.mpMatrix = &mpCombinedMatrix[9];
 	mColSphereLeft.mpMatrix = &mpCombinedMatrix[20];
-	mState = EAUTOMOVE;
+	mState = EIDLE;
 
 
 }
 //待機処理
-void CEnemy2::Idle() {
+void CBoss::Idle() {
 	//60溜まるまで待機のアニメーション
-		ChangeAnimation(8, true, 60);
-		if (mMove >= 60) {
-            //当たり判定が適用される時間
-			mEnemy2AttackCount = 120;
-			//60溜まった状態でアニメーションが終わると攻撃処理に移行
-			if (mAnimationFrame >= mAnimationFrameSize)
-			{
-				mState = EATTACK;
-			}
+	ChangeAnimation(8, true, 60);
+	if (mMove >= 60) {
+		//当たり判定が適用される時間
+		mEnemy2AttackCount = 120;
+		//60溜まった状態でアニメーションが終わると攻撃処理に移行
+		if (mAnimationFrame >= mAnimationFrameSize)
+		{
+			mState = EATTACK;
 		}
-		//60溜まる前にアニメーションが終わったら移動処理に移行
-	    else if (mAnimationFrame >= mAnimationFrameSize) {
-            mState = EAUTOMOVE;
-		}
-				
-			
-		
-}		
+	}
+	//60溜まる前にアニメーションが終わったら移動処理に移行
+	else if (mAnimationFrame >= mAnimationFrameSize) {
+		mState = EAUTOMOVE;
+	}
+
+
+
+}
 //移動処理
-void CEnemy2::AutoMove() {
+void CBoss::AutoMove() {
 	//歩く
-		mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
-		ChangeAnimation(1, true, 60);
+	mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
+	ChangeAnimation(1, false, 30);
 	//プレイヤーに向かって回転する処理
 	//左向き（X軸）のベクトルを求める
 	CVector vx = CVector(1.0f, 0.0f, 0.0f) * mMatrixRotate;
@@ -136,47 +136,44 @@ void CEnemy2::AutoMove() {
 		}
 	}
 	mpPlayer = 0;
-}	
+}
 //攻撃処理
-void CEnemy2::Attack() {
-	    //攻撃アニメーション
-		ChangeAnimation(4, false, 120);//+５番目のアニメーションフレーム１２０
-		
-		//当たり判定が適用される時間
-		if (mEnemy2AttackCount > 0) {
-			mEnemy2AttackCount--;
+void CBoss::Attack() {
+	//攻撃アニメーション
+	ChangeAnimation(5, false, 80);//+５番目のアニメーションフレーム１２０
+
+	//当たり判定が適用される時間
+	if (mEnemy2AttackCount > 0) {
+		mEnemy2AttackCount--;
+	}
+	//攻撃のあとは移動処理に移行
+	if (mEnemy2AttackCount <= 0) {
+		if (mState == EATTACK) {
+			mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
+			mState = EAUTOMOVE;
 		}
-		//攻撃のあとは移動処理に移行
-		if(mEnemy2AttackCount<=0){
-			if (mState == EATTACK) {
-				mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
-				mState = EAUTOMOVE;
-			}
-		}
-		
-}	
+	}
+
+}
 //ダメージ処理
-void CEnemy2::Damaged() {
+void CBoss::Damaged() {
 	//体力減少
 	mHp--;
 	//吹き飛ぶ（X,Z軸)
 	if (mColliderCount > 0) {
 		mColliderCount--;
-		mPosition = mPosition + mCollisionEnemy * mColliderCount;
-     
+		//mPosition = mPosition + mCollisionEnemy * mColliderCount;
+
 	}
 	//ダメージのあとは移動処理
-    mState = EAUTOMOVE;
-}		
+	mState = EAUTOMOVE;
+}
 //死亡処理
-void CEnemy2::Death() {
+void CBoss::Death() {
 
 	//体力がなくなったら
 	if (mHp <= 0) {
-		//mTimeとmJumpに整数が代入され、吹っ飛ぶようになる
-		//mPosition.mY = mJump * mTime - 0.5 * mGravity * mTime * mTime;
-		mTime = 1;
-		mJump = JUMP;
+		
 		mHp--;
 		//15フレームごとにエフェクト
 		if (mHp % 15 == 0) {
@@ -185,66 +182,62 @@ void CEnemy2::Death() {
 		}
 		CTransform::Update();
 	}
-	//吹き飛ぶ（X,Z軸)
-	if (mColliderCount > 0) {
-		mColliderCount--;
-		mPosition.mX = mPosition.mX + mCollisionEnemy.mX * mColliderCount;
-		mPosition.mZ = mPosition.mZ + mCollisionEnemy.mZ * mColliderCount;
-	}
-	//吹き飛ばし(鉛直投げ上げの公式）
-	if (mPosition.mY > 0.0f) {
-		mPosition.mY = mJump * mTime - 0.5 * mGravity * mTime * mTime;
-		mTime++;
-	}
+	
 	//しばらく経ったら消去
-	if (mHp <= -70) {
+	if (mHp <= -300) {
 		mEnabled = false;
-		CSceneGame::mEnemyCount -= 1;
+		
 	}
-}		
+}
 
 //更新処理
-void CEnemy2::Update() {
-
+void CBoss::Update() {
+	/*
 	//アニメーションの管理
 	switch (mAnimationIndex) {
-		//攻撃アニメーション
-	case(4):
+	case(1):
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
-			ChangeAnimation(5, false,120);
+			ChangeAnimation(2, false, 80);
 		}
 		break;
+		//攻撃アニメーション
 	case(5):
+		if (mAnimationFrame >= mAnimationFrameSize)
+		{
+			ChangeAnimation(6, false, 80);
+		}
+		break;
+	case(6):
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
 			ChangeAnimation(8, false, 60);
 		}
 		break;
-	}
+	}*/
 	//処理を行動ごとに分割
 	switch (mState) {
-		case EIDLE:	//待機
-			Idle();
-			break;
-		case EAUTOMOVE://移動
-			AutoMove();
-			break;
-		case EATTACK://攻撃
-			Attack();
-			break;
-		case EDAMAGED://ダメージ
-			Damaged();
-			break;
-		case EDEATH://死亡
-			Death();
-			break;
+	case EIDLE:	//待機
+		Idle();
+		break;
+	case EAUTOMOVE://移動
+		AutoMove();
+		break;
+	case EATTACK://攻撃
+		Attack();
+		break;
+	case EDAMAGED://ダメージ
+		Damaged();
+		break;
+	case EDEATH://死亡
+		Death();
+		break;
 	}
 	CXCharacter::Update();
 }
 
 //Collision(コライダ１，コライダ２，）
-void CEnemy2::Collision(CCollider* m, CCollider* o) {
+void CBoss::Collision(CCollider* m, CCollider* o) {
 	//自分がサーチ用のとき
 	if (m->mTag == CCollider::ESEARCH) {
 		//相手が弾コライダのとき
@@ -266,7 +259,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 		if (m->mTag == CCollider::EENEMY2COLLIDER) {
 
 			if (o->mType == CCollider::ESPHERE) {
-				
+
 				if (o->mpParent->mTag == EPLAYER) {
 					//相手が武器のとき
 					if (o->mTag == CCollider::ESWORD) {
@@ -286,27 +279,27 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 					}
 					//相手がESTOPPERの時
 					if (o->mTag == CCollider::ESTOPPER) {
-						
+
 						if (CCollider::Collision(m, o)) {
-                            if (mState != EATTACK) {
+							if (mState != EATTACK) {
 								if (mState != EIDLE) {
-                                 mState = EIDLE;
+									mState = EIDLE;
 								}
-                           
+
 							}
 							mColliderCount = 1.5f;
 							mCollisionEnemy = mPosition - o->mpParent->mPosition;
 							mCollisionEnemy = mCollisionEnemy.Normalize();
 							mMove++;
-							
+
 						}
-						
-						  
-						
-						
+
+
+
+
 					}
 				}
-					
+
 			}
 		}
 		if (o->mType == CCollider::ETRIANGLE) {
@@ -319,7 +312,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 					//衝突しない位置まで戻す
 					mPosition = mPosition - adjust;
 					if (mJump > 0) {
-						mPosition = mPosition - adjust ;
+						mPosition = mPosition - adjust;
 					}
 				}
 				else {
@@ -330,16 +323,16 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 					}
 				}
 
-				
+
 			}
 		}
 		return;
 	}
 }
-void CEnemy2::TaskCollision() {
-    //コライダの優先度変更
-    mCollider.ChangePriority();
-    mColSearch.ChangePriority();
+void CBoss::TaskCollision() {
+	//コライダの優先度変更
+	mCollider.ChangePriority();
+	mColSearch.ChangePriority();
 	mColSphereHead.ChangePriority();
 	mColSphereRight.ChangePriority();
 	mColSphereLeft.ChangePriority();

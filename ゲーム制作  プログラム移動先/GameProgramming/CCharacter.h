@@ -28,6 +28,7 @@ public:
 		EROCK,
 		ETREE,
 		EENEMY3,
+		EBOSS
 	};
 	ETag mTag;
 	CModel *mpModel; //モデルのポインタ
