@@ -19,8 +19,8 @@ CBoss::CBoss()
 	:mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 1.0f)
 	, mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 200.0f)
 	, mColSphereHead(this, &mMatrix, CVector(0.0f, 0.5f, -1.0f), 5.0f)
-	, mColSphereRightFront(this, &mMatrix, CVector(0.0f, 3.0f, 0.0f), 2.0f)
-	, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 3.0f, 0.0f), 2.0f)
+	, mColSphereRightFront(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 2.0f)
+	, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
 	, mColSphereRightBack(this, &mMatrix, CVector(0.0f, 3.0f, 0.0f), 2.0f)
 	, mColSphereLeftBack(this, &mMatrix, CVector(0.0f, 3.0f, 0.0f), 2.0f)
 
@@ -76,7 +76,7 @@ void CBoss::Init(CModelX* model)
 	//ì™
 	mColSphereHead.mpMatrix = &mpCombinedMatrix[5];
     mColSphereRightFront.mpMatrix = &mpCombinedMatrix[12];
-	mColSphereLeftFront.mpMatrix = &mpCombinedMatrix[20];
+	mColSphereLeftFront.mpMatrix = &mpCombinedMatrix[20];//ç∂ëOë´
 	mColSphereRightBack.mpMatrix = &mpCombinedMatrix[35];
 	mColSphereLeftBack.mpMatrix = &mpCombinedMatrix[17];
 

@@ -3,8 +3,8 @@
 #include"CEffect.h"
 #include"CCollisionManager.h"
 #include"CItem.h"
-#define OBJ "3DModel\\Item.obj"
-#define MTL "3DModel\\Item.mtl"
+#define OBJ "3DModel\\Itam\\Item.obj"
+#define MTL "3DModel\\Item\\Item.mtl"
 int CItem::mItemCount = 0;
 CModel CItem::mModel;//モデルデータ作成
 CItem::CItem(const CVector& position, const CVector& rotation, const CVector& scale)

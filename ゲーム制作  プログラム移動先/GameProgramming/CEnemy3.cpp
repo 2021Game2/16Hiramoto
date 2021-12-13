@@ -7,7 +7,7 @@
 #include"CText.h"
 #include"CXCharacter.h"
 #define OBJ "3DModel\\Bee\\BEE1.obj"//モデルのファイル
-#define MTL "3DMode\\Bee\\BEE1.mtl"//モデルのマテリアルファイル
+#define MTL "3DModel\\Bee\\BEE1.mtl"//モデルのマテリアルファイル
 #define HP 1
 #define VELOCITY 0.05f //行動１
 #define VELOCITY1  -0.1f//行動１
