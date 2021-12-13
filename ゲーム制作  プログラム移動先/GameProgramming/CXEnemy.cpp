@@ -8,9 +8,9 @@ CXEnemy::CXEnemy()
 	, mColSphereSword2(this, nullptr, CVector(0.3f, 1.5f, -0.2f), 0.5f)
 	,mMove(0)
 {
-	ChangeAnimation(2, true, 200);
-	mRotation.mX += 180;
+	
 }
+
 void CXEnemy::Update() {
 	
 	//if(mPosition.mY<=mpPlayer->mPosition.mY)
@@ -72,6 +72,7 @@ void CXEnemy::Update() {
 }
 void CXEnemy::Init(CModelX* model)
 {
+
 	CXCharacter::Init(model);
 	//çáê¨çsóÒÇÃê›íË
 	mColSphereBody.mpMatrix = &mpCombinedMatrix[1];
@@ -89,6 +90,8 @@ void CXEnemy::Init(CModelX* model)
 	//åï
 	mColSphereSword.mpMatrix = &mpCombinedMatrix[21];
 	*/
+	ChangeAnimation(2, true, 200);
+	//mRotation.mY += 180;
 }
 void CXEnemy::Collision(CCollider* m, CCollider* o)
 {

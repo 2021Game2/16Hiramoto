@@ -29,8 +29,12 @@ void CSceneGame::Init() {
 	//Bgm.Repeat();
 	//テキストフォントの読み込みと設定
 	mFont.LoadTexture("FontG.png", 1, 4096 / 64);
-	 
+	
 	CRes::sModelX.Load(MODEL_FILE);
+     //キャラクターにモデルを設定
+	mPlayer.Init(&CRes::sModelX);
+
+
 	CRes::sKnight.Load("3DModel\\knight\\knight_low.x");
     CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//1:移動
 	CRes::sKnight.SeparateAnimationSet(0, 1530, 1830, "idle1");//2:待機
@@ -43,8 +47,7 @@ void CSceneGame::Init() {
 	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//9:ダミー
 	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//10:ダミー
 	CRes::sKnight.SeparateAnimationSet(0, 1160, 1260, "death1");//11:ダウン
-	//キャラクターにモデルを設定
-	mPlayer.Init(&CRes::sModelX);
+	
 
 	//敵の初期設定
 	mEnemy.Init(&CRes::sKnight);
@@ -58,7 +61,7 @@ void CSceneGame::Init() {
 	//カメラ初期化
 	Camera.Init();
 
-    CRes::sScorp.Load("3DModel\\scopid\\scorpid-monster-X-animated.X");
+    CRes::sScorp.Load("3DModel\\scorpid\\scorpid-monster-X-animated.X");
 	CRes::sScorp.SeparateAnimationSet(0, 0, 72, "walk");
 	CRes::sScorp.SeparateAnimationSet(0, 72, 120, "strafe left");
 	CRes::sScorp.SeparateAnimationSet(0, 120, 168, "strafe right");
@@ -73,10 +76,8 @@ void CSceneGame::Init() {
 	CRes::sScorp.SeparateAnimationSet(0, 951, 1015, "jump");
 
 
-	mBoss.Init(&CRes::sBoss);
-	//ボスの配置
-	mBoss.mPosition = CVector(70.0f, 0.0f, 70.0f);
-	CRes::sBoss.Load("3DModel\\Boss\\monster-animated-character-X.X");
+	//アニメーションを読み込む
+ 	CRes::sBoss.Load("3DModel\\Boss\\monster-animated-character-X.X");
 	CRes::sBoss.SeparateAnimationSet(0, 0, 30, "walk");
 	CRes::sBoss.SeparateAnimationSet(0, 0, 120, "walk");
 	CRes::sBoss.SeparateAnimationSet(0, 150, 190, "run");
@@ -87,12 +88,19 @@ void CSceneGame::Init() {
 	CRes::sBoss.SeparateAnimationSet(0, 478, 500, "growl");
 	CRes::sBoss.SeparateAnimationSet(0, 500, 550, "death - 02" );
 	CRes::sBoss.SeparateAnimationSet(0, 565, 650, "death - 03");
-
+	//新しく作る
+	mpBoss = new CBoss(CVector(0.0f, 0.0f, 0.0f), 
+		CVector(0.0f, 0.0f, 0.0f), CVector(0.5f, 0.5f, 0.5f));
+	//読み込ませる
+	mpBoss->Init(&CRes::sBoss);
+	//ボスの配置
+	mpBoss->mPosition = CVector(10.0f, 0.0f, 10.0f);
 
 	new CItem(CVector(-20.0f, 2.0f, -10.0f) ,
 		CVector(), CVector(1.5f, 1.5f, 1.5f));
 	mpEnemySummon = new CEnemySummon(CVector(-40.0f, 1.0f, 0.0f),
 		CVector(), CVector(0.5f, 0.5f, 0.5f));
+
 	mpRock=new CRock(CVector(-100.0f, 0.0f, 50.0f),
 		CVector(), CVector(50.0f, 50.0f, 50.0f));
 	mpRock = new CRock(CVector(-100.0f, 0.0f, -100.0f),
@@ -112,7 +120,7 @@ void CSceneGame::Init() {
 void CSceneGame::Update() {
 	//敵のスポーン間隔
 	if (mSpawn >= 0) {
-		mSpawn--;
+		//mSpawn--;
 	}
 	if (mSpawn <= 0) {
 		mpEnemy2 = new CEnemy2(mpEnemySummon->mPosition, CVector(0.0f, 0.1f, 0.0f),

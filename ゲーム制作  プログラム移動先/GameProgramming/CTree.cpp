@@ -3,8 +3,8 @@
 #include"CEffect.h"
 #include"CCollisionManager.h"
 #include"CTree.h"
-#define OBJ "tree.obj"
-#define MTL "tree.mtl"
+#define OBJ "3DModel\\Tree\\tree.obj"
+#define MTL "3DModel\\Tree\\tree.mtl"
 CModel CTree::mModel;//モデルデータ作成
 CTree::CTree(const CVector& position, const CVector& rotation, const CVector& scale)
 	: CTree()

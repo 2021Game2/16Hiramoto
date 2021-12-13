@@ -7,7 +7,7 @@
 #include"CUtil.h"
 #include"CText.h"
 
-#define HP 10
+#define HP 30
 #define VELOCITY 0.5f //マクロ
 
 #define JUMP 5.0f
@@ -16,11 +16,15 @@ CModel CBoss::mModel;//モデルデータ作成
 //デフォルトコンストラクタ
 CBoss::CBoss()
 //コライダの設定
-	:mCollider(this, &mMatrix, CVector(-0.5f, 0.0f, -1.0f), 1.0f)
+	:mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 1.0f)
 	, mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 200.0f)
-	, mColSphereHead(this, &mMatrix, CVector(0.0f, 0.5f, -1.0f), 3.0f)
-	, mColSphereRight(this, &mMatrix, CVector(1.5f, 3.0f, 0.5f), 2.0f)
-	, mColSphereLeft(this, &mMatrix, CVector(-1.0f, 0.5f, 0.0f), 2.0f)
+	, mColSphereHead(this, &mMatrix, CVector(0.0f, 0.5f, -1.0f), 5.0f)
+	, mColSphereRightFront(this, &mMatrix, CVector(0.0f, 3.0f, 0.0f), 2.0f)
+	, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 3.0f, 0.0f), 2.0f)
+	, mColSphereRightBack(this, &mMatrix, CVector(0.0f, 3.0f, 0.0f), 2.0f)
+	, mColSphereLeftBack(this, &mMatrix, CVector(0.0f, 3.0f, 0.0f), 2.0f)
+
+
 	,mBossAttackCount(0)
 	, mpPlayer(0)
 	, mHp(HP)
@@ -38,8 +42,12 @@ CBoss::CBoss()
 	mTag = EBOSS;
 	mColSearch.mTag = CCollider::ESEARCH;//タグ設定
 	mColSphereHead.mTag = CCollider::EBOSSCOLLIDER;
-	mColSphereRight.mTag = CCollider::EBOSSCOLLIDERATTACK;
-	mColSphereLeft.mTag = CCollider::EBOSSCOLLIDERATTACK;
+	mColSphereRightFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
+	mColSphereLeftFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
+	mColSphereRightBack.mTag = CCollider::EBOSSCOLLIDERATTACK;
+	mColSphereLeftBack.mTag = CCollider::EBOSSCOLLIDERATTACK;
+
+
 	mGravity = 0.20f;
 }
 
@@ -66,9 +74,13 @@ void CBoss::Init(CModelX* model)
 	//合成行列の設定
 	mCollider.mpMatrix = &mpCombinedMatrix[1];
 	//頭
-	mColSphereHead.mpMatrix = &mpCombinedMatrix[10];
-    mColSphereRight.mpMatrix = &mpCombinedMatrix[9];
-	mColSphereLeft.mpMatrix = &mpCombinedMatrix[20];
+	mColSphereHead.mpMatrix = &mpCombinedMatrix[5];
+    mColSphereRightFront.mpMatrix = &mpCombinedMatrix[12];
+	mColSphereLeftFront.mpMatrix = &mpCombinedMatrix[20];
+	mColSphereRightBack.mpMatrix = &mpCombinedMatrix[35];
+	mColSphereLeftBack.mpMatrix = &mpCombinedMatrix[17];
+
+
 	mState = EIDLE;
 
 
@@ -104,8 +116,8 @@ void CBoss::Idle() {
 //移動処理
 void CBoss::AutoMove() {
 	//歩く
-	mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
-	ChangeAnimation(4, true,60);
+	//mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
+	ChangeAnimation(4, true,180);
 	//プレイヤーに向かって回転する処理
 	//左向き（X軸）のベクトルを求める
 	CVector vx = CVector(1.0f, 0.0f, 0.0f) * mMatrixRotate;
@@ -357,12 +369,18 @@ void CBoss::TaskCollision() {
 	mCollider.ChangePriority();
 	mColSearch.ChangePriority();
 	mColSphereHead.ChangePriority();
-	mColSphereRight.ChangePriority();
-	mColSphereLeft.ChangePriority();
+	mColSphereRightFront.ChangePriority();
+	mColSphereLeftFront.ChangePriority();
+	mColSphereRightBack.ChangePriority();
+	mColSphereLeftBack.ChangePriority();
+
 	//衝突処理を実行
 
-	CCollisionManager::Get()->Collision(&mColSphereRight, COLLISIONRANGE);
-	CCollisionManager::Get()->Collision(&mColSphereLeft, COLLISIONRANGE);
+	CCollisionManager::Get()->Collision(&mColSphereRightFront, COLLISIONRANGE);
+	CCollisionManager::Get()->Collision(&mColSphereLeftFront, COLLISIONRANGE);
+
+	CCollisionManager::Get()->Collision(&mColSphereRightBack, COLLISIONRANGE);
+	CCollisionManager::Get()->Collision(&mColSphereLeftBack, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSphereHead, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSearch, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mCollider, COLLISIONRANGE);

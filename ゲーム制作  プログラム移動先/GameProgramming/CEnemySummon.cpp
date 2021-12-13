@@ -5,8 +5,8 @@
 #include"CModel.h"
 #include"CTaskManager.h"
 #include"CCollisionManager.h"
-#define OBJ "egg.obj"
-#define MTL "egg.mtl"
+#define OBJ "3DModel\\egg.obj"
+#define MTL "3DModel\\egg.mtl"
 CModel CEnemySummon::mModel;
 CEnemySummon::CEnemySummon()
     :mHp(0)

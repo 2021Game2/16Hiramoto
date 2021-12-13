@@ -31,8 +31,12 @@ public:
 	int mEnemy2StopCount;//プレイヤーのESTOPPERに当たっている間増加
 	void Init(CModelX* model);
 	CCollider mColSphereHead;
-	CCollider mColSphereRight;
-	CCollider mColSphereLeft;
+	CCollider mColSphereRightFront;
+	CCollider mColSphereLeftFront;
+	CCollider mColSphereRightBack;
+	CCollider mColSphereLeftBack;
+
+
 	int mAttackPercent;
 	CVector mCollisionEnemy;
 	//CEnemy2(位置、回転、拡縮）

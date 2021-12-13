@@ -30,7 +30,7 @@ public:
 	int mSpawn;
 	CEnemySummon* mpEnemySummon;
 	CEnemy2* mpEnemy2;
-	CBoss mBoss;
+	CBoss* mpBoss;
 	static int mEnemyCount;
 	CSound Bgm;
 	//キャラクタのインスタンス
