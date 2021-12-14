@@ -12,20 +12,20 @@
 
 #define JUMP 5.0f
 #define G 0.5f
+int CBoss::mBossAttackCount = 0;
 CModel CBoss::mModel;//モデルデータ作成
 //デフォルトコンストラクタ
 CBoss::CBoss()
 //コライダの設定
 	:mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 1.0f)
 	, mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 200.0f)
-	, mColSphereHead(this, &mMatrix, CVector(0.0f, 0.5f, -1.0f), 5.0f)
-	, mColSphereRightFront(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 2.0f)
-	, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
-	, mColSphereRightBack(this, &mMatrix, CVector(0.0f, 3.0f, 0.0f), 2.0f)
-	, mColSphereLeftBack(this, &mMatrix, CVector(0.0f, 3.0f, 0.0f), 2.0f)
+	, mColSphereHead(this, &mMatrix, CVector(0.0f, 1.0f, 5.0f), 5.0f)
+	, mColSphereRightFront(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 4.0f)
+	, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 4.0f)
+	, mColSphereRightBack(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 4.0f)
+	, mColSphereLeftBack(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 4.0f)
 
 
-	,mBossAttackCount(0)
 	, mpPlayer(0)
 	, mHp(HP)
 	, mJump(0.0f)
@@ -74,33 +74,32 @@ void CBoss::Init(CModelX* model)
 	//合成行列の設定
 	mCollider.mpMatrix = &mpCombinedMatrix[1];
 	//頭
-	mColSphereHead.mpMatrix = &mpCombinedMatrix[5];
-    mColSphereRightFront.mpMatrix = &mpCombinedMatrix[12];
-	mColSphereLeftFront.mpMatrix = &mpCombinedMatrix[20];//左前足
-	mColSphereRightBack.mpMatrix = &mpCombinedMatrix[35];
-	mColSphereLeftBack.mpMatrix = &mpCombinedMatrix[17];
-
-
-	mState = EIDLE;
+	mColSphereHead.mpMatrix = &mpCombinedMatrix[6];
+    mColSphereRightFront.mpMatrix = &mpCombinedMatrix[12];//右前足
+	mColSphereLeftFront.mpMatrix = &mpCombinedMatrix[19];//左前足
+	mColSphereRightBack.mpMatrix = &mpCombinedMatrix[27];//右後ろ足
+	mColSphereLeftBack.mpMatrix = &mpCombinedMatrix[32];//左後ろ足
+	//mColSphereLeftBack.mpMatrix = &mpCombinedMatrix[17];
+	mState = EATTACK2;
 
 
 }
 //待機処理
 void CBoss::Idle() {
 	//60溜まるまで待機のアニメーション
-	ChangeAnimation(8, true, 60);
-	if (mMove >= 30) {
+	ChangeAnimation(8, true, 180);
+	if (mMove >= 300) {
 		//60溜まった状態でアニメーションが終わると攻撃処理に移行
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
-			if (mAttackPercent <= 50) {
+			if (mAttackPercent <= 30) {
             //当たり判定が適用される時間
-			mBossAttackCount = 83;
+			mBossAttackCount = 0;
 			mState = EATTACK;
 		    }
 			else {
 				//当たり判定が適用される時間
-				mBossAttackCount = 80;
+				mBossAttackCount = 0;
 				mState = EATTACK2;
 			}
 			
@@ -116,7 +115,7 @@ void CBoss::Idle() {
 //移動処理
 void CBoss::AutoMove() {
 	//歩く
-	//mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
+	mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
 	ChangeAnimation(4, true,180);
 	//プレイヤーに向かって回転する処理
 	//左向き（X軸）のベクトルを求める
@@ -159,16 +158,20 @@ void CBoss::AutoMove() {
 //攻撃処理
 void CBoss::Attack() {
 	//攻撃アニメーション
-	ChangeAnimation(5, false, 83);
+	ChangeAnimation(5, true, 83);
 	//当たり判定が適用される時間
-	if (mBossAttackCount > 0) {
-		mBossAttackCount--;
+	//if (mBossAttackCount > 0) {
+	if (mAnimationFrameSize > 43) {
+
+		mBossAttackCount++;
 	}
+	//}
 	//攻撃のあとは移動処理に移行
 	if (mBossAttackCount <= 0) {
 		if (mState == EATTACK) {
 			mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
 			mState = EIDLE;
+			mBossAttackCount = 0;
 		}
 	}
 
@@ -176,15 +179,19 @@ void CBoss::Attack() {
 //攻撃処理
 void CBoss::Attack2() {
 	//攻撃アニメーション
-	ChangeAnimation(6, false, 80);
+	ChangeAnimation(6, true, 80);
 	//当たり判定が適用される時間
-	if (mBossAttackCount > 0) {
-		mBossAttackCount--;
+	//if (mBossAttackCount > 0) {
+	if (mAnimationFrameSize > 40) {
+
+		mBossAttackCount++;
 	}
+	//}
 	//攻撃のあとは移動処理に移行
 	if (mBossAttackCount <= 0) {
 		if (mState == EATTACK2) {
 			mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
+			mBossAttackCount = 0;
 			mState = EIDLE;
 		}
 	}
@@ -255,6 +262,9 @@ void CBoss::Update() {
 	case EATTACK://攻撃
 		Attack();
 		break;
+	case EATTACK2:
+		Attack2();
+		break;
 	case EDAMAGED://ダメージ
 		Damaged();
 		break;
@@ -262,10 +272,10 @@ void CBoss::Update() {
 		Death();
 		break;
 	}
-	if (mAttackPercent < 100) {
+	if (mAttackPercent < 60) {
 		mAttackPercent++;
 	}
-	if (mAttackPercent >= 100) {
+	if (mAttackPercent >= 60) {
 		mAttackPercent=0;
 	}
 	CXCharacter::Update();
@@ -291,7 +301,7 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 	//弾コライダのとき
 	if (m->mType == CCollider::ESPHERE) {
 		//EENEMY2COLLIDERの時
-		if (m->mTag == CCollider::EENEMY2COLLIDER) {
+		if (m->mTag == CCollider::EBOSSCOLLIDER) {
 
 			if (o->mType == CCollider::ESPHERE) {
 
@@ -301,10 +311,12 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 						//衝突しているとき
 						if (CCollider::Collision(m, o)) {
 							if (CXPlayer::mAttackCount > 0) {
+								/*
 								mColliderCount = 5;
 								mCollisionEnemy = mPosition - o->mpParent->mPosition;
 								mCollisionEnemy.mY = 0;
 								mCollisionEnemy = mCollisionEnemy.Normalize();
+								*/
 								mState = EDAMAGED;
 								if (mHp <= 0) {
 									mState = EDEATH;

@@ -28,7 +28,7 @@ CXPlayer::CXPlayer()
 	,mSpaceCount3(0)
 	, mDamageCount(0)
 	,mAnimationCount(0)
-	
+	,mColliderCount(1.0f)
 	,mTime(0.0f)
 	
 {
@@ -37,6 +37,7 @@ CXPlayer::CXPlayer()
 	mColSphereSword.mTag = CCollider::ESWORD;
 	mCollider2.mTag = CCollider::ESWORD;
 	mColSphereFoot.mTag = CCollider::EBODY;
+	mColSphereBody.mTag = CCollider::EBODY;
 	CXPlayer::mStamina = 400;
 	mCollider.mTag = CCollider::ESTOPPER;
 }
@@ -468,24 +469,62 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 		if (o->mType == CCollider::ESPHERE) {
 			if (m->mpParent->mTag == EPLAYER) {
 				if (m->mTag == CCollider::EBODY) {
+					//“G‚ÌUŒ‚‚Æ‚ÌÕ“Ë”»’è
 					if (o->mpParent->mTag == EENEMY2) {
 						if (o->mTag == CCollider::EENEMY2COLLIDERATTACK) {
 							//Õ“Ë‚µ‚Ä‚¢‚é‚Æ‚«
 							CVector adjust;//’²®—pƒxƒNƒgƒ‹
 							if (CCollider::Collision(m, o)) {
+								//ƒ_ƒ[ƒW‚ª“ü‚Á‚½‚ ‚Æ‚Ì–³“GŽžŠÔ
 								if (mDamageCount == 0) {
+									//“G‚ÌUŒ‚”»’è‚ª“K—p‚³‚ê‚Ä‚¢‚éŠÔ
 									if (CEnemy2::mEnemy2AttackCount > 0) {
 										if (mHp > 0) {
-										mColliderCount = 5;
-										mCollisionEnemy = mPosition - o->mpParent->mPosition;
-										mCollisionEnemy.mY = 0;
-										mCollisionEnemy = mCollisionEnemy.Normalize();
-										mHp--;
-										mDamageCount = 60;
-										}	
+											mColliderCount = 5;
+											mCollisionEnemy = mPosition - o->mpParent->mPosition;
+											mCollisionEnemy.mY = 0;
+											mCollisionEnemy = mCollisionEnemy.Normalize();
+											mHp--;
+											mDamageCount = 60;
+										}
 									}
-									
+
 								}
+							}
+						}
+					}
+					else if (o->mpParent->mTag == EBOSS) {
+						if (o->mTag == CCollider::EBOSSCOLLIDERATTACK) {
+							if (CCollider::Collision(m, o)) {
+								//ƒ_ƒ[ƒW‚ª“ü‚Á‚½‚ ‚Æ‚Ì–³“GŽžŠÔ
+								if (mDamageCount == 0) {
+									//“G‚ÌUŒ‚”»’è‚ª“K—p‚³‚ê‚Ä‚¢‚éŠÔ
+									if (CBoss::mBossAttackCount > 0) {
+										if (mHp > 0) {
+											mColliderCount = 5;
+											mCollisionEnemy = mPosition - o->mpParent->mPosition;
+											mCollisionEnemy.mY = 0;
+											mCollisionEnemy = mCollisionEnemy.Normalize();
+											mHp--;
+											mDamageCount = 60;
+										}
+									}
+
+								}
+							}
+						}
+					}
+				}
+				 if(m->mTag==CCollider::EBODY){
+
+					//ƒ{ƒX‚Ì‘Ì‚Æ‚ÌÕ“Ë”»’è
+					 if (o->mpParent->mTag == EBOSS) {
+						if (o->mTag == CCollider::EBOSSCOLLIDER) {
+							if (CCollider::Collision(m, o)) {
+								mColliderCount = 1.5f;
+								mCollisionEnemy = mPosition - o->mpParent->mPosition;
+								mCollisionEnemy.mY = 0;
+								mCollisionEnemy = mCollisionEnemy.Normalize();
 							}
 						}
 					}
@@ -502,6 +541,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 						 }
 					 }
 				 }
+
 			}
 		}
 	}

@@ -94,7 +94,7 @@ void CSceneGame::Init() {
 	//読み込ませる
 	mpBoss->Init(&CRes::sBoss);
 	//ボスの配置
-	mpBoss->mPosition = CVector(10.0f, 0.0f, 10.0f);
+	mpBoss->mPosition = CVector(100.0f, 0.0f, 100.0f);
 
 	new CItem(CVector(-20.0f, 2.0f, -10.0f) ,
 		CVector(), CVector(1.5f, 1.5f, 1.5f));

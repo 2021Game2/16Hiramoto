@@ -5,6 +5,7 @@
 #include "CCollider.h"
 #include"CVector.h"
 #include"CEnemy2.h"
+#include"CBoss.h"
 class CXPlayer : public CXCharacter
 {
 public:
@@ -29,7 +30,7 @@ public:
 	float mGravity;//重力
     static int mSpAttack;//ジャンプ攻撃をするためのゲージ
 	static int mAttackCount;//武器の当たり判定が適用される時間
-	int mColliderCount;//吹き飛ばされた時の初速度
+	float mColliderCount;//吹き飛ばされた時の初速度
 	int mAnimationCount;//アニメーションが途中で変わらないようにする
 	int mHp;//体力
 	float mTime;//ジャンプする時の時間を計測
