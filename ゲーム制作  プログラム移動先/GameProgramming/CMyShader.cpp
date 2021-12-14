@@ -91,6 +91,8 @@ void CMyShader::Render(CModelX* model, CMesh* mesh, CMatrix* pCombinedMatrix) {
 		k += mesh->mMaterialVertexCount[i];
 		//ƒ}ƒeƒŠƒAƒ‹‚Ì‰ðœ
 		mesh->mMaterial[i]->Disabled();
+		glDisableVertexAttribArray(weightLoc);
+		glDisableVertexAttribArray(indexLoc);
 	}
 
 	//–³Œø‚É‚·‚é
