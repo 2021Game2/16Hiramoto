@@ -24,6 +24,7 @@ public:
 	CText mText;
 	int mMove;
 	int mMove2;
+	
 	float mColliderCount;
 	static int mEnemy2AttackCount;
 	float mGravity;//d—Í

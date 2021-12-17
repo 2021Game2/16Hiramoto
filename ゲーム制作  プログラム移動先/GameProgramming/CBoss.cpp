@@ -7,7 +7,7 @@
 #include"CUtil.h"
 #include"CText.h"
 
-#define HP 300
+#define HP 30
 
 #define VELOCITY 0.5f //É}ÉNÉç
 

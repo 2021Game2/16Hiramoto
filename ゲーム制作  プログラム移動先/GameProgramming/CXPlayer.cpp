@@ -362,8 +362,8 @@ void CXPlayer::Update()
 				
 		  }
 		  if (Move.Length() != 0.0f) {
-			  if (CKey::Push('C')){
-				  if (mState == EATTACK1 || mState == EATTACK2 || mState == EATTACK3) {
+			  if (CKey::Once('C')){
+				  if (mState !=EATTACKSP) {
 					  mState = EESCAPE;
 					  mAnimationCount = 20;
 					  mDamageCount = 20;

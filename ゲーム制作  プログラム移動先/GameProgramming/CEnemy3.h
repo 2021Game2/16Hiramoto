@@ -26,6 +26,7 @@ public:
 	int mMove2;
 	int mColliderCount;
 	int mCount;
+	int mFireCount;
 	CVector mCollisionEnemy;
 	//CEnemy2(ˆÊ’uA‰ñ“]AŠgkj
 	CEnemy3(const CVector& position, const CVector& rotation, const CVector& scale);

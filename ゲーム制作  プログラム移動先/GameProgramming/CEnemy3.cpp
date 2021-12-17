@@ -34,6 +34,7 @@ CEnemy3::CEnemy3()
 	, mMove2(0)
 	, mColliderCount(0)
 	,mCount(0)
+	,mFireCount(0)
 {
 	mRotation.mY += 90.0f;
 	mTag = EENEMY3;
@@ -222,7 +223,9 @@ void CEnemy3::Update() {
 	if (mJump > 0) {
 		mJump--;
 	}
-
+	if (mFireCount > 0) {
+		mFireCount--;
+	}
 	//CTransform::Update();
 
 	//CMatrix mMatrixCol;
@@ -264,11 +267,16 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 				//衝突しているとき
 				if (CCollider::Collision(m, o)) {
 					//プレイヤーのポインタ設定
-					mpPlayer = o->mpParent;
+					/*mpPlayer = o->mpParent;
 					mpBullet = new CBullet;
 					mpBullet->mPosition = mPosition;
-					mpBullet->mScale = CVector(2.5f, 2.5f, 2.5f);
-					
+					mpBullet->mScale = CVector(2.5f, 2.5f, 2.5f);*/
+					mFireCount = 60;
+					CBullet* bullet = new CBullet();
+					bullet->Set(0.1f, 1.5f);
+				bullet->mPosition = CVector(0.0f, 0.0f, 10.0f) * mMatrix;
+					bullet->mRotation = mRotation;
+					bullet->Update();
 				}
 				
 			}
