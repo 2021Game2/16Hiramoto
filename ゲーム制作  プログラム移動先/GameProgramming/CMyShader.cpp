@@ -91,11 +91,12 @@ void CMyShader::Render(CModelX* model, CMesh* mesh, CMatrix* pCombinedMatrix) {
 		k += mesh->mMaterialVertexCount[i];
 		//ƒ}ƒeƒŠƒAƒ‹‚Ì‰ðœ
 		mesh->mMaterial[i]->Disabled();
-		glDisableVertexAttribArray(weightLoc);
-		glDisableVertexAttribArray(indexLoc);
+		
 	}
 
 	//–³Œø‚É‚·‚é
+	glDisableVertexAttribArray(weightLoc);
+	glDisableVertexAttribArray(indexLoc);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);

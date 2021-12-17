@@ -9,7 +9,7 @@
 #define HP 10
 #define VELOCITY 0.2f //マクロ
 
-#define JUMP 5.0f
+#define JUMP 3.0f
 #define G 0.5f
 int CEnemy2::mEnemy2AttackCount = 0;
 CModel CEnemy2::mModel;//モデルデータ作成
@@ -170,13 +170,11 @@ void CEnemy2::Damaged() {
 }		
 //死亡処理
 void CEnemy2::Death() {
-
+	
 	//体力がなくなったら
 	if (mHp <= 0) {
 		//mTimeとmJumpに整数が代入され、吹っ飛ぶようになる
 		//mPosition.mY = mJump * mTime - 0.5 * mGravity * mTime * mTime;
-		mTime = 1;
-		mJump = JUMP;
 		mHp--;
 		//15フレームごとにエフェクト
 		if (mHp % 15 == 0) {
@@ -197,7 +195,7 @@ void CEnemy2::Death() {
 		mTime++;
 	}
 	//しばらく経ったら消去
-	if (mHp <= -70) {
+	if (mHp <= -60) {
 		mEnabled = false;
 		CSceneGame::mEnemyCount -= 1;
 	}
@@ -279,7 +277,11 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 								mCollisionEnemy = mCollisionEnemy.Normalize();
 								mState = EDAMAGED;
 								if (mHp <= 0) {
+									mJump = JUMP;
+									mTime = 1;//死んだ時だけ代入
+									mPosition.mY = 1.0f;// mJump* mTime - 0.5 * mGravity * mTime * mTime;
 									mState = EDEATH;
+
 								}
 							}
 						}

@@ -4,9 +4,10 @@
 #include "CUtil.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
-#define JUMP 5.0f
+#define JUMP 10.0f
 #define JUMP2 10.0f
-#define STEP  5.0f
+#define STEP  10.0f
+#define STEP2 20.0f
 #include"CItem.h"
 int CXPlayer::mSpAttack = 0;
 int CXPlayer::mStamina = 0;
@@ -30,7 +31,7 @@ CXPlayer::CXPlayer()
 	,mAnimationCount(0)
 	,mColliderCount(1.0f)
 	,mTime(0.0f)
-	
+	,mSpeed(0.0f)
 {
 	//タグにプレイヤーを設定します
 	mTag = EPLAYER;
@@ -67,7 +68,7 @@ void CXPlayer::Update()
 	switch (mState) {
 	case EIDLE:	//待機
 		ChangeAnimation(0, true, 60);
-
+		mSpeed = 0;
 		break;
 	case EMOVE://移動
 		
@@ -95,6 +96,19 @@ void CXPlayer::Update()
 
 			}
 		break;
+	case EESCAPE:
+		
+		ChangeAnimation(1, true, 20);
+		//speed = mStep;//攻撃時、進行方向にステップを踏む
+		if (mRotation.mX!=360.0f) {
+			
+			mRotation.mX += 36.0f;
+		}
+		if(mAnimationFrame >= mAnimationFrameSize){
+         mState = EIDLE;
+		 mRotation.mX = 0.0f;
+		}
+		break;
 	case EATTACK1://攻撃
 		if (mAttackCount>0) {
 		ChangeAnimation(3, false, 20);//+4番目のアニメーションのフレーム３０
@@ -120,6 +134,7 @@ void CXPlayer::Update()
 		break;
 	case EDAMAGED://ダメージ
 		ChangeAnimation(4, false, 10);
+		
 		break;
 	case EDEATH://死亡
 		ChangeAnimation(11, false, 60);
@@ -348,7 +363,14 @@ void CXPlayer::Update()
 		  }
 		  if (Move.Length() != 0.0f) {
 			  if (CKey::Push('C')){
+				  if (mState == EATTACK1 || mState == EATTACK2 || mState == EATTACK3) {
+					  mState = EESCAPE;
+					  mAnimationCount = 20;
+					  mDamageCount = 20;
+					  mStep = STEP2;
+				   }
 				  if (mState == EIDLE) {
+
 					  mAnimationCount = 1;
 					  mState = EDUSH;
 				  }
@@ -368,8 +390,14 @@ void CXPlayer::Update()
 		//ジャンプ時などはY軸を正規化しないよう注意
 		Move.Normalize();
 		//平行移動量
-		
-         Move = Move*speed;
+		if (mSpeed < speed) {
+			mSpeed += 0.01f;
+		}
+		else {
+			mSpeed -= 0.01f;
+		}
+         Move = Move*mSpeed;
+
 		
 		
 		//普通に3次元ベクトル計算で算出したほうが正確だが計算量を懸念する場合は擬似計算で軽量化
@@ -388,7 +416,8 @@ void CXPlayer::Update()
 		}
 		//座標移動
 		if (mState == EMOVE||mStep > 0||mState==EDUSH) {
-            mPosition += Move;
+		
+             mPosition += Move;
 		}
 
 
@@ -399,6 +428,11 @@ void CXPlayer::Update()
 		 if (mAnimationCount > 0) {
 			 mAnimationCount--;
 	     }
+		 if (mAnimationCount <= 0) {
+			 mSpaceCount1 = 0;
+			 mSpaceCount2 = 0;
+			 mSpaceCount3 = 0;
+		 }
 		/* if (mSpaceCount1 > 0) {
 			// mSpaceCount1--;
 		 }
@@ -438,11 +472,8 @@ void CXPlayer::Update()
 		 if (mColliderCount > 0) {
 			mColliderCount--;
 			mPosition = mPosition + mCollisionEnemy * mColliderCount;
-			//ChangeAnimation(4, false, 10);
+			
 		 }
-
-
-
 	    //注視点設定
 	    Camera.SetTarget(mPosition);
 	    CXCharacter::Update();
@@ -486,9 +517,9 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 											mCollisionEnemy = mCollisionEnemy.Normalize();
 											mHp--;
 											mDamageCount = 60;
+											mState = EDAMAGED;
 										}
 									}
-
 								}
 							}
 						}
@@ -507,6 +538,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 											mCollisionEnemy = mCollisionEnemy.Normalize();
 											mHp--;
 											mDamageCount = 60;
+											mState = EDAMAGED;
 										}
 									}
 

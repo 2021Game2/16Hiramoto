@@ -26,6 +26,7 @@ public:
 	int mMove2;
 	float mColliderCount;
 	static int mBossAttackCount;
+	int mBossDamageCount;
 	float mGravity;//重力
 	float mTime;//ジャンプする時の時間を計測
 	int mEnemy2StopCount;//プレイヤーのESTOPPERに当たっている間増加

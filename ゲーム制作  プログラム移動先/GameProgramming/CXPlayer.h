@@ -28,13 +28,14 @@ public:
 	float mJump;//ジャンプする時の初速度
 	float mStep;//攻撃時、少し前進
 	float mGravity;//重力
+	
     static int mSpAttack;//ジャンプ攻撃をするためのゲージ
 	static int mAttackCount;//武器の当たり判定が適用される時間
 	float mColliderCount;//吹き飛ばされた時の初速度
 	int mAnimationCount;//アニメーションが途中で変わらないようにする
 	int mHp;//体力
 	float mTime;//ジャンプする時の時間を計測
-	
+	float mSpeed;
 	
 	//敵の状態
 	enum EPLAYERState
@@ -42,6 +43,7 @@ public:
 		EIDLE,		//待機
 		EMOVE,	//移動
 		EDUSH,
+		EESCAPE,
 		EATTACK1,	//攻撃1
 		EATTACK2,
 		EATTACK3,
