@@ -8,6 +8,6 @@ CMap::CMap()
 
 	mModel.Load("sky.obj", "sky.mtl");
 	mpModel = &mModel;
-	mType = CCollider::ELINE;
+	//mType = ETRIANGLE;
 }
 

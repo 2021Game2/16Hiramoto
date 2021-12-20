@@ -29,6 +29,7 @@ void CCamera::Init()
 }
 void CCamera::Set(const CVector &eye, const CVector &center,
 	const CVector &up) {
+	
 	mEye = eye;
 	mCenter = center;
 	mUp = up;
