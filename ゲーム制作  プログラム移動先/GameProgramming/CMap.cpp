@@ -1,5 +1,5 @@
 #include "CMap.h"
-
+#include"CCollider.h"
 CMap::CMap()
 {
 	mPosition = CVector(0.0f, 1.0f, 0.0f);
@@ -8,5 +8,6 @@ CMap::CMap()
 
 	mModel.Load("sky.obj", "sky.mtl");
 	mpModel = &mModel;
-
+	mType = CCollider::ELINE;
 }
+
