@@ -2,6 +2,7 @@
 #include "CKey.h"
 #include "CCamera.h"
 #include "CUtil.h"
+#include"CBullet.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
 #define JUMP 10.0f
@@ -21,7 +22,7 @@ CXPlayer::CXPlayer()
 	, mColSphereFoot(this, nullptr, CVector(0.0f, -10.0f, -3.0f), 1.0f)
 	,mCollider(this, &mMatrix, CVector(0.0f, 0.0f, -0.0f), 5.0f)
 	, mCollider2(this, &mMatrix, CVector(0.0f, -5.0f, 0.0f), 4.0f)
-	, mJump(0.0f)
+	, mJump(0.1f)
 	, mHp(10)
 	, mGravity(0.0f)
 	,mSpaceCount1(0)
@@ -55,7 +56,7 @@ void CXPlayer::Init(CModelX* model)
 
 	//合成行列の設定
 	mColSphereFoot.mpMatrix = &mpCombinedMatrix[1];
-	//mRotation.mY = 0.01f;
+	
 	mGravity = 0.20f;
 	mState = EIDLE;
 	mRotation.mY += 180.0f;
@@ -74,10 +75,10 @@ void CXPlayer::Update()
 		
            
 			 if (CKey::Push('C')) {
-				//if (mState == EIDLE||) {
+				
 					 mAnimationCount = 1;
 					 mState = EDUSH;
-				// }
+				
 
 			 }
 			 else {
@@ -85,9 +86,7 @@ void CXPlayer::Update()
 			 }
 			if (mAnimationCount <= 0) {
 				mState = EIDLE;
-			
 		    }
-		
 		break;
 	case EDUSH:
 			ChangeAnimation(1, true, 30);
@@ -97,11 +96,9 @@ void CXPlayer::Update()
 			}
 		break;
 	case EESCAPE:
-		
 		ChangeAnimation(1, true, 20);
 		//speed = mStep;//攻撃時、進行方向にステップを踏む
 		if (mRotation.mX!=360.0f) {
-			
 			mRotation.mX += 36.0f;
 		}
 		if(mAnimationFrame >= mAnimationFrameSize){
@@ -130,11 +127,12 @@ void CXPlayer::Update()
 		}
 		if (mAnimationCount <= 0) {
 			mState = EIDLE;
+			mTime = 0;
 		}
+		mTime++;
 		break;
 	case EDAMAGED://ダメージ
 		ChangeAnimation(4, false, 10);
-		
 		break;
 	case EDEATH://死亡
 		ChangeAnimation(11, false, 60);
@@ -163,7 +161,6 @@ void CXPlayer::Update()
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
 			mState = EIDLE;
-			
 		}
 		break;
 	case(7):
@@ -176,7 +173,6 @@ void CXPlayer::Update()
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
 			mState = EIDLE;
-			
 		}
 		break;
 	case(9):
@@ -189,15 +185,10 @@ void CXPlayer::Update()
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
 			mState = EIDLE;
-			
 		}
 		break;
 	}
-	
-	
-	
 		//カメラ視点移動　通称無双移動
-
 		//カメラの左右と前後のベクトルを取得
 		CVector SideVec = Camera.GetMat().GetXVec();
 		CVector FrontVec = Camera.GetMat().GetZVec();
@@ -207,14 +198,11 @@ void CXPlayer::Update()
 		//正規化する
 		SideVec.Normalize();
 		FrontVec.Normalize();
-
 		float speed = 0.15f;
 		CVector Move(0, 0, 0);
-
 		//左
 		if (CKey::Push('A'))
 		{
-			
 				Move -= SideVec;
 				mAnimationCount = 10;//0になるまでアニメーションを変更できない
 				if (mStamina > 0) {
@@ -227,8 +215,6 @@ void CXPlayer::Update()
 				else {
 					speed = 0.05f;//スピード1/2
 				}
-			
-			
 			if (CKey::Push(' ')) {
 				speed= mStep;//攻撃時、進行方向にステップを踏む
 			}
@@ -238,12 +224,10 @@ void CXPlayer::Update()
 		{
 			Move += SideVec;
 			mAnimationCount = 10;//0になるまでアニメーションを変更できない
-			
 			if (mStamina > 0) {
 				if (CKey::Push('C')) {
 					speed = 0.30f;//スピード倍
-					mStamina-=2;//スタミナ減少
-					
+					mStamina-=2;//スタミナ減少	
 				}
 			}
 			else {
@@ -259,7 +243,6 @@ void CXPlayer::Update()
 			Move += FrontVec;
 			//mPosition += CVector(0.0f, 0.0f, 0.1f) * mMatrixRotate;
 			mAnimationCount = 10;//0になるまでアニメーションを変更できない
-			
 			if(mStamina > 0) {
 				if (CKey::Push('C')) {
 					speed = 0.30f;//スピード倍
@@ -273,6 +256,12 @@ void CXPlayer::Update()
             if (CKey::Push(' ')) {
 					speed= mStep;//攻撃時、進行方向にステップを踏む
 		    } 
+
+			CBullet* bullet = new CBullet();
+			bullet->Set(0.1f, 1.5f);
+			bullet->mPosition = CVector(0.0f, 0.0f, 10.0f) * mMatrix;
+			bullet->mRotation = mRotation;
+			bullet->Update();
 		}
 		 //後ろ
 		else if (CKey::Push('S'))
@@ -280,14 +269,11 @@ void CXPlayer::Update()
 			Move -= FrontVec;
 			//mPosition += CVector(0.0f, 0.0f, 0.1f) * mMatrixRotate;
 			mAnimationCount = 10;//0になるまでアニメーションを変更できない
-			
 			if (mStamina > 0) {
 				if (CKey::Push('C')) {
 					speed = 0.30f;//スピード倍
 					mStamina-=2;//スタミナ減少
-					
 				}
-				
 			}
 			else {
 				speed = 0.05f;//スピード1/2
@@ -304,17 +290,13 @@ void CXPlayer::Update()
 					 if (CKey::Once(' '))
 					 {
 						 mState = EATTACK1;
-						 
 						 mSpaceCount1 = 1;//１回目の攻撃のフラグ
 						 mSpaceCount2 = 0;
 						 mAttackCount = 20;//当たり判定が適用される時間
 						 mAnimationCount = 50;//0になるまでアニメーションが変わらない
 						 mStep = STEP;
-
 					 }
-				 
 				}
-				
 			 }
 		//2回目の攻撃
 		else if ( mSpaceCount2==0) {
@@ -343,12 +325,12 @@ void CXPlayer::Update()
 			 }
 		}
 		 //ジャンプ攻撃
-		 if (mSpAttack >= 30) {
+		 if (mSpAttack >= 0) {
 			 if (CKey::Once('F')) {
 				 if (mAttackCount <= 0) {
 					 mState = EATTACKSP;
 					 mJump = JUMP;//ジャンプ力を代入
-					  mSpAttack -= 30;//特殊攻撃のゲージ減少
+					 // mSpAttack -= 30;//特殊攻撃のゲージ減少
 					 mAnimationCount = 100;//0になるまでアニメーションが変わらない
 					 mAttackCount = 50;
 					 mTime = 1;//特殊攻撃の間だけ代入
@@ -359,22 +341,21 @@ void CXPlayer::Update()
 		 //死亡
 		 if (mHp <= 0) {
 			 mState = EDEATH;
-				
 		  }
 		  if (Move.Length() != 0.0f) {
 			  if (CKey::Once('C')){
 				  if (mState !=EATTACKSP) {
 					  mState = EESCAPE;
 					  mAnimationCount = 20;
-					  mDamageCount = 20;
+					  mDamageCount = 40;
 					  mStep = STEP2;
-				   }
+					  mStamina -= 20;
+				  }
 				  if (mState == EIDLE) {
 
 					  mAnimationCount = 1;
 					  mState = EDUSH;
 				  }
-				
 			  }
                   else {
 					  if (mState == EIDLE) {
@@ -383,9 +364,6 @@ void CXPlayer::Update()
 					  }
 				  } 
 		  }
-		  
-		 
-		
 		//移動量正規化　これをしないと斜め移動が早くなってしまうので注意
 		//ジャンプ時などはY軸を正規化しないよう注意
 		Move.Normalize();
@@ -397,9 +375,6 @@ void CXPlayer::Update()
 			mSpeed -= 0.01f;
 		}
          Move = Move*mSpeed;
-
-		
-		
 		//普通に3次元ベクトル計算で算出したほうが正確だが計算量を懸念する場合は擬似計算で軽量化
 		//擬似ベクトル計算
 		Check tCheck = CUtil::GetCheck2D(Move.mX,Move.mZ,0,0, mRotation.mY*(M_PI/180.0f));
@@ -419,9 +394,6 @@ void CXPlayer::Update()
 		
              mPosition += Move;
 		}
-
-
-        
 		 if (mStep > 0) {
 				mStep--;
 		 }
@@ -433,15 +405,6 @@ void CXPlayer::Update()
 			 mSpaceCount2 = 0;
 			 mSpaceCount3 = 0;
 		 }
-		/* if (mSpaceCount1 > 0) {
-			// mSpaceCount1--;
-		 }
-		 if (mSpaceCount2 > 0) {
-			//mSpaceCount2--;
-		 }
-		 if (mSpaceCount3 > 0) {
-			// mSpaceCount3--;
-		 }*/
 		 if (mStamina < 400) {
 			mStamina++;
 		 }
@@ -452,18 +415,14 @@ void CXPlayer::Update()
 			 mDamageCount--;
 		 }
 		 //特殊攻撃中のみコライダ表示
-		 if (mPosition.mY > 0) {
+		 if (mState==EATTACKSP) {
 			mCollider2.mRenderEnabled = true;
 		 }
 		 else {
-			mPosition.mY = 0.0f;
+			//mPosition.mY = 0.0f;
 			mCollider2.mRenderEnabled = false;
 		 }
-		 //重力
-		 if (mPosition.mY>0) {
-			mPosition.mY =mJump*mTime- 0.5 * mGravity * mTime * mTime;
-            mTime++;
-		 }
+		
 		//アイテム取得時に武器の当たり判定拡大
 		 if (CItem::mItemCount > 0) {
 			mColSphereSword.mRadius = 7.5f;
@@ -474,6 +433,8 @@ void CXPlayer::Update()
 			mPosition = mPosition + mCollisionEnemy * mColliderCount;
 			
 		 }
+
+
 	    //注視点設定
 	    Camera.SetTarget(mPosition);
 	    CXCharacter::Update();
@@ -483,99 +444,138 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 
 	//自身のコライダの設定
 	switch (m->mType) {
-	case CCollider::ELINE://線分コライダ
-			//相手のコライダが三角コライダの場合
-		if (o->mType == CCollider::ETRIANGLE) {
-			CVector adjust;//調整用ベクトル
-			//三角形と線分の衝突判定
-			CCollider::CollisionTriangleLine(o, m, &adjust);
-			//位置の更新（mPosition+adjust)
-			mPosition = mPosition - adjust * -1;
-			//mPosition.mY = 0.0f;
-			//行列の更新
-			CTransform::Update();
-		}
+			
+			
+		
 	case CCollider::ESPHERE:
 
-		if (o->mType == CCollider::ESPHERE) {
+	         //親がプレイヤー
 			if (m->mpParent->mTag == EPLAYER) {
-				if (m->mTag == CCollider::EBODY) {
-					//敵の攻撃との衝突判定
-					if (o->mpParent->mTag == EENEMY2) {
-						if (o->mTag == CCollider::EENEMY2COLLIDERATTACK) {
-							//衝突しているとき
-							CVector adjust;//調整用ベクトル
+				//プレイヤーの体部分
+				if (m->mTag == CCollider::EBODY) {//相手のコライダが三角コライダの場合
+					//親が三角コライダ
+					if (o->mType == CCollider::ETRIANGLE) {
+						//マップについているコライダ
+						if (o->mTag == CCollider::EMAP) {
 							if (CCollider::Collision(m, o)) {
-								//ダメージが入ったあとの無敵時間
-								if (mDamageCount == 0) {
-									//敵の攻撃判定が適用されている間
-									if (CEnemy2::mEnemy2AttackCount > 0) {
-										if (mHp > 0) {
-											mColliderCount = 5;
-											mCollisionEnemy = mPosition - o->mpParent->mPosition;
-											mCollisionEnemy.mY = 0;
-											mCollisionEnemy = mCollisionEnemy.Normalize();
-											mHp--;
-											mDamageCount = 60;
-											mState = EDAMAGED;
+
+								CVector adjust;//調整用ベクトル
+								//三角形と線分の衝突判定
+								CCollider::CollisionTriangleLine(o, m, &adjust);
+								//位置の更新（mPosition+adjust)
+								mPosition = mPosition - adjust * -1;
+								mPosition.mY = 0.0f;
+								//行列の更新
+								CTransform::Update();
+
+							}
+							else {
+
+								mPosition.mY = mJump * mTime - 0.5 * mGravity * mTime * mTime;
+								if (mTime <= 1.0f) {
+									mTime++;
+								}
+							}
+
+						}
+					}
+			
+					//球コライダ
+					if (o->mType == CCollider::ESPHERE) {
+						//親が敵（２）
+						if (o->mpParent->mTag == EENEMY2) {
+							//敵の攻撃部位との衝突判定
+							if (o->mTag == CCollider::EENEMY2COLLIDERATTACK) {
+								
+								CVector adjust;//調整用ベクトル
+								if (CCollider::Collision(m, o)) {
+									//ダメージが入ったあとの無敵時間が０のとき
+									if (mDamageCount == 0) {
+										//敵の攻撃判定が適用されている間
+										if (CEnemy2::mEnemy2AttackCount > 0) {
+											if (mHp > 0) {
+												//後ろに下がる
+												mColliderCount = 5.0f;
+												mCollisionEnemy = mPosition - o->mpParent->mPosition;
+												mCollisionEnemy.mY = 0;
+												mCollisionEnemy = mCollisionEnemy.Normalize();
+												//体力減少
+												mHp--;
+												//無敵時間付与
+												mDamageCount = 60;
+												//ダメージ時の処理を開始
+												mState = EDAMAGED;
+											}
 										}
 									}
 								}
 							}
 						}
-					}
-					else if (o->mpParent->mTag == EBOSS) {
-						if (o->mTag == CCollider::EBOSSCOLLIDERATTACK) {
-							if (CCollider::Collision(m, o)) {
-								//ダメージが入ったあとの無敵時間
-								if (mDamageCount == 0) {
-									//敵の攻撃判定が適用されている間
-									if (CBoss::mBossAttackCount > 0) {
-										if (mHp > 0) {
-											mColliderCount = 5;
-											mCollisionEnemy = mPosition - o->mpParent->mPosition;
-											mCollisionEnemy.mY = 0;
-											mCollisionEnemy = mCollisionEnemy.Normalize();
-											mHp--;
-											mDamageCount = 60;
-											mState = EDAMAGED;
-										}
-									}
+						//親がボス
+						else if (o->mpParent->mTag == EBOSS) {
 
+							//ボスの体との衝突判定
+							if (o->mTag == CCollider::EBOSSCOLLIDER) {
+								if (CCollider::Collision(m, o)) {
+									//後ろに下がる
+									mColliderCount = 1.5f;
+									mCollisionEnemy = mPosition - o->mpParent->mPosition;
+									mCollisionEnemy.mY = 0;
+									mCollisionEnemy = mCollisionEnemy.Normalize();
+								}
+							}
+							//ボスの攻撃部位との衝突判定
+							else if (o->mTag == CCollider::EBOSSCOLLIDERATTACK) {
+								if (CCollider::Collision(m, o)) {
+									//ダメージが入ったあとの無敵時間
+									if (mDamageCount == 0) {
+										//敵の攻撃判定が適用されている間
+										if (CBoss::mBossAttackCount > 0) {
+											if (mHp > 0) {
+												//後ろに下がる
+												mColliderCount = 5.0f;
+												mCollisionEnemy = mPosition - o->mpParent->mPosition;
+												mCollisionEnemy.mY = 0;
+												mCollisionEnemy = mCollisionEnemy.Normalize();
+												//体力減少
+												mHp--;
+												//無敵時間付与
+												mDamageCount = 60;
+												//ダメージ時の処理開始
+												mState = EDAMAGED;
+											}
+										}
+
+									}
 								}
 							}
 						}
 					}
+                     
 				}
-				 if(m->mTag==CCollider::EBODY){
-
-					//ボスの体との衝突判定
-					 if (o->mpParent->mTag == EBOSS) {
-						if (o->mTag == CCollider::EBOSSCOLLIDER) {
-							if (CCollider::Collision(m, o)) {
-								mColliderCount = 1.5f;
-								mCollisionEnemy = mPosition - o->mpParent->mPosition;
-								mCollisionEnemy.mY = 0;
-								mCollisionEnemy = mCollisionEnemy.Normalize();
+				
+				 //プレイヤーの剣
+				 else if (m->mTag == CCollider::ESWORD) {
+					//球コライダ
+					if (o->mType == CCollider::ESPHERE) {
+						//敵（２）
+						if (o->mpParent->mTag == EENEMY2) {
+							//敵のコライダ
+							if (o->mTag == CCollider::EENEMY2COLLIDER) {
+								if (CCollider::Collision(m, o)) {
+									if (mAttackCount > 0) {
+										//特殊攻撃のゲージ増加
+										mSpAttack += 2;
+										break;
+									}
+								}
 							}
 						}
 					}
-				}
-				 if (m->mTag == CCollider::ESWORD) {
-					 if (o->mpParent->mTag == EENEMY2) {
-						 if (o->mTag == CCollider::EENEMY2COLLIDER) {
-							 if (CCollider::Collision(m, o)) {
-								 if (mAttackCount > 0) {
-									 mSpAttack+=2;
-									 break;
-								 }
-							 }
-						 }
-					 }
 				 }
 
 			}
-		}
+		
 	}
 }
 

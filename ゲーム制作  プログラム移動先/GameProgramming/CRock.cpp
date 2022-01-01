@@ -22,7 +22,7 @@ CRock::CRock(const CVector& position, const CVector& rotation, const CVector& sc
 	CTaskManager::Get()->Add(this);//追加する
 }
 CRock::CRock()
-	: mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
+	: mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 100.0f)
 
 {
 	//モデルのポインタ設定

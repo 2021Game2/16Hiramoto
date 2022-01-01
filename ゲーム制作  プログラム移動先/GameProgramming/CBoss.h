@@ -19,7 +19,7 @@ public:
 	CBoss();
 	CVector mPoint;//–Ú•W’n“_
 	int mHp;//‘Ì—Í
-	float mJump;
+
 	int mJump2;
 	CText mText;
 	int mMove;

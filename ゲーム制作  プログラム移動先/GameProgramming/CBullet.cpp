@@ -2,8 +2,8 @@
 #include "CCollisionManager.h"
 
 CBullet::CBullet()
-: mLife(50)
-, mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 0.1f)
+: mLife(500)
+, mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 1.1f)
 {}
 
 //幅と奥行きの設定
@@ -53,7 +53,7 @@ void CBullet::Collision(CCollider *m, CCollider *o) {
 	//コライダのmとyが衝突しているか判定
 	if (CCollider::Collision(m, o)) {
 		//衝突している時は無効にする
-		mEnabled = false;
+		//mEnabled = false;
 	}
 
 	return;
@@ -61,17 +61,15 @@ void CBullet::Collision(CCollider *m, CCollider *o) {
 	if (m->mType == CCollider::ESPHERE
 		&& o->mType == CCollider::ESPHERE)
 	{
+		
+		/*
 		switch (o->mTag)
 		{
 		case CCollider::ESEARCH:
 			break;
-		default:
-			//コライダのmとyが衝突しているか判定
-			if (CCollider::Collision(m, o)) {
-				//衝突している時は無効にする
-				mEnabled = false;
-			}
-		}
+			
+			
+		}*/
 	}
 }
 void CBullet::TaskCollision()

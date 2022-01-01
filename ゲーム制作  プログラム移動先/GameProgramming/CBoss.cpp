@@ -29,7 +29,6 @@ CBoss::CBoss()
 
 	, mpPlayer(0)
 	, mHp(HP)
-	, mJump(0.0f)
 	, mJump2(0)
 	, mEnemyDamage(60)
 	, mMove(0)
@@ -322,14 +321,12 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 												mState = EDAMAGED;
 											}
 										}
-										if (mHp <= 0 && mState != EDEATH) {
-											mState = EDEATH;
-										}
 										if (mBossDamageCount <= 0) {
 	                                        mHp--;
 											mBossDamageCount = 10;
-										
-
+											if (mHp <= 0 && mState != EDEATH) {
+												mState = EDEATH;
+											}
 										}
 								}
 							}
@@ -368,17 +365,13 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 			{
 				if (mPosition.mX + mPosition.mZ > 0) {
 					//Õ“Ë‚µ‚È‚¢ˆÊ’u‚Ü‚Å–ß‚·
-					mPosition = mPosition - adjust;
-					if (mJump > 0) {
-						mPosition = mPosition - adjust;
-					}
+					//mPosition = mPosition - adjust;
+					
 				}
 				else {
 					//Õ“Ë‚µ‚È‚¢ˆÊ’u‚Ü‚Å–ß‚·
-					mPosition = mPosition + adjust;
-					if (mJump > 0) {
-						mPosition = mPosition + adjust;
-					}
+					//mPosition = mPosition + adjust;
+					
 				}
 
 

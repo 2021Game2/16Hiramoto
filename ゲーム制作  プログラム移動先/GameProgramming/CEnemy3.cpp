@@ -24,7 +24,7 @@ CEnemy3::CEnemy3()
 //ƒRƒ‰ƒCƒ_‚ÌÝ’è
 	:mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 20.0f)
 	, mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 70.0f)
-	, mColSearch2(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f),35.0f)
+	, mColSearch2(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f),50.0f)
 	, mpPlayer(0)
 	, mHp(HP)
 	, mJump(0)
@@ -271,12 +271,17 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 					mpBullet = new CBullet;
 					mpBullet->mPosition = mPosition;
 					mpBullet->mScale = CVector(2.5f, 2.5f, 2.5f);*/
-					mFireCount = 60;
+
+					
+					if (mFireCount <= 0) {
+
 					CBullet* bullet = new CBullet();
 					bullet->Set(0.1f, 1.5f);
-				bullet->mPosition = CVector(0.0f, 0.0f, 10.0f) * mMatrix;
+				    bullet->mPosition = CVector(0.0f, 0.0f, 10.0f) * mMatrix;
 					bullet->mRotation = mRotation;
 					bullet->Update();
+					mFireCount = 60;
+					}
 				}
 				
 			}

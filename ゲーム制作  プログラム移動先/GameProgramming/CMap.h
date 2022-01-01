@@ -3,12 +3,20 @@
 
 #include "CCharacter.h"
 #include"CCollider.h"
+
+#include"CColliderTriangle.h"
+#include"CCollisionManager.h"
 class CMap : public CCharacter
 {
+
 	CModel mModel;
 public:
 	CMap();
-	//void CollisionTriangleLine(CCollider* t, CCollider* l, CVector* a) ;
+
+	CColliderTriangle mColliderTriangle;
+
+	CColliderTriangle mColliderTriangle2;
+	void TaskCollision();
 };
 
 #endif

@@ -33,7 +33,7 @@ void CSceneGame::Init() {
 	CRes::sModelX.Load(MODEL_FILE);
      //キャラクターにモデルを設定
 	mPlayer.Init(&CRes::sModelX);
-
+	mPlayer.mPosition = CVector(0.0f, 100000.0f, 0.0f);
 
 	CRes::sKnight.Load("3DModel\\knight\\knight_low.x");
     CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//1:移動
@@ -89,7 +89,7 @@ void CSceneGame::Init() {
 	CRes::sBoss.SeparateAnimationSet(0, 500, 550, "death - 02" );
 	CRes::sBoss.SeparateAnimationSet(0, 565, 650, "death - 03");
 	//新しく作る
-	mpBoss = new CBoss(CVector(0.0f, 0.0f, 0.0f), 
+	mpBoss = new CBoss(CVector(0.0f, 10.0f, 0.0f), 
 		CVector(0.0f, 0.0f, 0.0f), CVector(0.5f, 0.5f, 0.5f));
 	//読み込ませる
 	mpBoss->Init(&CRes::sBoss);
