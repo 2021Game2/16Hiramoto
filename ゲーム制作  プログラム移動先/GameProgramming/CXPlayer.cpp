@@ -19,10 +19,10 @@ CXPlayer::CXPlayer()
 	, mColSphereHead(this, nullptr, CVector(0.0f, 5.0f, -3.0f), 0.5f)
 	, mColSphereSword(this, nullptr, CVector(-10.0f, 10.0f, 50.0f), 5.7f)
 
-	, mColSphereFoot(this, nullptr, CVector(0.0f, -10.0f, -3.0f), 1.0f)
+	, mColSphereFoot(this, nullptr, CVector(0.0f, -10.0f, -3.0f), 0.5f)
 	,mCollider(this, &mMatrix, CVector(0.0f, 0.0f, -0.0f), 5.0f)
-	, mCollider2(this, &mMatrix, CVector(0.0f, -5.0f, 0.0f), 4.0f)
-	, mJump(0.1f)
+	, mCollider2(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 4.0f)
+	, mJump(0.0f)
 	, mHp(10)
 	, mGravity(0.0f)
 	,mSpaceCount1(0)
@@ -42,6 +42,7 @@ CXPlayer::CXPlayer()
 	mColSphereBody.mTag = CCollider::EBODY;
 	CXPlayer::mStamina = 400;
 	mCollider.mTag = CCollider::ESTOPPER;
+
 }
 
 void CXPlayer::Init(CModelX* model)
@@ -60,6 +61,8 @@ void CXPlayer::Init(CModelX* model)
 	mGravity = 0.20f;
 	mState = EIDLE;
 	mRotation.mY += 180.0f;
+
+	mCollider2.mRenderEnabled = false;
 }
 
 void CXPlayer::Update()
@@ -76,7 +79,7 @@ void CXPlayer::Update()
            
 			 if (CKey::Push('C')) {
 				
-					 mAnimationCount = 1;
+					// mAnimationCount = 1;
 					 mState = EDUSH;
 				
 
@@ -96,13 +99,15 @@ void CXPlayer::Update()
 			}
 		break;
 	case EESCAPE:
-		ChangeAnimation(1, true, 20);
-		//speed = mStep;//攻撃時、進行方向にステップを踏む
+		ChangeAnimation(1, true, 10);
+		
+		//攻撃時、進行方向にステップを踏む
+		mStep = STEP2;
 		if (mRotation.mX!=360.0f) {
 			mRotation.mX += 36.0f;
 		}
 		if(mAnimationFrame >= mAnimationFrameSize){
-         mState = EIDLE;
+         mState = EMOVE;
 		 mRotation.mX = 0.0f;
 		}
 		break;
@@ -125,11 +130,13 @@ void CXPlayer::Update()
 		if (mAttackCount>0) {
 		ChangeAnimation(7, false, 50);//７番目のアニメーション５０フレームで
 		}
+		
 		if (mAnimationCount <= 0) {
 			mState = EIDLE;
-			mTime = 0;
+			
 		}
-		mTime++;
+		
+		
 		break;
 	case EDAMAGED://ダメージ
 		ChangeAnimation(4, false, 10);
@@ -164,14 +171,19 @@ void CXPlayer::Update()
 		}
 		break;
 	case(7):
+		
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
+		
 			ChangeAnimation(8, false, 30);
 		}
 		break;
 	case(8):
+		mCollider2.mRenderEnabled = true;
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
+			
+			mCollider2.mRenderEnabled = false;
 			mState = EIDLE;
 		}
 		break;
@@ -256,12 +268,12 @@ void CXPlayer::Update()
             if (CKey::Push(' ')) {
 					speed= mStep;//攻撃時、進行方向にステップを踏む
 		    } 
-
+			/*
 			CBullet* bullet = new CBullet();
 			bullet->Set(0.1f, 1.5f);
 			bullet->mPosition = CVector(0.0f, 0.0f, 10.0f) * mMatrix;
 			bullet->mRotation = mRotation;
-			bullet->Update();
+			bullet->Update();*/
 		}
 		 //後ろ
 		else if (CKey::Push('S'))
@@ -285,7 +297,9 @@ void CXPlayer::Update()
 		 //一回目の攻撃
 			 //一回目の攻撃のフレーム＜＝０かつ３回目の攻撃の総フレーム＞＝０
 			 //１→２→３→１   攻撃の順番がループ
-			 if (mSpaceCount1 ==0){
+		 if (mDamageCount <= 0) {
+
+			 if (mSpaceCount1 == 0) {
 				 if (mAttackCount <= 0) {
 					 if (CKey::Once(' '))
 					 {
@@ -296,25 +310,26 @@ void CXPlayer::Update()
 						 mAnimationCount = 50;//0になるまでアニメーションが変わらない
 						 mStep = STEP;
 					 }
-				}
+				 }
 			 }
-		//2回目の攻撃
-		else if ( mSpaceCount2==0) {
-			if (mAttackCount <= 0) {
-				 if (CKey::Once(' ')) {
+
+			 //2回目の攻撃
+			 else if (mSpaceCount2 == 0) {
+				 if (mAttackCount <= 0) {
+					 if (CKey::Once(' ')) {
 						 mState = EATTACK2;
 						 mSpaceCount2 = 1;//２回目の攻撃のフラグ
 						 mSpaceCount3 = 0;
 						 mAttackCount = 20;//当たり判定が適用される時間
 						 mAnimationCount = 50;//0になるまでアニメーションが変わらない
 						 mStep = STEP;
+					 }
 				 }
 			 }
-		}
-		 //３回目の攻撃
-		else if (mSpaceCount3==0) {
-			 if (mAttackCount <=0) {
-					  if (CKey::Once(' ')) {
+			 //３回目の攻撃
+			 else if (mSpaceCount3 == 0) {
+				 if (mAttackCount <= 0) {
+					 if (CKey::Once(' ')) {
 						 mState = EATTACK3;
 						 mAnimationCount = 50;//0になるまでアニメーションが変わらない
 						 mSpaceCount3 = 1;//３回目の攻撃のフラグ
@@ -322,8 +337,9 @@ void CXPlayer::Update()
 						 mAttackCount = 30;//当たり判定が適用される時間
 						 mStep = STEP;//ジャンプ力を代入
 					 }
+				 }
 			 }
-		}
+		 }
 		 //ジャンプ攻撃
 		 if (mSpAttack >= 0) {
 			 if (CKey::Once('F')) {
@@ -333,8 +349,8 @@ void CXPlayer::Update()
 					 // mSpAttack -= 30;//特殊攻撃のゲージ減少
 					 mAnimationCount = 100;//0になるまでアニメーションが変わらない
 					 mAttackCount = 50;
-					 mTime = 1;//特殊攻撃の間だけ代入
-					 mPosition.mY = 1.0f;// mJump* mTime - 0.5 * mGravity * mTime * mTime;
+					 //mTime = 1;//特殊攻撃の間だけ代入
+					 //mPosition.mY = 1.0f;// mJump* mTime - 0.5 * mGravity * mTime * mTime;
 				 }
 			 }
 		 }
@@ -342,15 +358,18 @@ void CXPlayer::Update()
 		 if (mHp <= 0) {
 			 mState = EDEATH;
 		  }
+		 //移動中
 		  if (Move.Length() != 0.0f) {
+			  //Cキーを押すと回避行動
 			  if (CKey::Once('C')){
 				  if (mState !=EATTACKSP) {
 					  mState = EESCAPE;
 					  mAnimationCount = 20;
 					  mDamageCount = 40;
-					  mStep = STEP2;
+					 
 					  mStamina -= 20;
 				  }
+				  //待機中のときにCを押しているとダッシュ
 				  if (mState == EIDLE) {
 
 					  mAnimationCount = 1;
@@ -390,7 +409,7 @@ void CXPlayer::Update()
 			mRotation.mY -= tCheck.turn * turnspeed;
 		}
 		//座標移動
-		if (mState == EMOVE||mStep > 0||mState==EDUSH) {
+		if (mState == EMOVE||mState==EDUSH||mStep > 0) {
 		
              mPosition += Move;
 		}
@@ -414,15 +433,9 @@ void CXPlayer::Update()
 		 if (mDamageCount > 0) {
 			 mDamageCount--;
 		 }
-		 //特殊攻撃中のみコライダ表示
-		 if (mState==EATTACKSP) {
-			mCollider2.mRenderEnabled = true;
-		 }
-		 else {
-			//mPosition.mY = 0.0f;
-			mCollider2.mRenderEnabled = false;
-		 }
-		
+		 if (mState != EATTACKSP) {
+			 mTime = 0;
+		}
 		//アイテム取得時に武器の当たり判定拡大
 		 if (CItem::mItemCount > 0) {
 			mColSphereSword.mRadius = 7.5f;
@@ -433,7 +446,6 @@ void CXPlayer::Update()
 			mPosition = mPosition + mCollisionEnemy * mColliderCount;
 			
 		 }
-
 
 	    //注視点設定
 	    Camera.SetTarget(mPosition);
@@ -456,28 +468,27 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 					//親が三角コライダ
 					if (o->mType == CCollider::ETRIANGLE) {
 						//マップについているコライダ
-						if (o->mTag == CCollider::EMAP) {
-							if (CCollider::Collision(m, o)) {
+						//if (o->mTag == CCollider::EMAPCOLLIDER) {
 
 								CVector adjust;//調整用ベクトル
+							if (CCollider::CollisionTriangleSphere(o,m,&adjust)) {
+
 								//三角形と線分の衝突判定
-								CCollider::CollisionTriangleLine(o, m, &adjust);
+								//CCollider::CollisionTriangleLine(o, m, &adjust);
 								//位置の更新（mPosition+adjust)
 								mPosition = mPosition - adjust * -1;
-								mPosition.mY = 0.0f;
+								//mPosition.mY = 0.0f;
 								//行列の更新
 								CTransform::Update();
-
+								mTime = 0;
 							}
 							else {
-
+								//マップに接触していない間ずっと重力がかかる
 								mPosition.mY = mJump * mTime - 0.5 * mGravity * mTime * mTime;
-								if (mTime <= 1.0f) {
-									mTime++;
-								}
+								mTime+=0.1f;
 							}
 
-						}
+						//}
 					}
 			
 					//球コライダ

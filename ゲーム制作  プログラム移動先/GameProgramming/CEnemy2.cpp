@@ -197,7 +197,8 @@ void CEnemy2::Death() {
 	//‚µ‚Î‚ç‚­Œo‚Á‚½‚çÁ‹
 	if (mHp <= -60) {
 		mEnabled = false;
-		CSceneGame::mEnemyCount -= 1;
+		CSceneGame::mEnemy2Count --;
+		CSceneGame::mEnemy2CountStopper--;
 	}
 }		
 

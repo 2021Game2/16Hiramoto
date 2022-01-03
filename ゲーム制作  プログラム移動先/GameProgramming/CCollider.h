@@ -27,6 +27,7 @@ public:
 		EBOSSCOLLIDER,
 		EBOSSCOLLIDERATTACK,
 		EMAP,
+		EMAPCOLLIDER,
 
 	};
 	ETag mTag;

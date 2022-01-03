@@ -31,7 +31,8 @@ public:
 	CEnemySummon* mpEnemySummon;
 	CEnemy2* mpEnemy2;
 	CBoss* mpBoss;
-	static int mEnemyCount;
+	static int mEnemy2Count;
+	static int mEnemy2CountStopper;
 	CSound Bgm;
 	//キャラクタのインスタンス
 	CXPlayer mPlayer;

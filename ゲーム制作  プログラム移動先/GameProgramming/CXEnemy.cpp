@@ -1,5 +1,5 @@
 #include "CXEnemy.h"
-#define VELOCITY 0.1f
+#define VELOCITY -0.1f
 CXEnemy::CXEnemy()
 	: mColSphereBody(this, nullptr, CVector(0.5f, -1.0f, 0.0f), 1.0f)
 	, mColSphereHead(this, nullptr, CVector(0.0f, 1.f, 0.0f), 1.5f)
@@ -7,12 +7,15 @@ CXEnemy::CXEnemy()
 	, mColSphereSword1(this, nullptr, CVector(0.5f, 2.5f, -0.2f), 0.5f)
 	, mColSphereSword2(this, nullptr, CVector(0.3f, 1.5f, -0.2f), 0.5f)
 	,mMove(0)
+	,mHp(0)
 {
 	
 }
 
 void CXEnemy::Update() {
-	
+	if (mHp <= 0) {
+		//mEnabled = false;
+	}
 	//if(mPosition.mY<=mpPlayer->mPosition.mY)
 	//左向き（X軸）のベクトルを求める
 	CVector vx = CVector(1.0f, 0.0f, 0.0f) * mMatrixRotate;
@@ -91,7 +94,7 @@ void CXEnemy::Init(CModelX* model)
 	mColSphereSword.mpMatrix = &mpCombinedMatrix[21];
 	*/
 	ChangeAnimation(2, true, 200);
-	//mRotation.mY += 180;
+	//mRotation.mY += 180.0f;
 }
 void CXEnemy::Collision(CCollider* m, CCollider* o)
 {

@@ -20,7 +20,7 @@ CBoss::CBoss()
 //ƒRƒ‰ƒCƒ_‚ÌÝ’è
 	:mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 1.0f)
 	, mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 200.0f)
-	, mColSphereHead(this, &mMatrix, CVector(0.0f, 1.0f, 5.0f), 5.0f)
+	, mColSphereHead(this, &mMatrix, CVector(0.0f, 1.0f, 5.0f), 10.0f)
 	, mColSphereRightFront(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 4.0f)
 	, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 4.0f)
 	, mColSphereRightBack(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 4.0f)
@@ -45,8 +45,8 @@ CBoss::CBoss()
 	mColSphereHead.mTag = CCollider::EBOSSCOLLIDER;
 	mColSphereRightFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
 	mColSphereLeftFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
-	mColSphereRightBack.mTag = CCollider::EBOSSCOLLIDERATTACK;
-	mColSphereLeftBack.mTag = CCollider::EBOSSCOLLIDERATTACK;
+	mColSphereRightBack.mTag = CCollider::EBOSSCOLLIDER;
+	mColSphereLeftBack.mTag = CCollider::EBOSSCOLLIDER;
 
 
 	mGravity = 0.20f;
@@ -275,6 +275,10 @@ void CBoss::Update() {
 	if (mBossDamageCount > 0) {
 		mBossDamageCount--;
 	}
+
+	if (mHp <= 0 && mState != EDEATH) {
+		mState = EDEATH;
+	}
 	CXCharacter::Update();
 }
 
@@ -307,27 +311,27 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 					//‘ŠŽè‚ª•Ší‚Ì‚Æ‚«
 					if (o->mTag == CCollider::ESWORD) {
 						//Õ“Ë‚µ‚Ä‚¢‚é‚Æ‚«
-					
+					    
 							if (CCollider::Collision(m, o)) {
 								if (CXPlayer::mAttackCount > 0) {
-									
-										if (mHp > 0) {
+									if (mHp > 0) {
 
-											if (mHp % 30 == 0) {
-												mColliderCount = 10;
-												mCollisionEnemy = mPosition - o->mpParent->mPosition;
-												mCollisionEnemy.mY = 0;
-												mCollisionEnemy = mCollisionEnemy.Normalize();
-												mState = EDAMAGED;
-											}
+									
+										if (mHp % 30 == 0) {
+											mColliderCount = 10;
+											mCollisionEnemy = mPosition - o->mpParent->mPosition;
+											mCollisionEnemy.mY = 0;
+											mCollisionEnemy = mCollisionEnemy.Normalize();
+											mState = EDAMAGED;
 										}
+
 										if (mBossDamageCount <= 0) {
-	                                        mHp--;
+
+											mHp--;
 											mBossDamageCount = 10;
-											if (mHp <= 0 && mState != EDEATH) {
-												mState = EDEATH;
-											}
 										}
+								    }
+										
 								}
 							}
 						
@@ -338,7 +342,10 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 						if (CCollider::Collision(m, o)) {
 							if (mState != EATTACK) {
 								if (mState != EIDLE) {
-									mState = EIDLE;
+									if (mHp > 0) {
+
+									 mState = EIDLE;
+									}
 								}
 
 							}

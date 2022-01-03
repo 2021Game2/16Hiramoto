@@ -15,16 +15,17 @@
 #include"CItem.h"
 #include"CRock.h"
 //CMatrix Matrix;
-int CSceneGame::mEnemyCount = 0;
+int CSceneGame::mEnemy2Count = 0;
+int CSceneGame::mEnemy2CountStopper = 5;
 CSceneGame::~CSceneGame() {
-	
+	Sleep(2000);
 }
 
 void CSceneGame::Init() {
 	//サウンド(wav)ファイルの読み込み
 	Bgm.Load("BGM.wav");
 	mJump.Load("jump.wav");
-    Sleep(2000);
+   
 	//mBillBoard.Set(CVector(0.0f, 5.0f, 0.0f), 1.0f, 1.0f);
 	//Bgm.Repeat();
 	//テキストフォントの読み込みと設定
@@ -33,8 +34,7 @@ void CSceneGame::Init() {
 	CRes::sModelX.Load(MODEL_FILE);
      //キャラクターにモデルを設定
 	mPlayer.Init(&CRes::sModelX);
-	mPlayer.mPosition = CVector(0.0f, 100000.0f, 0.0f);
-
+	
 	CRes::sKnight.Load("3DModel\\knight\\knight_low.x");
     CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//1:移動
 	CRes::sKnight.SeparateAnimationSet(0, 1530, 1830, "idle1");//2:待機
@@ -54,10 +54,10 @@ void CSceneGame::Init() {
 	mEnemy.mAnimationFrameSize = 1024;
 	//敵の配置
 	mEnemy.mPosition = CVector(7.0f, 0.0f, 0.0f);
-
+	
 	
 
-	//mEnemy2.Init(&CRes::sScorp);
+	
 	//カメラ初期化
 	Camera.Init();
 
@@ -111,7 +111,7 @@ void CSceneGame::Init() {
 		CVector(), CVector(50.0f, 50.0f, 50.0f));
 	mpTree = new CTree(CVector(70.0f, 0.0f, 0.0f),
 		CVector(), CVector(50.0f, 50.0f, 50.0f));
-	mpEnemy3=new CEnemy3(CVector(-20.0f, 5.0f, 100.0f),
+	mpEnemy3=new CEnemy3(CVector(-20.0f, 50.0f, 100.0f),
 		CVector(), CVector(1000.5f, 1000.5f, 1000.5f));
 
 }
@@ -120,16 +120,19 @@ void CSceneGame::Init() {
 void CSceneGame::Update() {
 	//敵のスポーン間隔
 	if (mSpawn >= 0) {
-		//mSpawn--;
+		mSpawn--;
 	}
-	if (mSpawn <= 0) {
-		mpEnemy2 = new CEnemy2(mpEnemySummon->mPosition, CVector(0.0f, 0.1f, 0.0f),
-			CVector(1.5f, 1.5f, 1.5f));
+	if (mEnemy2Count < mEnemy2CountStopper) {
+
+		if (mSpawn <= 0) {
+			mpEnemy2 = new CEnemy2(mpEnemySummon->mPosition, CVector(0.0f, 0.1f, 0.0f),
+				CVector(1.5f, 1.5f, 1.5f));
 	  
-		mpEnemy2->Init(&CRes::sScorp);
+			mpEnemy2->Init(&CRes::sScorp);
 		
-		mEnemyCount++;
-		mSpawn = 120;
+			mEnemy2Count++;
+			mSpawn = 120;
+		}
 	}
 	if (CKey::Push(VK_ESCAPE)) {
 		exit(0);
