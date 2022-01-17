@@ -5,10 +5,12 @@
 #include"CBullet.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
-#define JUMP 10.0f
+#define JUMP 9.0f
 #define JUMP2 10.0f
 #define STEP  10.0f
 #define STEP2 20.0f
+#define G 0.1f
+#define G2 1.0f
 #include"CItem.h"
 int CXPlayer::mSpAttack = 0;
 int CXPlayer::mStamina = 0;
@@ -22,9 +24,10 @@ CXPlayer::CXPlayer()
 	, mColSphereFoot(this, nullptr, CVector(0.0f, -10.0f, -3.0f), 0.5f)
 	,mCollider(this, &mMatrix, CVector(0.0f, 0.0f, -0.0f), 5.0f)
 	, mCollider2(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 4.0f)
+	,mLine(this, &mMatrix, CVector(0.0f, 5.0f, 0.0f), CVector(0.0f, -3.0f, 0.0f))  //上下の線分コライダ
 	, mJump(0.0f)
 	, mHp(10)
-	, mGravity(0.0f)
+	, mGravity(1.1f)
 	,mSpaceCount1(0)
 	,mSpaceCount2(0)
 	,mSpaceCount3(0)
@@ -40,7 +43,9 @@ CXPlayer::CXPlayer()
 	mCollider2.mTag = CCollider::ESWORD;
 	mColSphereFoot.mTag = CCollider::EBODY;
 	mColSphereBody.mTag = CCollider::EBODY;
-	CXPlayer::mStamina = 400;
+
+	mLine.mType = CCollider::ELINE;
+	CXPlayer::mStamina = 1000;
 	mCollider.mTag = CCollider::ESTOPPER;
 
 }
@@ -57,7 +62,6 @@ void CXPlayer::Init(CModelX* model)
 
 	//合成行列の設定
 	mColSphereFoot.mpMatrix = &mpCombinedMatrix[1];
-	
 	mGravity = 0.20f;
 	mState = EIDLE;
 	mRotation.mY += 180.0f;
@@ -67,7 +71,6 @@ void CXPlayer::Init(CModelX* model)
 
 void CXPlayer::Update()
 {
-	
 	//処理を行動ごとに分割
 	switch (mState) {
 	case EIDLE:	//待機
@@ -75,14 +78,9 @@ void CXPlayer::Update()
 		mSpeed = 0;
 		break;
 	case EMOVE://移動
-		
-           
 			 if (CKey::Push('C')) {
-				
 					// mAnimationCount = 1;
 					 mState = EDUSH;
-				
-
 			 }
 			 else {
              ChangeAnimation(1, true, 60);
@@ -100,7 +98,6 @@ void CXPlayer::Update()
 		break;
 	case EESCAPE:
 		ChangeAnimation(1, true, 10);
-		
 		//攻撃時、進行方向にステップを踏む
 		mStep = STEP2;
 		if (mRotation.mX!=360.0f) {
@@ -132,11 +129,9 @@ void CXPlayer::Update()
 		}
 		
 		if (mAnimationCount <= 0) {
+
 			mState = EIDLE;
-			
 		}
-		
-		
 		break;
 	case EDAMAGED://ダメージ
 		ChangeAnimation(4, false, 10);
@@ -179,7 +174,9 @@ void CXPlayer::Update()
 		}
 		break;
 	case(8):
+
 		mCollider2.mRenderEnabled = true;
+		
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
 			
@@ -348,8 +345,7 @@ void CXPlayer::Update()
 					 mJump = JUMP;//ジャンプ力を代入
 					 // mSpAttack -= 30;//特殊攻撃のゲージ減少
 					 mAnimationCount = 100;//0になるまでアニメーションが変わらない
-					 mAttackCount = 50;
-					 //mTime = 1;//特殊攻撃の間だけ代入
+					 mAttackCount = 100;
 					 //mPosition.mY = 1.0f;// mJump* mTime - 0.5 * mGravity * mTime * mTime;
 				 }
 			 }
@@ -366,7 +362,8 @@ void CXPlayer::Update()
 					  mState = EESCAPE;
 					  mAnimationCount = 20;
 					  mDamageCount = 40;
-					 
+					  mStep = STEP;//ジャンプ力を代入
+
 					  mStamina -= 20;
 				  }
 				  //待機中のときにCを押しているとダッシュ
@@ -424,7 +421,7 @@ void CXPlayer::Update()
 			 mSpaceCount2 = 0;
 			 mSpaceCount3 = 0;
 		 }
-		 if (mStamina < 400) {
+		 if (mStamina < 1000) {
 			mStamina++;
 		 }
 		 if (mAttackCount > 0) {
@@ -433,9 +430,24 @@ void CXPlayer::Update()
 		 if (mDamageCount > 0) {
 			 mDamageCount--;
 		 }
-		 if (mState != EATTACKSP) {
-			 mTime = 0;
-		}
+		
+		 if (mState == EATTACKSP) {
+
+			 //マップに接触していない間ずっと重力がかかる
+			 mPosition.mY = mJump * mTime - 0.5 * mGravity * mTime * mTime;
+			 if (mTime >= 3.0) {
+					 mTime += 1.5f;
+			 }
+			 else {
+						 mTime += 0.2f;
+			 }
+			 
+		 }
+		 else if (mState != EATTACKSP) {
+			 mTime = 0.0f;
+			
+
+		 }
 		//アイテム取得時に武器の当たり判定拡大
 		 if (CItem::mItemCount > 0) {
 			mColSphereSword.mRadius = 7.5f;
@@ -467,9 +479,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 				if (m->mTag == CCollider::EBODY) {//相手のコライダが三角コライダの場合
 					//親が三角コライダ
 					if (o->mType == CCollider::ETRIANGLE) {
-						//マップについているコライダ
-						//if (o->mTag == CCollider::EMAPCOLLIDER) {
-
+						
 								CVector adjust;//調整用ベクトル
 							if (CCollider::CollisionTriangleSphere(o,m,&adjust)) {
 
@@ -477,18 +487,19 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 								//CCollider::CollisionTriangleLine(o, m, &adjust);
 								//位置の更新（mPosition+adjust)
 								mPosition = mPosition - adjust * -1;
-								//mPosition.mY = 0.0f;
+								
 								//行列の更新
 								CTransform::Update();
-								mTime = 0;
+								
 							}
 							else {
+
 								//マップに接触していない間ずっと重力がかかる
-								mPosition.mY = mJump * mTime - 0.5 * mGravity * mTime * mTime;
-								mTime+=0.1f;
+								//mPosition.mY = mJump * mTime - 0.5 * mGravity * mTime * mTime;
+								
 							}
 
-						//}
+						
 					}
 			
 					//球コライダ
@@ -586,8 +597,28 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 				 }
 
 			}
-		
+			break;
+	case CCollider::ELINE://線分コライダ
+			//相手のコライダが三角コライダの場合
+			if (o->mType == CCollider::ETRIANGLE) {
+				CVector adjust;//調整用ベクトル
+				//三角形と線分の衝突判定
+				CCollider::CollisionTriangleLine(o, m, &adjust);
+				//位置の更新（mPosition+adjust)
+				mPosition = mPosition - adjust * -1;
+				//行列の更新
+				CTransform::Update();
+
+			}
+			break;
+	
 	}
+}
+
+void CXPlayer::TaskCollision() {
+	mLine.ChangePriority();
+	//	衝突処理を実行
+	CCollisionManager::Get()->Collision(&mLine, COLLISIONRANGE);
 }
 
 	

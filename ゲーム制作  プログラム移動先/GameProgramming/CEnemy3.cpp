@@ -30,7 +30,6 @@ CEnemy3::CEnemy3()
 	, mJump(0)
 	, mJump2(0)
 	, mEnemyDamage(60)
-	
 	, mMove2(0)
 	, mColliderCount(0)
 	,mCount(0)
@@ -74,7 +73,8 @@ void CEnemy3::Update() {
 	//上向き（Y軸）のベクトルを求める
 	CVector vy = CVector(0.0f, 1.0f, 0.0f) * mMatrixRotate;
 	//前方向（Z軸）のベクトルを求める
-	CVector vz = CVector(0.0f, 0.0f, 5.0f) * mMatrixRotate;
+	CVector vz = CVector(0.0f, 0.0f, 1.0f) * mMatrixRotate;
+	
 	//目標地点までのベクトルを求める
 	CVector vp = mPoint - mPosition;
 	//左ベクトルとの内積を求める
@@ -83,15 +83,31 @@ void CEnemy3::Update() {
 	float dy = vp.Dot(vy);
 	//前ベクトルとの内積を求める
 	float dz = vp.Dot(vz);
+	
 	float margin = 0.1f;
+	
 	//左右方向へ回転
 	if (dx > margin) {
 		mRotation.mY += 1.0f;//左へ回転
+
 	}
 	else if (dx < -margin) {
 		mRotation.mY -= 1.0f;//右へ回転
 	}
+	if (dy > margin) {
+		//if (dz > margin) {
 
+		mRotation.mX -= 1.0f;
+	}
+		//}
+	else if(dy > margin){
+
+		//else if (dz < margin) {
+			
+				mRotation.mX += 1.0f;
+			
+		//}
+	}
 	CTransform::Update();//行列更新
 	switch (mMoveCount) {
 		//浮遊
@@ -130,7 +146,7 @@ void CEnemy3::Update() {
 		break;
 		//移動２（右後ろに移動）
 	case(2):
-		if (mCount <= 10) {
+		if (mCount < 10) {
 
 			//mPosition.mX += 3.0f;
 			//mPosition.mZ -= 1.5f;
@@ -186,10 +202,16 @@ void CEnemy3::Update() {
 		}
 		else {
 			mPoint = mPoint * CMatrix().RotateY(80);
+
+
 			//mPoint = mPoint * CMatrix().RotateX(80);
 		}
 	}
 	mpPlayer = 0;
+
+	if (mPosition.mY > 3.0f) {
+		mRotation.mX += 20.0f;
+	}
 	if (mHp <= 0) {
 
 		//吹き飛ぶ(X軸方向）
@@ -203,7 +225,7 @@ void CEnemy3::Update() {
 			mJump2--;
 		}
 		
-		//回転
+		
 		if (mPosition.mY > 3.0f) {
 			mRotation.mX += 20.0f;
 		}
@@ -266,17 +288,18 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 				//衝突しているとき
 				if (CCollider::Collision(m, o)) {
 					//プレイヤーのポインタ設定
-					/*mpPlayer = o->mpParent;
+					/*
 					mpBullet = new CBullet;
 					mpBullet->mPosition = mPosition;
 					mpBullet->mScale = CVector(2.5f, 2.5f, 2.5f);*/
 
 					
 					if (mFireCount <= 0) {
-
+                   // *mpPlayer = o->mpParent;
 					CBullet* bullet = new CBullet();
 					bullet->Set(0.1f, 1.5f);
-				    bullet->mPosition = CVector(0.0f, 0.0f, 10.0f) * mMatrix;
+					bullet->mPosition = mPosition;
+					
 					bullet->mRotation = mRotation;
 					bullet->Update();
 					mFireCount = 60;

@@ -3,12 +3,18 @@
 
 #include "CXCharacter.h"
 #include "CCollider.h"
+#include"CColliderLine.h"
+#include"CCollisionManager.h"
+#include"CTaskManager.h"
 #include"CVector.h"
 #include"CEnemy2.h"
 #include"CBoss.h"
 class CXPlayer : public CXCharacter
 {
 public:
+
+
+	CColliderLine mLine;//線分コライダ
 	//コライダの宣言
 	CCollider mColSphereBody;	//体
 	CCollider mColSphereHead;	//頭
@@ -53,7 +59,8 @@ public:
 	};
 	EPLAYERState mState;
 	CXPlayer();
-	
+
+	void TaskCollision();
 	
 	
 	/*

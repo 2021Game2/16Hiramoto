@@ -2,7 +2,7 @@
 #include "CCollisionManager.h"
 
 CBullet::CBullet()
-: mLife(500)
+: mLife(300)
 , mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 1.1f)
 {}
 
@@ -50,27 +50,26 @@ void CBullet::Collision(CCollider *m, CCollider *o) {
 		return;
 	}
 
-	//コライダのmとyが衝突しているか判定
-	if (CCollider::Collision(m, o)) {
-		//衝突している時は無効にする
-		//mEnabled = false;
-	}
+	
 
 	return;
 
-	if (m->mType == CCollider::ESPHERE
-		&& o->mType == CCollider::ESPHERE)
-	{
-		
-		/*
-		switch (o->mTag)
+	if (m->mType == CCollider::ESPHERE) {
+		if( o->mType == CCollider::ESPHERE)
 		{
-		case CCollider::ESEARCH:
-			break;
+			if (o->mpParent->mTag ==EPLAYER) {
+				if (o->mTag == CCollider::EBODY) {
+					//コライダのmとyが衝突しているか判定
+					if (CCollider::Collision(m, o)) {
+						
+				     mEnabled = false;
+					}
+				}
+		    }
 			
-			
-		}*/
+		}
 	}
+		
 }
 void CBullet::TaskCollision()
 {
