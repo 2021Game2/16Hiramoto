@@ -12,15 +12,14 @@
 #define VELOCITY 0.5f //マクロ
 
 #define JUMP 5.0f
-#define G 0.5f
+#define G 0.1f
 int CBoss::mBossAttackCount = 0;
 CModel CBoss::mModel;//モデルデータ作成
 //デフォルトコンストラクタ
 CBoss::CBoss()
 //コライダの設定
-	:mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 1.0f)
-	, mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 200.0f)
-	, mColSphereHead(this, &mMatrix, CVector(0.0f, 1.0f, 5.0f), 10.0f)
+	: mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 200.0f)
+	, mColSphereHead(this, &mMatrix, CVector(0.0f, 1.0f, 5.0f), 8.0f)
 	, mColSphereRightFront(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 4.0f)
 	, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 4.0f)
 	, mColSphereRightBack(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 4.0f)
@@ -37,12 +36,13 @@ CBoss::CBoss()
 	, mGravity(0.0f)
 	, mTime(0.0f)
 	, mBossDamageCount(0)
+	
 {
 
 	mGravity = 0.20f;
 	mTag = EBOSS;
 	mColSearch.mTag = CCollider::ESEARCH;//タグ設定
-	mColSphereHead.mTag = CCollider::EBOSSCOLLIDER;
+	mColSphereHead.mTag = CCollider::EBOSSCOLLIDERHEAD;
 	mColSphereRightFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
 	mColSphereLeftFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
 	mColSphereRightBack.mTag = CCollider::EBOSSCOLLIDER;
@@ -73,7 +73,6 @@ void CBoss::Init(CModelX* model)
 {
 	CXCharacter::Init(model);
 	//合成行列の設定
-	mCollider.mpMatrix = &mpCombinedMatrix[1];
 	//頭
 	mColSphereHead.mpMatrix = &mpCombinedMatrix[6];
     mColSphereRightFront.mpMatrix = &mpCombinedMatrix[12];//右前足
@@ -279,31 +278,36 @@ void CBoss::Update() {
 	if (mHp <= 0 && mState != EDEATH) {
 		mState = EDEATH;
 	}
+
+	mGravity  -= G;
+	mPosition.mY += mGravity;
 	CXCharacter::Update();
 }
 
 //Collision(コライダ１，コライダ２，）
 void CBoss::Collision(CCollider* m, CCollider* o) {
-	//自分がサーチ用のとき
-	if (m->mTag == CCollider::ESEARCH) {
-		//相手が弾コライダのとき
-		if (o->mType == CCollider::ESPHERE) {
-			//相手がプレイヤーのとき
-			if (o->mpParent->mTag == EPLAYER) {
-				//衝突しているとき
-				if (CCollider::Collision(m, o)) {
-					//ポインタをプレイヤーに設定
+	//コライダのとき
+	m->mType == CCollider::ESPHERE;
 
-					mpPlayer = o->mpParent;
+		//自分がサーチ用のとき
+		if (m->mTag == CCollider::ESEARCH) {
+			//相手が弾コライダのとき
+			if (o->mType == CCollider::ESPHERE) {
+				//相手がプレイヤーのとき
+				if (o->mpParent->mTag == EPLAYER) {
+					//衝突しているとき
+					if (CCollider::Collision(m, o)) {
+						//ポインタをプレイヤーに設定
+
+						mpPlayer = o->mpParent;
+					}
 				}
 			}
+			return;
 		}
-		return;
-	}
-	//弾コライダのとき
-	if (m->mType == CCollider::ESPHERE) {
+	
 		//EENEMY2COLLIDERの時
-		if (m->mTag == CCollider::EBOSSCOLLIDER) {
+		if (m->mTag == CCollider::EBOSSCOLLIDER||m->mTag== CCollider::EBOSSCOLLIDERATTACK) {
 
 			if (o->mType == CCollider::ESPHERE) {
 
@@ -315,8 +319,6 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 							if (CCollider::Collision(m, o)) {
 								if (CXPlayer::mAttackCount > 0) {
 									if (mHp > 0) {
-
-									
 										if (mHp % 30 == 0) {
 											mColliderCount = 10;
 											mCollisionEnemy = mPosition - o->mpParent->mPosition;
@@ -343,7 +345,6 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 							if (mState != EATTACK) {
 								if (mState != EIDLE) {
 									if (mHp > 0) {
-
 									 mState = EIDLE;
 									}
 								}
@@ -364,32 +365,25 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 
 			}
 		}
-		if (o->mType == CCollider::ETRIANGLE) {
-			CVector adjust;//調整値
-			//三角コライダと球コライダの衝突判定
-			//adjust、、、調整値
-			if (CCollider::CollisionTriangleSphere(o, m, &adjust))
-			{
-				if (mPosition.mX + mPosition.mZ > 0) {
-					//衝突しない位置まで戻す
-					//mPosition = mPosition - adjust;
-					
-				}
-				else {
-					//衝突しない位置まで戻す
-					//mPosition = mPosition + adjust;
-					
-				}
+		if (m->mTag == CCollider::EBOSSCOLLIDERHEAD) {
 
+			if (o->mType == CCollider::ETRIANGLE) {
+				CVector adjust;//調整値
+				//三角コライダと球コライダの衝突判定
+				//adjust、、、調整値
+				if (CCollider::CollisionTriangleSphere(o, m, &adjust))
+				{
+					mPosition = mPosition + adjust;
 
+					mGravity = 0;
+				}
 			}
 		}
 		return;
-	}
+	
 }
 void CBoss::TaskCollision() {
 	//コライダの優先度変更
-	mCollider.ChangePriority();
 	mColSearch.ChangePriority();
 	mColSphereHead.ChangePriority();
 	mColSphereRightFront.ChangePriority();
@@ -406,5 +400,4 @@ void CBoss::TaskCollision() {
 	CCollisionManager::Get()->Collision(&mColSphereLeftBack, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSphereHead, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSearch, COLLISIONRANGE);
-	CCollisionManager::Get()->Collision(&mCollider, COLLISIONRANGE);
 }

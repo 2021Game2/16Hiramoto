@@ -311,6 +311,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 				}
 					
 			}
+
 		}
 		if (o->mType == CCollider::ETRIANGLE) {
 			CVector adjust;//調整値
@@ -318,20 +319,15 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 			//adjust、、、調整値
 			if (CCollider::CollisionTriangleSphere(o, m, &adjust))
 			{
-				if (mPosition.mX + mPosition.mZ > 0) {
-					//衝突しない位置まで戻す
-					mPosition = mPosition - adjust;
-					if (mJump > 0) {
-						mPosition = mPosition - adjust ;
-					}
-				}
-				else {
+				
 					//衝突しない位置まで戻す
 					mPosition = mPosition + adjust;
+					/*
 					if (mJump > 0) {
 						mPosition = mPosition + adjust;
 					}
-				}
+					*/
+				
 
 				
 			}

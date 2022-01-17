@@ -22,7 +22,7 @@ CModel CEnemy3::mModel;//モデルデータ作成
 //デフォルトコンストラクタ
 CEnemy3::CEnemy3()
 //コライダの設定
-	:mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 20.0f)
+	:mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 10.0f)
 	, mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 70.0f)
 	, mColSearch2(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f),50.0f)
 	, mpPlayer(0)
@@ -209,9 +209,6 @@ void CEnemy3::Update() {
 	}
 	mpPlayer = 0;
 
-	if (mPosition.mY > 3.0f) {
-		mRotation.mX += 20.0f;
-	}
 	if (mHp <= 0) {
 
 		//吹き飛ぶ(X軸方向）
@@ -226,9 +223,7 @@ void CEnemy3::Update() {
 		}
 		
 		
-		if (mPosition.mY > 3.0f) {
-			mRotation.mX += 20.0f;
-		}
+		
 		mHp--;
 		//15フレームごとにエフェクト
 		if (mHp % 15 == 0) {
@@ -259,6 +254,7 @@ void CEnemy3::Update() {
 }
 //Collision(コライダ１，コライダ２，）
 void CEnemy3::Collision(CCollider* m, CCollider* o) {
+	m->mType == CCollider::ESPHERE;
 	//自分がサーチ用のとき
 	if (m->mTag == CCollider::ESEARCH) {
 		//相手が弾コライダのとき
@@ -310,12 +306,14 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 		}
 		return;
 	}
-	if (m->mType == CCollider::ESPHERE) {
+	if (m->mTag == CCollider::EENEMY3COLLIDER) {
+
+
 		if (o->mType == CCollider::ESPHERE) {
 			//相手が武器のとき、
 			if (o->mpParent->mTag == EPLAYER) {
 				if (o->mTag == CCollider::ESWORD) {
-                     //衝突しているとき
+					//衝突しているとき
 					if (CCollider::Collision(m, o)) {
 						if (CXPlayer::mAttackCount > 0) {
 							mColliderCount = 5;
@@ -330,7 +328,7 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 
 					}
 				}
-					
+
 			}
 		}
 		if (o->mType == CCollider::ETRIANGLE) {
@@ -339,26 +337,18 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 			//adjust、、、調整値
 			if (CCollider::CollisionTriangleSphere(o, m, &adjust))
 			{
-				if (mPosition.mX + mPosition.mZ > 0) {
-					//衝突しない位置まで戻す
-					mPosition = mPosition - adjust;
-					if (mJump > 0) {
-						mPosition = mPosition - adjust;
-					}
-				}
-				else {
+				 
 					//衝突しない位置まで戻す
 					mPosition = mPosition + adjust;
-					if (mJump > 0) {
-						mPosition = mPosition + adjust;
-					}
-				}
+					
+				
 
 
 			}
 		}
-		return;
+		
 	}
+	return;
 }
 void CEnemy3::TaskCollision() {
 	mColSearch.ChangePriority();

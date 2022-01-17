@@ -14,7 +14,6 @@ public:
 	//モデルデータ
 	static CModel mModel;
 	//コライダ
-	CCollider mCollider;
 	//コンストラクタ	
 	CBoss();
 	CVector mPoint;//目標地点
@@ -30,6 +29,7 @@ public:
 	float mGravity;//重力
 	float mTime;//ジャンプする時の時間を計測
 	int mEnemy2StopCount;//プレイヤーのESTOPPERに当たっている間増加
+	
 	void Init(CModelX* model);
 	CCollider mColSphereHead;
 	CCollider mColSphereRightFront;

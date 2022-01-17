@@ -486,7 +486,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 								//三角形と線分の衝突判定
 								//CCollider::CollisionTriangleLine(o, m, &adjust);
 								//位置の更新（mPosition+adjust)
-								mPosition = mPosition - adjust * -1;
+								mPosition = mPosition +adjust;
 								
 								//行列の更新
 								CTransform::Update();
@@ -605,7 +605,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 				//三角形と線分の衝突判定
 				CCollider::CollisionTriangleLine(o, m, &adjust);
 				//位置の更新（mPosition+adjust)
-				mPosition = mPosition - adjust * -1;
+				//mPosition = mPosition - adjust * -1;
 				//行列の更新
 				CTransform::Update();
 
