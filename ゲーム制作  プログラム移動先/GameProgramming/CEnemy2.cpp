@@ -213,7 +213,7 @@ void CEnemy2::Update() {
 		{
 			ChangeAnimation(5, false,120);
 		}
-		break;
+break;
 	case(5):
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
@@ -223,27 +223,29 @@ void CEnemy2::Update() {
 	}
 	//処理を行動ごとに分割
 	switch (mState) {
-		case EIDLE:	//待機
-			Idle();
-			break;
-		case EAUTOMOVE://移動
-			AutoMove();
-			break;
-		case EATTACK://攻撃
-			Attack();
-			break;
-		case EDAMAGED://ダメージ
-			Damaged();
-			break;
-		case EDEATH://死亡
-			Death();
-			break;
+	case EIDLE:	//待機
+		Idle();
+		break;
+	case EAUTOMOVE://移動
+		AutoMove();
+		break;
+	case EATTACK://攻撃
+		Attack();
+		break;
+	case EDAMAGED://ダメージ
+		Damaged();
+		break;
+	case EDEATH://死亡
+		Death();
+		break;
 	}
 	CXCharacter::Update();
 }
 
 //Collision(コライダ１，コライダ２，）
 void CEnemy2::Collision(CCollider* m, CCollider* o) {
+
+	m->mType == CCollider::ESPHERE;
 	//自分がサーチ用のとき
 	if (m->mTag == CCollider::ESEARCH) {
 		//相手が弾コライダのとき
@@ -259,60 +261,70 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 		}
 		return;
 	}
-	//弾コライダのとき
-	if (m->mType == CCollider::ESPHERE) {
-		//EENEMY2COLLIDERの時
-		if (m->mTag == CCollider::EENEMY2COLLIDER) {
+	//EENEMY2COLLIDERの時
+	if (m->mTag == CCollider::EENEMY2COLLIDER) {
 
-			if (o->mType == CCollider::ESPHERE) {
-				
-				if (o->mpParent->mTag == EPLAYER) {
-					//相手が武器のとき
-					if (o->mTag == CCollider::ESWORD) {
-						//衝突しているとき
-						if (CCollider::Collision(m, o)) {
-							if (CXPlayer::mAttackCount > 0) {
-								mColliderCount = 5;
-								mCollisionEnemy = mPosition - o->mpParent->mPosition;
-								mCollisionEnemy.mY = 0;
-								mCollisionEnemy = mCollisionEnemy.Normalize();
-								mState = EDAMAGED;
-								if (mHp <= 0) {
-									mJump = JUMP;
-									mTime = 1;//死んだ時だけ代入
-									mPosition.mY = 1.0f;// mJump* mTime - 0.5 * mGravity * mTime * mTime;
-									mState = EDEATH;
+		if (o->mType == CCollider::ESPHERE) {
 
-								}
-							}
-						}
-					}
-					//相手がESTOPPERの時
-					if (o->mTag == CCollider::ESTOPPER) {
-						
-						if (CCollider::Collision(m, o)) {
-                            if (mState != EATTACK) {
-								if (mState != EIDLE) {
-                                 mState = EIDLE;
-								}
-                           
-							}
-							mColliderCount = 1.5f;
+			if (o->mpParent->mTag == EPLAYER) {
+				//相手が武器のとき
+				if (o->mTag == CCollider::ESWORD) {
+					//衝突しているとき
+					if (CCollider::Collision(m, o)) {
+						if (CXPlayer::mAttackCount > 0) {
+							mColliderCount = 5;
 							mCollisionEnemy = mPosition - o->mpParent->mPosition;
+							mCollisionEnemy.mY = 0;
 							mCollisionEnemy = mCollisionEnemy.Normalize();
-							mMove++;
-							
+							mState = EDAMAGED;
+							if (mHp <= 0) {
+								mJump = JUMP;
+								mTime = 1;//死んだ時だけ代入
+								mPosition.mY = 1.0f;// mJump* mTime - 0.5 * mGravity * mTime * mTime;
+								mState = EDEATH;
+
+							}
 						}
-						
-						  
-						
-						
 					}
 				}
-					
+				//相手がESTOPPERの時
+				if (o->mTag == CCollider::ESTOPPER) {
+
+					if (CCollider::Collision(m, o)) {
+						if (mState != EATTACK) {
+							if (mState != EIDLE) {
+								mState = EIDLE;
+							}
+
+						}
+						mColliderCount = 1.5f;
+						mCollisionEnemy = mPosition - o->mpParent->mPosition;
+						mCollisionEnemy = mCollisionEnemy.Normalize();
+						mMove++;
+
+					}
+
+
+
+
+				}
 			}
 
 		}
+
+	}
+	//if(o->mpParent->mTag == EENEMY2){
+		if (m->mTag != CCollider::ESEARCH&&o->mTag != CCollider::ESEARCH) {
+			
+			if (CCollider::Collision(m, o )) {
+				//後ろに下がる
+				mColliderCount = 1.5f;
+					mCollisionEnemy = mPosition - o->mpParent->mPosition;
+					mCollisionEnemy.mY = 0;
+					mCollisionEnemy = mCollisionEnemy.Normalize();
+			}
+		}
+   // }
 		if (o->mType == CCollider::ETRIANGLE) {
 			CVector adjust;//調整値
 			//三角コライダと球コライダの衝突判定
@@ -333,7 +345,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 			}
 		}
 		return;
-	}
+	
 }
 void CEnemy2::TaskCollision() {
     //コライダの優先度変更

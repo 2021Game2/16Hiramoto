@@ -23,6 +23,7 @@ void CColliderTriangle::Render()
 {
 	//行列退避
 	glPushMatrix();
+	return;
 	//行列適用
 	glMultMatrixf(mpMatrix->mM[0]);
 
