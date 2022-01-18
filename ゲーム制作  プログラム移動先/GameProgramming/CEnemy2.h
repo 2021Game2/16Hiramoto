@@ -2,7 +2,7 @@
 #define CENEMY2_H
 //キャラクタクラスのインクルード
 #include"CCharacter.h"
-
+#include"CXPlayer.h"
 #include "CXCharacter.h"
 //コライダクラスのインクルード
 #include"CCollider.h"
@@ -34,7 +34,7 @@ public:
 	CCollider mColSphereHead;
 	CCollider mColSphereRight;
 	CCollider mColSphereLeft;
-
+	
 	CVector mCollisionEnemy;
 	//CEnemy2(位置、回転、拡縮）
 	CEnemy2(const CVector& position, const CVector& rotation, const CVector& scale);
@@ -45,7 +45,9 @@ public:
 	//Collision(コライダ１、コライダ２）
 	void Collision(CCollider* m, CCollider* o);
 	void TaskCollision();
-	CCharacter* mpPlayer;//プレイヤーのポインタ
+	CPlayer mPlayer;//プレイヤーのポインタ
+	float mPlayerMarkingX;//プレイヤーと敵のX座標の差
+	float mPlayerMarkingZ;//プレイヤーと敵のZ座標の差
 	int mEnemyDamage;
 
 	void Idle();		//待機処理

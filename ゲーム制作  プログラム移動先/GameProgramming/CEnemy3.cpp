@@ -45,7 +45,7 @@ CEnemy3::CEnemy3()
 	mpModel = &mModel;
 	mTag = EENEMY2;
     mCollider.mTag = CCollider::EENEMY3COLLIDER;
-	mColSearch.mTag = CCollider::ESEARCH;//タグ設定
+	//mColSearch.mTag = CCollider::ESEARCH;//タグ設定
 	mColSearch2.mTag = CCollider::ESEARCH2;//タグ設定
 }
 
@@ -284,10 +284,7 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 				//衝突しているとき
 				if (CCollider::Collision(m, o)) {
 					//プレイヤーのポインタ設定
-					/*
-					mpBullet = new CBullet;
-					mpBullet->mPosition = mPosition;
-					mpBullet->mScale = CVector(2.5f, 2.5f, 2.5f);*/
+					
 
 					
 					if (mFireCount <= 0) {

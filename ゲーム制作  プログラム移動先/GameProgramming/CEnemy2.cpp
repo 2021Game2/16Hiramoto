@@ -21,7 +21,7 @@ CEnemy2::CEnemy2()
 	,mColSphereHead(this,&mMatrix,CVector(0.0f,0.5f,-1.0f),3.0f)
 	, mColSphereRight(this, &mMatrix, CVector(1.5f, 3.0f, 0.5f), 2.0f)
 	, mColSphereLeft(this, &mMatrix, CVector(-1.0f, 0.5f, 0.0f), 2.0f)
-	,mpPlayer(0)
+	//,mpPlayer(0)
 	,mHp(HP)
 	,mJump(0.0f)
 	,mJump2(0)
@@ -35,7 +35,7 @@ CEnemy2::CEnemy2()
 	
 	mGravity = 0.20f;
 	mTag = EENEMY2;
-	mColSearch.mTag = CCollider::ESEARCH;//タグ設定
+	//mColSearch.mTag = CCollider::ESEARCH;//タグ設定
 	//mCollider.mTag = CCollider::EENEMY2COLLIDER;
 	mColSphereHead.mTag= CCollider::EENEMY2COLLIDER;
 		mColSphereRight.mTag= CCollider::EENEMY2COLLIDERATTACK;
@@ -115,6 +115,7 @@ void CEnemy2::AutoMove() {
 	//前ベクトルとの内積を求める
 	float dz = vp.Dot(vz);
 	float margin = 0.1f;
+	
 	//左右方向へ回転
 	if (dx > margin) {
 		mRotation.mY += 1.0f;//左へ回転
@@ -127,15 +128,18 @@ void CEnemy2::AutoMove() {
 	int r = rand() % 60; //rand()は整数の乱数を返す
 	//%180は１８０で割った余りを求める
 	if (r == 0) {
-		if (mpPlayer) {
+		//if (0) {
 			//プレイヤーの座標を記録
-			mPoint = mpPlayer->mPosition;
-		}
+			
+		//}
+		/*
 		else {
 			mPoint = mPoint * CMatrix().RotateY(80);
+			
 		}
+		*/
 	}
-	mpPlayer = 0;
+	
 }	
 //攻撃処理
 void CEnemy2::Attack() {
@@ -239,6 +243,9 @@ break;
 		Death();
 		break;
 	}
+	mPlayerMarkingX = mPosition.mX - mPlayer.mPosition.mX;
+	mPlayerMarkingZ = mPosition.mZ - mPlayer.mPosition.mZ;
+
 	CXCharacter::Update();
 }
 
@@ -313,18 +320,6 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 		}
 
 	}
-	//if(o->mpParent->mTag == EENEMY2){
-		if (m->mTag != CCollider::ESEARCH&&o->mTag != CCollider::ESEARCH) {
-			
-			if (CCollider::Collision(m, o )) {
-				//後ろに下がる
-				mColliderCount = 1.5f;
-					mCollisionEnemy = mPosition - o->mpParent->mPosition;
-					mCollisionEnemy.mY = 0;
-					mCollisionEnemy = mCollisionEnemy.Normalize();
-			}
-		}
-   // }
 		if (o->mType == CCollider::ETRIANGLE) {
 			CVector adjust;//調整値
 			//三角コライダと球コライダの衝突判定

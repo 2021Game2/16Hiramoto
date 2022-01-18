@@ -5,7 +5,7 @@
 #include"CBullet.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
-#define JUMP 9.0f
+#define JUMP 5.0f
 #define JUMP2 10.0f
 #define STEP  10.0f
 #define STEP2 20.0f
@@ -434,13 +434,9 @@ void CXPlayer::Update()
 		 if (mState == EATTACKSP) {
 
 			 //マップに接触していない間ずっと重力がかかる
-			 mPosition.mY = mJump * mTime - 0.5 * mGravity * mTime * mTime;
-			 if (mTime >= 3.0) {
-					 mTime += 1.5f;
-			 }
-			 else {
-						 mTime += 0.2f;
-			 }
+			 mPosition.mY += mJump + mGravity;
+
+			 mGravity -= G;
 			 
 		 }
 		 else if (mState != EATTACKSP) {
@@ -490,12 +486,10 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 								
 								//行列の更新
 								CTransform::Update();
-								
+								mGravity = 0;
+								mJump = 0;
 							}
 							else {
-
-								//マップに接触していない間ずっと重力がかかる
-								//mPosition.mY = mJump * mTime - 0.5 * mGravity * mTime * mTime;
 								
 							}
 

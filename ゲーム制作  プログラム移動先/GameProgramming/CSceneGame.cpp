@@ -187,6 +187,8 @@ void CSceneGame::Render() {
 	mFont.DrawString(buf, 20, 150, 8, 16);
 	sprintf(buf, "MOVE:%10d", CEnemy3::mMoveCount);
 	mFont.DrawString(buf, 20, 200, 8, 16);
+	sprintf(buf, "Y:%10d", mPlayer.mPosition.mY);
+	mFont.DrawString(buf, 20, 250, 8, 16);
 
 	//2DÇÃï`âÊèIóπ
 	CUtil::End2D();
