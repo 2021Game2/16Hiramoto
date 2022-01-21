@@ -15,6 +15,14 @@
 int CXPlayer::mSpAttack = 0;
 int CXPlayer::mStamina = 0;
 int CXPlayer::mAttackCount = 0;
+
+
+CXPlayer* CXPlayer::mpPlayerInstance;
+//プレイヤーのポインタを返すことで、座標などが参照できるようになる
+CXPlayer* CXPlayer::GetInstance()
+{
+	return mpPlayerInstance;
+}
 CXPlayer::CXPlayer()
 
 	: mColSphereBody(this, nullptr, CVector(), 0.5f)
@@ -47,6 +55,8 @@ CXPlayer::CXPlayer()
 	mLine.mType = CCollider::ELINE;
 	CXPlayer::mStamina = 1000;
 	mCollider.mTag = CCollider::ESTOPPER;
+	//this＝プレイヤーそのもの
+	mpPlayerInstance = this;
 
 }
 

@@ -8,7 +8,7 @@
 #include"CText.h"
 #define HP 10
 #define VELOCITY 0.2f //マクロ
-
+#define ROTATION 180.0f
 #define JUMP 3.0f
 #define G 0.5f
 int CEnemy2::mEnemy2AttackCount = 0;
@@ -125,19 +125,36 @@ void CEnemy2::AutoMove() {
 	}
 	CTransform::Update();//行列更新
 	//定期的にプレイヤーの座標を記録
-	int r = rand() % 60; //rand()は整数の乱数を返す
+	int r = 0; 
 	//%180は１８０で割った余りを求める
 	if (r == 0) {
 		//if (0) {
 			//プレイヤーの座標を記録
+		//右にいる
+		if (mPlayerMarkingX > 0) {
+
 			
-		//}
-		/*
-		else {
-			mPoint = mPoint * CMatrix().RotateY(80);
-			
+		
 		}
-		*/
+        //後ろにいる
+		if (mPlayerMarkingZ < 0) {
+			if (mRotationCount >= ROTATION) {
+
+			}
+		}
+		//左にいる
+		if (mPlayerMarkingX < 0) {
+			//前にいる
+			if (mPlayerMarkingZ > 0) {
+
+			}
+			//後ろにいる
+			else if (mPlayerMarkingZ < 0) {
+				if (mRotationCount >= ROTATION) {
+
+				}
+			}
+		}
 	}
 	
 }	
@@ -243,8 +260,10 @@ break;
 		Death();
 		break;
 	}
-	mPlayerMarkingX = mPosition.mX - mPlayer.mPosition.mX;
-	mPlayerMarkingZ = mPosition.mZ - mPlayer.mPosition.mZ;
+	//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
+	CXPlayer* tPlayer = CXPlayer::GetInstance();
+	mPlayerMarkingX = mPosition.mX - tPlayer->mPosition.mX;
+	mPlayerMarkingZ = mPosition.mZ - tPlayer->mPosition.mZ;
 
 	CXCharacter::Update();
 }
@@ -262,7 +281,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 				//衝突しているとき
 				if (CCollider::Collision(m, o)) {
 					//プレイヤーのポインタ設定
-					mpPlayer = o->mpParent;
+					//mPlayer = o->mpParent;
 				}
 			}
 		}

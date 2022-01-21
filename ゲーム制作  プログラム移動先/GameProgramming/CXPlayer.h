@@ -34,7 +34,12 @@ public:
 	float mJump;//ジャンプする時の初速度
 	float mStep;//攻撃時、少し前進
 	float mGravity;//重力
-	
+	//別のクラスで変数を呼び出す場合
+	//staticでポインタを作る
+	static CXPlayer* mpPlayerInstance;
+	//staticで処理を作る
+	static CXPlayer* GetInstance();
+
     static int mSpAttack;//ジャンプ攻撃をするためのゲージ
 	static int mAttackCount;//武器の当たり判定が適用される時間
 	float mColliderCount;//吹き飛ばされた時の初速度

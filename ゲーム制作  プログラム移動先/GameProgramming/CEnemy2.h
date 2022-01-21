@@ -45,9 +45,9 @@ public:
 	//Collision(コライダ１、コライダ２）
 	void Collision(CCollider* m, CCollider* o);
 	void TaskCollision();
-	CPlayer mPlayer;//プレイヤーのポインタ
 	float mPlayerMarkingX;//プレイヤーと敵のX座標の差
 	float mPlayerMarkingZ;//プレイヤーと敵のZ座標の差
+	float mRotationCount;
 	int mEnemyDamage;
 
 	void Idle();		//待機処理
