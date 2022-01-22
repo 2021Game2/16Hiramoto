@@ -6,7 +6,7 @@ CCollider::CCollider()
 : mpParent(0)
 , mpMatrix(&mMatrix)
 , mType(ESPHERE)
-, mTag(EBODY)
+, mTag(EPLAYERBODY)
 {
 	//コリジョンマネージャyに追加
 	CCollisionManager::Get()->Add(this);
@@ -30,6 +30,7 @@ CCollider::CCollider(CCharacter *parent, CMatrix *matrix,
 
 //描画
 void CCollider::Render() {
+
 	glPushMatrix();
 	//コライダの中心座標を計算
 	//自分の座標×親の変換行列を掛ける
@@ -37,10 +38,14 @@ void CCollider::Render() {
 	//中心座標へ移動
 	glMultMatrixf(CMatrix().Translate(pos.mX, pos.mY, pos.mZ).mM[0]);
 	//DIFFUSE赤色設定
+
 	float c[] = { 1.0f, 0.0f, 0.0f, 1.0f };
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, c);
 	//球描画
-	glutWireSphere(mRadius, 16, 16);
+	// 
+	// 
+	// ここをコメントにするとコライダが透明になる
+	//glutWireSphere(mRadius, 16, 16);
 	glPopMatrix();
 }
 

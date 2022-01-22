@@ -48,7 +48,7 @@ void CEnemySummon::Collision(CCollider* m, CCollider* o) {
 	if (m->mType == CCollider::ESPHERE) {
 		if (o->mType == CCollider::ESPHERE) {
 			if (o->mpParent->mTag ==EPLAYER) {
-				if(o->mTag==CCollider::ESWORD)
+				if(o->mTag==CCollider::EPLAYERSWORD)
 				//Õ“Ë‚µ‚Ä‚¢‚é‚Æ‚«
 				if (CCollider::Collision(m, o)) {
 				//	mHp--;

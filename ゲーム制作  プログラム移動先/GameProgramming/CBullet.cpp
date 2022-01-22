@@ -58,7 +58,7 @@ void CBullet::Collision(CCollider *m, CCollider *o) {
 		if( o->mType == CCollider::ESPHERE)
 		{
 			if (o->mpParent->mTag ==EPLAYER) {
-				if (o->mTag == CCollider::EBODY) {
+				if (o->mTag == CCollider::EPLAYERBODY) {
 					//ƒRƒ‰ƒCƒ_‚Ìm‚Æy‚ªÕ“Ë‚µ‚Ä‚¢‚é‚©”»’è
 					if (CCollider::Collision(m, o)) {
 						

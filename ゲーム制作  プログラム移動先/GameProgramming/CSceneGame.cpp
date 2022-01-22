@@ -14,17 +14,28 @@
 #include"CEnemy2.h"
 #include"CItem.h"
 #include"CRock.h"
+#include"CSound.h"
 //CMatrix Matrix;
 int CSceneGame::mEnemy2Count = 0;
-int CSceneGame::mEnemy2CountStopper = 5;
+int CSceneGame::mEnemy2CountStopper = 7;
 CSceneGame::~CSceneGame() {
 	Sleep(2000);
 }
 
 void CSceneGame::Init() {
 	//サウンド(wav)ファイルの読み込み
-	Bgm.Load("BGM.wav");
-	mJump.Load("jump.wav");
+
+	Bgm.Load("mp3\\BGM.wav");
+	Bgm.Repeat();
+	FirstAttack.Load("mp3\\一撃目.wav");
+	SecondAttack.Load("mp3\\二撃目.wav");
+	ThirdAttack.Load("mp3\\三撃目.wav");
+	JumpAttack.Load("mp3\\ジャンプ攻撃.wav");
+	Damage.Load("mp3\\ダメージ.wav");
+	Enemy3Fry.Load("mp3\\ハチの羽ばたき.wav");
+	BossVoice.Load("mp3\\ボス鳴き声.wav");
+	BossMove.Load("mp3\\ボスの足音.wav");
+	Enemy2Voice.Load("mp3\\サソリ鳴き声.wav");
    
 	//mBillBoard.Set(CVector(0.0f, 5.0f, 0.0f), 1.0f, 1.0f);
 	//Bgm.Repeat();
@@ -34,7 +45,7 @@ void CSceneGame::Init() {
 	CRes::sModelX.Load(MODEL_FILE);
      //キャラクターにモデルを設定
 	mPlayer.Init(&CRes::sModelX);
-	
+	mPlayer.mPosition = CVector(7.0f, 5.0f, -100.0f);
 	CRes::sKnight.Load("3DModel\\knight\\knight_low.x");
     CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//1:移動
 	CRes::sKnight.SeparateAnimationSet(0, 1530, 1830, "idle1");//2:待機
@@ -53,7 +64,7 @@ void CSceneGame::Init() {
 	mEnemy.Init(&CRes::sKnight);
 	mEnemy.mAnimationFrameSize = 1024;
 	//敵の配置
-	mEnemy.mPosition = CVector(7.0f, 0.0f, 0.0f);
+	mEnemy.mPosition = CVector(700.0f, 0.0f, 0.0f);
 	
 	
 
@@ -134,6 +145,10 @@ void CSceneGame::Update() {
 			mSpawn = 120;
 		}
 	}
+	else if( mEnemy2CountStopper==0) {
+		mEnemy2Count = 0;
+		mEnemy2CountStopper = 5;
+	}
 	if (CKey::Push(VK_ESCAPE)) {
 		exit(0);
 	}
@@ -180,16 +195,21 @@ void CSceneGame::Render() {
 
 	mFont.DrawString("3D PROGRAMMING", 20, 20, 10, 12);
 	char buf[64];
+	if (CBoss::mHp>0) {
 
-	sprintf(buf, "SPECIAL:%10d", CXPlayer::mSpAttack);
-	mFont.DrawString(buf, 20, 100, 8, 16);
-	sprintf(buf, "STAMINA:%10d", CXPlayer::mStamina);
-	mFont.DrawString(buf, 20, 150, 8, 16);
-	sprintf(buf, "MOVE:%10d", CEnemy3::mMoveCount);
-	mFont.DrawString(buf, 20, 200, 8, 16);
-	sprintf(buf, "Y:%10d", mPlayer.mPosition.mY);
-	mFont.DrawString(buf, 20, 250, 8, 16);
-
+		sprintf(buf, "SPECIAL:%10d", CXPlayer::mSpAttack);
+		mFont.DrawString(buf, 20, 100, 8, 16);
+		sprintf(buf, "STAMINA:%10d", CXPlayer::mStamina);
+		mFont.DrawString(buf, 20, 150, 8, 16);
+		sprintf(buf, "MOVE:%10d", CEnemy3::mMoveCount);
+		mFont.DrawString(buf, 20, 200, 8, 16);
+		sprintf(buf, "Y:%10f", mPlayer.mPosition.mY);
+		mFont.DrawString(buf, 20, 250, 8, 16);
+	}
+	else if (CBoss::mHp <= 0) {
+	sprintf(buf, "GAMECLEAR" );
+	mFont.DrawString(buf, 20, 300, 16, 32);
+	}
 	//2Dの描画終了
 	CUtil::End2D();
 

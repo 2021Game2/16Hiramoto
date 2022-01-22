@@ -104,7 +104,7 @@ void CXEnemy::Collision(CCollider* m, CCollider* o)
 		{
 			if (o->mpParent->mTag == EPLAYER)
 			{
-				if (o->mTag == CCollider::ESWORD)
+				if (o->mTag == CCollider::EPLAYERSWORD)
 				{
 					if (CCollider::Collision(m, o))
 					{

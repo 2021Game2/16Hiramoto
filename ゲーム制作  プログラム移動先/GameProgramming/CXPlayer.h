@@ -9,6 +9,8 @@
 #include"CVector.h"
 #include"CEnemy2.h"
 #include"CBoss.h"
+
+#include"CSound.h"
 class CXPlayer : public CXCharacter
 {
 public:

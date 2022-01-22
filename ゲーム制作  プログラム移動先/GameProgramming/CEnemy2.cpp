@@ -12,8 +12,10 @@
 #define JUMP 3.0f
 #define G 0.5f
 int CEnemy2::mEnemy2AttackCount = 0;
+extern CSound Enemy2Voice;
 CModel CEnemy2::mModel;//モデルデータ作成
 //デフォルトコンストラクタ
+//敵（サソリ）
 CEnemy2::CEnemy2()
 //コライダの設定
 	:mCollider(this,&mMatrix,CVector(-0.5f,0.0f,-1.0f),1.0f)
@@ -31,6 +33,8 @@ CEnemy2::CEnemy2()
 	, mColliderCount(0.0f)
 	,mGravity(0.0f)
 	,mTime(0.0f)
+	,CurveCount(0.0f)
+	,mEnemyVoice(0)
 {
 	
 	mGravity = 0.20f;
@@ -128,10 +132,37 @@ void CEnemy2::AutoMove() {
 	int r = 0; 
 	//%180は１８０で割った余りを求める
 	if (r == 0) {
+		CVector vpp = CVector(mPlayerMarkingX, 0.0f, mPlayerMarkingZ);
+		CVector vpx = CVector(1.0f, 0.0f, 0.0f);
+		CVector vpz = CVector(0.0f, 0.0f, 1.0f);
+		float dpx = vpp.Dot(vpx);
+		float dpz = vpp.Dot(vpz);
+		//X軸の-2～2の範囲に接触
+		if (-2.0f < dx && dx < 2.0f) {
+			//Y軸の-2～2の範囲に接触
+			if (-2.0f < dy && dy < 2.0f) {
+
+			}
+		}
+		else {
+			if (mPlayerMarkingX>0) {
+				mRotation.mY++;
+
+				if (mPlayerMarkingZ < 0) {
+					mRotation.mY++;
+				}
+			}
+			else if(mPlayerMarkingX > 0){
+				mRotation.mY--;
+				if (mPlayerMarkingZ < 0) {
+					mRotation.mY--;
+				}
+			}
+		}
 		//if (0) {
 			//プレイヤーの座標を記録
 		//右にいる
-		if (mPlayerMarkingX > 0) {
+		/*if (mPlayerMarkingX > 0) {
 
 			
 		
@@ -154,8 +185,19 @@ void CEnemy2::AutoMove() {
 
 				}
 			}
+		}*/
+		if (mpPlayer) {
+			//mPoint = mpPlayer->mPosition;
+
+		}
+		else {
+			mPoint = mPoint * CMatrix().RotateY(80);
+
+
+			//mPoint = mPoint * CMatrix().RotateX(80);
 		}
 	}
+	mpPlayer = 0;
 	
 }	
 //攻撃処理
@@ -212,8 +254,8 @@ void CEnemy2::Death() {
 	}
 	//吹き飛ばし(鉛直投げ上げの公式）
 	if (mPosition.mY > 0.0f) {
-		mPosition.mY = mJump * mTime - 0.5 * mGravity * mTime * mTime;
-		mTime++;
+		//mPosition.mY = mJump * mTime - 0.5 * mGravity * mTime * mTime;
+		//mTime++;
 	}
 	//しばらく経ったら消去
 	if (mHp <= -60) {
@@ -260,10 +302,15 @@ break;
 		Death();
 		break;
 	}
+	mEnemyVoice++;
+	if (mEnemyVoice>=180) {
+		//Enemy2Voice.Play();
+		mEnemyVoice = 0;
+	}
 	//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
 	CXPlayer* tPlayer = CXPlayer::GetInstance();
-	mPlayerMarkingX = mPosition.mX - tPlayer->mPosition.mX;
-	mPlayerMarkingZ = mPosition.mZ - tPlayer->mPosition.mZ;
+	mPlayerMarkingX =  tPlayer->mPosition.mX-mPosition.mX;
+	mPlayerMarkingZ =   tPlayer->mPosition.mZ-mPosition.mZ;
 
 	CXCharacter::Update();
 }
@@ -281,7 +328,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 				//衝突しているとき
 				if (CCollider::Collision(m, o)) {
 					//プレイヤーのポインタ設定
-					//mPlayer = o->mpParent;
+					mpPlayer = o->mpParent;
 				}
 			}
 		}
@@ -294,7 +341,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 
 			if (o->mpParent->mTag == EPLAYER) {
 				//相手が武器のとき
-				if (o->mTag == CCollider::ESWORD) {
+				if (o->mTag == CCollider::EPLAYERSWORD) {
 					//衝突しているとき
 					if (CCollider::Collision(m, o)) {
 						if (CXPlayer::mAttackCount > 0) {
@@ -339,6 +386,8 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 		}
 
 	}
+	if (m->mTag == CCollider::EENEMY2COLLIDER) {
+
 		if (o->mType == CCollider::ETRIANGLE) {
 			CVector adjust;//調整値
 			//三角コライダと球コライダの衝突判定
@@ -348,17 +397,14 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 				
 					//衝突しない位置まで戻す
 					mPosition = mPosition + adjust;
-					/*
-					if (mJump > 0) {
-						mPosition = mPosition + adjust;
-					}
-					*/
+					
 				
 
 				
 			}
 		}
 		return;
+	}
 	
 }
 void CEnemy2::TaskCollision() {

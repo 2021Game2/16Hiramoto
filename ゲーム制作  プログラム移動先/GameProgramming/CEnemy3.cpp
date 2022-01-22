@@ -6,6 +6,8 @@
 #include"CUtil.h"
 #include"CText.h"
 #include"CXCharacter.h"
+#include"CSound.h"
+#include"CSceneGame.h"
 #define OBJ "3DModel\\Bee\\BEE1.obj"//モデルのファイル
 #define MTL "3DModel\\Bee\\BEE1.mtl"//モデルのマテリアルファイル
 #define HP 1
@@ -18,8 +20,11 @@
 #define JUMP 4.0f
 #define G 0.1f
 int CEnemy3::mMoveCount = 0;
+extern CSound Enemy3Fry;
+
 CModel CEnemy3::mModel;//モデルデータ作成
 //デフォルトコンストラクタ
+//敵（ハチ）
 CEnemy3::CEnemy3()
 //コライダの設定
 	:mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 10.0f)
@@ -34,6 +39,7 @@ CEnemy3::CEnemy3()
 	, mColliderCount(0)
 	,mCount(0)
 	,mFireCount(0)
+	,mEnemy3Fry(0)
 {
 	mRotation.mY += 90.0f;
 	mTag = EENEMY3;
@@ -242,6 +248,11 @@ void CEnemy3::Update() {
 	if (mFireCount > 0) {
 		mFireCount--;
 	}
+	mEnemy3Fry++;
+	if (mEnemy3Fry >= 300) {
+		//Enemy3Fry.Play();
+		mEnemy3Fry = 0;
+	}
 	//CTransform::Update();
 
 	//CMatrix mMatrixCol;
@@ -309,7 +320,7 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 		if (o->mType == CCollider::ESPHERE) {
 			//相手が武器のとき、
 			if (o->mpParent->mTag == EPLAYER) {
-				if (o->mTag == CCollider::ESWORD) {
+				if (o->mTag == CCollider::EPLAYERSWORD) {
 					//衝突しているとき
 					if (CCollider::Collision(m, o)) {
 						if (CXPlayer::mAttackCount > 0) {

@@ -34,6 +34,16 @@ public:
 	static int mEnemy2Count;
 	static int mEnemy2CountStopper;
 	CSound Bgm;
+	CSound FirstAttack;
+	CSound SecondAttack;
+	CSound ThirdAttack;
+	CSound JumpAttack;
+	CSound Damage;
+	CSound Enemy3Fry;
+	CSound BossVoice;
+	CSound BossMove;
+	CSound Enemy2Voice;
+
 	//キャラクタのインスタンス
 	CXPlayer mPlayer;
 	//敵のインスタンス

@@ -14,20 +14,25 @@
 #define JUMP 5.0f
 #define G 0.1f
 int CBoss::mBossAttackCount = 0;
+int CBoss::mHp = HP;
+
+extern CSound BossVoice;
+extern CSound BossMove;
+
 CModel CBoss::mModel;//モデルデータ作成
 //デフォルトコンストラクタ
 CBoss::CBoss()
 //コライダの設定
 	: mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 200.0f)
 	, mColSphereHead(this, &mMatrix, CVector(0.0f, 1.0f, 5.0f), 8.0f)
-	, mColSphereRightFront(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 4.0f)
-	, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 4.0f)
-	, mColSphereRightBack(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 4.0f)
-	, mColSphereLeftBack(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 4.0f)
+	, mColSphereRightFront(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 2.0f)
+	, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
+	, mColSphereRightBack(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
+	, mColSphereLeftBack(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
 
 
 	, mpPlayer(0)
-	, mHp(HP)
+	
 	, mJump2(0)
 	, mEnemyDamage(60)
 	, mMove(0)
@@ -114,6 +119,7 @@ void CBoss::Idle() {
 //移動処理
 void CBoss::AutoMove() {
 	//歩く
+	//BossMove.Play();
 	mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
 	ChangeAnimation(4, true,180);
 	//プレイヤーに向かって回転する処理
@@ -158,6 +164,7 @@ void CBoss::AutoMove() {
 }
 //攻撃処理
 void CBoss::Attack() {
+	//BossVoice.Play();
 	//攻撃アニメーション
 	ChangeAnimation(5, true, 83);
 	//当たり判定が適用される時間
@@ -178,6 +185,7 @@ void CBoss::Attack() {
 }
 //攻撃処理
 void CBoss::Attack2() {
+	//BossVoice.Play();
 	//攻撃アニメーション
 	ChangeAnimation(6, true, 80);
 	//当たり判定が適用される時間
@@ -313,7 +321,7 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 
 				if (o->mpParent->mTag == EPLAYER) {
 					//相手が武器のとき
-					if (o->mTag == CCollider::ESWORD) {
+					if (o->mTag == CCollider::EPLAYERSWORD) {
 						//衝突しているとき
 					    
 							if (CCollider::Collision(m, o)) {

@@ -7,6 +7,8 @@
 //コライダクラスのインクルード
 #include"CCollider.h"
 #include"CText.h"
+
+#include"CSound.h"
 /*エネミークラス
 キャラクタクラスを継承	*/
 class CEnemy2 :public CXCharacter {
@@ -24,7 +26,8 @@ public:
 	CText mText;
 	int mMove;
 	int mMove2;
-	
+
+	CCharacter* mpPlayer;//プレイヤーのポインタ
 	float mColliderCount;
 	static int mEnemy2AttackCount;
 	float mGravity;//重力
@@ -49,7 +52,8 @@ public:
 	float mPlayerMarkingZ;//プレイヤーと敵のZ座標の差
 	float mRotationCount;
 	int mEnemyDamage;
-
+	int mEnemyVoice;
+	float CurveCount;
 	void Idle();		//待機処理
 	void AutoMove();	//移動処理
 	void Attack();	//攻撃処理

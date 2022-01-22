@@ -6,6 +6,8 @@
 #include"CCollider.h"
 #include"CText.h"
 #include"CBullet.h"
+
+#include"CSound.h"
 /*エネミークラス
 キャラクタクラスを継承	*/
 class CEnemy3 :public CCharacter {
@@ -27,6 +29,7 @@ public:
 	int mColliderCount;
 	int mCount;
 	int mFireCount;
+	int mEnemy3Fry;
 	CVector mCollisionEnemy;
 	//CEnemy2(位置、回転、拡縮）
 	CEnemy3(const CVector& position, const CVector& rotation, const CVector& scale);

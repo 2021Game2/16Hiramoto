@@ -7,6 +7,8 @@
 //コライダクラスのインクルード
 #include"CCollider.h"
 #include"CText.h"
+
+#include"CSound.h"
 /*エネミークラス
 キャラクタクラスを継承	*/
 class CBoss :public CXCharacter {
@@ -17,7 +19,7 @@ public:
 	//コンストラクタ	
 	CBoss();
 	CVector mPoint;//目標地点
-	int mHp;//体力
+	static int mHp;//体力
 
 	int mJump2;
 	CText mText;

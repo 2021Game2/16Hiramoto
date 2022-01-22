@@ -12,10 +12,11 @@ class CCollider : public CTransform, public CTask {
 public:
 	enum ETag
 	{
-		EBODY,		//本体
+		EPLAYERBODY,		//本体
 		ESEARCH,	//サーチ用
 		ESEARCH2,	//サーチ用
-		ESWORD,	//剣
+		EPLAYERSWORD,	//剣
+		EPLAYERFOOT,
 		EENEMYSUMMON,
 		EENEMY2COLLIDER,
 		EPLAYER,
