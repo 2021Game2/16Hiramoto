@@ -15,9 +15,10 @@
 #include"CItem.h"
 #include"CRock.h"
 #include"CSound.h"
+#define ENEMYCOUNT 15
 //CMatrix Matrix;
 int CSceneGame::mEnemy2Count = 0;
-int CSceneGame::mEnemy2CountStopper = 7;
+int CSceneGame::mEnemy2CountStopper = ENEMYCOUNT;
 CSceneGame::~CSceneGame() {
 	Sleep(2000);
 }
@@ -26,7 +27,7 @@ void CSceneGame::Init() {
 	//サウンド(wav)ファイルの読み込み
 
 	Bgm.Load("mp3\\BGM.wav");
-	Bgm.Repeat();
+	//Bgm.Repeat();
 	FirstAttack.Load("mp3\\一撃目.wav");
 	SecondAttack.Load("mp3\\二撃目.wav");
 	ThirdAttack.Load("mp3\\三撃目.wav");
@@ -145,9 +146,9 @@ void CSceneGame::Update() {
 			mSpawn = 120;
 		}
 	}
-	else if( mEnemy2CountStopper==0) {
-		mEnemy2Count = 0;
-		mEnemy2CountStopper = 5;
+	else if( mEnemy2CountStopper<=4) {
+		
+		mEnemy2CountStopper = ENEMYCOUNT;
 	}
 	if (CKey::Push(VK_ESCAPE)) {
 		exit(0);
@@ -156,9 +157,9 @@ void CSceneGame::Update() {
 	//更新
 	CTaskManager::Get()->Update();
 
-	//衝突処理
+	//衝突処理(総当り）
 	CCollisionManager::Get()->Collision();
-
+	//CTaskManager::Get()->TaskCollision();
 	Camera.Update();
 
 	//mJump.Play();
@@ -189,7 +190,8 @@ void CSceneGame::Render() {
 	CTaskManager::Get()->Render();
 
 	//コライダの描画
-	CCollisionManager::Get()->Render();
+	//ここをコメントにするとすべてのコライダ非表示
+	//CCollisionManager::Get()->Render();
 	//2D描画開始
 	CUtil::Start2D(0, 800, 0, 600);
 
@@ -201,10 +203,10 @@ void CSceneGame::Render() {
 		mFont.DrawString(buf, 20, 100, 8, 16);
 		sprintf(buf, "STAMINA:%10d", CXPlayer::mStamina);
 		mFont.DrawString(buf, 20, 150, 8, 16);
-		sprintf(buf, "MOVE:%10d", CEnemy3::mMoveCount);
-		mFont.DrawString(buf, 20, 200, 8, 16);
-		sprintf(buf, "Y:%10f", mPlayer.mPosition.mY);
-		mFont.DrawString(buf, 20, 250, 8, 16);
+		//sprintf(buf, "MOVE:%10d", CEnemy3::mMoveCount);
+		//mFont.DrawString(buf, 20, 200, 8, 16);
+		//sprintf(buf, "Y:%10f", mPlayer.mPosition.mY);
+		//mFont.DrawString(buf, 20, 250, 8, 16);
 	}
 	else if (CBoss::mHp <= 0) {
 	sprintf(buf, "GAMECLEAR" );

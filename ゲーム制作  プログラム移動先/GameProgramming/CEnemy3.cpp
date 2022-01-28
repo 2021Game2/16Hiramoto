@@ -51,7 +51,7 @@ CEnemy3::CEnemy3()
 	mpModel = &mModel;
 	mTag = EENEMY2;
     mCollider.mTag = CCollider::EENEMY3COLLIDER;
-	//mColSearch.mTag = CCollider::ESEARCH;//タグ設定
+	mColSearch.mTag = CCollider::ESEARCH;//タグ設定
 	mColSearch2.mTag = CCollider::ESEARCH2;//タグ設定
 }
 
@@ -267,53 +267,57 @@ void CEnemy3::Update() {
 void CEnemy3::Collision(CCollider* m, CCollider* o) {
 	m->mType == CCollider::ESPHERE;
 	//自分がサーチ用のとき
-	if (m->mTag == CCollider::ESEARCH) {
-		//相手が弾コライダのとき
-		if (o->mType == CCollider::ESPHERE) {
-			//相手がプレイヤーのとき、
-			if (o->mpParent->mTag == EPLAYER) {
-				//衝突しているとき
-				if (CCollider::Collision(m, o)) {
-					//プレイヤーのポインタ設定
-					mpPlayer = o->mpParent;
-					if (mMoveCount<= 0) {
-                          mMoveCount = 1;
-						
-                     
-					}
-					
-				}
-			}
-		}
-		return;
-	}
-	if (m->mTag == CCollider::ESEARCH2) {
-		//相手が弾コライダのとき
-		if (o->mType == CCollider::ESPHERE) {
-			//相手がプレイヤーのとき、
-			if (o->mpParent->mTag == EPLAYER) {
-				//衝突しているとき
-				if (CCollider::Collision(m, o)) {
-					//プレイヤーのポインタ設定
-					
 
-					
-					if (mFireCount <= 0) {
-                   // *mpPlayer = o->mpParent;
-					CBullet* bullet = new CBullet();
-					bullet->Set(0.1f, 1.5f);
-					bullet->mPosition = mPosition;
-					
-					bullet->mRotation = mRotation;
-					bullet->Update();
-					mFireCount = 60;
+	if (m->mpParent->mTag == EENEMY3) {
+		if (m->mTag == CCollider::ESEARCH) {
+			//相手が弾コライダのとき
+			if (o->mType == CCollider::ESPHERE) {
+				//相手がプレイヤーのとき、
+				if (o->mpParent->mTag == EPLAYER) {
+					//衝突しているとき
+					if (CCollider::Collision(m, o)) {
+						//プレイヤーのポインタ設定
+						mpPlayer = o->mpParent;
+						if (mMoveCount <= 0) {
+							mMoveCount = 1;
+
+
+						}
+
 					}
 				}
-				
 			}
+			return;
 		}
-		return;
 	}
+		if (m->mTag == CCollider::ESEARCH2) {
+			//相手が弾コライダのとき
+			if (o->mType == CCollider::ESPHERE) {
+				//相手がプレイヤーのとき、
+				if (o->mpParent->mTag == EPLAYER) {
+					//衝突しているとき
+					if (CCollider::Collision(m, o)) {
+						//プレイヤーのポインタ設定
+
+
+
+						if (mFireCount <= 0) {
+							// *mpPlayer = o->mpParent;
+							CBullet* bullet = new CBullet();
+							bullet->Set(0.1f, 1.5f);
+							bullet->mPosition = mPosition;
+
+							bullet->mRotation = mRotation;
+							bullet->Update();
+							mFireCount = 60;
+						}
+					}
+
+				}
+			}
+			return;
+		}
+	
 	if (m->mTag == CCollider::EENEMY3COLLIDER) {
 
 

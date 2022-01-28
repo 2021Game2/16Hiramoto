@@ -26,7 +26,7 @@ public:
 	CText mText;
 	int mMove;
 	int mMove2;
-
+	int mDamageCount;
 	CCharacter* mpPlayer;//プレイヤーのポインタ
 	float mColliderCount;
 	static int mEnemy2AttackCount;

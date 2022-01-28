@@ -44,8 +44,7 @@ void CCollider::Render() {
 	//球描画
 	// 
 	// 
-	// ここをコメントにするとコライダが透明になる
-	//glutWireSphere(mRadius, 16, 16);
+	glutWireSphere(mRadius, 16, 16);
 	glPopMatrix();
 }
 

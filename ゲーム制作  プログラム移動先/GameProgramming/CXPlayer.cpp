@@ -5,22 +5,27 @@
 #include"CBullet.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
-#define JUMP 4.0f
+#define JUMP 5.0f
 #define JUMP2 10.0f
-#define STEP  10.0f
+#define STEP  20.0f
 #define STEP2 20.0f
 #define STAMINA 1000
+
+#define HP_MAX 100				//体力最大値
+#define STAMINA_MAX 100			//スタミナ最大値
+
+#define GAUGE_WID_MAX 350.0f	//ゲージの幅の最大値
 #define G 0.1f
-#define G2 1.0f
+#define G2 2.0f
 #include"CItem.h"
 #include"CSound.h"
 #include"CSceneGame.h"
 
 
 int CXPlayer::mSpAttack = 0;
-int CXPlayer::mStamina = 0;
+int CXPlayer::mStamina = STAMINA_MAX;
 int CXPlayer::mAttackCount = 0;
-
+int CXPlayer::mHp = HP_MAX;
 extern CSound FirstAttack;
 extern CSound SecondAttack;
 extern CSound ThirdAttack;
@@ -37,14 +42,14 @@ CXPlayer::CXPlayer()
 
 	: mColSphereBody(this, nullptr, CVector(0.0f,1.1f,0.0f), 0.5f)
 	, mColSphereHead(this, nullptr, CVector(0.0f, 5.0f, -3.0f), 0.5f)
-	, mColSphereSword(this, nullptr, CVector(-10.0f, 10.0f, 50.0f), 5.7f)
+	, mColSphereSword(this, nullptr, CVector(-10.0f, 10.0f, 50.0f), 4.5f)
 
-	, mColSphereFoot(this, nullptr, CVector(0.0f, 0.0f, -3.0f), 0.5f)
+	, mColSphereFoot(this, nullptr, CVector(0.0f, 0.0f, -3.0f), 3.0f)
 	,mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 5.0f)
 	, mCollider2(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 4.0f)
 	,mLine(this, &mMatrix, CVector(0.0f, 5.0f, 0.0f), CVector(0.0f, 1.0f, 0.0f))  //上下の線分コライダ
 	, mJump(0.0f)
-	, mHp(10)
+
 	, mGravity(0.0f)
 	,mSpaceCount1(0)
 	,mSpaceCount2(0)
@@ -64,11 +69,12 @@ CXPlayer::CXPlayer()
 	mColSphereBody.mTag = CCollider::EPLAYERBODY;
 
 	mLine.mType = CCollider::ELINE;
-	CXPlayer::mStamina = STAMINA;
+	
 	mCollider.mTag = CCollider::ESTOPPER;
 	//this＝プレイヤーそのもの
 	mpPlayerInstance = this;
 
+	mTexture.Load("Gauge.png");
 }
 
 void CXPlayer::Init(CModelX* model)
@@ -82,7 +88,7 @@ void CXPlayer::Init(CModelX* model)
 	mColSphereSword.mpMatrix = &mpCombinedMatrix[22];
 
 	//合成行列の設定
-	mColSphereFoot.mpMatrix = &mpCombinedMatrix[1];
+	mColSphereFoot.mpMatrix = &mpCombinedMatrix[2];
 	mGravity = 0.20f;
 	mState = EIDLE;
 	mRotation.mY += 180.0f;
@@ -196,12 +202,17 @@ void CXPlayer::Update()
 		}
 		break;
 	case(8):
-		if (mJump >= -1.0f) {
-			mJump -= G;
-		}
-		mCollider2.mRenderEnabled = true;
+		if (mState == EATTACKSP) {
+
+			if (mJump >= -5.0f) {
+				mJump -= G2;
+
+			  mCollider2.mRenderEnabled = true;
 		
-		if (mAnimationFrame >= mAnimationFrameSize)
+		    }
+	    }
+
+				if (mAnimationFrame >= mAnimationFrameSize)
 		{
 			
 			mCollider2.mRenderEnabled = false;
@@ -460,10 +471,10 @@ void CXPlayer::Update()
 			 mDamageCount--;
 		 }
 		
-		 //if (mState == EATTACKSP) {
+		 
 
 			 //マップに接触していない間ずっと重力がかかる
-		 mPosition.mY += mJump;
+		
 		 if (mState != EATTACKSP) {
 
 			 if (mJump >= -0.1) {
@@ -471,8 +482,7 @@ void CXPlayer::Update()
 			 mJump -= G;
 			 }
 		 }
-			// mGravity -= G;
-			 
+			  mPosition.mY += mJump;
 		// }
 		//アイテム取得時に武器の当たり判定拡大
 		 if (CItem::mItemCount > 0) {
@@ -606,6 +616,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 							//敵のコライダ
 							if (o->mTag == CCollider::EENEMY2COLLIDER) {
 								if (CCollider::Collision(m, o)) {
+									//o->mpParent->Collision(o, m);
 									if (mAttackCount > 0) {
 										//特殊攻撃のゲージ増加
 										mSpAttack += 2;
@@ -636,12 +647,42 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 	}
 }
 
+
 void CXPlayer::TaskCollision() {
+
+	//半径（数値）の間でのみ衝突判定
+	//CCollisionManager::Get()->Collision(&mColSphereSword.100);
 	mLine.ChangePriority();
 	//	衝突処理を実行
 	CCollisionManager::Get()->Collision(&mLine, COLLISIONRANGE);
 }
+void CXPlayer::Render2D()
+{
+	//2D描画開始
+	CUtil::Start2D(0, 800, 0, 600);
 
+	//体力の割合
+	float hpRate = (float)mHp / (float)HP_MAX;
+	//体力ゲージの幅
+	float hpGaugeWid = GAUGE_WID_MAX * hpRate;
+
+	//スタミナの割合
+	float staminaRate = (float)mStamina / (float)STAMINA_MAX;
+	//スタミナゲージの幅
+	float staminaGaugeWid = GAUGE_WID_MAX * staminaRate;
+
+	mTexture.Draw(20, GAUGE_WID_MAX, 560, 590, 210, 290, 63, 0);	//ゲージ背景
+	mTexture.Draw(20, hpGaugeWid, 560, 590, 0, 0, 0, 0);			//体力ゲージ
+
+	mTexture.Draw(20, GAUGE_WID_MAX, 520, 550, 210, 290, 63, 0);	//ゲージ背景
+	mTexture.Draw(20, staminaGaugeWid, 520, 550, 110, 190, 63, 0);	//スタミナゲージ
+
+
+
+
+
+
+}
 	
 
 

@@ -6,11 +6,11 @@
 #include"CXCharacter.h"
 #include"CUtil.h"
 #include"CText.h"
-#define HP 10
+#define HP 30
 #define VELOCITY 0.2f //マクロ
 #define ROTATION 180.0f
-#define JUMP 3.0f
-#define G 0.5f
+#define JUMP 2.0f
+#define G 0.1f
 int CEnemy2::mEnemy2AttackCount = 0;
 extern CSound Enemy2Voice;
 CModel CEnemy2::mModel;//モデルデータ作成
@@ -35,6 +35,7 @@ CEnemy2::CEnemy2()
 	,mTime(0.0f)
 	,CurveCount(0.0f)
 	,mEnemyVoice(0)
+	, mDamageCount(0)
 {
 	
 	mGravity = 0.20f;
@@ -122,10 +123,10 @@ void CEnemy2::AutoMove() {
 	
 	//左右方向へ回転
 	if (dx > margin) {
-		mRotation.mY += 1.0f;//左へ回転
+		//mRotation.mY += 1.0f;//左へ回転
 	}
 	else if (dx < -margin) {
-		mRotation.mY -= 1.0f;//右へ回転
+		//mRotation.mY -= 1.0f;//右へ回転
 	}
 	CTransform::Update();//行列更新
 	//定期的にプレイヤーの座標を記録
@@ -138,13 +139,7 @@ void CEnemy2::AutoMove() {
 		float dpx = vpp.Dot(vpx);
 		float dpz = vpp.Dot(vpz);
 		//X軸の-2～2の範囲に接触
-		if (-2.0f < dx && dx < 2.0f) {
-			//Y軸の-2～2の範囲に接触
-			if (-2.0f < dy && dy < 2.0f) {
-
-			}
-		}
-		else {
+		
 			if (mPlayerMarkingX>0) {
 				mRotation.mY++;
 
@@ -158,7 +153,7 @@ void CEnemy2::AutoMove() {
 					mRotation.mY--;
 				}
 			}
-		}
+		
 		//if (0) {
 			//プレイヤーの座標を記録
 		//右にいる
@@ -222,14 +217,22 @@ void CEnemy2::Attack() {
 void CEnemy2::Damaged() {
 	//体力減少
 	mHp--;
+
+	if (mDamageCount < 60) {
+		mDamageCount++;
+	}
 	//吹き飛ぶ（X,Z軸)
 	if (mColliderCount > 0) {
 		mColliderCount--;
 		mPosition = mPosition + mCollisionEnemy * mColliderCount;
      
 	}
+
+	if (mDamageCount >= 60) {
 	//ダメージのあとは移動処理
     mState = EAUTOMOVE;
+	mDamageCount = 0;
+	}
 }		
 //死亡処理
 void CEnemy2::Death() {
@@ -237,7 +240,10 @@ void CEnemy2::Death() {
 	//体力がなくなったら
 	if (mHp <= 0) {
 		//mTimeとmJumpに整数が代入され、吹っ飛ぶようになる
-		//mPosition.mY = mJump * mTime - 0.5 * mGravity * mTime * mTime;
+		mPosition.mY += mJump;
+		if (mJump >= -0.5f) {
+			mJump -= G;
+		}
 		mHp--;
 		//15フレームごとにエフェクト
 		if (mHp % 15 == 0) {
@@ -258,7 +264,7 @@ void CEnemy2::Death() {
 		//mTime++;
 	}
 	//しばらく経ったら消去
-	if (mHp <= -60) {
+	if (mHp <= -120) {
 		mEnabled = false;
 		CSceneGame::mEnemy2Count --;
 		CSceneGame::mEnemy2CountStopper--;
@@ -326,10 +332,10 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 			//相手がプレイヤーのとき
 			if (o->mpParent->mTag == EPLAYER) {
 				//衝突しているとき
-				if (CCollider::Collision(m, o)) {
+				//if (CCollider::Collision(m, o)) {
 					//プレイヤーのポインタ設定
-					mpPlayer = o->mpParent;
-				}
+					//mpPlayer = o->mpParent;
+				//}
 			}
 		}
 		return;
@@ -352,8 +358,8 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 							mState = EDAMAGED;
 							if (mHp <= 0) {
 								mJump = JUMP;
-								mTime = 1;//死んだ時だけ代入
-								mPosition.mY = 1.0f;// mJump* mTime - 0.5 * mGravity * mTime * mTime;
+								
+								
 								mState = EDEATH;
 
 							}
