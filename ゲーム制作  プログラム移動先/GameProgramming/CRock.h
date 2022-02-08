@@ -1,6 +1,7 @@
 #include"CCollider.h"
 #include"CModel.h"
 #include"CCharacter.h"
+#include"CColliderMesh.h"
 #ifndef CROCK_H
 #define CROCK_H
 class CRock : public CCharacter {
@@ -8,7 +9,8 @@ public:
 	//モデルデータ
 	static CModel mModel;
 	//コライダ
-	CCollider mCollider;
+	//CCollider mCollider;
+	CColliderMesh mColliderMesh;
 	CRock();
 	//CEnemy2(位置、回転、拡縮）
 	CRock(const CVector& position, const CVector& rotation, const CVector& scale);

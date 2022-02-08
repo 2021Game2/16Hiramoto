@@ -12,7 +12,7 @@
 #define STAMINA 1000
 
 #define HP_MAX 100				//体力最大値
-#define STAMINA_MAX 100			//スタミナ最大値
+#define STAMINA_MAX 1000		//スタミナ最大値
 
 #define GAUGE_WID_MAX 350.0f	//ゲージの幅の最大値
 #define G 0.1f
@@ -67,7 +67,7 @@ CXPlayer::CXPlayer()
 	mCollider2.mTag = CCollider::EPLAYERSWORD;
 	mColSphereFoot.mTag = CCollider::EPLAYERBODY;
 	mColSphereBody.mTag = CCollider::EPLAYERBODY;
-
+	mColSphereHead.mTag = CCollider::EPLAYERBODY;
 	mLine.mType = CCollider::ELINE;
 	
 	mCollider.mTag = CCollider::ESTOPPER;
@@ -94,6 +94,7 @@ void CXPlayer::Init(CModelX* model)
 	mRotation.mY += 180.0f;
 
 	mCollider2.mRenderEnabled = false;
+
 }
 
 void CXPlayer::Update()
@@ -482,7 +483,10 @@ void CXPlayer::Update()
 			 mJump -= G;
 			 }
 		 }
+		 if (mState != EESCAPE) {
+
 			  mPosition.mY += mJump;
+		 }
 		// }
 		//アイテム取得時に武器の当たり判定拡大
 		 if (CItem::mItemCount > 0) {
@@ -518,15 +522,18 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 						
 								CVector adjust;//調整用ベクトル
 							if (CCollider::CollisionTriangleSphere(o,m,&adjust)) {
-                                mGravity = 0;
-								mJump = 0;
-								//三角形と線分の衝突判定
-								//CCollider::CollisionTriangleLine(o, m, &adjust);
-								//位置の更新（mPosition+adjust)
-								mPosition = mPosition +adjust;
-								
-								//行列の更新
-								CTransform::Update();
+
+								if (mState != EESCAPE) {
+									mGravity = 0;
+									mJump = 0;
+									//三角形と線分の衝突判定
+									//CCollider::CollisionTriangleLine(o, m, &adjust);
+									//位置の更新（mPosition+adjust)
+									mPosition = mPosition + adjust;
+
+									//行列の更新
+									CTransform::Update();
+								}
 								
 							}
 
@@ -593,7 +600,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 												//体力減少
 												mHp--;
 												//無敵時間付与
-												mDamageCount = 60;
+												mDamageCount = 30;
 												//ダメージ時の処理開始
 												mState = EDAMAGED;
 											}

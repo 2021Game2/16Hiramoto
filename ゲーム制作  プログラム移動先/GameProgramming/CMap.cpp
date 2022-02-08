@@ -2,8 +2,8 @@
 #include"CCollider.h"
 #include"CColliderTriangle.h"
 #include"CCollisionManager.h"
-#define OBJ "sky.obj"
-#define MTL "sky.mtl"
+#define OBJ "3DModel\\Map\\sky.obj"
+#define MTL "3DModel\\Map\\sky.mtl"
 CColliderMesh mColliderMesh;
 CMap::CMap()
 

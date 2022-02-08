@@ -13,7 +13,8 @@ CRock::CRock(const CVector& position, const CVector& rotation, const CVector& sc
 	mPosition = position;
 	mRotation = rotation;
 	mScale = scale;
-	mCollider.mTag = CCollider::EROCKCOLLIDER;
+	//mCollider.mTag = CCollider::EROCKCOLLIDER;
+	//mColliderMesh.Set(NULL, NULL, &mModel);//モデルをコライダにする
 	mTag = EROCK;
 	CTransform::Update();//行列の更新
 	//優先度を１に変更する
@@ -22,7 +23,7 @@ CRock::CRock(const CVector& position, const CVector& rotation, const CVector& sc
 	CTaskManager::Get()->Add(this);//追加する
 }
 CRock::CRock()
-	: mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 100.0f)
+	//: mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 100.0f)
 
 {
 	//モデルのポインタ設定
@@ -61,7 +62,7 @@ void CRock::Render() {
 }
 void CRock::TaskCollision() {
 	//コライダの優先度変更
-	mCollider.ChangePriority();
+	//mCollider.ChangePriority();
 	//衝突処理を実行
-	CCollisionManager::Get()->Collision(&mCollider, COLLISIONRANGE);
+	//CCollisionManager::Get()->Collision(&mCollider, COLLISIONRANGE);
 }

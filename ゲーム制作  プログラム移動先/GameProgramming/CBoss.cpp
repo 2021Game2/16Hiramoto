@@ -91,20 +91,20 @@ void CBoss::Init(CModelX* model)
 }
 //待機処理
 void CBoss::Idle() {
-	//60溜まるまで待機のアニメーション
+	//30溜まるまで待機のアニメーション
 	ChangeAnimation(8, false, 60);
 	if (mMove >= 30) {
-		//60溜まった状態でアニメーションが終わると攻撃処理に移行
+		//30溜まった状態でアニメーションが終わると攻撃処理に移行
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
-			if (mAttackPercent <= 30) {
+			if (mAttackPercent <= 5) {
             //当たり判定が適用される時間
 			mBossAttackCount = 80;
 			mState = EATTACK;
 		    }
-			else if(mAttackPercent >= 30) {
+			else if(mAttackPercent > 5) {
 				//当たり判定が適用される時間
-				mBossAttackCount = 83;
+				mBossAttackCount = 80;
 				mState = EATTACK2;
 			}
 		}
@@ -166,7 +166,7 @@ void CBoss::AutoMove() {
 void CBoss::Attack() {
 	//BossVoice.Play();
 	//攻撃アニメーション
-	ChangeAnimation(5, true, 83);
+	ChangeAnimation(5, false, 40);
 	//当たり判定が適用される時間
 	if (mBossAttackCount > 0) {
 	
@@ -187,7 +187,7 @@ void CBoss::Attack() {
 void CBoss::Attack2() {
 	//BossVoice.Play();
 	//攻撃アニメーション
-	ChangeAnimation(6, true, 80);
+	ChangeAnimation(6, false, 40);
 	//当たり判定が適用される時間
 	if (mBossAttackCount > 0) {
 		mBossAttackCount--;
@@ -273,10 +273,10 @@ void CBoss::Update() {
 		break;
 	}
 
-	if (mAttackPercent < 60) {
+	if (mAttackPercent < 10) {
 		mAttackPercent++;
 	}
-	if (mAttackPercent >= 60) {
+	if (mAttackPercent >= 10) {
 		mAttackPercent = 0;
 	}
 	if (mBossDamageCount > 0) {
@@ -350,10 +350,13 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 					if (o->mTag == CCollider::ESTOPPER) {
 
 						if (CCollider::Collision(m, o)) {
+							
 							if (mState != EATTACK) {
-								if (mState != EIDLE) {
-									if (mHp > 0) {
-									 mState = EIDLE;
+								if (mState != EATTACK2) {
+									if (mState != EIDLE) {
+										if (mHp > 0) {
+											mState = EIDLE;
+										}
 									}
 								}
 

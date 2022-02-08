@@ -21,9 +21,10 @@ void CColliderTriangle::Set(CCharacter *parent, CMatrix *matrix
 
 void CColliderTriangle::Render()
 {
+    return;
 	//行列退避
 	glPushMatrix();
-	return;
+	
 	//行列適用
 	glMultMatrixf(mpMatrix->mM[0]);
 
