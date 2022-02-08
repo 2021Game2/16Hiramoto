@@ -4,12 +4,15 @@
 #ifndef CITEM_H
 #define CITEM_H
 class CItem : public CCharacter {
+private:
+
+	//コライダ
+	CCollider mCollider;
+
 public:
 	//モデルデータ
 	static CModel mModel;
 	static int mItemCount;
-	//コライダ
-	CCollider mCollider;
 	CItem();
 	//CEnemy2(位置、回転、拡縮）
 	CItem(const CVector& position, const CVector& rotation, const CVector& scale);

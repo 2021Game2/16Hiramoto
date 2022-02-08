@@ -73,6 +73,7 @@ CEnemy3::CEnemy3(const CVector& position, const CVector& rotation, const CVector
 }
 //更新処理
 void CEnemy3::Update() {
+	
 	//if(mPosition.mY<=mpPlayer->mPosition.mY)
 	//左向き（X軸）のベクトルを求める
 	CVector vx = CVector(1.0f, 0.0f, 0.0f) * mMatrixRotate;
@@ -250,7 +251,7 @@ void CEnemy3::Update() {
 	}
 	mEnemy3Fry++;
 	if (mEnemy3Fry >= 300) {
-		//Enemy3Fry.Play();
+		Enemy3Fry.Play();
 		mEnemy3Fry = 0;
 	}
 	//CTransform::Update();

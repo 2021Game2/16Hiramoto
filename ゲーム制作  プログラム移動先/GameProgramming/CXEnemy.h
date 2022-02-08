@@ -6,6 +6,7 @@
 #include"CPlayer.h"
 class CXEnemy : public CXCharacter
 {
+private:
 	int mMove;
 	CCharacter* mpPlayer;//プレイヤーのポインタ
 	CVector mPoint;//目標地点

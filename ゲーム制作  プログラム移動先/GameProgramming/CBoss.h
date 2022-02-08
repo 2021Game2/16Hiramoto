@@ -12,48 +12,50 @@
 /*エネミークラス
 キャラクタクラスを継承	*/
 class CBoss :public CXCharacter {
-public:
-	//モデルデータ
-	static CModel mModel;
-	//コライダ
-	//コンストラクタ	
-	CBoss();
-	CVector mPoint;//目標地点
-	static int mHp;//体力
+private:
 
+	CVector mPoint;//目標地点
 	int mJump2;
 	CText mText;
 	int mMove;
 	int mMove2;
 	float mColliderCount;
-	static int mBossAttackCount;
 	int mBossDamageCount;
 	float mGravity;//重力
 	float mTime;//ジャンプする時の時間を計測
 	int mEnemy2StopCount;//プレイヤーのESTOPPERに当たっている間増加
-	
-	void Init(CModelX* model);
 	CCollider mColSphereHead;
 	CCollider mColSphereRightFront;
 	CCollider mColSphereLeftFront;
 	CCollider mColSphereRightBack;
 	CCollider mColSphereLeftBack;
-
-
 	int mAttackPercent;
 	CVector mCollisionEnemy;
+	int mEnemyDamage;
+
+	CCollider mColSearch;//サーチ用コライダ
+
+	CCharacter* mpPlayer;//プレイヤーのポインタ
+public:
+
+	static int mBossAttackCount;
+	//モデルデータ
+	static CModel mModel;
+	//コライダ
+	//コンストラクタ	
+	CBoss();
+	static int mHp;//体力
+
+	void Init(CModelX* model);
+
 	//CEnemy2(位置、回転、拡縮）
 	CBoss(const CVector& position, const CVector& rotation, const CVector& scale);
-	CCollider mColSearch;//サーチ用コライダ
 	//更新処理
 	void Update();
 	//衝突処理
 	//Collision(コライダ１、コライダ２）
 	void Collision(CCollider* m, CCollider* o);
 	void TaskCollision();
-	CCharacter* mpPlayer;//プレイヤーのポインタ
-	int mEnemyDamage;
-
 	void Idle();		//待機処理
 	void AutoMove();	//移動処理
 	void Attack();	//攻撃処理

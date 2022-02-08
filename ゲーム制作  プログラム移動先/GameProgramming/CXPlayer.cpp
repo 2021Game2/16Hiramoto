@@ -159,7 +159,7 @@ void CXPlayer::Update()
 		}
 		break;
 	case EDAMAGED://ダメージ
-		//Damage.Play();
+		Damage.Play();
 		ChangeAnimation(4, false, 10);
 		break;
 	case EDEATH://死亡
@@ -337,7 +337,7 @@ void CXPlayer::Update()
 				 if (mAttackCount <= 0) {
 					 if (CKey::Once(' '))
 					 {
-						 //FirstAttack.Play();
+						 FirstAttack.Play();
 						 mState = EATTACK1;
 						 mSpaceCount1 = 1;//１回目の攻撃のフラグ
 						 mSpaceCount2 = 0;
@@ -352,7 +352,7 @@ void CXPlayer::Update()
 			 else if (mSpaceCount2 == 0) {
 				 if (mAttackCount <= 0) {
 					 if (CKey::Once(' ')) {
-						 //SecondAttack.Play();
+						 SecondAttack.Play();
 						 mState = EATTACK2;
 						 mSpaceCount2 = 1;//２回目の攻撃のフラグ
 						 mSpaceCount3 = 0;
@@ -366,7 +366,7 @@ void CXPlayer::Update()
 			 else if (mSpaceCount3 == 0) {
 				 if (mAttackCount <= 0) {
 					 if (CKey::Once(' ')) {
-						 //ThirdAttack.Play();
+						 ThirdAttack.Play();
 						 mState = EATTACK3;
 						 mAnimationCount = 50;//0になるまでアニメーションが変わらない
 						 mSpaceCount3 = 1;//３回目の攻撃のフラグ
@@ -381,7 +381,7 @@ void CXPlayer::Update()
 		 if (mSpAttack >= 30) {
 			 if (CKey::Once('F')) {
 				 if (mAttackCount <= 0) {
-					 //JumpAttack.Play();
+					 JumpAttack.Play();
 					 mState = EATTACKSP;
 					 mJump = JUMP;//ジャンプ力を代入
 					  mSpAttack -= 30;//特殊攻撃のゲージ減少

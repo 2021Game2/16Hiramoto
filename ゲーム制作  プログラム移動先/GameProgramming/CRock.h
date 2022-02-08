@@ -5,12 +5,14 @@
 #ifndef CROCK_H
 #define CROCK_H
 class CRock : public CCharacter {
+private:
+
+	CColliderMesh mColliderMesh;
 public:
 	//モデルデータ
 	static CModel mModel;
 	//コライダ
 	//CCollider mCollider;
-	CColliderMesh mColliderMesh;
 	CRock();
 	//CEnemy2(位置、回転、拡縮）
 	CRock(const CVector& position, const CVector& rotation, const CVector& scale);

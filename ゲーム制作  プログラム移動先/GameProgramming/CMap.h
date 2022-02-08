@@ -8,6 +8,7 @@
 #include"CCollisionManager.h"
 class CMap : public CCharacter
 {
+private:
 	CMatrix mBackGroundMatrix;
 	CModel mModel;
 

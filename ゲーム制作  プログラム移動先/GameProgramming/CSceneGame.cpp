@@ -16,6 +16,17 @@
 #include"CRock.h"
 #include"CSound.h"
 #define ENEMYCOUNT 15
+#define BGM "mp3\\BGM.wav"
+#define ATTACK1 "mp3\\一撃目.wav"
+#define ATTACK2 "mp3\\二撃目.wav"
+#define ATTACK3 "mp3\\三撃目.wav"
+#define ATTACK4 "mp3\\ジャンプ攻撃.wav"
+#define DAMAGE "mp3\\ダメージ.wav"
+#define FRY "mp3\\ハチの羽ばたき.wav"
+#define VOICE "mp3\\ボス鳴き声.wav"
+#define VOICE2 "mp3\\ボスの足音.wav"
+#define MOVE "mp3\\サソリ鳴き声.wav"
+#define FONT "FontG.png"
 //CMatrix Matrix;
 int CSceneGame::mEnemy2Count = 0;
 int CSceneGame::mEnemy2CountStopper = ENEMYCOUNT;
@@ -26,22 +37,22 @@ CSceneGame::~CSceneGame() {
 void CSceneGame::Init() {
 	//サウンド(wav)ファイルの読み込み
 
-	Bgm.Load("mp3\\BGM.wav");
+	Bgm.Load(BGM);
 	//Bgm.Repeat();
-	FirstAttack.Load("mp3\\一撃目.wav");
-	SecondAttack.Load("mp3\\二撃目.wav");
-	ThirdAttack.Load("mp3\\三撃目.wav");
-	JumpAttack.Load("mp3\\ジャンプ攻撃.wav");
-	Damage.Load("mp3\\ダメージ.wav");
-	Enemy3Fry.Load("mp3\\ハチの羽ばたき.wav");
-	BossVoice.Load("mp3\\ボス鳴き声.wav");
-	BossMove.Load("mp3\\ボスの足音.wav");
-	Enemy2Voice.Load("mp3\\サソリ鳴き声.wav");
+	FirstAttack.Load(ATTACK1);
+	SecondAttack.Load(ATTACK2);
+	ThirdAttack.Load(ATTACK3);
+	JumpAttack.Load(ATTACK4);
+	Damage.Load(DAMAGE);
+	Enemy3Fry.Load(FRY);
+	BossVoice.Load(VOICE);
+	BossMove.Load(MOVE);
+	Enemy2Voice.Load(VOICE2);
    
 	//mBillBoard.Set(CVector(0.0f, 5.0f, 0.0f), 1.0f, 1.0f);
 	//Bgm.Repeat();
 	//テキストフォントの読み込みと設定
-	mFont.LoadTexture("FontG.png", 1, 4096 / 64);
+	mFont.LoadTexture(FONT, 1, 4096 / 64);
 	
 	CRes::sModelX.Load(MODEL_FILE);
      //キャラクターにモデルを設定

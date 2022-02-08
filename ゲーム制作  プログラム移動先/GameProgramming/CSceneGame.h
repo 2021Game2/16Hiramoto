@@ -18,10 +18,11 @@
 ゲームのシーン
 */
 class CSceneGame : public CScene {
+private:
+
 	CSound mJump;
 	//CBillBoard2 mBillBoard;
 
-public:
 	//マップのインスタンス
 	CMap mMap;
 	CModel mModelC5;
@@ -31,8 +32,7 @@ public:
 	CEnemySummon* mpEnemySummon;
 	CEnemy2* mpEnemy2;
 	CBoss* mpBoss;
-	static int mEnemy2Count;
-	static int mEnemy2CountStopper;
+
 	CSound Bgm;
 	CSound FirstAttack;
 	CSound SecondAttack;
@@ -43,12 +43,15 @@ public:
 	CSound BossVoice;
 	CSound BossMove;
 	CSound Enemy2Voice;
-
 	//キャラクタのインスタンス
 	CXPlayer mPlayer;
 	//敵のインスタンス
 	CXEnemy mEnemy;
 	CEnemy3* mpEnemy3;
+public:
+	static int mEnemy2Count;
+	static int mEnemy2CountStopper;
+
 	~CSceneGame();
 	//初期化処理のオーバーライド
 	void Init();

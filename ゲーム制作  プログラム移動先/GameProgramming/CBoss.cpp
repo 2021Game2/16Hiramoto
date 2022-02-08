@@ -119,7 +119,7 @@ void CBoss::Idle() {
 //移動処理
 void CBoss::AutoMove() {
 	//歩く
-	//BossMove.Play();
+	BossMove.Play();
 	mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
 	ChangeAnimation(4, true,180);
 	//プレイヤーに向かって回転する処理
@@ -164,7 +164,7 @@ void CBoss::AutoMove() {
 }
 //攻撃処理
 void CBoss::Attack() {
-	//BossVoice.Play();
+	BossVoice.Play();
 	//攻撃アニメーション
 	ChangeAnimation(5, false, 40);
 	//当たり判定が適用される時間
@@ -185,7 +185,7 @@ void CBoss::Attack() {
 }
 //攻撃処理
 void CBoss::Attack2() {
-	//BossVoice.Play();
+	BossVoice.Play();
 	//攻撃アニメーション
 	ChangeAnimation(6, false, 40);
 	//当たり判定が適用される時間

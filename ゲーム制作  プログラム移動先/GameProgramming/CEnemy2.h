@@ -12,13 +12,11 @@
 /*エネミークラス
 キャラクタクラスを継承	*/
 class CEnemy2 :public CXCharacter {
-public:
-	//モデルデータ
-	static CModel mModel;
+private:
+
 	//コライダ
 	CCollider mCollider;
-	//コンストラクタ	
-	CEnemy2();
+
 	CVector mPoint;//目標地点
 	int mHp;//体力
 	float mJump;
@@ -27,33 +25,43 @@ public:
 	int mMove;
 	int mMove2;
 	int mDamageCount;
-	CCharacter* mpPlayer;//プレイヤーのポインタ
+
 	float mColliderCount;
-	static int mEnemy2AttackCount;
+
 	float mGravity;//重力
 	float mTime;//ジャンプする時の時間を計測
 	int mEnemy2StopCount;//プレイヤーのESTOPPERに当たっている間増加
-	void Init(CModelX* model);
+
 	CCollider mColSphereHead;
 	CCollider mColSphereRight;
 	CCollider mColSphereLeft;
-	
 	CVector mCollisionEnemy;
-	//CEnemy2(位置、回転、拡縮）
-	CEnemy2(const CVector& position, const CVector& rotation, const CVector& scale);
+
 	CCollider mColSearch;//サーチ用コライダ
-	//更新処理
-	void Update();
-	//衝突処理
-	//Collision(コライダ１、コライダ２）
-	void Collision(CCollider* m, CCollider* o);
-	void TaskCollision();
+
 	float mPlayerMarkingX;//プレイヤーと敵のX座標の差
 	float mPlayerMarkingZ;//プレイヤーと敵のZ座標の差
 	float mRotationCount;
 	int mEnemyDamage;
 	int mEnemyVoice;
 	float CurveCount;
+	CCharacter* mpPlayer;//プレイヤーのポインタ
+public:
+	//モデルデータ
+	static CModel mModel;
+	//コンストラクタ	
+	CEnemy2();
+	static int mEnemy2AttackCount;
+	void Init(CModelX* model);
+	
+	//CEnemy2(位置、回転、拡縮）
+	CEnemy2(const CVector& position, const CVector& rotation, const CVector& scale);
+	//更新処理
+	void Update();
+	//衝突処理
+	//Collision(コライダ１、コライダ２）
+	void Collision(CCollider* m, CCollider* o);
+	void TaskCollision();
 	void Idle();		//待機処理
 	void AutoMove();	//移動処理
 	void Attack();	//攻撃処理

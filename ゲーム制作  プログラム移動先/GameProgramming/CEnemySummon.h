@@ -7,11 +7,14 @@
 #include"CCollider.h"
 
 class CEnemySummon:public CCharacter {
+private:
+
+	//コライダ
+	CCollider mCollider;
+	int mHp;
 public:
 	//モデルデータ
 	static CModel mModel;
-	//コライダ
-	CCollider mCollider;
 	CEnemySummon();
 	//CEnemy2(位置、回転、拡縮）
 	CEnemySummon(const CVector& position, const CVector& rotation, const CVector& scale);
@@ -22,7 +25,6 @@ public:
 	void Collision(CCollider* m, CCollider* o);
 	void TaskCollision();
 	void Render();
-	int mHp;
 };
 
 

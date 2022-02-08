@@ -197,6 +197,7 @@ void CEnemy2::AutoMove() {
 }	
 //攻撃処理
 void CEnemy2::Attack() {
+	Enemy2Voice.Play();
 	    //攻撃アニメーション
 		ChangeAnimation(4, false, 120);//+５番目のアニメーションフレーム１２０
 		
