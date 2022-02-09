@@ -12,7 +12,7 @@
 #define JUMP 2.0f
 #define G 0.1f
 int CEnemy2::mEnemy2AttackCount = 0;
-extern CSound Enemy2Voice;
+ extern CSound Enemy2Voice;
 CModel CEnemy2::mModel;//モデルデータ作成
 //デフォルトコンストラクタ
 //敵（サソリ）

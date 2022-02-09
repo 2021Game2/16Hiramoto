@@ -16,20 +16,31 @@
 #include"CRock.h"
 #include"CSound.h"
 #define ENEMYCOUNT 15
-#define BGM "mp3\\BGM.wav"
-#define ATTACK1 "mp3\\一撃目.wav"
-#define ATTACK2 "mp3\\二撃目.wav"
-#define ATTACK3 "mp3\\三撃目.wav"
-#define ATTACK4 "mp3\\ジャンプ攻撃.wav"
-#define DAMAGE "mp3\\ダメージ.wav"
-#define FRY "mp3\\ハチの羽ばたき.wav"
-#define VOICE "mp3\\ボス鳴き声.wav"
-#define VOICE2 "mp3\\ボスの足音.wav"
-#define MOVE "mp3\\サソリ鳴き声.wav"
+#define BGM "SE\\BGM.wav"
+#define ATTACK1 "SE\\一撃目.wav"
+#define ATTACK2 "SE\\二撃目.wav"
+#define ATTACK3 "SE\\三撃目.wav"
+#define ATTACK4 "SE\\ジャンプ攻撃.wav"
+#define DAMAGE "SE\\ダメージ.wav"
+#define FRY "SE\\ハチの羽ばたき.wav"
+#define VOICE "SE\\ボス鳴き声.wav"
+#define VOICE2 "SE\\ボスの足音.wav"
+#define MOVE "SE\\サソリ鳴き声.wav"
 #define FONT "FontG.png"
 //CMatrix Matrix;
 int CSceneGame::mEnemy2Count = 0;
 int CSceneGame::mEnemy2CountStopper = ENEMYCOUNT;
+
+CSound FirstAttack;
+CSound SecondAttack;
+CSound ThirdAttack;
+CSound JumpAttack;
+CSound Damage;
+CSound Enemy3Fry;
+CSound BossVoice;
+CSound BossMove;
+CSound Enemy2Voice;
+
 CSceneGame::~CSceneGame() {
 	Sleep(2000);
 }
@@ -40,6 +51,7 @@ void CSceneGame::Init() {
 	Bgm.Load(BGM);
 	//Bgm.Repeat();
 	FirstAttack.Load(ATTACK1);
+	
 	SecondAttack.Load(ATTACK2);
 	ThirdAttack.Load(ATTACK3);
 	JumpAttack.Load(ATTACK4);

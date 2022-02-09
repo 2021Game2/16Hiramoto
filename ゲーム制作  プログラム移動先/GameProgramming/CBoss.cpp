@@ -16,8 +16,8 @@
 int CBoss::mBossAttackCount = 0;
 int CBoss::mHp = HP;
 
-extern CSound BossVoice;
-extern CSound BossMove;
+ extern CSound BossVoice;
+ extern CSound BossMove;
 
 CModel CBoss::mModel;//モデルデータ作成
 //デフォルトコンストラクタ

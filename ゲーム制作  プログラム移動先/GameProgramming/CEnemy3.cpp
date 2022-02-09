@@ -20,7 +20,7 @@
 #define JUMP 4.0f
 #define G 0.1f
 int CEnemy3::mMoveCount = 0;
-extern CSound Enemy3Fry;
+ extern CSound Enemy3Fry;
 
 CModel CEnemy3::mModel;//モデルデータ作成
 //デフォルトコンストラクタ

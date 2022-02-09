@@ -17,6 +17,7 @@
 /*
 ゲームのシーン
 */
+
 class CSceneGame : public CScene {
 private:
 
@@ -33,22 +34,15 @@ private:
 	CEnemy2* mpEnemy2;
 	CBoss* mpBoss;
 
-	CSound Bgm;
-	CSound FirstAttack;
-	CSound SecondAttack;
-	CSound ThirdAttack;
-	CSound JumpAttack;
-	CSound Damage;
-	CSound Enemy3Fry;
-	CSound BossVoice;
-	CSound BossMove;
-	CSound Enemy2Voice;
 	//キャラクタのインスタンス
 	CXPlayer mPlayer;
 	//敵のインスタンス
 	CXEnemy mEnemy;
 	CEnemy3* mpEnemy3;
 public:
+
+	 CSound Bgm;
+	 
 	static int mEnemy2Count;
 	static int mEnemy2CountStopper;
 

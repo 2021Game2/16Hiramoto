@@ -19,7 +19,7 @@
 #define G2 2.0f
 #include"CItem.h"
 #include"CSound.h"
-#include"CSceneGame.h"
+//#include"CSceneGame.h"
 
 
 int CXPlayer::mSpAttack = 0;
