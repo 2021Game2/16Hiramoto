@@ -27,19 +27,12 @@
 #define VOICE2 "SE\\ボスの足音.wav"
 #define MOVE "SE\\サソリ鳴き声.wav"
 #define FONT "FontG.png"
+#define SCOPION "3DModel\\scorpid\\scorpid-monster-X-animated.X"
+#define BOSS "3DModel\\Boss\\monster-animated-character-X.X"
 //CMatrix Matrix;
 int CSceneGame::mEnemy2Count = 0;
 int CSceneGame::mEnemy2CountStopper = ENEMYCOUNT;
 
-CSound FirstAttack;
-CSound SecondAttack;
-CSound ThirdAttack;
-CSound JumpAttack;
-CSound Damage;
-CSound Enemy3Fry;
-CSound BossVoice;
-CSound BossMove;
-CSound Enemy2Voice;
 
 CSceneGame::~CSceneGame() {
 	Sleep(2000);
@@ -96,7 +89,7 @@ void CSceneGame::Init() {
 	//カメラ初期化
 	Camera.Init();
 
-    CRes::sScorp.Load("3DModel\\scorpid\\scorpid-monster-X-animated.X");
+    CRes::sScorp.Load(SCOPION);
 	CRes::sScorp.SeparateAnimationSet(0, 0, 72, "walk");
 	CRes::sScorp.SeparateAnimationSet(0, 72, 120, "strafe left");
 	CRes::sScorp.SeparateAnimationSet(0, 120, 168, "strafe right");
@@ -112,7 +105,7 @@ void CSceneGame::Init() {
 
 
 	//アニメーションを読み込む
- 	CRes::sBoss.Load("3DModel\\Boss\\monster-animated-character-X.X");
+ 	CRes::sBoss.Load(BOSS);
 	CRes::sBoss.SeparateAnimationSet(0, 0, 30, "walk");
 	CRes::sBoss.SeparateAnimationSet(0, 0, 120, "walk");
 	CRes::sBoss.SeparateAnimationSet(0, 150, 190, "run");

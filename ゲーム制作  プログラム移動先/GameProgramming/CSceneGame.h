@@ -41,6 +41,15 @@ private:
 	CEnemy3* mpEnemy3;
 public:
 
+	CSound FirstAttack;
+	CSound SecondAttack;
+	CSound ThirdAttack;
+	CSound JumpAttack;
+	CSound Damage;
+	CSound Enemy3Fry;
+	CSound BossVoice;
+	CSound BossMove;
+	CSound Enemy2Voice;
 	 CSound Bgm;
 	 
 	static int mEnemy2Count;

@@ -21,40 +21,13 @@ C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,50): warning C4101: 'cnt': ローカル変数は 1 度も使われていません。
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(104,24): warning C4101: 'state': ローカル変数は 1 度も使われていません。
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,87): warning C4101: 'dw': ローカル変数は 1 度も使われていません。
-CEnemy2.obj : error LNK2005: "class CSound Damage" (?Damage@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CEnemy2.obj : error LNK2005: "class CSound SecondAttack" (?SecondAttack@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CEnemy2.obj : error LNK2005: "class CSound JumpAttack" (?JumpAttack@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CEnemy2.obj : error LNK2005: "class CSound Enemy2Voice" (?Enemy2Voice@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CEnemy2.obj : error LNK2005: "class CSound BossVoice" (?BossVoice@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CEnemy2.obj : error LNK2005: "class CSound BossMove" (?BossMove@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CEnemy2.obj : error LNK2005: "class CSound FirstAttack" (?FirstAttack@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CEnemy2.obj : error LNK2005: "class CSound Enemy3Fry" (?Enemy3Fry@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CEnemy2.obj : error LNK2005: "class CSound ThirdAttack" (?ThirdAttack@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CEnemy3.obj : error LNK2005: "class CSound Damage" (?Damage@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CEnemy3.obj : error LNK2005: "class CSound SecondAttack" (?SecondAttack@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CEnemy3.obj : error LNK2005: "class CSound JumpAttack" (?JumpAttack@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CEnemy3.obj : error LNK2005: "class CSound Enemy2Voice" (?Enemy2Voice@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CEnemy3.obj : error LNK2005: "class CSound BossVoice" (?BossVoice@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CEnemy3.obj : error LNK2005: "class CSound BossMove" (?BossMove@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CEnemy3.obj : error LNK2005: "class CSound FirstAttack" (?FirstAttack@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CEnemy3.obj : error LNK2005: "class CSound Enemy3Fry" (?Enemy3Fry@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CEnemy3.obj : error LNK2005: "class CSound ThirdAttack" (?ThirdAttack@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CSceneGame.obj : error LNK2005: "class CSound Damage" (?Damage@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CSceneGame.obj : error LNK2005: "class CSound SecondAttack" (?SecondAttack@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CSceneGame.obj : error LNK2005: "class CSound JumpAttack" (?JumpAttack@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CSceneGame.obj : error LNK2005: "class CSound Enemy2Voice" (?Enemy2Voice@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CSceneGame.obj : error LNK2005: "class CSound BossVoice" (?BossVoice@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CSceneGame.obj : error LNK2005: "class CSound BossMove" (?BossMove@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CSceneGame.obj : error LNK2005: "class CSound FirstAttack" (?FirstAttack@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CSceneGame.obj : error LNK2005: "class CSound Enemy3Fry" (?Enemy3Fry@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CSceneGame.obj : error LNK2005: "class CSound ThirdAttack" (?ThirdAttack@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CSceneManager.obj : error LNK2005: "class CSound Damage" (?Damage@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CSceneManager.obj : error LNK2005: "class CSound SecondAttack" (?SecondAttack@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CSceneManager.obj : error LNK2005: "class CSound JumpAttack" (?JumpAttack@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CSceneManager.obj : error LNK2005: "class CSound Enemy2Voice" (?Enemy2Voice@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CSceneManager.obj : error LNK2005: "class CSound BossVoice" (?BossVoice@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CSceneManager.obj : error LNK2005: "class CSound BossMove" (?BossMove@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CSceneManager.obj : error LNK2005: "class CSound FirstAttack" (?FirstAttack@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CSceneManager.obj : error LNK2005: "class CSound Enemy3Fry" (?Enemy3Fry@@3VCSound@@A) は既に CBoss.obj で定義されています。
-CSceneManager.obj : error LNK2005: "class CSound ThirdAttack" (?ThirdAttack@@3VCSound@@A) は既に CBoss.obj で定義されています。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\Release\GameProgramming.exe : fatal error LNK1169: 1 つ以上の複数回定義されているシンボルが見つかりました。
+CBoss.obj : error LNK2001: 外部シンボル "class CSound BossVoice" (?BossVoice@@3VCSound@@A) は未解決です
+CBoss.obj : error LNK2001: 外部シンボル "class CSound BossMove" (?BossMove@@3VCSound@@A) は未解決です
+CEnemy2.obj : error LNK2001: 外部シンボル "class CSound Enemy2Voice" (?Enemy2Voice@@3VCSound@@A) は未解決です
+CEnemy3.obj : error LNK2001: 外部シンボル "class CSound Enemy3Fry" (?Enemy3Fry@@3VCSound@@A) は未解決です
+CXPlayer.obj : error LNK2001: 外部シンボル "class CSound SecondAttack" (?SecondAttack@@3VCSound@@A) は未解決です
+CXPlayer.obj : error LNK2001: 外部シンボル "class CSound Damage" (?Damage@@3VCSound@@A) は未解決です
+CXPlayer.obj : error LNK2001: 外部シンボル "class CSound JumpAttack" (?JumpAttack@@3VCSound@@A) は未解決です
+CXPlayer.obj : error LNK2001: 外部シンボル "class CSound FirstAttack" (?FirstAttack@@3VCSound@@A) は未解決です
+CXPlayer.obj : error LNK2001: 外部シンボル "class CSound ThirdAttack" (?ThirdAttack@@3VCSound@@A) は未解決です
+C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\Release\GameProgramming.exe : fatal error LNK1120: 9 件の未解決の外部参照
