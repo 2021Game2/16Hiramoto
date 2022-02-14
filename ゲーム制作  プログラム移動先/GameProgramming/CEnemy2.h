@@ -46,6 +46,7 @@ private:
 	int mEnemyVoice;
 	float CurveCount;
 	CCharacter* mpPlayer;//プレイヤーのポインタ
+	CXPlayer* mpPointPlayer;
 public:
 	//モデルデータ
 	static CModel mModel;

@@ -1,33 +1,11 @@
-﻿  CBoss.cpp
+﻿  CEnemy2.cpp
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,50): warning C4101: 'cnt': ローカル変数は 1 度も使われていません。
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(104,24): warning C4101: 'state': ローカル変数は 1 度も使われていません。
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,87): warning C4101: 'dw': ローカル変数は 1 度も使われていません。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CBoss.cpp(298,11): warning C4553: '==': 式の結果が使用されていません。'=' を意図していますか?
-  CEnemy2.cpp
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,50): warning C4101: 'cnt': ローカル変数は 1 度も使われていません。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(104,24): warning C4101: 'state': ローカル変数は 1 度も使われていません。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,87): warning C4101: 'dw': ローカル変数は 1 度も使われていません。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CEnemy2.cpp(328,11): warning C4553: '==': 式の結果が使用されていません。'=' を意図していますか?
-  CEnemy3.cpp
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,50): warning C4101: 'cnt': ローカル変数は 1 度も使われていません。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(104,24): warning C4101: 'state': ローカル変数は 1 度も使われていません。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,87): warning C4101: 'dw': ローカル変数は 1 度も使われていません。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CEnemy3.cpp(269,11): warning C4553: '==': 式の結果が使用されていません。'=' を意図していますか?
-  CSceneGame.cpp
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,50): warning C4101: 'cnt': ローカル変数は 1 度も使われていません。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(104,24): warning C4101: 'state': ローカル変数は 1 度も使われていません。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,87): warning C4101: 'dw': ローカル変数は 1 度も使われていません。
-  CSceneManager.cpp
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,50): warning C4101: 'cnt': ローカル変数は 1 度も使われていません。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(104,24): warning C4101: 'state': ローカル変数は 1 度も使われていません。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,87): warning C4101: 'dw': ローカル変数は 1 度も使われていません。
-CBoss.obj : error LNK2001: 外部シンボル "class CSound BossVoice" (?BossVoice@@3VCSound@@A) は未解決です
-CBoss.obj : error LNK2001: 外部シンボル "class CSound BossMove" (?BossMove@@3VCSound@@A) は未解決です
-CEnemy2.obj : error LNK2001: 外部シンボル "class CSound Enemy2Voice" (?Enemy2Voice@@3VCSound@@A) は未解決です
-CEnemy3.obj : error LNK2001: 外部シンボル "class CSound Enemy3Fry" (?Enemy3Fry@@3VCSound@@A) は未解決です
-CXPlayer.obj : error LNK2001: 外部シンボル "class CSound SecondAttack" (?SecondAttack@@3VCSound@@A) は未解決です
-CXPlayer.obj : error LNK2001: 外部シンボル "class CSound Damage" (?Damage@@3VCSound@@A) は未解決です
-CXPlayer.obj : error LNK2001: 外部シンボル "class CSound JumpAttack" (?JumpAttack@@3VCSound@@A) は未解決です
-CXPlayer.obj : error LNK2001: 外部シンボル "class CSound FirstAttack" (?FirstAttack@@3VCSound@@A) は未解決です
-CXPlayer.obj : error LNK2001: 外部シンボル "class CSound ThirdAttack" (?ThirdAttack@@3VCSound@@A) は未解決です
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\Release\GameProgramming.exe : fatal error LNK1120: 9 件の未解決の外部参照
+C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CEnemy2.cpp(330,11): warning C4553: '==': 式の結果が使用されていません。'=' を意図していますか?
+  コード生成しています。
+  21 of 803 functions ( 2.6%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    18 functions had inline decision re-evaluated but remain unchanged
+  コード生成が終了しました。
+  GameProgramming.vcxproj -> C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\Release\GameProgramming.exe

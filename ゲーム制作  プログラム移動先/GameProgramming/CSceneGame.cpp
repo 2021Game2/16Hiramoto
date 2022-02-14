@@ -33,6 +33,15 @@
 int CSceneGame::mEnemy2Count = 0;
 int CSceneGame::mEnemy2CountStopper = ENEMYCOUNT;
 
+CSound FirstAttack;
+CSound SecondAttack;
+CSound ThirdAttack;
+CSound JumpAttack;
+CSound Damage;
+CSound Enemy3Fry;
+CSound BossVoice;
+CSound BossMove;
+CSound Enemy2Voice;
 
 CSceneGame::~CSceneGame() {
 	Sleep(2000);

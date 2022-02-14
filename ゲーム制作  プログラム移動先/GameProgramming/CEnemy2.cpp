@@ -76,6 +76,7 @@ void CEnemy2::Init(CModelX* model)
 	mColSphereLeft.mpMatrix = &mpCombinedMatrix[20];
 	mState = EAUTOMOVE;
 
+	
 
 }
 //待機処理
@@ -101,6 +102,7 @@ void CEnemy2::Idle() {
 }		
 //移動処理
 void CEnemy2::AutoMove() {
+	
 	//歩く
 		mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
 		ChangeAnimation(1, true, 60);
@@ -197,7 +199,7 @@ void CEnemy2::AutoMove() {
 }	
 //攻撃処理
 void CEnemy2::Attack() {
-	Enemy2Voice.Play();
+	
 	    //攻撃アニメーション
 		ChangeAnimation(4, false, 120);//+５番目のアニメーションフレーム１２０
 		
@@ -274,7 +276,7 @@ void CEnemy2::Death() {
 
 //更新処理
 void CEnemy2::Update() {
-
+	mpPlayer = mpPointPlayer;
 	//アニメーションの管理
 	switch (mAnimationIndex) {
 		//攻撃アニメーション
