@@ -49,7 +49,6 @@ CEnemy3::CEnemy3()
 	}
 	//モデルのポインタ設定
 	mpModel = &mModel;
-	mTag = EENEMY2;
     mCollider.mTag = CCollider::EENEMY3COLLIDER;
 	mColSearch.mTag = CCollider::ESEARCH;//タグ設定
 	mColSearch2.mTag = CCollider::ESEARCH2;//タグ設定
@@ -73,8 +72,12 @@ CEnemy3::CEnemy3(const CVector& position, const CVector& rotation, const CVector
 }
 //更新処理
 void CEnemy3::Update() {
-	
+
+	//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
+	CXPlayer* tPlayer = CXPlayer::GetInstance();
 	//if(mPosition.mY<=mpPlayer->mPosition.mY)
+
+	mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
 	//左向き（X軸）のベクトルを求める
 	CVector vx = CVector(1.0f, 0.0f, 0.0f) * mMatrixRotate;
 	//上向き（Y軸）のベクトルを求める
@@ -95,26 +98,28 @@ void CEnemy3::Update() {
 	
 	//左右方向へ回転
 	if (dx > margin) {
-		mRotation.mY += 1.0f;//左へ回転
+		mRotation.mY += 3.0f;//左へ回転
 
 	}
 	else if (dx < -margin) {
-		mRotation.mY -= 1.0f;//右へ回転
+		mRotation.mY -= 3.0f;//右へ回転
 	}
+	/*
 	if (dy > margin) {
 		//if (dz > margin) {
 
-		mRotation.mX -= 1.0f;
+		mRotation.mX -= 3.0f;
 	}
 		//}
 	else if(dy > margin){
 
 		//else if (dz < margin) {
 			
-				mRotation.mX += 1.0f;
+				mRotation.mX += 3.0f;
 			
 		//}
 	}
+	*/
 	CTransform::Update();//行列更新
 	switch (mMoveCount) {
 		//浮遊
@@ -214,7 +219,7 @@ void CEnemy3::Update() {
 			//mPoint = mPoint * CMatrix().RotateX(80);
 		}
 	}
-	mpPlayer = 0;
+	mpPlayer = tPlayer;
 
 	if (mHp <= 0) {
 

@@ -120,6 +120,8 @@ void CBoss::Idle() {
 void CBoss::AutoMove() {
 	//歩く
 	BossMove.Play();
+	//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
+	CXPlayer* tPlayer = CXPlayer::GetInstance();
 	mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
 	ChangeAnimation(4, true,180);
 	//プレイヤーに向かって回転する処理
@@ -160,7 +162,7 @@ void CBoss::AutoMove() {
 			mPoint = mPoint * CMatrix().RotateY(80);
 		}
 	}
-	mpPlayer = 0;
+	mpPlayer = tPlayer;
 }
 //攻撃処理
 void CBoss::Attack() {
@@ -296,7 +298,7 @@ void CBoss::Update() {
 void CBoss::Collision(CCollider* m, CCollider* o) {
 	//コライダのとき
 	m->mType == CCollider::ESPHERE;
-
+	/*
 		//自分がサーチ用のとき
 		if (m->mTag == CCollider::ESEARCH) {
 			//相手が弾コライダのとき
@@ -313,6 +315,7 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 			}
 			return;
 		}
+		*/
 	
 		//EENEMY2COLLIDERの時
 		if (m->mTag == CCollider::EBOSSCOLLIDER||m->mTag== CCollider::EBOSSCOLLIDERATTACK) {

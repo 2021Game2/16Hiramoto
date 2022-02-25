@@ -7,8 +7,7 @@
 #include"CCollisionManager.h"
 #include"CTaskManager.h"
 #include"CVector.h"
-#include"CEnemy2.h"
-#include"CBoss.h"
+
 #include"CTexture.h"
 #include"CSound.h"
 class CXPlayer : public CXCharacter

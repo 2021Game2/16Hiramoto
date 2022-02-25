@@ -102,7 +102,11 @@ void CEnemy2::Idle() {
 }		
 //移動処理
 void CEnemy2::AutoMove() {
-	
+	//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
+	CXPlayer* tPlayer = CXPlayer::GetInstance();
+	mPlayerMarkingX = tPlayer->mPosition.mX - mPosition.mX;
+	mPlayerMarkingZ = tPlayer->mPosition.mZ - mPosition.mZ;
+
 	//歩く
 		mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
 		ChangeAnimation(1, true, 60);
@@ -125,76 +129,31 @@ void CEnemy2::AutoMove() {
 	
 	//左右方向へ回転
 	if (dx > margin) {
-		//mRotation.mY += 1.0f;//左へ回転
+		mRotation.mY += 3.0f;//左へ回転
 	}
 	else if (dx < -margin) {
-		//mRotation.mY -= 1.0f;//右へ回転
+		mRotation.mY -= 3.0f;//右へ回転
 	}
 	CTransform::Update();//行列更新
-	//定期的にプレイヤーの座標を記録
-	int r = 0; 
+
+	int r = rand() % 60; //rand()は整数の乱数を返す
 	//%180は１８０で割った余りを求める
 	if (r == 0) {
-		CVector vpp = CVector(mPlayerMarkingX, 0.0f, mPlayerMarkingZ);
-		CVector vpx = CVector(1.0f, 0.0f, 0.0f);
-		CVector vpz = CVector(0.0f, 0.0f, 1.0f);
-		float dpx = vpp.Dot(vpx);
-		float dpz = vpp.Dot(vpz);
-		//X軸の-2～2の範囲に接触
-		
-			if (mPlayerMarkingX>0) {
-				mRotation.mY++;
-
-				if (mPlayerMarkingZ < 0) {
-					mRotation.mY++;
-				}
-			}
-			else if(mPlayerMarkingX > 0){
-				mRotation.mY--;
-				if (mPlayerMarkingZ < 0) {
-					mRotation.mY--;
-				}
-			}
-		
-		//if (0) {
-			//プレイヤーの座標を記録
-		//右にいる
-		/*if (mPlayerMarkingX > 0) {
-
-			
-		
-		}
-        //後ろにいる
-		if (mPlayerMarkingZ < 0) {
-			if (mRotationCount >= ROTATION) {
-
-			}
-		}
-		//左にいる
-		if (mPlayerMarkingX < 0) {
-			//前にいる
-			if (mPlayerMarkingZ > 0) {
-
-			}
-			//後ろにいる
-			else if (mPlayerMarkingZ < 0) {
-				if (mRotationCount >= ROTATION) {
-
-				}
-			}
-		}*/
 		if (mpPlayer) {
-			//mPoint = mpPlayer->mPosition;
+			//ESEARCHに衝突してポインタに設定した
+			//プレイヤーの座標を記録
 
+			mPoint = mpPlayer->mPosition;
 		}
 		else {
 			mPoint = mPoint * CMatrix().RotateY(80);
-
-
-			//mPoint = mPoint * CMatrix().RotateX(80);
 		}
 	}
-	mpPlayer = 0;
+	mpPlayer = tPlayer;
+	
+		
+	
+	
 	
 }	
 //攻撃処理
@@ -276,7 +235,7 @@ void CEnemy2::Death() {
 
 //更新処理
 void CEnemy2::Update() {
-	mpPlayer = mpPointPlayer;
+	//mpPlayer = mpPointPlayer;
 	//アニメーションの管理
 	switch (mAnimationIndex) {
 		//攻撃アニメーション
@@ -316,11 +275,7 @@ break;
 		//Enemy2Voice.Play();
 		mEnemyVoice = 0;
 	}
-	//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
-	CXPlayer* tPlayer = CXPlayer::GetInstance();
-	mPlayerMarkingX =  tPlayer->mPosition.mX-mPosition.mX;
-	mPlayerMarkingZ =   tPlayer->mPosition.mZ-mPosition.mZ;
-
+	
 	CXCharacter::Update();
 }
 
@@ -329,6 +284,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 
 	m->mType == CCollider::ESPHERE;
 	//自分がサーチ用のとき
+	/*
 	if (m->mTag == CCollider::ESEARCH) {
 		//相手が弾コライダのとき
 		if (o->mType == CCollider::ESPHERE) {
@@ -343,6 +299,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 		}
 		return;
 	}
+	*/
 	//EENEMY2COLLIDERの時
 	if (m->mTag == CCollider::EENEMY2COLLIDER) {
 

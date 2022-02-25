@@ -15,7 +15,7 @@
 #include"CItem.h"
 #include"CRock.h"
 #include"CSound.h"
-#define ENEMYCOUNT 15
+#define ENEMYCOUNT 30
 #define BGM "SE\\BGM.wav"
 #define ATTACK1 "SE\\一撃目.wav"
 #define ATTACK2 "SE\\二撃目.wav"
@@ -29,9 +29,13 @@
 #define FONT "FontG.png"
 #define SCOPION "3DModel\\scorpid\\scorpid-monster-X-animated.X"
 #define BOSS "3DModel\\Boss\\monster-animated-character-X.X"
+#define KNIGHT "3DModel\\knight\\knight_low.x"
+
+
 //CMatrix Matrix;
 int CSceneGame::mEnemy2Count = 0;
 int CSceneGame::mEnemy2CountStopper = ENEMYCOUNT;
+
 
 CSound FirstAttack;
 CSound SecondAttack;
@@ -45,6 +49,7 @@ CSound Enemy2Voice;
 
 CSceneGame::~CSceneGame() {
 	Sleep(2000);
+
 }
 
 void CSceneGame::Init() {
@@ -72,7 +77,7 @@ void CSceneGame::Init() {
      //キャラクターにモデルを設定
 	mPlayer.Init(&CRes::sModelX);
 	mPlayer.mPosition = CVector(7.0f, 5.0f, -100.0f);
-	CRes::sKnight.Load("3DModel\\knight\\knight_low.x");
+	CRes::sKnight.Load(KNIGHT);
     CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//1:移動
 	CRes::sKnight.SeparateAnimationSet(0, 1530, 1830, "idle1");//2:待機
 	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//3:ダミー

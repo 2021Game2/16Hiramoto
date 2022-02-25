@@ -3,6 +3,9 @@
 #include "CCamera.h"
 #include "CUtil.h"
 #include"CBullet.h"
+
+#include"CEnemy2.h"
+#include"CBoss.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
 #define JUMP 5.0f

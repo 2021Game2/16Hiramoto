@@ -42,7 +42,7 @@ private:
 public:
 
 	 CSound Bgm;
-	 
+	// static CSound Enemy2Voice;
 	static int mEnemy2Count;
 	static int mEnemy2CountStopper;
 
