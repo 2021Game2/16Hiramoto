@@ -12,12 +12,16 @@
 #define JUMP2 10.0f
 #define STEP  20.0f
 #define STEP2 20.0f
-#define STAMINA 1000
+#define STAMINA 1000//スタミナ
 
-#define HP_MAX 100				//体力最大値
+#define HP_MAX 100	//HP			//体力最大値
 #define STAMINA_MAX 1000		//スタミナ最大値
 
-#define GAUGE_WID_MAX 350.0f	//ゲージの幅の最大値
+
+#define GAUGE_WID_MAX 400.0f	//ゲージの幅の最大値
+#define GAUGE_LEFT 20			//ゲージ描画時の左端
+
+#define IMAGE_GAUGE "Resource\\Gauge.png"		//ゲージ画像
 #define G 0.1f
 #define G2 2.0f
 #include"CItem.h"
@@ -77,7 +81,8 @@ CXPlayer::CXPlayer()
 	//this＝プレイヤーそのもの
 	mpPlayerInstance = this;
 
-	mTexture.Load("Gauge.png");
+	mImageGauge.Load(IMAGE_GAUGE);
+	
 }
 
 void CXPlayer::Init(CModelX* model)
@@ -236,6 +241,9 @@ void CXPlayer::Update()
 		}
 		break;
 	}
+
+	if (mHp > HP_MAX)mHp = HP_MAX;
+
 		//カメラ視点移動　通称無双移動
 		//カメラの左右と前後のベクトルを取得
 		CVector SideVec = Camera.GetMat().GetXVec();
@@ -681,11 +689,11 @@ void CXPlayer::Render2D()
 	//スタミナゲージの幅
 	float staminaGaugeWid = GAUGE_WID_MAX * staminaRate;
 
-	mTexture.Draw(20, GAUGE_WID_MAX, 560, 590, 210, 290, 63, 0);	//ゲージ背景
-	mTexture.Draw(20, hpGaugeWid, 560, 590, 0, 0, 0, 0);			//体力ゲージ
+	mImageGauge.Draw(20, GAUGE_WID_MAX, 560, 590, 210, 290, 63, 0);	//ゲージ背景
+	mImageGauge.Draw(20, hpGaugeWid, 560, 590, 0, 0, 0, 0);			//体力ゲージ
 
-	mTexture.Draw(20, GAUGE_WID_MAX, 520, 550, 210, 290, 63, 0);	//ゲージ背景
-	mTexture.Draw(20, staminaGaugeWid, 520, 550, 110, 190, 63, 0);	//スタミナゲージ
+	mImageGauge.Draw(20, GAUGE_WID_MAX, 520, 550, 210, 290, 63, 0);	//ゲージ背景
+	mImageGauge.Draw(20, staminaGaugeWid, 520, 550, 110, 190, 63, 0);	//スタミナゲージ
 
 
 

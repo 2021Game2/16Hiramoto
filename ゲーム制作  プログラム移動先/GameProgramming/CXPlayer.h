@@ -12,6 +12,9 @@
 #include"CSound.h"
 class CXPlayer : public CXCharacter
 {
+private:
+
+	CTexture mImageGauge; //ゲージ画像
 public:
 
 
@@ -42,7 +45,7 @@ public:
 	static CXPlayer* mpPlayerInstance;
 	//staticで処理を作る
 	static CXPlayer* GetInstance();
-
+	
     static int mSpAttack;//ジャンプ攻撃をするためのゲージ
 	static int mAttackCount;//武器の当たり判定が適用される時間
 	float mColliderCount;//吹き飛ばされた時の初速度

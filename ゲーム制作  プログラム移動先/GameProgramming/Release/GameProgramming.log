@@ -1,15 +1,10 @@
-﻿  CEnemy3.cpp
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,50): warning C4101: 'cnt': ローカル変数は 1 度も使われていません。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(104,24): warning C4101: 'state': ローカル変数は 1 度も使われていません。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,87): warning C4101: 'dw': ローカル変数は 1 度も使われていません。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CEnemy3.cpp(274,11): warning C4553: '==': 式の結果が使用されていません。'=' を意図していますか?
-  CSceneGame.cpp
+﻿  CXPlayer.cpp
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,50): warning C4101: 'cnt': ローカル変数は 1 度も使われていません。
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(104,24): warning C4101: 'state': ローカル変数は 1 度も使われていません。
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,87): warning C4101: 'dw': ローカル変数は 1 度も使われていません。
   コード生成しています。
-  2 of 803 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+  0 of 803 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    10 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   コード生成が終了しました。
   GameProgramming.vcxproj -> C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\Release\GameProgramming.exe
