@@ -696,7 +696,7 @@ void CXPlayer::Render2D()
 	mImageGauge.Draw(20, staminaGaugeWid, 520, 550, 110, 190, 63, 0);	//スタミナゲージ
 
 
-
+	CUtil::End2D();
 
 
 

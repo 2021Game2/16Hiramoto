@@ -244,5 +244,6 @@ void CSceneGame::Render() {
 	}
 	//2D‚Ì•`‰æI—¹
 	CUtil::End2D();
-
+	//CXPlayer‚Ìƒpƒ‰ƒ[ƒ^“™‚Ì‚QD•`‰æ‚Íˆê”ÔÅŒã
+	CXPlayer::GetInstance()->Render2D();
 }

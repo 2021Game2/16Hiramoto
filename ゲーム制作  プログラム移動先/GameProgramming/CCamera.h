@@ -1,12 +1,13 @@
 #ifndef CCAMERA_H
 #define CCAMERA_H
 #include "CVector.h"
+#include"CCharacter.h"
 /*
 カメラクラス
 */
 #define DEF_CAMERA_DIST 10.0f
 #define DEF_CAMERA_HEAD_ADJUST 3.0f
-class CCamera {
+class CCamera :public CCharacter{
 public:
 	//視点
 	CVector mEye;
