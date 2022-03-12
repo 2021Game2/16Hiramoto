@@ -182,6 +182,16 @@ void CMatrix::operator+=(const CMatrix& m)
 		mF[i] += m.mF[i];
 	}
 }
+
+CVector CMatrix::operator*(const CVector& v) {
+
+	return CVector(
+		v.mX * mM[0][0] + v.mY * mM[1][0] + v.mZ * mM[2][0] + mM[3][0],
+		v.mX * mM[0][1] + v.mY * mM[1][1] + v.mZ * mM[2][1] + mM[3][1],
+		v.mX * mM[0][2] + v.mY * mM[1][2] + v.mZ * mM[2][2] + mM[3][2]
+	);
+}
+
 /*
 getInverse
 逆行列の取得
@@ -238,5 +248,8 @@ CVector CMatrix::GetYVec() {
 }
 CVector CMatrix::GetZVec() {
 	return CVector(-m20, -m21, -m22);//奥行きの逆方向なのでマイナスにしておく
+}
+CVector CMatrix::GetPos() {
+	return CVector(m03, m13, m23);
 }
 

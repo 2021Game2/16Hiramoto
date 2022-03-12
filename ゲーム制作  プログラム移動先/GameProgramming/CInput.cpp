@@ -13,7 +13,6 @@ Init(ウィンドウポインタ)
 void CInput::Init(GLFWwindow* w) {
 	mpWindow = w;
 	glfwSetScrollCallback(mpWindow, CInput::MouseScrollCB);
-
 }
 
 /*
@@ -82,6 +81,11 @@ int CInput::GetWheelValue()
 void CInput::InputReset()
 {
 	sm_wheel = 0;
+}
+
+void CInput::SetMousePosW(int x, int y)
+{
+	glfwSetCursorPos(mpWindow, x, y);
 }
 
 

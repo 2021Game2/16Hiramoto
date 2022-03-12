@@ -4,13 +4,13 @@
 #include <corecrt_math.h>
 #include <stdio.h>
 #include "CInput.h"
+#include "main.h"
 
 //カメラの外部変数
 CCamera Camera;
 
-
-
-
+#define WIN_CENTRAL_X WINDOW_WIDTH/2
+#define WIN_CENTRAL_Y WINDOW_HEIGHT/2
 
 void CCamera::Init()
 {
@@ -25,7 +25,14 @@ void CCamera::Init()
 
 	//カメラクラスの設定
 	Set(e, c, u);
+}
 
+CCamera::CCamera()
+	:mSkip(true)
+	, mAngleX(0.0f)
+	, mAngleY(0.0f)
+	, mDist(0.0f)
+{
 }
 void CCamera::Set(const CVector &eye, const CVector &center,
 	const CVector &up) {
@@ -39,33 +46,41 @@ void CCamera::Set(const CVector &eye, const CVector &center,
 	mAngleX = 0.0f;
 	mAngleY = 1.0f;
 	mDist = DEF_CAMERA_DIST;
-
 }
+
 void CCamera::SetTarget(const CVector& target)
 {
 	mTarget = target;
 }
 
-
 void CCamera::Update() {
 	static int oldMouseX(0), oldMouseY(0);
 	int mouseX(0), mouseY(0);
-	CInput::GetMousePos(&mouseX, &mouseY);
+	CInput::GetMousePosW(&mouseX, &mouseY);
 
 
 	float moveX = (float)(oldMouseX - mouseX);
 	float moveY = (float)(oldMouseY - mouseY);
 
 
-	if (CInput::GetMouseButton(GLFW_MOUSE_BUTTON_RIGHT)) {
-		if (moveX != 0) mAngleX += (moveX * 0.01f);
-		if (moveY != 0) mAngleY += (moveY * 0.01f);
+	if (mSkip == false) {
+		if (moveX != 0) mAngleX += (moveX * 0.005f);
+		if (moveY != 0) mAngleY += (moveY * 0.005f);
 	}
+	mSkip = false;
 
+	int X = WIN_CENTRAL_X;
+	int Y = WIN_CENTRAL_Y;
+	CInput::SetMousePosW(X, Y);
+	oldMouseX = X;
+	oldMouseY = Y;
+
+    /*
 	int wheel = CInput::GetWheelValue();
 	if (wheel != 0) {
 		mDist -= (float)(wheel)*0.5f;
 	}
+	*/
 
 
 	//X軸＋回転
@@ -104,20 +119,13 @@ void CCamera::Update() {
 	mPos.mY = mTarget.mY + cosf(mAngleY) * mDist;
 	mPos.mZ = mTarget.mZ + (cosf(mAngleX)) * (mDist * sinf(mAngleY));
 
-
 	mCenter = mTarget;
 	mCenter.mY += DEF_CAMERA_HEAD_ADJUST;//頭上補正
 	mEye = mPos;
-
-	//mJump.Play();
-
-	//行列設定
-//	glMultMatrixf(Matrix.mF);
-//	Camera.mEye = CVector(1.0f, 2.0f, 10.0f) * Matrix;
-
-
+	/*
 	oldMouseX = mouseX;
 	oldMouseY = mouseY;
+	*/
 	CInput::InputReset();
 
 }
@@ -129,11 +137,32 @@ void CCamera::Render() {
 
 	//カメラ行列格納
 	glGetFloatv(GL_MODELVIEW_MATRIX, mMatrix.mF);
-
 }
 
 CMatrix CCamera::GetMat() {
 	return mMatrix;
-	
 }
 
+bool CCamera::WorldToScreen(CVector* pOut, const CVector& pos)
+{
+	//座標変換
+	CVector	screen_pos = mMatrix * pos;
+
+	//画面外なのでリターン
+	if (screen_pos.mZ >= 0.0f) {
+		return false;
+	}
+
+	float Z = -screen_pos.mZ;
+	//座標調整
+	screen_pos = screen_pos / -screen_pos.mZ;
+
+	//	printf("%f,%f,%f\n", screen_pos.mX, screen_pos.mY, screen_pos.mZ);
+
+	//スクリーン変換
+	pOut->mX = (1.0f + screen_pos.mX) * WINDOW_WIDTH * 0.5f;
+	pOut->mY = (1.0f + screen_pos.mY) * WINDOW_HEIGHT * 0.5f;
+	pOut->mZ = Z; //screen_pos.mZ
+
+	return true;
+}

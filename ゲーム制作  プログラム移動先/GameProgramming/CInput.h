@@ -13,7 +13,6 @@ class CInput {
 	static int sm_wheel;
 
 public:
-
 	/*
 	初期化
 	Init(ウィンドウポインタ)
@@ -57,6 +56,8 @@ public:
 
 	//コールバック系の数値をﾘｾｯﾄ
 	static void InputReset();
+
+	static void CInput::SetMousePosW(int x, int y);
 };
 
 #endif

@@ -1,14 +1,14 @@
 #ifndef CCAMERA_H
 #define CCAMERA_H
 #include "CVector.h"
-#include"CCharacter.h"
 /*
 カメラクラス
 */
-#define DEF_CAMERA_DIST 10.0f
+#define DEF_CAMERA_DIST 8.0f
 #define DEF_CAMERA_HEAD_ADJUST 3.0f
-class CCamera :public CCharacter{
+class CCamera {
 public:
+	CCamera();
 	//視点
 	CVector mEye;
 	//注視点
@@ -36,12 +36,19 @@ public:
 	void Init();
 	//カメラ更新処理
 	void Update();
-
 	//カメラ適用
 	void Render();
 
 	//ベクトル取得
 	CMatrix GetMat();
+
+	//スクリーン座標変換
+	//戻り値 表示範囲
+	//pOut 結果格納用
+	//pos 2Dに変換したいワールド座標
+	bool WorldToScreen(CVector* pOut, const CVector& pos);
+
+	bool mSkip;
 };
 
 //カメラの外部参照
