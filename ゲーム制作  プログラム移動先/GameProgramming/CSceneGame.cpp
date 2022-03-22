@@ -161,9 +161,9 @@ void CSceneGame::Init() {
 
 void CSceneGame::Update() {
 
-	Camera.Update();
+	//Camera.Update();
 
-	Camera.Render();
+	//Camera.Render();
 	//“G‚ÌƒXƒ|[ƒ“ŠÔŠu
 	if (mSpawn >= 0) {
 		mSpawn--;

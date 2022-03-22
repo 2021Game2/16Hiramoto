@@ -1,7 +1,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
+#define WINDOW_WIDTH 800 //âÊñ ÇÃâ°ïù
+#define WINDOW_HEIGHT 600 //âÊñ ÇÃçÇÇ≥
 
 #endif

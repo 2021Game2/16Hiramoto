@@ -1,6 +1,8 @@
 #ifndef CCAMERA_H
 #define CCAMERA_H
 #include "CVector.h"
+
+#include "CColliderLine.h"
 /*
 カメラクラス
 */
@@ -15,8 +17,9 @@ public:
 	CVector mCenter;
 	//上方向
 	CVector mUp;
-
+	
 	CMatrix mMatrix;
+	//CColliderLine mLineCamera;
 
 	//重複するがカメラ制御用
 	CVector mPos;		//位置

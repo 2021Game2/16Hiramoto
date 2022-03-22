@@ -9,13 +9,14 @@
 //カメラの外部変数
 CCamera Camera;
 
-#define WIN_CENTRAL_X WINDOW_WIDTH/2
-#define WIN_CENTRAL_Y WINDOW_HEIGHT/2
+#define WIN_CENTRAL_X WINDOW_WIDTH/2 //画面の中央（X軸）
+#define WIN_CENTRAL_Y WINDOW_HEIGHT/2 //画面の中央 （Y軸）
+
 
 void CCamera::Init()
 {
 	//カメラのパラメータを作成する
-	CVector e, c, u;//視点、注視点、上方向
+	CVector e, c, u;//視点、注視点、上方向（void CCamera::Setで使用）
 	//視点を求める
 	e = CVector(1.0f, 2.0f, 10.0f);
 	//注視点を求める
