@@ -36,6 +36,7 @@ CEnemy2::CEnemy2()
 	,CurveCount(0.0f)
 	,mEnemyVoice(0)
 	, mDamageCount(0)
+	,mEnemy2AttackHit(false)
 {
 	
 	mGravity = 0.20f;
@@ -168,6 +169,7 @@ void CEnemy2::Attack() {
 		}
 		//攻撃のあとは移動処理に移行
 		if(mEnemy2AttackCount<=0){
+
 			if (mState == EATTACK) {
 				mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
 				mState = EAUTOMOVE;
@@ -310,7 +312,9 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 				if (o->mTag == CCollider::EPLAYERSWORD) {
 					//衝突しているとき
 					if (CCollider::Collision(m, o)) {
-						if (CXPlayer::mAttackCount > 0) {
+						if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
+						{
+						//if (CXPlayer::mAttackCount > 0) {
 							mColliderCount = 5;
 							mCollisionEnemy = mPosition - o->mpParent->mPosition;
 							mCollisionEnemy.mY = 0;
@@ -318,10 +322,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 							mState = EDAMAGED;
 							if (mHp <= 0) {
 								mJump = JUMP;
-								
-								
 								mState = EDEATH;
-
 							}
 						}
 					}
@@ -330,6 +331,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 				if (o->mTag == CCollider::ESTOPPER) {
 
 					if (CCollider::Collision(m, o)) {
+
 						if (mState != EATTACK) {
 							if (mState != EIDLE) {
 								mState = EIDLE;

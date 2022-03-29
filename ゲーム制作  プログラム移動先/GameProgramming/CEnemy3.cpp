@@ -13,7 +13,7 @@
 #define HP 1
 #define VELOCITY 0.05f //çsìÆÇP
 #define VELOCITY1  -0.1f//çsìÆÇP
-
+#define COLLIDERCOUNT 5.0
 #define VELOCITY2 0.1f
 
 #define VELOCITY3 0.2f
@@ -104,22 +104,7 @@ void CEnemy3::Update() {
 	else if (dx < -margin) {
 		mRotation.mY -= 3.0f;//âEÇ÷âÒì]
 	}
-	/*
-	if (dy > margin) {
-		//if (dz > margin) {
-
-		mRotation.mX -= 3.0f;
-	}
-		//}
-	else if(dy > margin){
-
-		//else if (dz < margin) {
-			
-				mRotation.mX += 3.0f;
-			
-		//}
-	}
-	*/
+	
 	CTransform::Update();//çsóÒçXêV
 	switch (mMoveCount) {
 		//ïÇóV
@@ -333,8 +318,10 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 				if (o->mTag == CCollider::EPLAYERSWORD) {
 					//è’ìÀÇµÇƒÇ¢ÇÈÇ∆Ç´
 					if (CCollider::Collision(m, o)) {
-						if (CXPlayer::mAttackCount > 0) {
-							mColliderCount = 5;
+						if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
+						{
+						//if (CXPlayer::mAttackCount > 0) {
+							mColliderCount = COLLIDERCOUNT;
 							mCollisionEnemy = mPosition - o->mpParent->mPosition;
 							mCollisionEnemy.mY = 0;
 							mCollisionEnemy = mCollisionEnemy.Normalize();

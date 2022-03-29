@@ -37,7 +37,8 @@ private:
 
 	CCharacter* mpPlayer;//プレイヤーのポインタ
 public:
-
+	
+	 bool mBossAttackHit;
 	static int mBossAttackCount;
 	//モデルデータ
 	static CModel mModel;

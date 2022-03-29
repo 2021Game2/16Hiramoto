@@ -48,6 +48,7 @@ private:
 	CCharacter* mpPlayer;//プレイヤーのポインタ
 	//CXPlayer* mpPointPlayer;
 public:
+	bool mEnemy2AttackHit;
 	//モデルデータ
 	static CModel mModel;
 	//コンストラクタ	

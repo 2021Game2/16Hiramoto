@@ -41,6 +41,7 @@ CBoss::CBoss()
 	, mGravity(0.0f)
 	, mTime(0.0f)
 	, mBossDamageCount(0)
+	, mBossAttackHit(false)
 	
 {
 
@@ -170,18 +171,18 @@ void CBoss::Attack() {
 	//攻撃アニメーション
 	ChangeAnimation(5, false, 40);
 	//当たり判定が適用される時間
+	/*
 	if (mBossAttackCount > 0) {
-	
 		mBossAttackCount--;
-	}
+	}*/
 	
 	//攻撃のあとは移動処理に移行
-	if (mBossAttackCount <= 0) {
-		if (mState == EATTACK) {
+	if (mAnimationFrame > mAnimationFrameSize) {
+		//if (mState == EATTACK) {
 			mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
-			mState = EIDLE;
-			mBossAttackCount = 0;
-		}
+			//mState = EIDLE;
+			//mBossAttackCount = 0;
+		//}
 	}
 
 }
@@ -191,17 +192,19 @@ void CBoss::Attack2() {
 	//攻撃アニメーション
 	ChangeAnimation(6, false, 40);
 	//当たり判定が適用される時間
+	/*
 	if (mBossAttackCount > 0) {
 		mBossAttackCount--;
 	}
+	*/
 	
 	//攻撃のあとは移動処理に移行
-	if (mBossAttackCount <= 0) {
-		if (mState == EATTACK2) {
+	if (mAnimationFrame>mAnimationFrameSize) {
+		//if (mState == EATTACK2) {
 			mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
-			mBossAttackCount = 0;
-			mState = EIDLE;
-		}
+			//mBossAttackCount = 0;
+			//mState = EIDLE;
+		//}
 	}
 
 }
@@ -274,7 +277,40 @@ void CBoss::Update() {
 		Death();
 		break;
 	}
+	//アニメーションの種類
+	switch (mAnimationIndex) {
+		/*case(4):
 
+			break;*/
+	case(5):
+		if (mAnimationFrame == 30) {
+			mBossAttackHit = true;
+		}
+		if (mAnimationFrame >= mAnimationFrameSize)
+		{
+			mBossAttackHit = false;
+			mState = EIDLE;
+		}
+		break;
+	case(6):
+		if (mAnimationFrame == 30) {
+			mBossAttackHit = true;
+		}
+		if (mAnimationFrame >= mAnimationFrameSize)
+		{
+			mBossAttackHit = false;
+			mState = EIDLE;
+		}
+		break;
+	}
+		/*
+	case(8):
+
+		break;
+	case(9):
+
+		break;
+		*/
 	if (mAttackPercent < 10) {
 		mAttackPercent++;
 	}
@@ -328,7 +364,9 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 						//衝突しているとき
 					    
 							if (CCollider::Collision(m, o)) {
-								if (CXPlayer::mAttackCount > 0) {
+								if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
+								{
+								//if (CXPlayer::mAttackCount > 0) {
 									if (mHp > 0) {
 										if (mHp % 30 == 0) {
 											mColliderCount = 10;

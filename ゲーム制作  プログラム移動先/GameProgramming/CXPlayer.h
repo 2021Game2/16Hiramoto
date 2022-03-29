@@ -17,7 +17,7 @@ private:
 	CTexture mImageGauge; //ゲージ画像
 public:
 
-
+	 bool mAttackHit;
 	CColliderLine mLine;//線分コライダ
 	//コライダの宣言
 	CCollider mColSphereBody;	//体

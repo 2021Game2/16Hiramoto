@@ -33,6 +33,7 @@ int CXPlayer::mSpAttack = 0;
 int CXPlayer::mStamina = STAMINA_MAX;
 int CXPlayer::mAttackCount = 0;
 int CXPlayer::mHp = HP_MAX;
+
 extern CSound FirstAttack;
 extern CSound SecondAttack;
 extern CSound ThirdAttack;
@@ -152,19 +153,22 @@ void CXPlayer::Update()
 		break;
 	case EATTACK2://攻撃
 		if (mAttackCount>0) {
+		
 		ChangeAnimation(5, false, 20);//+６番目のアニメーションのフレーム３０
 		}
 		break;
 	case EATTACK3://攻撃
 		if (mAttackCount>0) {
+		
 		ChangeAnimation(7, false, 30);//+８番目のアニメーションのフレーム３０
+		
 		}
 		break;
 	case EATTACKSP://攻撃
-		if (mAttackCount>0) {
+		//if (mAttackCount>0) {
 		ChangeAnimation(7, false, 100);//７番目のアニメーション５０フレームで
 		
-		}
+		//}
 		break;
 	case EDAMAGED://ダメージ
 		Damage.Play();
@@ -174,10 +178,15 @@ void CXPlayer::Update()
 		ChangeAnimation(11, false, 60);
 		break;
 	}
+	//アニメーションの種類
 	switch (mAnimationIndex) {
 	case(3): 
+		if (mAnimationFrame == 15) {
+			mAttackHit = true;
+		}
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
+			mAttackHit = false;
 			ChangeAnimation(4, false, 30);
 		}
 		break;
@@ -188,8 +197,12 @@ void CXPlayer::Update()
 		}
 		break;
 	case(5):
+		if (mAnimationFrame == 15) {
+			mAttackHit = true;
+		}
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
+			mAttackHit = false;
 			ChangeAnimation(6, false, 30);
 		}
 		break;
@@ -203,9 +216,12 @@ void CXPlayer::Update()
 		if (mJump >= -0.1f) {
 			mJump -= G;
 		}
+		if (mAnimationFrame == 15) {
+			mAttackHit = true;
+		}
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
-		
+			mAttackHit = false;
 			ChangeAnimation(8, false, 100);
 
 		}
@@ -221,7 +237,7 @@ void CXPlayer::Update()
 		    }
 	    }
 
-				if (mAnimationFrame >= mAnimationFrameSize)
+		if (mAnimationFrame >= mAnimationFrameSize)
 		{
 			
 			mCollider2.mRenderEnabled = false;
@@ -342,40 +358,42 @@ void CXPlayer::Update()
 		 //一回目の攻撃
 			 //一回目の攻撃のフレーム＜＝０かつ３回目の攻撃の総フレーム＞＝０
 			 //１→２→３→１   攻撃の順番がループ
+		 //無敵時間中じゃないとき
 		 if (mDamageCount <= 0) {
-
+			 //攻撃１が使えるとき
 			 if (mSpaceCount1 == 0) {
-				 if (mAttackCount <= 0) {
+
+				// if (mAttackCount <= 0) {
 					 if (CKey::Once(' '))
 					 {
 						 FirstAttack.Play();
 						 mState = EATTACK1;
 						 mSpaceCount1 = 1;//１回目の攻撃のフラグ
 						 mSpaceCount2 = 0;
-						 mAttackCount = 20;//当たり判定が適用される時間
+						mAttackCount = 10;//当たり判定が適用される時間
 						 mAnimationCount = 50;//0になるまでアニメーションが変わらない
 						 mStep = STEP;
 					 }
-				 }
+				// }
 			 }
 
 			 //2回目の攻撃
 			 else if (mSpaceCount2 == 0) {
-				 if (mAttackCount <= 0) {
+				 //if (mAttackCount <= 0) {
 					 if (CKey::Once(' ')) {
 						 SecondAttack.Play();
 						 mState = EATTACK2;
 						 mSpaceCount2 = 1;//２回目の攻撃のフラグ
 						 mSpaceCount3 = 0;
-						 mAttackCount = 20;//当たり判定が適用される時間
+						 mAttackCount = 10;//当たり判定が適用される時間
 						 mAnimationCount = 50;//0になるまでアニメーションが変わらない
 						 mStep = STEP;
 					 }
-				 }
+				// }
 			 }
 			 //３回目の攻撃
 			 else if (mSpaceCount3 == 0) {
-				 if (mAttackCount <= 0) {
+				// if (mAttackCount <= 0) {
 					 if (CKey::Once(' ')) {
 						 ThirdAttack.Play();
 						 mState = EATTACK3;
@@ -385,21 +403,21 @@ void CXPlayer::Update()
 						 mAttackCount = 30;//当たり判定が適用される時間
 						 mStep = STEP;//ジャンプ力を代入
 					 }
-				 }
+				// }
 			 }
 		 }
 		 //ジャンプ攻撃
 		 if (mSpAttack >= 30) {
 			 if (CKey::Once('F')) {
-				 if (mAttackCount <= 0) {
+				// if (mAttackCount <= 0) {
 					 JumpAttack.Play();
 					 mState = EATTACKSP;
 					 mJump = JUMP;//ジャンプ力を代入
 					  mSpAttack -= 30;//特殊攻撃のゲージ減少
 					 mAnimationCount = 200;//0になるまでアニメーションが変わらない
-					 mAttackCount = 100;
+					// mAttackCount = 100;
 					 //mPosition.mY = 1.0f;// mJump* mTime - 0.5 * mGravity * mTime * mTime;
-				 }
+				// }
 			 }
 		 }
 		 //死亡
@@ -425,6 +443,7 @@ void CXPlayer::Update()
 					  mState = EDUSH;
 				  }
 			  }
+			  //動いていないかつCキーを押していなければ待機
                   else {
 					  if (mState == EIDLE) {
 						  mAnimationCount = 1;
@@ -443,7 +462,7 @@ void CXPlayer::Update()
 			mSpeed -= 0.01f;
 		}
          Move = Move*mSpeed;
-		//普通に3次元ベクトル計算で算出したほうが正確だが計算量を懸念する場合は擬似計算で軽量化
+		//3次元ベクトル計算で算出したほうが正確だが計算量を懸念する場合は擬似計算で軽量化
 		//擬似ベクトル計算
 		Check tCheck = CUtil::GetCheck2D(Move.mX,Move.mZ,0,0, mRotation.mY*(M_PI/180.0f));
 		//回転速度　degreeに直す
@@ -457,28 +476,34 @@ void CXPlayer::Update()
 		if (tCheck.cross < 0.0f) {
 			mRotation.mY -= tCheck.turn * turnspeed;
 		}
-		//座標移動
+		//移動
 		if (mState == EMOVE||mState==EDUSH||mStep > 0) {
 		
              mPosition += Move;
 		}
+		//回避行動時の移動量
 		 if (mStep > 0) {
 				mStep--;
 		 }
+
 		 if (mAnimationCount > 0) {
 			 mAnimationCount--;
 	     }
+		 //アニメーションが終わるたびに攻撃モーション最初から
 		 if (mAnimationCount <= 0) {
 			 mSpaceCount1 = 0;
 			 mSpaceCount2 = 0;
 			 mSpaceCount3 = 0;
 		 }
+		 //スタミナ回復
 		 if (mStamina < 1000) {
 			mStamina++;
 		 }
+		 //攻撃アニメーション中
 		 if (mAttackCount > 0) {
 			 mAttackCount--;
 		 }
+		 //無敵時間
 		 if (mDamageCount > 0) {
 			 mDamageCount--;
 		 }
@@ -573,7 +598,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 												//体力減少
 												mHp--;
 												//無敵時間付与
-												mDamageCount = 60;
+												mDamageCount = 30;
 												//ダメージ時の処理を開始
 												mState = EDAMAGED;
 											}
@@ -601,7 +626,9 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 									//ダメージが入ったあとの無敵時間
 									if (mDamageCount == 0) {
 										//敵の攻撃判定が適用されている間
-										if (CBoss::mBossAttackCount > 0) {
+										if (((CBoss*)(o->mpParent))->mBossAttackHit == true)
+										{
+										
 											if (mHp > 0) {
 												//後ろに下がる
 												mColliderCount = 5.0f;
@@ -633,14 +660,15 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 						if (o->mpParent->mTag == EENEMY2) {
 							//敵のコライダ
 							if (o->mTag == CCollider::EENEMY2COLLIDER) {
+                              if (mAttackHit ==true) {
 								if (CCollider::Collision(m, o)) {
 									//o->mpParent->Collision(o, m);
-									if (mAttackCount > 0) {
+									
 										//特殊攻撃のゲージ増加
 										mSpAttack += 2;
 										break;
-									}
-								}
+							    }
+							  }
 							}
 						}
 					}
