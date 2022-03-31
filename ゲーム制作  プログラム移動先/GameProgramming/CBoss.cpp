@@ -24,11 +24,11 @@ CModel CBoss::mModel;//モデルデータ作成
 CBoss::CBoss()
 //コライダの設定
 	: mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 200.0f)
-	, mColSphereHead(this, &mMatrix, CVector(0.0f, 1.0f, 5.0f), 5.0f)
+	, mColSphereHead(this, &mMatrix, CVector(0.0f, 1.0f, 5.0f), 7.0f)
 	, mColSphereRightFront(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 2.0f)
 	, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
-	, mColSphereRightBack(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
-	, mColSphereLeftBack(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
+	//, mColSphereRightBack(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
+	//, mColSphereLeftBack(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
 
 
 	, mpPlayer(0)
@@ -51,8 +51,8 @@ CBoss::CBoss()
 	mColSphereHead.mTag = CCollider::EBOSSCOLLIDERHEAD;
 	mColSphereRightFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
 	mColSphereLeftFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
-	mColSphereRightBack.mTag = CCollider::EBOSSCOLLIDER;
-	mColSphereLeftBack.mTag = CCollider::EBOSSCOLLIDER;
+	//mColSphereRightBack.mTag = CCollider::EBOSSCOLLIDER;
+	//mColSphereLeftBack.mTag = CCollider::EBOSSCOLLIDER;
 
 
 	mGravity = 0.20f;
@@ -83,8 +83,8 @@ void CBoss::Init(CModelX* model)
 	mColSphereHead.mpMatrix = &mpCombinedMatrix[6];
     mColSphereRightFront.mpMatrix = &mpCombinedMatrix[12];//右前足
 	mColSphereLeftFront.mpMatrix = &mpCombinedMatrix[19];//左前足
-	mColSphereRightBack.mpMatrix = &mpCombinedMatrix[27];//右後ろ足
-	mColSphereLeftBack.mpMatrix = &mpCombinedMatrix[32];//左後ろ足
+	//mColSphereRightBack.mpMatrix = &mpCombinedMatrix[27];//右後ろ足
+	//mColSphereLeftBack.mpMatrix = &mpCombinedMatrix[32];//左後ろ足
 	//mColSphereLeftBack.mpMatrix = &mpCombinedMatrix[17];
 	mState = EATTACK2;
 
@@ -94,18 +94,19 @@ void CBoss::Init(CModelX* model)
 void CBoss::Idle() {
 	//30溜まるまで待機のアニメーション
 	ChangeAnimation(8, false, 60);
-	if (mMove >= 30) {
+	mMove++;
+	if (mMove >= 120) {
 		//30溜まった状態でアニメーションが終わると攻撃処理に移行
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
 			if (mAttackPercent <= 5) {
             //当たり判定が適用される時間
-			mBossAttackCount = 80;
+			//mBossAttackCount = 80;
 			mState = EATTACK;
 		    }
 			else if(mAttackPercent > 5) {
 				//当たり判定が適用される時間
-				mBossAttackCount = 80;
+				//mBossAttackCount = 80;
 				mState = EATTACK2;
 			}
 		}
@@ -177,7 +178,7 @@ void CBoss::Attack() {
 	}*/
 	
 	//攻撃のあとは移動処理に移行
-	if (mAnimationFrame > mAnimationFrameSize) {
+	if (mAnimationFrame >= mAnimationFrameSize) {
 		//if (mState == EATTACK) {
 			mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
 			//mState = EIDLE;
@@ -199,7 +200,7 @@ void CBoss::Attack2() {
 	*/
 	
 	//攻撃のあとは移動処理に移行
-	if (mAnimationFrame>mAnimationFrameSize) {
+	if (mAnimationFrame>=mAnimationFrameSize) {
 		//if (mState == EATTACK2) {
 			mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
 			//mBossAttackCount = 0;
@@ -354,7 +355,7 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 		*/
 	
 		//EENEMY2COLLIDERの時
-		if (m->mTag == CCollider::EBOSSCOLLIDER||m->mTag== CCollider::EBOSSCOLLIDERATTACK) {
+		if (m->mTag== CCollider::EBOSSCOLLIDERATTACK) {
 
 			if (o->mType == CCollider::ESPHERE) {
 
@@ -405,7 +406,7 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 							mColliderCount = 1.5f;
 							mCollisionEnemy = mPosition - o->mpParent->mPosition;
 							mCollisionEnemy = mCollisionEnemy.Normalize();
-							mMove++;
+							
 
 						}
 
@@ -440,16 +441,16 @@ void CBoss::TaskCollision() {
 	mColSphereHead.ChangePriority();
 	mColSphereRightFront.ChangePriority();
 	mColSphereLeftFront.ChangePriority();
-	mColSphereRightBack.ChangePriority();
-	mColSphereLeftBack.ChangePriority();
+	//mColSphereRightBack.ChangePriority();
+	//mColSphereLeftBack.ChangePriority();
 
 	//衝突処理を実行
 
 	CCollisionManager::Get()->Collision(&mColSphereRightFront, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSphereLeftFront, COLLISIONRANGE);
 
-	CCollisionManager::Get()->Collision(&mColSphereRightBack, COLLISIONRANGE);
-	CCollisionManager::Get()->Collision(&mColSphereLeftBack, COLLISIONRANGE);
+	//CCollisionManager::Get()->Collision(&mColSphereRightBack, COLLISIONRANGE);
+	//CCollisionManager::Get()->Collision(&mColSphereLeftBack, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSphereHead, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSearch, COLLISIONRANGE);
 }

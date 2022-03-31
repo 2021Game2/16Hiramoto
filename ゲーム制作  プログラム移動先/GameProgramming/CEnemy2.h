@@ -15,7 +15,7 @@ class CEnemy2 :public CXCharacter {
 private:
 
 	//コライダ
-	CCollider mCollider;
+	//CCollider mCollider;
 
 	CVector mPoint;//目標地点
 	int mHp;//体力
@@ -32,12 +32,12 @@ private:
 	float mTime;//ジャンプする時の時間を計測
 	int mEnemy2StopCount;//プレイヤーのESTOPPERに当たっている間増加
 
-	CCollider mColSphereHead;
+	//CCollider mColSphereHead;
 	CCollider mColSphereRight;
 	CCollider mColSphereLeft;
 	CVector mCollisionEnemy;
 
-	CCollider mColSearch;//サーチ用コライダ
+	//CCollider mColSearch;//サーチ用コライダ
 
 	float mPlayerMarkingX;//プレイヤーと敵のX座標の差
 	float mPlayerMarkingZ;//プレイヤーと敵のZ座標の差

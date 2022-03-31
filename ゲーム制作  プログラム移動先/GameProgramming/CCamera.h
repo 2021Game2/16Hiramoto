@@ -8,7 +8,7 @@
 */
 #define DEF_CAMERA_DIST 8.0f
 #define DEF_CAMERA_HEAD_ADJUST 3.0f
-class CCamera {
+class CCamera :public CCharacter{
 public:
 	CCamera();
 	//視点
@@ -17,7 +17,7 @@ public:
 	CVector mCenter;
 	//上方向
 	CVector mUp;
-	
+	CColliderLine mColliderLine;
 	CMatrix mMatrix;
 	//CColliderLine mLineCamera;
 
@@ -42,6 +42,8 @@ public:
 	//カメラ適用
 	void Render();
 
+	void Collision(CCollider* m, CCollider* o);
+	//void CollisionTriangleLine(CCollider* triangle, CCollider* line, CVector* adjust);
 	//ベクトル取得
 	CMatrix GetMat();
 

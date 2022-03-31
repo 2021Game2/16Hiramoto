@@ -27,7 +27,7 @@ CModel CEnemy3::mModel;//モデルデータ作成
 //敵（ハチ）
 CEnemy3::CEnemy3()
 //コライダの設定
-	:mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 10.0f)
+	:mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 5.0f)
 	, mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 70.0f)
 	, mColSearch2(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f),50.0f)
 	, mpPlayer(0)

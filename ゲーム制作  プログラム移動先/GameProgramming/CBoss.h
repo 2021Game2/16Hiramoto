@@ -27,8 +27,8 @@ private:
 	CCollider mColSphereHead;
 	CCollider mColSphereRightFront;
 	CCollider mColSphereLeftFront;
-	CCollider mColSphereRightBack;
-	CCollider mColSphereLeftBack;
+	//CCollider mColSphereRightBack;
+	//CCollider mColSphereLeftBack;
 	int mAttackPercent;
 	CVector mCollisionEnemy;
 	int mEnemyDamage;
