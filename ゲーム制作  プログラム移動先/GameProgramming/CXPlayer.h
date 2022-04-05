@@ -21,7 +21,7 @@ public:
 	CColliderLine mLine;//線分コライダ
 	//コライダの宣言
 	CCollider mColSphereBody;	//体
-	CCollider mColSphereHead;	//頭
+	//CCollider mColSphereHead;	//頭
 	CCollider mColSphereSword;	//剣
 
 

@@ -2,37 +2,47 @@
 #include"CPlayer.h"
 #include"CEffect.h"
 #include"CCollisionManager.h"
+#include"CColliderTriangle.h"
 #include"CRock.h"
-#define OBJ "3DModel\\Rock\\Rock1.obj"
-#define MTL "3DModel\\Rock\\Rock1.mtl"
+#include"CCollider.h"
+#define OBJ "3DModel\\Ground\\Ground.obj"
+#define MTL "3DModel\\Ground\\Ground.mtl"
+
 CModel CRock::mModel;//モデルデータ作成
+
 CRock::CRock(const CVector& position, const CVector& rotation, const CVector& scale)
 	: CRock()
 {
-
+	
 	mPosition = position;
 	mRotation = rotation;
 	mScale = scale;
-	//mCollider.mTag = CCollider::EROCKCOLLIDER;
-	//mColliderMesh.Set(NULL, NULL, &mModel);//モデルをコライダにする
 	mTag = EROCK;
-	CTransform::Update();//行列の更新
-	//優先度を１に変更する
+	 CTransform::Update();//行列の更新
+	//優先度を2に変更する
 	mPriority = 1;
 	CTaskManager::Get()->Remove(this);//削除して
 	CTaskManager::Get()->Add(this);//追加する
 }
 CRock::CRock()
-	//: mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 100.0f)
 
 {
+	//mPosition = CVector(-100.0f, 0.0f, 50.0f);
+	//mPosition = CVector(0.0f, 0.0f, 0.0f);
+	//mScale = CVector(1.0f, 1.0f, 1.0f);
+   
+	
+
 	//モデルのポインタ設定
 	mpModel = &mModel;
-	//モデルが無いときは読み込む
+
+		//モデルが無いときは読み込む
 	if (mModel.mTriangles.size() == 0) {
 		mModel.Load(OBJ, MTL);
 	}
-	mRotation.mX += 30.0f;
+
+	mColliderMesh.Set(NULL, NULL, &mModel);//モデルをコライダにする
+	
 }
 void CRock::Update() {
 	
@@ -58,7 +68,7 @@ void CRock::Collision(CCollider* m, CCollider* o) {
 }
 void CRock::Render() {
 	//親の描画処理
-	CCharacter::Render();
+	//CCharacter::Render();
 }
 void CRock::TaskCollision() {
 	//コライダの優先度変更

@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include "CInput.h"
 #include "main.h"
-
+#include "CTaskManager.h"
 //カメラの外部変数
 CCamera Camera;
 
@@ -36,7 +36,12 @@ CCamera::CCamera()
 	, mAngleY(0.0f)
 	, mDist(0.0f)
 {
+
 	mColliderLine.mType = CCollider::ELINE;
+
+	mPriority = 100;
+	CTaskManager::Get()->Remove(this);
+	CTaskManager::Get()->Add(this);
 }
 void CCamera::Set(const CVector &eye, const CVector &center,
 	const CVector &up) {
@@ -59,7 +64,7 @@ void CCamera::SetTarget(const CVector& target)
 
 
 void CCamera::Update() {
-	//CCamera::Render();
+
 	static int oldMouseX(0), oldMouseY(0);
 	int mouseX(0), mouseY(0);
 	CInput::GetMousePosW(&mouseX, &mouseY);
@@ -181,8 +186,8 @@ void CCamera::Collision(CCollider* m, CCollider* o) {
 
 	case CCollider::ETRIANGLE:
 		CVector adjust;//調整用ベクトル
-		if (CCollider::CollisionTriangleLine(o, m, &adjust)) {
-			mEye += adjust + (adjust.Normalize()*0.5f);
+		if (CCollider::CollisionTriangleLine(m,o, &adjust)) {
+			//mEye += adjust + (adjust.Normalize()*0.5f);
 			mColliderLine.Set(this, nullptr, mEye, mCenter);
 			//行列の更新
 			CTransform::Update();

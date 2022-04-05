@@ -49,13 +49,13 @@ CXPlayer* CXPlayer::GetInstance()
 CXPlayer::CXPlayer()
 
 	: mColSphereBody(this, nullptr, CVector(0.0f,1.1f,0.0f), 0.5f)
-	, mColSphereHead(this, nullptr, CVector(0.0f, 5.0f, -3.0f), 0.5f)
-	, mColSphereSword(this, nullptr, CVector(-10.0f, 10.0f, 50.0f), 4.5f)
+	//, mColSphereHead(this, nullptr, CVector(0.0f, 5.0f, -3.0f), 0.5f)
+	, mColSphereSword(this, nullptr, CVector(-10.0f, 10.0f, 50.0f), 4.5f)//剣のコライダ１
 
 	, mColSphereFoot(this, nullptr, CVector(0.0f, 0.0f, -3.0f), 3.0f)
-	,mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 5.0f)
-	, mCollider2(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 4.0f)
-	,mLine(this, &mMatrix, CVector(0.0f, 5.0f, 0.0f), CVector(0.0f, 1.0f, 0.0f))  //上下の線分コライダ
+	,mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 5.0f)//ストッパー
+	, mCollider2(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 4.0f)//剣のコライダ２
+	//,mLine(this, &mMatrix, CVector(0.0f, 5.0f, 0.0f), CVector(0.0f, 1.0f, 0.0f))  //上下の線分コライダ
 	, mJump(0.0f)
 
 	, mGravity(0.0f)
@@ -70,12 +70,12 @@ CXPlayer::CXPlayer()
 {
 	//タグにプレイヤーを設定します
 	mTag = EPLAYER;
-	mColSphereFoot.mTag = CCollider::EPLAYERFOOT;
+	
 	mColSphereSword.mTag = CCollider::EPLAYERSWORD;
 	mCollider2.mTag = CCollider::EPLAYERSWORD;
 	mColSphereFoot.mTag = CCollider::EPLAYERBODY;
 	mColSphereBody.mTag = CCollider::EPLAYERBODY;
-	mColSphereHead.mTag = CCollider::EPLAYERBODY;
+	//mColSphereHead.mTag = CCollider::EPLAYERBODY;
 	mLine.mType = CCollider::ELINE;
 	
 	mCollider.mTag = CCollider::ESTOPPER;
@@ -92,7 +92,7 @@ void CXPlayer::Init(CModelX* model)
 	//合成行列の設定
 	mColSphereBody.mpMatrix = &mpCombinedMatrix[9];
 	//頭
-	mColSphereHead.mpMatrix = &mpCombinedMatrix[12];
+	//mColSphereHead.mpMatrix = &mpCombinedMatrix[12];
 	//剣
 	mColSphereSword.mpMatrix = &mpCombinedMatrix[22];
 
@@ -543,45 +543,47 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 
 	//自身のコライダの設定
 	switch (m->mType) {
-			
-			
-		
+
+
+
 	case CCollider::ESPHERE:
 
-	         //親がプレイヤー
-			if (m->mpParent->mTag == EPLAYER) {
-				//プレイヤーの体部分
-				if (m->mTag == CCollider::EPLAYERBODY) {//相手のコライダが三角コライダの場合
+		//親がプレイヤー
+		if (m->mpParent->mTag == EPLAYER) {
+			//プレイヤーの体部分
+			if (m->mTag == CCollider::EPLAYERBODY) {//相手のコライダが三角コライダの場合
+				//親が三角コライダ
+				if (o->mType == CCollider::ETRIANGLE) {
 					//親が三角コライダ
-					if (o->mType == CCollider::ETRIANGLE) {
-						
-								CVector adjust;//調整用ベクトル
-							if (CCollider::CollisionTriangleSphere(o,m,&adjust)) {
+					if (o->mTag == EMAP ) {
 
-								if (mState != EESCAPE) {
-									mGravity = 0;
-									mJump = 0;
-									//三角形と線分の衝突判定
-									//CCollider::CollisionTriangleLine(o, m, &adjust);
-									//位置の更新（mPosition+adjust)
-									mPosition = mPosition + adjust;
+						CVector adjust;//調整用ベクトル
+						if (CCollider::CollisionTriangleSphere(o, m, &adjust)) {
 
-									//行列の更新
-									CTransform::Update();
-								}
-								
+							if (mState != EESCAPE) {
+								mGravity = 0;
+								mJump = 0;
+								//三角形と線分の衝突判定
+								//CCollider::CollisionTriangleLine(o, m, &adjust);
+								//位置の更新（mPosition+adjust)
+								mPosition = mPosition + adjust;
+
+								//行列の更新
+								CTransform::Update();
 							}
 
-						
+						}
+
+
 					}
-			
+
 					//球コライダ
 					if (o->mType == CCollider::ESPHERE) {
 						//親が敵（２）
 						if (o->mpParent->mTag == EENEMY2) {
 							//敵の攻撃部位との衝突判定
 							if (o->mTag == CCollider::EENEMY2COLLIDERATTACK) {
-								
+
 								CVector adjust;//調整用ベクトル
 								if (CCollider::Collision(m, o)) {
 									//ダメージが入ったあとの無敵時間が０のとき
@@ -628,7 +630,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 										//敵の攻撃判定が適用されている間
 										if (((CBoss*)(o->mpParent))->mBossAttackHit == true)
 										{
-										
+
 											if (mHp > 0) {
 												//後ろに下がる
 												mColliderCount = 5.0f;
@@ -649,47 +651,48 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 							}
 						}
 					}
-                     
+
 				}
-				
-				 //プレイヤーの剣
-				 else if (m->mTag == CCollider::EPLAYERSWORD) {
+
+				//プレイヤーの剣
+				else if (m->mTag == CCollider::EPLAYERSWORD) {
 					//球コライダ
 					if (o->mType == CCollider::ESPHERE) {
 						//敵（２）
 						if (o->mpParent->mTag == EENEMY2) {
 							//敵のコライダ
 							if (o->mTag == CCollider::EENEMY2COLLIDERATTACK) {
-                              if (mAttackHit ==true) {
-								if (CCollider::Collision(m, o)) {
-									//o->mpParent->Collision(o, m);
-									
-										//特殊攻撃のゲージ増加
+								if (mAttackHit == true) {
+									if (CCollider::Collision(m, o)) {
+										//o->mpParent->Collision(o, m);
+
+											//特殊攻撃のゲージ増加
 										mSpAttack += 2;
 										break;
-							    }
-							  }
+									}
+								}
 							}
 						}
 					}
-				 }
+				}
 
 			}
 			break;
 	case CCollider::ELINE://線分コライダ
 			//相手のコライダが三角コライダの場合
-			if (o->mType == CCollider::ETRIANGLE) {
-				CVector adjust;//調整用ベクトル
-				//三角形と線分の衝突判定
-				CCollider::CollisionTriangleLine(o, m, &adjust);
-				//位置の更新（mPosition+adjust)
-				//mPosition = mPosition - adjust * -1;
-				//行列の更新
-				CTransform::Update();
+		if (o->mType == CCollider::ETRIANGLE) {
+			CVector adjust;//調整用ベクトル
+			//三角形と線分の衝突判定
+			CCollider::CollisionTriangleLine(o, m, &adjust);
+			//位置の更新（mPosition+adjust)
+			//mPosition = mPosition - adjust * -1;
+			//行列の更新
+			CTransform::Update();
 
-			}
-			break;
-	
+		}
+		break;
+
+		}
 	}
 }
 

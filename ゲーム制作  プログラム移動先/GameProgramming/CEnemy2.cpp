@@ -141,17 +141,18 @@ void CEnemy2::AutoMove() {
 	int r = rand() % 60; //rand()は整数の乱数を返す
 	//%180は１８０で割った余りを求める
 	if (r == 0) {
-		if (mpPlayer) {
+		//if (mpPlayer) {
 			//ESEARCHに衝突してポインタに設定した
 			//プレイヤーの座標を記録
 
-			mPoint = mpPlayer->mPosition;
-		}
-		else {
-			mPoint = mPoint * CMatrix().RotateY(80);
-		}
+			//mPoint = mpPlayer->mPosition;
+		mPoint = tPlayer->mPosition;
+		//}
+		//else {
+		//	mPoint = mPoint * CMatrix().RotateY(80);
+		//}
 	}
-	mpPlayer = tPlayer;
+	//mpPlayer = tPlayer;
 	
 		
 	

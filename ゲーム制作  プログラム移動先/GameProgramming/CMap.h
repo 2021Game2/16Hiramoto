@@ -12,14 +12,10 @@ private:
 	CMatrix mBackGroundMatrix;
 	CModel mModel;
 
-	CColliderMesh mColliderMesh;
 
 public:
 	CMap();
 
-	//CColliderTriangle mColliderTriangle;
-
-	//CColliderTriangle mColliderTriangle2;
 	void TaskCollision();
 };
 
