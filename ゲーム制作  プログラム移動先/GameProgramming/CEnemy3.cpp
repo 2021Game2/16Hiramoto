@@ -28,8 +28,8 @@ CModel CEnemy3::mModel;//モデルデータ作成
 CEnemy3::CEnemy3()
 //コライダの設定
 	:mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 5.0f)
-	, mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 70.0f)
-	, mColSearch2(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f),50.0f)
+	, mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 50.0f)
+	, mColSearch2(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f),70.0f)
 	, mpPlayer(0)
 	, mHp(HP)
 	, mJump(0)
@@ -43,6 +43,7 @@ CEnemy3::CEnemy3()
 {
 	mRotation.mY += 90.0f;
 	mTag = EENEMY3;
+	mState = EIDLE;
 	//モデルが無いときは読み込む
 	if (mModel.mTriangles.size() == 0) {
 		mModel.Load(OBJ, MTL);
@@ -70,21 +71,36 @@ CEnemy3::CEnemy3(const CVector& position, const CVector& rotation, const CVector
 	CTaskManager::Get()->Remove(this);//削除して
 	CTaskManager::Get()->Add(this);//追加する
 }
-//更新処理
-void CEnemy3::Update() {
+void CEnemy3::Idle() {
 
+	mCount++;
+	if (mCount < 60) {
+		if (mCount >= 0) {
+			mPosition.mY -= 1.1f;
+		}
+	}
+	//６０から１２０フレーム
+	else if (mCount < 120) {
+		if (mCount >= 60) {
+			mPosition.mY += 0.1f;
+		}
+	}
+	if (mCount >= 120) {
+		mCount = 0;
+	}
+}
+void CEnemy3::AutoMove1() {
+
+	mCount++;
 	//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
 	CXPlayer* tPlayer = CXPlayer::GetInstance();
-	//if(mPosition.mY<=mpPlayer->mPosition.mY)
-
-	mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
+	//mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
 	//左向き（X軸）のベクトルを求める
 	CVector vx = CVector(1.0f, 0.0f, 0.0f) * mMatrixRotate;
 	//上向き（Y軸）のベクトルを求める
 	CVector vy = CVector(0.0f, 1.0f, 0.0f) * mMatrixRotate;
 	//前方向（Z軸）のベクトルを求める
 	CVector vz = CVector(0.0f, 0.0f, 1.0f) * mMatrixRotate;
-	
 	//目標地点までのベクトルを求める
 	CVector vp = mPoint - mPosition;
 	//左ベクトルとの内積を求める
@@ -93,9 +109,8 @@ void CEnemy3::Update() {
 	float dy = vp.Dot(vy);
 	//前ベクトルとの内積を求める
 	float dz = vp.Dot(vz);
-	
+	CTransform::Update();//行列更新
 	float margin = 0.1f;
-	
 	//左右方向へ回転
 	if (dx > margin) {
 		mRotation.mY += 3.0f;//左へ回転
@@ -104,110 +119,79 @@ void CEnemy3::Update() {
 	else if (dx < -margin) {
 		mRotation.mY -= 3.0f;//右へ回転
 	}
-	
-	CTransform::Update();//行列更新
+	int r = rand() % 60; //rand()は整数の乱数を返す
+	//%180は１８０で割った余りを求める
+	if (r == 0) {
+		mPoint = tPlayer->mPosition;
+	}
 	switch (mMoveCount) {
-		//浮遊
-	case(0):
-       //０から６０フレーム
-		 if (mCount < 60) {
-			
-			if (mCount >= 0) {
-				mPosition.mY -= 0.1f;
-			}
-		}
-		//６０から１２０フレーム
-		if (mCount < 120) {
-			if (mCount >= 60) {
-				mPosition.mY += 0.1f;
-			}
-		}
-	    if (mCount >= 120) {
-			mCount = 0;
-	    }
-		break;
-		//移動（まっすぐ移動）
+		//移動１前進
 	case(1):
 		if (mCount < 180) {
 			mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
 			if (mPosition.mY > 3.0f) {
-				mPosition = mPosition + CVector(0.0f,-0.1f , VELOCITY) * mMatrixRotate;
-				//mPosition.mY -= 0.1f;
+				mPosition = mPosition + CVector(0.0f, -0.1f, VELOCITY) * mMatrixRotate;
+			}
+			if (mCount >= 180) {
+				
+				mMoveCount = 2;
+				mCount = 0;
 			}
 		}
-		if (mCount >= 180) {
-			mMoveCount = 2;
-			mCount = 0;
-			
-		}
-		break;
-		//移動２（右後ろに移動）
+		   break;
+		   //移動２（右後ろに移動）
 	case(2):
 		if (mCount < 10) {
-
-			//mPosition.mX += 3.0f;
-			//mPosition.mZ -= 1.5f;
-			//mPosition.mY += 2.0f;
-			mPosition = mPosition + CVector(3.0f, 2.0f,-1.5f) * mMatrixRotate;
+			mPosition = mPosition + CVector(3.0f, 2.0f, -1.5f) * mMatrixRotate;
 		}
 		if (mCount >= 10) {
-            mMoveCount = 3;
+			mMoveCount = 3;
 			mCount = 0;
-			
 		}
 		break;
 		//移動３（左に移動）
 	case(3):
 		if (mCount <= 10) {
-			//mPosition.mX -= 6.0f;
-			//mPosition.mY -= 1.0f;
 			mPosition = mPosition + CVector(-6.0f, -1.0f, 0.0f) * mMatrixRotate;
 		}
 		if (mCount >= 10) {
-            mMoveCount = 4;
+			mMoveCount = 4;
 			mCount = 0;
-			
 		}
 		break;
 		//移動４（右前に移動（元の位置に戻る）
 	case(4):
 		if (mCount <= 30) {
-			//mPosition.mX += 1.5f;
-			//mPosition.mZ += 0.5f;
-           // mPosition.mY += 0.1f;
-			
-			
-			mPosition = mPosition + CVector(1.5f,VELOCITY ,0.5f ) * mMatrixRotate;
+			mPosition = mPosition + CVector(1.5f, VELOCITY, 0.5f) * mMatrixRotate;
 		}
 		if (mCount >= 30) {
-           mMoveCount = 0;
-			mCount = 0;
+			
+			mState = EATTACK;
 			
 		}
 		break;
 	}
-	mCount++;
-		
+}
+void CEnemy3::AutoMove2() {
 
-	int r = rand() % 60; //rand()は整数の乱数を返す
-
-	//%180は１８０で割った余りを求める
-	if (r == 0) {
-		if (mpPlayer) {
-			mPoint = mpPlayer->mPosition;
-
-		}
-		else {
-			mPoint = mPoint * CMatrix().RotateY(80);
-
-
-			//mPoint = mPoint * CMatrix().RotateX(80);
-		}
+}
+void CEnemy3::Attack() {
+	if (mFireCount > 0) {
+		mFireCount--;
+		CBullet* bullet = new CBullet();
+		bullet->Set(0.1f, 1.5f);
+		bullet->mPosition = mPosition;
+		bullet->mRotation = mRotation;
+		bullet->Update();
 	}
-	mpPlayer = tPlayer;
-
+	if (mFireCount == 0) {
+		mCount = 0;
+		mMoveCount = 1;
+		mState = EAUTOMOVE1;
+	}
+}
+void CEnemy3::Death() {
 	if (mHp <= 0) {
-
 		//吹き飛ぶ(X軸方向）
 		if (mColliderCount > 0) {
 			mColliderCount--;
@@ -218,9 +202,6 @@ void CEnemy3::Update() {
 			mPosition.mY += mJump;
 			mJump2--;
 		}
-		
-		
-		
 		mHp--;
 		//15フレームごとにエフェクト
 		if (mHp % 15 == 0) {
@@ -233,25 +214,41 @@ void CEnemy3::Update() {
 		mEnabled = false;
 
 	}
+}
+//更新処理
+void CEnemy3::Update() {
+	//処理を行動ごとに分割
+	switch (mState) {
+	case EIDLE:
+		Idle();
+		break;
+	case EAUTOMOVE1:
+		AutoMove1();
+		break;
+	case EAUTOMOVE2:
+		AutoMove2();
+		break;
+	case EATTACK:
+		Attack();
+		break;
+	case EDEATH:
+		Death();
+		break;
+	}
+	if (mColSearch.mRenderEnabled == false) {
+		
+		if (mState != EATTACK) {
+			mFireCount = 60;
+		}
+	}
 	if (mJump > 0) {
 		mJump--;
-	}
-	if (mFireCount > 0) {
-		mFireCount--;
 	}
 	mEnemy3Fry++;
 	if (mEnemy3Fry >= 300) {
 		Enemy3Fry.Play();
 		mEnemy3Fry = 0;
 	}
-	//CTransform::Update();
-
-	//CMatrix mMatrixCol;
-	//CModel cube;
-	//cube.Load("cube.obj", "cube.mtl");
-	//CColliderMesh.Set(this, &mMatrix, mpModel);
-	//mMatrixCol = CMatrix().Scale(10.0f,10.0f,10.0f)* mMatrix;
-	//ColliderMesh.Set(this, &mMatrixCol, &cube);
 
 }
 //Collision(コライダ１，コライダ２，）
@@ -260,58 +257,26 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 	//自分がサーチ用のとき
 
 	if (m->mpParent->mTag == EENEMY3) {
-		if (m->mTag == CCollider::ESEARCH) {
+		if (m->mTag == CCollider::ESEARCH2) {
 			//相手が弾コライダのとき
 			if (o->mType == CCollider::ESPHERE) {
 				//相手がプレイヤーのとき、
 				if (o->mpParent->mTag == EPLAYER) {
-					//衝突しているとき
-					if (CCollider::Collision(m, o)) {
-						//プレイヤーのポインタ設定
-						mpPlayer = o->mpParent;
-						if (mMoveCount <= 0) {
+					if (o->mTag == CCollider::EPLAYERBODY) {
+						//衝突しているとき
+						if (CCollider::Collision(m, o)) {
 							mMoveCount = 1;
-
-
+							mColSearch2.mRenderEnabled = false;
+							mState = EAUTOMOVE1;
 						}
-
 					}
 				}
 			}
 			return;
 		}
 	}
-		if (m->mTag == CCollider::ESEARCH2) {
-			//相手が弾コライダのとき
-			if (o->mType == CCollider::ESPHERE) {
-				//相手がプレイヤーのとき、
-				if (o->mpParent->mTag == EPLAYER) {
-					//衝突しているとき
-					if (CCollider::Collision(m, o)) {
-						//プレイヤーのポインタ設定
-
-
-
-						if (mFireCount <= 0) {
-							// *mpPlayer = o->mpParent;
-							CBullet* bullet = new CBullet();
-							bullet->Set(0.1f, 1.5f);
-							bullet->mPosition = mPosition;
-
-							bullet->mRotation = mRotation;
-							bullet->Update();
-							mFireCount = 60;
-						}
-					}
-
-				}
-			}
-			return;
-		}
 	
 	if (m->mTag == CCollider::EENEMY3COLLIDER) {
-
-
 		if (o->mType == CCollider::ESPHERE) {
 			//相手が武器のとき、
 			if (o->mpParent->mTag == EPLAYER) {
@@ -320,14 +285,11 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 					if (CCollider::Collision(m, o)) {
 						if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
 						{
-						//if (CXPlayer::mAttackCount > 0) {
 							mColliderCount = COLLIDERCOUNT;
 							mCollisionEnemy = mPosition - o->mpParent->mPosition;
 							mCollisionEnemy.mY = 0;
 							mCollisionEnemy = mCollisionEnemy.Normalize();
-
 							mJump = JUMP;
-							mJump2 = JUMP;
 							mHp--;
 						}
 
@@ -342,13 +304,9 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 			//adjust、、、調整値
 			if (CCollider::CollisionTriangleSphere(o, m, &adjust))
 			{
-				 
 					//衝突しない位置まで戻す
 					mPosition = mPosition + adjust;
 					
-				
-
-
 			}
 		}
 		
@@ -357,13 +315,12 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 }
 void CEnemy3::TaskCollision() {
 	mColSearch.ChangePriority();
+	mColSearch2.ChangePriority();
+	mCollider.ChangePriority();
 	//衝突処理を実行
 	CCollisionManager::Get()->Collision(&mColSearch, COLLISIONRANGE);
-	mColSearch2.ChangePriority();
 	//衝突処理を実行
 	CCollisionManager::Get()->Collision(&mColSearch2, COLLISIONRANGE);
-	//コライダの優先度変更
-	mCollider.ChangePriority();
 	//衝突処理を実行
 	CCollisionManager::Get()->Collision(&mCollider, COLLISIONRANGE);
 }

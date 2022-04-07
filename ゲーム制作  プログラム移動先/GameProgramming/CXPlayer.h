@@ -18,14 +18,13 @@ private:
 public:
 
 	 bool mAttackHit;
-	CColliderLine mLine;//線分コライダ
 	//コライダの宣言
-	CCollider mColSphereBody;	//体
+	//CCollider mColSphereBody;	//体
 	//CCollider mColSphereHead;	//頭
 	CCollider mColSphereSword;	//剣
 
 
-	CCollider mCollider;
+	//CCollider mCollider;
 	
 	CCollider  mColSphereFoot;//ダメージが通る当たり判定
 	CCollider mCollider2;//アイテムを拾った時の武器の当たり判定

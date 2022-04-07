@@ -298,23 +298,8 @@ break;
 void CEnemy2::Collision(CCollider* m, CCollider* o) {
 
 	m->mType == CCollider::ESPHERE;
-	//自分がサーチ用のとき
-	/*
-	if (m->mTag == CCollider::ESEARCH) {
-		//相手が弾コライダのとき
-		if (o->mType == CCollider::ESPHERE) {
-			//相手がプレイヤーのとき
-			if (o->mpParent->mTag == EPLAYER) {
-				//衝突しているとき
-				//if (CCollider::Collision(m, o)) {
-					//プレイヤーのポインタ設定
-					//mpPlayer = o->mpParent;
-				//}
-			}
-		}
-		return;
-	}
-	*/
+	
+	
 	//EENEMY2COLLIDERの時
 	if (m->mTag == CCollider::EENEMY2COLLIDERATTACK) {
 
@@ -341,7 +326,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 					}
 				}
 				//相手がESTOPPERの時
-				if (o->mTag == CCollider::ESTOPPER) {
+				if (o->mTag == CCollider::EPLAYERBODY) {
 
 					if (CCollider::Collision(m, o)) {
 

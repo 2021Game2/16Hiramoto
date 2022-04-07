@@ -33,7 +33,7 @@ private:
 	CVector mCollisionEnemy;
 	int mEnemyDamage;
 
-	CCollider mColSearch;//サーチ用コライダ
+	//CCollider mColSearch;//サーチ用コライダ
 
 	CCharacter* mpPlayer;//プレイヤーのポインタ
 public:

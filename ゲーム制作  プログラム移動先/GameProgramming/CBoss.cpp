@@ -23,8 +23,8 @@ CModel CBoss::mModel;//モデルデータ作成
 //デフォルトコンストラクタ
 CBoss::CBoss()
 //コライダの設定
-	: mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 200.0f)
-	, mColSphereHead(this, &mMatrix, CVector(0.0f, 1.0f, 5.0f), 7.0f)
+	//: mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 200.0f)
+	: mColSphereHead(this, &mMatrix, CVector(0.0f, 1.0f, 5.0f), 7.0f)
 	, mColSphereRightFront(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 2.0f)
 	, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
 	//, mColSphereRightBack(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
@@ -47,7 +47,7 @@ CBoss::CBoss()
 
 	mGravity = 0.20f;
 	mTag = EBOSS;
-	mColSearch.mTag = CCollider::ESEARCH;//タグ設定
+	//mColSearch.mTag = CCollider::ESEARCH;//タグ設定
 	mColSphereHead.mTag = CCollider::EBOSSCOLLIDERHEAD;
 	mColSphereRightFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
 	mColSphereLeftFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
@@ -220,7 +220,6 @@ void CBoss::Damaged() {
 	if (mHp <= 0) {
 		mState = EDEATH;
 	}
-
 	else {
     //ダメージのあとは移動処理
 	mState = EIDLE;
@@ -389,7 +388,7 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 						
 					}
 					//相手がESTOPPERの時
-					if (o->mTag == CCollider::ESTOPPER) {
+					if (o->mTag == CCollider::EPLAYERBODY) {
 
 						if (CCollider::Collision(m, o)) {
 							
@@ -437,7 +436,7 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 }
 void CBoss::TaskCollision() {
 	//コライダの優先度変更
-	mColSearch.ChangePriority();
+	//mColSearch.ChangePriority();
 	mColSphereHead.ChangePriority();
 	mColSphereRightFront.ChangePriority();
 	mColSphereLeftFront.ChangePriority();
@@ -452,5 +451,5 @@ void CBoss::TaskCollision() {
 	//CCollisionManager::Get()->Collision(&mColSphereRightBack, COLLISIONRANGE);
 	//CCollisionManager::Get()->Collision(&mColSphereLeftBack, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSphereHead, COLLISIONRANGE);
-	CCollisionManager::Get()->Collision(&mColSearch, COLLISIONRANGE);
+	//CCollisionManager::Get()->Collision(&mColSearch, COLLISIONRANGE);
 }

@@ -38,6 +38,12 @@ public:
 	//コライダ
 	//コンストラクタ	
 	CEnemy3();
+	void AutoMove1();
+	void AutoMove2();
+	void Damage();
+	void Death();
+	void Attack();
+	void Idle();
 	static int mMoveCount;
 	//CEnemy2(位置、回転、拡縮）
 	CEnemy3(const CVector& position, const CVector& rotation, const CVector& scale);
@@ -47,6 +53,17 @@ public:
 	//Collision(コライダ１、コライダ２）
 	void Collision(CCollider* m, CCollider* o);
 	void TaskCollision();
+	//敵の状態
+	enum EEnemy3State
+	{
+		EIDLE,		//待機
+		EAUTOMOVE1,	//移動
+		EAUTOMOVE2,
+		EATTACK,	//攻撃
+		EDAMAGED,	//被弾
+		EDEATH,		//死亡
+	};
+	EEnemy3State mState;
 };
 
 #endif

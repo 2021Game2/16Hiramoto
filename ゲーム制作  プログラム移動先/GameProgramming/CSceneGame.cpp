@@ -15,7 +15,7 @@
 #include"CItem.h"
 #include"CRock.h"
 #include"CSound.h"
-#define ENEMYCOUNT 30
+#define ENEMYCOUNT 10
 #define BGM "SE\\BGM.wav"
 #define ATTACK1 "SE\\ˆêŒ‚–Ú.wav"
 #define ATTACK2 "SE\\“ñŒ‚–Ú.wav"
@@ -192,8 +192,8 @@ void CSceneGame::Update() {
 	CTaskManager::Get()->Update();
 
 	//Õ“Ëˆ—(‘“–‚èj
-	CCollisionManager::Get()->Collision();
-	//CTaskManager::Get()->TaskCollision();
+	//CCollisionManager::Get()->Collision();
+	CTaskManager::Get()->TaskCollision();
 	//Camera.Update();
 
 	//mJump.Play();

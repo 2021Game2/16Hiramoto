@@ -2,6 +2,7 @@
 #define CCAMERA_H
 #include "CVector.h"
 
+#include"CCollisionManager.h"
 #include "CColliderLine.h"
 /*
 カメラクラス
@@ -41,6 +42,8 @@ public:
 	void Update();
 	//カメラ適用
 	void Render();
+
+	void TaskCollision();
 
 	void Collision(CCollider* m, CCollider* o);
 	//void CollisionTriangleLine(CCollider* triangle, CCollider* line, CVector* adjust);

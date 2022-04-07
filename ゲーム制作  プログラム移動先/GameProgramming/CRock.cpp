@@ -5,8 +5,8 @@
 #include"CColliderTriangle.h"
 #include"CRock.h"
 #include"CCollider.h"
-#define OBJ "3DModel\\Ground\\Ground.obj"
-#define MTL "3DModel\\Ground\\Ground.mtl"
+#define OBJ "3DModel\\Rock\\Rock.obj"
+#define MTL "3DModel\\Rock\\Rock.mtl"
 
 CModel CRock::mModel;//モデルデータ作成
 
@@ -41,7 +41,7 @@ CRock::CRock()
 		mModel.Load(OBJ, MTL);
 	}
 
-	mColliderMesh.Set(NULL, NULL, &mModel);//モデルをコライダにする
+	mColliderMesh.Set(this, NULL, &mModel);//モデルをコライダにする
 	
 }
 void CRock::Update() {

@@ -5,6 +5,9 @@
 #include <stdio.h>
 #include "CInput.h"
 #include "main.h"
+
+#define _USE_MATH_DEFINES
+#include "CUtil.h"
 #include "CTaskManager.h"
 //カメラの外部変数
 CCamera Camera;
@@ -36,20 +39,16 @@ CCamera::CCamera()
 	, mAngleY(0.0f)
 	, mDist(0.0f)
 {
-
 	mColliderLine.mType = CCollider::ELINE;
-
 	mPriority = 100;
 	CTaskManager::Get()->Remove(this);
 	CTaskManager::Get()->Add(this);
 }
 void CCamera::Set(const CVector &eye, const CVector &center,
 	const CVector &up) {
-	
 	mEye = eye;
 	mCenter = center;
 	mUp = up;
-
 	mPos = eye;
 	mTarget = center;
 	mAngleX = 0.0f;
@@ -195,14 +194,8 @@ void CCamera::Collision(CCollider* m, CCollider* o) {
 		break;
 	}
 }
-/*
-void CCamera::CollisionTriangleLine(CCollider* triangle, CCollider* line, CVector* adjust) {
-	line->mType = CCollider::ELINE;
-	triangle->mType = CCollider::ETRIANGLE;
+void CCamera::TaskCollision() {
+	mColliderLine.ChangePriority();
 
-	CVector adjust;//調整用ベクトル
-	if (CCollider::CollisionTriangleSphere(line, triangle, &adjust)) {
-
-	}
-
-}*/
+	CCollisionManager::Get()->Collision(&mColliderLine, COLLISIONRANGE);
+}
