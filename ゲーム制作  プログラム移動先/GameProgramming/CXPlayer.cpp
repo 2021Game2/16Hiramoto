@@ -74,7 +74,11 @@ CXPlayer::CXPlayer()
 	//this＝プレイヤーそのもの
 	mpPlayerInstance = this;
 	mImageGauge.Load(IMAGE_GAUGE);
-	
+
+	//優先度を１に変更する
+	mPriority = 1;
+	CTaskManager::Get()->Remove(this);//削除して
+	CTaskManager::Get()->Add(this);//追加する
 }
 
 void CXPlayer::Init(CModelX* model)

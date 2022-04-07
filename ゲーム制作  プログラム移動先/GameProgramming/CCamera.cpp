@@ -40,9 +40,10 @@ CCamera::CCamera()
 	, mDist(0.0f)
 {
 	mColliderLine.mType = CCollider::ELINE;
+	//優先度を設定
 	mPriority = 100;
-	CTaskManager::Get()->Remove(this);
-	CTaskManager::Get()->Add(this);
+	CTaskManager::Get()->Remove(this);//
+	CTaskManager::Get()->Add(this);//追加する
 }
 void CCamera::Set(const CVector &eye, const CVector &center,
 	const CVector &up) {
@@ -179,19 +180,16 @@ bool CCamera::WorldToScreen(CVector* pOut, const CVector& pos)
 void CCamera::Collision(CCollider* m, CCollider* o) {
 	m->mType = CCollider::ELINE;
 	//相手のコライダの設定
-	switch (o->mType) {
 
 
-
-	case CCollider::ETRIANGLE:
+	if (o->mType == CCollider::ETRIANGLE) {
 		CVector adjust;//調整用ベクトル
-		if (CCollider::CollisionTriangleLine(m,o, &adjust)) {
-			//mEye += adjust + (adjust.Normalize()*0.5f);
+		if (CCollider::CollisionTriangleLine(o,m, &adjust)) {
+			mEye += (adjust + adjust.Normalize()*0.5f);
 			mColliderLine.Set(this, nullptr, mEye, mCenter);
 			//行列の更新
 			CTransform::Update();
 		}
-		break;
 	}
 }
 void CCamera::TaskCollision() {
