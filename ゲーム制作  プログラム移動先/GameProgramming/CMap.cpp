@@ -18,13 +18,6 @@ CMap::CMap()
 	
 }
 void CMap::TaskCollision() {
-	/*
-	mColliderTriangle.ChangePriority();
-	mColliderTriangle2.ChangePriority();
-	//Õ“Ëˆ—‚ðŽÀs
-	CCollisionManager::Get()->Collision(&mColliderTriangle, COLLISIONRANGE);
-
-	CCollisionManager::Get()->Collision(&mColliderTriangle2, COLLISIONRANGE);
-	*/
+	
 }
 

@@ -71,36 +71,19 @@ CEnemy3::CEnemy3(const CVector& position, const CVector& rotation, const CVector
 	CTaskManager::Get()->Remove(this);//削除して
 	CTaskManager::Get()->Add(this);//追加する
 }
-void CEnemy3::Idle() {
-
-	mCount++;
-	if (mCount < 60) {
-		if (mCount >= 0) {
-			mPosition.mY -= 1.1f;
-		}
-	}
-	//６０から１２０フレーム
-	else if (mCount < 120) {
-		if (mCount >= 60) {
-			mPosition.mY += 0.1f;
-		}
-	}
-	if (mCount >= 120) {
-		mCount = 0;
-	}
-}
-void CEnemy3::AutoMove1() {
-
-	mCount++;
+//更新処理
+void CEnemy3::Update() {
 	//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
 	CXPlayer* tPlayer = CXPlayer::GetInstance();
-	//mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
+	
+	//if(mPosition.mY<=mpPlayer->mPosition.mY)
 	//左向き（X軸）のベクトルを求める
 	CVector vx = CVector(1.0f, 0.0f, 0.0f) * mMatrixRotate;
 	//上向き（Y軸）のベクトルを求める
 	CVector vy = CVector(0.0f, 1.0f, 0.0f) * mMatrixRotate;
 	//前方向（Z軸）のベクトルを求める
 	CVector vz = CVector(0.0f, 0.0f, 1.0f) * mMatrixRotate;
+
 	//目標地点までのベクトルを求める
 	CVector vp = mPoint - mPosition;
 	//左ベクトルとの内積を求める
@@ -109,44 +92,64 @@ void CEnemy3::AutoMove1() {
 	float dy = vp.Dot(vy);
 	//前ベクトルとの内積を求める
 	float dz = vp.Dot(vz);
-	CTransform::Update();//行列更新
+
 	float margin = 0.1f;
+
 	//左右方向へ回転
 	if (dx > margin) {
-		mRotation.mY += 3.0f;//左へ回転
+		mRotation.mY += 1.0f;//左へ回転
 
 	}
 	else if (dx < -margin) {
-		mRotation.mY -= 3.0f;//右へ回転
+		mRotation.mY -= 1.0f;//右へ回転
 	}
-	int r = rand() % 60; //rand()は整数の乱数を返す
-	//%180は１８０で割った余りを求める
-	if (r == 0) {
-		mPoint = tPlayer->mPosition;
-	}
+	CTransform::Update();//行列更新
 	switch (mMoveCount) {
-		//移動１前進
+		//浮遊
+	case(0):
+		//０から６０フレーム
+		if (mCount < 60) {
+
+			if (mCount >= 0) {
+				mPosition.mY -= 0.1f;
+			}
+		}
+		//６０から１２０フレーム
+		if (mCount < 120) {
+			if (mCount >= 60) {
+				mPosition.mY += 0.1f;
+			}
+		}
+		if (mCount >= 120) {
+
+			mCount = 0;
+		}
+		break;
+		//移動（まっすぐ移動）
 	case(1):
 		if (mCount < 180) {
 			mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
 			if (mPosition.mY > 3.0f) {
 				mPosition = mPosition + CVector(0.0f, -0.1f, VELOCITY) * mMatrixRotate;
-			}
-			if (mCount >= 180) {
 				
-				mMoveCount = 2;
-				mCount = 0;
 			}
 		}
-		   break;
-		   //移動２（右後ろに移動）
+		if (mCount >= 180) {
+			mMoveCount = 2;
+			mCount = 0;
+
+		}
+		break;
+		//移動２（右後ろに移動）
 	case(2):
 		if (mCount < 10) {
+
 			mPosition = mPosition + CVector(3.0f, 2.0f, -1.5f) * mMatrixRotate;
 		}
 		if (mCount >= 10) {
 			mMoveCount = 3;
 			mCount = 0;
+
 		}
 		break;
 		//移動３（左に移動）
@@ -157,6 +160,7 @@ void CEnemy3::AutoMove1() {
 		if (mCount >= 10) {
 			mMoveCount = 4;
 			mCount = 0;
+
 		}
 		break;
 		//移動４（右前に移動（元の位置に戻る）
@@ -165,33 +169,30 @@ void CEnemy3::AutoMove1() {
 			mPosition = mPosition + CVector(1.5f, VELOCITY, 0.5f) * mMatrixRotate;
 		}
 		if (mCount >= 30) {
-			
-			mState = EATTACK;
-			
+			mMoveCount = 1;
+			mCount = 0;
+
 		}
 		break;
 	}
-}
-void CEnemy3::AutoMove2() {
 
-}
-void CEnemy3::Attack() {
-	if (mFireCount > 0) {
-		mFireCount--;
-		CBullet* bullet = new CBullet();
-		bullet->Set(0.1f, 1.5f);
-		bullet->mPosition = mPosition;
-		bullet->mRotation = mRotation;
-		bullet->Update();
+
+	int r = rand() % 60; //rand()は整数の乱数を返す
+
+	//%180は１８０で割った余りを求める
+	if (r == 0) {
+		if (mpPlayer) {
+			mPoint = tPlayer->mPosition;
+
+		}
+		else {
+			mPoint = mPoint * CMatrix().RotateY(80);
+
+
+		}
 	}
-	if (mFireCount == 0) {
-		mCount = 0;
-		mMoveCount = 1;
-		mState = EAUTOMOVE1;
-	}
-}
-void CEnemy3::Death() {
 	if (mHp <= 0) {
+
 		//吹き飛ぶ(X軸方向）
 		if (mColliderCount > 0) {
 			mColliderCount--;
@@ -202,6 +203,9 @@ void CEnemy3::Death() {
 			mPosition.mY += mJump;
 			mJump2--;
 		}
+
+
+
 		mHp--;
 		//15フレームごとにエフェクト
 		if (mHp % 15 == 0) {
@@ -210,45 +214,24 @@ void CEnemy3::Death() {
 		}
 		CTransform::Update();
 	}
+	mCount++;
 	if (mHp <= -70) {
 		mEnabled = false;
 
 	}
-}
-//更新処理
-void CEnemy3::Update() {
-	//処理を行動ごとに分割
-	switch (mState) {
-	case EIDLE:
-		Idle();
-		break;
-	case EAUTOMOVE1:
-		AutoMove1();
-		break;
-	case EAUTOMOVE2:
-		AutoMove2();
-		break;
-	case EATTACK:
-		Attack();
-		break;
-	case EDEATH:
-		Death();
-		break;
-	}
-	if (mColSearch.mRenderEnabled == false) {
-		
-		if (mState != EATTACK) {
-			mFireCount = 60;
-		}
-	}
 	if (mJump > 0) {
 		mJump--;
+	}
+	if (mFireCount > 0) {
+		mFireCount--;
 	}
 	mEnemy3Fry++;
 	if (mEnemy3Fry >= 300) {
 		Enemy3Fry.Play();
 		mEnemy3Fry = 0;
 	}
+
+
 
 }
 //Collision(コライダ１，コライダ２，）
@@ -265,9 +248,14 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 					if (o->mTag == CCollider::EPLAYERBODY) {
 						//衝突しているとき
 						if (CCollider::Collision(m, o)) {
-							mMoveCount = 1;
-							mColSearch2.mRenderEnabled = false;
-							mState = EAUTOMOVE1;
+
+							if (mColSearch2.mRenderEnabled == true) {
+
+
+								mCount = 0;
+								mMoveCount = 1;
+								mColSearch2.mRenderEnabled = false;
+							}
 						}
 					}
 				}

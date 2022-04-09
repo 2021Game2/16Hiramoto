@@ -68,8 +68,6 @@ void CSceneGame::Init() {
 	BossMove.Load(MOVE);
 	Enemy2Voice.Load(VOICE2);
    
-	//mBillBoard.Set(CVector(0.0f, 5.0f, 0.0f), 1.0f, 1.0f);
-	//Bgm.Repeat();
 	//テキストフォントの読み込みと設定
 	mFont.LoadTexture(FONT, 1, 4096 / 64);
 	
@@ -143,8 +141,8 @@ void CSceneGame::Init() {
 	mpEnemySummon = new CEnemySummon(CVector(-40.0f, 1.0f, 0.0f),
 		CVector(), CVector(0.5f, 0.5f, 0.5f));
 	
-	mpRock=new CRock(CVector(-100.0f, 0.0f, 50.0f),
-		CVector(), CVector(1.0f, 1.0f, 1.0f));
+	mpRock=new CRock(CVector(-10.0f, 5.5f, -100.0f),
+		CVector(0.0f,180.0f,0.0f), CVector(0.5f, 0.5f, 0.5f));
 		
 	/*
 	mpRock = new CRock(CVector(-100.0f, 0.0f, -100.0f),
@@ -154,8 +152,8 @@ void CSceneGame::Init() {
 	mpRock = new CRock(CVector(100.0f, 0.0f, -100.0f),
 		CVector(), CVector(50.0f, 50.0f, 50.0f));
 		*/
-	mpTree = new CTree(CVector(70.0f, 0.0f, 0.0f),
-		CVector(), CVector(50.0f, 50.0f, 50.0f));
+	/*mpTree = new CTree(CVector(70.0f, 0.0f, 0.0f),
+		CVector(), CVector(50.0f, 50.0f, 50.0f));*/
 	mpEnemy3=new CEnemy3(CVector(-20.0f, 50.0f, 100.0f),
 		CVector(), CVector(1000.5f, 1000.5f, 1000.5f));
 

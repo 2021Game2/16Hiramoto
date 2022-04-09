@@ -133,6 +133,10 @@ void CCamera::Update() {
 	mCenter = mTarget;
 	mCenter.mY += DEF_CAMERA_HEAD_ADJUST;//ì™è„ï‚ê≥
 	mEye = mPos;
+
+	gluLookAt(mEye.mX, mEye.mY, mEye.mZ,
+		mCenter.mX, mCenter.mY, mCenter.mZ,
+		mUp.mX, mUp.mY, mUp.mZ);
 	/*
 	oldMouseX = mouseX;
 	oldMouseY = mouseY;
@@ -142,9 +146,6 @@ void CCamera::Update() {
 }
 
 void CCamera::Render() {
-	gluLookAt(mEye.mX, mEye.mY, mEye.mZ,
-		mCenter.mX, mCenter.mY, mCenter.mZ,
-		mUp.mX, mUp.mY, mUp.mZ);
 
 	//ÉJÉÅÉâçsóÒäiî[
 	glGetFloatv(GL_MODELVIEW_MATRIX, mMatrix.mF);
