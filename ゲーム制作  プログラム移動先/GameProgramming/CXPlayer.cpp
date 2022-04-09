@@ -550,7 +550,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 				//親が三角コライダ
 				if (o->mType == CCollider::ETRIANGLE) {
 					//親が三角コライダ
-					if (o->mpParent->mTag == EMAP) {
+				//	if (o->mpParent->mTag == EMAP) {
 
 						CVector adjust;//調整用ベクトル
 						if (CCollider::CollisionTriangleSphere(o, m, &adjust)) {
@@ -570,7 +570,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 						}
 
 
-					}
+					//}
 				}
 				//球コライダ
 				if (o->mType == CCollider::ESPHERE) {

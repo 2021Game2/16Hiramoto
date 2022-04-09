@@ -15,7 +15,7 @@
 #include"CItem.h"
 #include"CRock.h"
 #include"CSound.h"
-#define ENEMYCOUNT 10
+#define ENEMYCOUNT 5
 #define BGM "SE\\BGM.wav"
 #define ATTACK1 "SE\\ˆêŒ‚–Ú.wav"
 #define ATTACK2 "SE\\“ñŒ‚–Ú.wav"

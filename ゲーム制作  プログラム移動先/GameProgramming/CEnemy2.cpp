@@ -141,18 +141,11 @@ void CEnemy2::AutoMove() {
 	int r = rand() % 60; //rand()は整数の乱数を返す
 	//%180は１８０で割った余りを求める
 	if (r == 0) {
-		//if (mpPlayer) {
-			//ESEARCHに衝突してポインタに設定した
-			//プレイヤーの座標を記録
-
-			//mPoint = mpPlayer->mPosition;
+		
 		mPoint = tPlayer->mPosition;
-		//}
-		//else {
-		//	mPoint = mPoint * CMatrix().RotateY(80);
-		//}
+		
 	}
-	//mpPlayer = tPlayer;
+	
 	
 		
 	
@@ -312,7 +305,6 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 					if (CCollider::Collision(m, o)) {
 						if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
 						{
-						//if (CXPlayer::mAttackCount > 0) {
 							mColliderCount = 5;
 							mCollisionEnemy = mPosition - o->mpParent->mPosition;
 							mCollisionEnemy.mY = 0;
@@ -339,35 +331,25 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 						mColliderCount = 1.5f;
 						mCollisionEnemy = mPosition - o->mpParent->mPosition;
 						mCollisionEnemy = mCollisionEnemy.Normalize();
-						
-
 					}
-
-
-
-
 				}
 			}
-
 		}
-
 	}
 	if (m->mTag == CCollider::EENEMY2COLLIDERATTACK) {
-
 		if (o->mType == CCollider::ETRIANGLE) {
 			CVector adjust;//調整値
 			//三角コライダと球コライダの衝突判定
 			//adjust、、、調整値
+			/*
 			if (CCollider::CollisionTriangleSphere(o, m, &adjust))
 			{
 				
 					//衝突しない位置まで戻す
 					mPosition = mPosition + adjust;
 					
-				
-
-				
 			}
+			*/
 		}
 		return;
 	}

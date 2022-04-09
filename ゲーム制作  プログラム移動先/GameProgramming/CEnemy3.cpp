@@ -82,7 +82,7 @@ void CEnemy3::Update() {
 	//上向き（Y軸）のベクトルを求める
 	CVector vy = CVector(0.0f, 1.0f, 0.0f) * mMatrixRotate;
 	//前方向（Z軸）のベクトルを求める
-	CVector vz = CVector(0.0f, 0.0f, 1.0f) * mMatrixRotate;
+	CVector vz = CVector(0.0f, 0.0f, 5.0f) * mMatrixRotate;
 
 	//目標地点までのベクトルを求める
 	CVector vp = mPoint - mPosition;
@@ -97,13 +97,21 @@ void CEnemy3::Update() {
 
 	//左右方向へ回転
 	if (dx > margin) {
-		mRotation.mY += 1.0f;//左へ回転
+		mRotation.mY += 3.0f;//左へ回転
 
 	}
 	else if (dx < -margin) {
-		mRotation.mY -= 1.0f;//右へ回転
+		mRotation.mY -= 3.0f;//右へ回転
 	}
 	CTransform::Update();//行列更新
+	int r = rand() % 60; //rand()は整数の乱数を返す
+	//%180は１８０で割った余りを求める
+	if (r == 0) {
+		
+			mPoint = tPlayer->mPosition;
+		
+		
+	}
 	switch (mMoveCount) {
 		//浮遊
 	case(0):
@@ -177,20 +185,6 @@ void CEnemy3::Update() {
 	}
 
 
-	int r = rand() % 60; //rand()は整数の乱数を返す
-
-	//%180は１８０で割った余りを求める
-	if (r == 0) {
-		if (mpPlayer) {
-			mPoint = tPlayer->mPosition;
-
-		}
-		else {
-			mPoint = mPoint * CMatrix().RotateY(80);
-
-
-		}
-	}
 	if (mHp <= 0) {
 
 		//吹き飛ぶ(X軸方向）
