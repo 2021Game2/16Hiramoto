@@ -14,6 +14,7 @@
 #include"CEnemy3.h"
 #include"CSound.h"
 #include"CBoss.h"
+//#include"CShadowMap.h"
 /*
 ゲームのシーン
 */
@@ -33,7 +34,7 @@ private:
 	CEnemySummon* mpEnemySummon;
 	CEnemy2* mpEnemy2;
 	CBoss* mpBoss;
-
+	//CShadowMap mShadowMap;
 	//キャラクタのインスタンス
 	CXPlayer mPlayer;
 	//敵のインスタンス

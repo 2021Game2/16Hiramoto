@@ -34,7 +34,7 @@ void CCamera::Init()
 CCamera::CCamera()
 
 	:mSkip(true)
-	,mColliderLine(this, &mMatrix, mEye, mCenter)
+	,mColliderLine(this, nullptr, mEye, mCenter)
 	, mAngleX(0.0f)
 	, mAngleY(0.0f)
 	, mDist(0.0f)
@@ -134,9 +134,9 @@ void CCamera::Update() {
 	mCenter.mY += DEF_CAMERA_HEAD_ADJUST;//頭上補正
 	mEye = mPos;
 
-	gluLookAt(mEye.mX, mEye.mY, mEye.mZ,
-		mCenter.mX, mCenter.mY, mCenter.mZ,
-		mUp.mX, mUp.mY, mUp.mZ);
+	mColliderLine.Set(this, nullptr, mEye, mCenter);
+
+	
 	/*
 	oldMouseX = mouseX;
 	oldMouseY = mouseY;
@@ -146,7 +146,10 @@ void CCamera::Update() {
 }
 
 void CCamera::Render() {
-
+	//一度だけ呼び出す
+	gluLookAt(mEye.mX, mEye.mY, mEye.mZ,
+		mCenter.mX, mCenter.mY, mCenter.mZ,
+		mUp.mX, mUp.mY, mUp.mZ);
 	//カメラ行列格納
 	glGetFloatv(GL_MODELVIEW_MATRIX, mMatrix.mF);
 }
@@ -186,10 +189,11 @@ void CCamera::Collision(CCollider* m, CCollider* o) {
 	if (o->mType == CCollider::ETRIANGLE) {
 		CVector adjust;//調整用ベクトル
 		if (CCollider::CollisionTriangleLine(o,m, &adjust)) {
+
 			mEye += (adjust + adjust.Normalize()*0.5f);
+			
 			mColliderLine.Set(this, nullptr, mEye, mCenter);
-			//行列の更新
-			CTransform::Update();
+			
 		}
 	}
 }

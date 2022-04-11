@@ -74,7 +74,7 @@ void CSceneGame::Init() {
 	CRes::sModelX.Load(MODEL_FILE);
      //キャラクターにモデルを設定
 	mPlayer.Init(&CRes::sModelX);
-	mPlayer.mPosition = CVector(7.0f, 5.0f, -100.0f);
+	mPlayer.mPosition = CVector(7.0f, 5.0f, 0.0f);
 	CRes::sKnight.Load(KNIGHT);
     CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//1:移動
 	CRes::sKnight.SeparateAnimationSet(0, 1530, 1830, "idle1");//2:待機
@@ -135,13 +135,13 @@ void CSceneGame::Init() {
 	mpBoss->Init(&CRes::sBoss);
 	//ボスの配置
 	mpBoss->mPosition = CVector(10.0f, 10.0f, 0.0f);
-
+	
 	new CItem(CVector(-20.0f, 2.0f, -10.0f) ,
 		CVector(), CVector(1.5f, 1.5f, 1.5f));
 	mpEnemySummon = new CEnemySummon(CVector(-40.0f, 1.0f, 0.0f),
 		CVector(), CVector(0.5f, 0.5f, 0.5f));
 	
-	mpRock=new CRock(CVector(-10.0f, 5.5f, -100.0f),
+	mpRock=new CRock(CVector(-150.0f, 5.5f, 0.0f),
 		CVector(0.0f,180.0f,0.0f), CVector(0.5f, 0.5f, 0.5f));
 		
 	/*
@@ -235,6 +235,10 @@ void CSceneGame::Render() {
 		mFont.DrawString(buf, 20, 100, 8, 16);
 		sprintf(buf, "STAMINA:%10d", CXPlayer::mStamina);
 		mFont.DrawString(buf, 20, 150, 8, 16);
+		/*
+		sprintf(buf, "STAMINA:%10d", mPosition);
+		mFont.DrawString(buf, 20, 200, 8, 16);
+		*/
 		//sprintf(buf, "MOVE:%10d", CEnemy3::mMoveCount);
 		//mFont.DrawString(buf, 20, 200, 8, 16);
 		//sprintf(buf, "Y:%10f", mPlayer.mPosition.mY);

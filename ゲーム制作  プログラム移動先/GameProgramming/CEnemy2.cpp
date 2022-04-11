@@ -38,7 +38,6 @@ CEnemy2::CEnemy2()
 	, mDamageCount(0)
 	,mEnemy2AttackHit(false)
 {
-	
 	mGravity = 0.20f;
 	mTag = EENEMY2;
 	//mColSearch.mTag = CCollider::ESEARCH;//タグ設定
@@ -146,11 +145,6 @@ void CEnemy2::AutoMove() {
 		
 	}
 	
-	
-		
-	
-	
-	
 }	
 //攻撃処理
 void CEnemy2::Attack() {
@@ -168,7 +162,9 @@ void CEnemy2::Attack() {
 
 		if (mAnimationFrame >= mAnimationFrameSize) {
 			//if (mState == EATTACK) {
-				mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
+            mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
+				
+			mState = EAUTOMOVE;
 				
 			//}
 		}
@@ -256,7 +252,7 @@ break;
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
 			mEnemy2AttackHit = false;
-			mState = EAUTOMOVE;
+			
 		}
 		break;
 	}
@@ -280,7 +276,7 @@ break;
 	}
 	mEnemyVoice++;
 	if (mEnemyVoice>=180) {
-		//Enemy2Voice.Play();
+		Enemy2Voice.Play();
 		mEnemyVoice = 0;
 	}
 	

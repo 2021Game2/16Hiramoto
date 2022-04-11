@@ -168,7 +168,7 @@ void CBoss::AutoMove() {
 }
 //攻撃処理
 void CBoss::Attack() {
-	BossVoice.Play();
+	//BossVoice.Play();
 	//攻撃アニメーション
 	ChangeAnimation(5, false, 40);
 	//当たり判定が適用される時間
@@ -189,7 +189,7 @@ void CBoss::Attack() {
 }
 //攻撃処理
 void CBoss::Attack2() {
-	BossVoice.Play();
+	
 	//攻撃アニメーション
 	ChangeAnimation(6, false, 40);
 	//当たり判定が適用される時間
@@ -285,6 +285,7 @@ void CBoss::Update() {
 	case(5):
 		if (mAnimationFrame == 30) {
 			mBossAttackHit = true;
+			BossVoice.Play();
 		}
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
@@ -295,6 +296,7 @@ void CBoss::Update() {
 	case(6):
 		if (mAnimationFrame == 30) {
 			mBossAttackHit = true;
+			BossVoice.Play();
 		}
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
