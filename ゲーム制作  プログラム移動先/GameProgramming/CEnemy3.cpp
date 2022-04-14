@@ -107,17 +107,13 @@ void CEnemy3::Update() {
 	int r = rand() % 60; //rand()‚Í®”‚Ì—”‚ğ•Ô‚·
 	//%180‚Í‚P‚W‚O‚ÅŠ„‚Á‚½—]‚è‚ğ‹‚ß‚é
 	if (r == 0) {
-		
 			mPoint = tPlayer->mPosition;
-		
-		
 	}
 	switch (mMoveCount) {
 		//•‚—V
 	case(0):
 		//‚O‚©‚ç‚U‚OƒtƒŒ[ƒ€
 		if (mCount < 60) {
-
 			if (mCount >= 0) {
 				mPosition.mY -= 0.1f;
 			}
@@ -129,7 +125,6 @@ void CEnemy3::Update() {
 			}
 		}
 		if (mCount >= 120) {
-
 			mCount = 0;
 		}
 		break;
@@ -221,7 +216,9 @@ void CEnemy3::Update() {
 	}
 	mEnemy3Fry++;
 	if (mEnemy3Fry >= 300) {
-		Enemy3Fry.Play();
+		if (CSceneGame::mVoiceSwitch == 1) {
+			Enemy3Fry.Play();
+		}
 		mEnemy3Fry = 0;
 	}
 
@@ -244,8 +241,6 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 						if (CCollider::Collision(m, o)) {
 
 							if (mColSearch2.mRenderEnabled == true) {
-
-
 								mCount = 0;
 								mMoveCount = 1;
 								mColSearch2.mRenderEnabled = false;
@@ -257,7 +252,6 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 			return;
 		}
 	}
-	
 	if (m->mTag == CCollider::EENEMY3COLLIDER) {
 		if (o->mType == CCollider::ESPHERE) {
 			//‘Šè‚ª•Ší‚Ì‚Æ‚«A

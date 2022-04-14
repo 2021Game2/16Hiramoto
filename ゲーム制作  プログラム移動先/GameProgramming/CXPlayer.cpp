@@ -3,7 +3,7 @@
 #include "CCamera.h"
 #include "CUtil.h"
 #include"CBullet.h"
-
+#include"CSceneGame.h"
 #include"CEnemy2.h"
 #include"CBoss.h"
 #define _USE_MATH_DEFINES
@@ -49,7 +49,7 @@ CXPlayer::CXPlayer()
 	: mColSphereSword(this, nullptr, CVector(-10.0f, 10.0f, 50.0f), 4.5f)//剣のコライダ１
 	, mColSphereFoot(this, nullptr, CVector(0.0f, 0.0f, -3.0f), 2.0f)//足付近のコライダ
 	//,mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 5.0f)//ストッパー
-	, mCollider2(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 4.0f)//剣のコライダ２
+	, mCollider2(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 10.0f)//剣のコライダ２
 	, mJump(0.0f)
 	, mGravity(0.0f)
 	,mSpaceCount1(0)
@@ -166,7 +166,10 @@ void CXPlayer::Update()
 		}
 		break;
 	case EDAMAGED://ダメージ
-		Damage.Play();
+
+		if (CSceneGame::mVoiceSwitch == 1) {
+			Damage.Play();
+		}
 		ChangeAnimation(4, false, 10);
 		break;
 	case EDEATH://死亡
@@ -216,7 +219,6 @@ void CXPlayer::Update()
 		}
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
-			mAttackHit = false;
 			ChangeAnimation(8, false, 100);
 
 		}
@@ -224,7 +226,7 @@ void CXPlayer::Update()
 	case(8):
 		if (mState == EATTACKSP) {
 
-			if (mJump >= -5.0f) {
+			if (mJump >= -3.0f) {
 				mJump -= G2;
 			  mCollider2.mRenderEnabled = true;
 		
@@ -233,7 +235,7 @@ void CXPlayer::Update()
 
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
-			
+			mAttackHit = false;
 			mCollider2.mRenderEnabled = false;
 			mState = EIDLE;
 		}
@@ -360,7 +362,10 @@ void CXPlayer::Update()
 				 if (mAttackCount <= 0) {
 					 if (CKey::Once(' '))
 					 {
-						 FirstAttack.Play();
+
+						 if (CSceneGame::mVoiceSwitch == 1) {
+							 FirstAttack.Play();
+						 }
 						 mState = EATTACK1;
 						 mSpaceCount1 = 1;//１回目の攻撃のフラグ
 						 mSpaceCount2 = 0;
@@ -375,7 +380,10 @@ void CXPlayer::Update()
 			 else if (mSpaceCount2 == 0) {
 				 if (mAttackCount <= 0) {
 					 if (CKey::Once(' ')) {
-						 SecondAttack.Play();
+
+						 if (CSceneGame::mVoiceSwitch == 1) {
+							 SecondAttack.Play();
+						 }
 						 mState = EATTACK2;
 						 mSpaceCount2 = 1;//２回目の攻撃のフラグ
 						 mSpaceCount3 = 0;
@@ -389,7 +397,10 @@ void CXPlayer::Update()
 			 else if (mSpaceCount3 == 0) {
 				 if (mAttackCount <= 0) {
 					 if (CKey::Once(' ')) {
-						 ThirdAttack.Play();
+
+						 if (CSceneGame::mVoiceSwitch == 1) {
+							 ThirdAttack.Play();
+						 }
 						 mState = EATTACK3;
 						 mAnimationCount = 50;//0になるまでアニメーションが変わらない
 						 mSpaceCount3 = 1;//３回目の攻撃のフラグ
@@ -404,7 +415,10 @@ void CXPlayer::Update()
 		 if (mSpAttack >= 30) {
 			 if (CKey::Once('F')) {
 			     if (mAttackCount <= 0) {
-					 JumpAttack.Play();
+
+					 if (CSceneGame::mVoiceSwitch == 1) {
+						 JumpAttack.Play();
+					 }
 					 mState = EATTACKSP;
 					 mJump = JUMP;//ジャンプ力を代入
 					  mSpAttack -= 30;//特殊攻撃のゲージ減少
@@ -662,7 +676,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 											//o->mpParent->Collision(o, m);
 
 												//特殊攻撃のゲージ増加
-											mSpAttack += 2;
+ 											mSpAttack += 2;
 											break;
 										}
 									}

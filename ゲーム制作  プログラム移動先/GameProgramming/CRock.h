@@ -8,7 +8,7 @@ class CRock : public CCharacter {
 private:
 
 public:
-	CColliderMesh mColliderMesh;
+	CColliderMesh mColliderMesh;//岩の３Dモデルのコライダ
 	//モデルデータ
 	static CModel mModel;
 	//コライダ

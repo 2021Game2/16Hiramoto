@@ -93,35 +93,6 @@ void CCamera::Update() {
 	}
 	*/
 
-
-	//X軸＋回転
-	//if (CKey::Push('K')) {
-	//	Matrix = Matrix * CMatrix().RotateX(1);
-	//}
-	//if (CKey::Push('I')) {
-	//	Matrix = Matrix * CMatrix().RotateX(-1);
-	//}
-	////Y軸＋回転
-	//if (CKey::Push('L')) {
-	//	Matrix = Matrix * CMatrix().RotateY(1);
-	//}
-	//if (CKey::Push('J')) {
-	//	Matrix = Matrix * CMatrix().RotateY(-1);
-	//}
-
-	if (CKey::Push(VK_RIGHT)) {
-		mAngleX += 0.1f;
-	}
-	if (CKey::Push(VK_LEFT)) {
-		mAngleX -= 0.1f;
-	}
-	if (CKey::Push(VK_UP)) {
-		mAngleY += 0.01f;
-	}
-	if (CKey::Push(VK_DOWN)) {
-		mAngleY -= 0.01f;
-	}
-
 	//Y軸制限 0～3.14が180度範囲
 	if (mAngleY < 0.05f) mAngleY = 0.05f;
 	if (mAngleY > 3.12f) mAngleY = 3.12f;
@@ -189,9 +160,8 @@ void CCamera::Collision(CCollider* m, CCollider* o) {
 	if (o->mType == CCollider::ETRIANGLE) {
 		CVector adjust;//調整用ベクトル
 		if (CCollider::CollisionTriangleLine(o,m, &adjust)) {
-
+			//マップ等に衝突すると、視点をプレイヤーに近づく
 			mEye += (adjust + adjust.Normalize()*0.5f);
-			
 			mColliderLine.Set(this, nullptr, mEye, mCenter);
 			
 		}
@@ -199,6 +169,5 @@ void CCamera::Collision(CCollider* m, CCollider* o) {
 }
 void CCamera::TaskCollision() {
 	mColliderLine.ChangePriority();
-
 	CCollisionManager::Get()->Collision(&mColliderLine, COLLISIONRANGE);
 }

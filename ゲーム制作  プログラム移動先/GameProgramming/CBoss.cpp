@@ -23,8 +23,8 @@ CModel CBoss::mModel;//モデルデータ作成
 //デフォルトコンストラクタ
 CBoss::CBoss()
 //コライダの設定
-	//: mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 200.0f)
-	: mColSphereHead(this, &mMatrix, CVector(0.0f, 1.0f, 5.0f), 7.0f)
+	: mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 20.0f)
+	, mColSphereHead(this, &mMatrix, CVector(0.0f, 1.0f, 5.0f), 7.0f)
 	, mColSphereRightFront(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 2.0f)
 	, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
 	//, mColSphereRightBack(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
@@ -47,7 +47,7 @@ CBoss::CBoss()
 
 	mGravity = 0.20f;
 	mTag = EBOSS;
-	//mColSearch.mTag = CCollider::ESEARCH;//タグ設定
+	mColSearch.mTag = CCollider::ESEARCH;//タグ設定
 	mColSphereHead.mTag = CCollider::EBOSSCOLLIDERHEAD;
 	mColSphereRightFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
 	mColSphereLeftFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
@@ -56,6 +56,7 @@ CBoss::CBoss()
 
 
 	mGravity = 0.20f;
+	mState = EIDLE;
 }
 
 //CEnemy(位置、回転、拡縮）
@@ -100,20 +101,20 @@ void CBoss::Idle() {
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
 			if (mAttackPercent <= 5) {
-            //当たり判定が適用される時間
-			//mBossAttackCount = 80;
+           
 			mState = EATTACK;
 		    }
 			else if(mAttackPercent > 5) {
-				//当たり判定が適用される時間
-				//mBossAttackCount = 80;
+				
 				mState = EATTACK2;
 			}
 		}
 	}
 	//30溜まる前にアニメーションが終わったら移動処理に移行
 	else if (mAnimationFrame >= mAnimationFrameSize) {
-		mState = EAUTOMOVE;
+		if (mColSearch.mRenderEnabled == false) {
+	    	mState = EAUTOMOVE;
+		}
 	}
 
 
@@ -121,7 +122,10 @@ void CBoss::Idle() {
 //移動処理
 void CBoss::AutoMove() {
 	//歩く
-	BossMove.Play();
+
+	if (CSceneGame::mVoiceSwitch == 1) {
+		BossMove.Play();
+	}
 	//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
 	CXPlayer* tPlayer = CXPlayer::GetInstance();
 	mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
@@ -153,59 +157,33 @@ void CBoss::AutoMove() {
 	//定期的にプレイヤーの座標を記録
 	int r = rand() % 60; //rand()は整数の乱数を返す
 	//%180は１８０で割った余りを求める
-	if (r == 0) {
-		if (mpPlayer) {
-			//ESEARCHに衝突してポインタに設定した
-			//プレイヤーの座標を記録
-
-			mPoint = mpPlayer->mPosition;
-		}
-		else {
-			mPoint = mPoint * CMatrix().RotateY(80);
+	if (mColSearch.mRenderEnabled == false) {
+		if (r == 0) {
+				//ESEARCHに衝突してポインタに設定した
+				//プレイヤーの座標を記録
+				mPoint = tPlayer->mPosition;
+		
 		}
 	}
-	mpPlayer = tPlayer;
+	
 }
 //攻撃処理
 void CBoss::Attack() {
-	//BossVoice.Play();
 	//攻撃アニメーション
 	ChangeAnimation(5, false, 40);
-	//当たり判定が適用される時間
-	/*
-	if (mBossAttackCount > 0) {
-		mBossAttackCount--;
-	}*/
-	
 	//攻撃のあとは移動処理に移行
 	if (mAnimationFrame >= mAnimationFrameSize) {
-		//if (mState == EATTACK) {
 			mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
-			//mState = EIDLE;
-			//mBossAttackCount = 0;
-		//}
 	}
 
 }
 //攻撃処理
 void CBoss::Attack2() {
-	
 	//攻撃アニメーション
 	ChangeAnimation(6, false, 40);
-	//当たり判定が適用される時間
-	/*
-	if (mBossAttackCount > 0) {
-		mBossAttackCount--;
-	}
-	*/
-	
 	//攻撃のあとは移動処理に移行
 	if (mAnimationFrame>=mAnimationFrameSize) {
-		//if (mState == EATTACK2) {
 			mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
-			//mBossAttackCount = 0;
-			//mState = EIDLE;
-		//}
 	}
 
 }
@@ -213,7 +191,6 @@ void CBoss::Attack2() {
 void CBoss::Damaged() {
 	//体力減少
 	if (mBossDamageCount <= 0) {
-
 	mHp--;
 	mBossDamageCount = 10;
 	}
@@ -231,7 +208,6 @@ void CBoss::Damaged() {
 }
 //死亡処理
 void CBoss::Death() {
-
 	ChangeAnimation(9, false, 250);
 	//体力がなくなったら
 	if (mHp <= 0) {
@@ -243,14 +219,10 @@ void CBoss::Death() {
 		}
 		CTransform::Update();
 	}
-
 	//しばらく経ったら消去
 	if (mHp <= -250) {
 		mEnabled = false;
-		
 	}
-
-
 	CXCharacter::Update();
 }
 
@@ -279,13 +251,12 @@ void CBoss::Update() {
 	}
 	//アニメーションの種類
 	switch (mAnimationIndex) {
-		/*case(4):
-
-			break;*/
 	case(5):
 		if (mAnimationFrame == 30) {
 			mBossAttackHit = true;
-			BossVoice.Play();
+			if (CSceneGame::mVoiceSwitch == 1) {
+				BossVoice.Play();
+			}
 		}
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
@@ -296,7 +267,9 @@ void CBoss::Update() {
 	case(6):
 		if (mAnimationFrame == 30) {
 			mBossAttackHit = true;
-			BossVoice.Play();
+			if (CSceneGame::mVoiceSwitch == 1) {
+			  BossVoice.Play();
+			 }
 		}
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
@@ -305,14 +278,7 @@ void CBoss::Update() {
 		}
 		break;
 	}
-		/*
-	case(8):
-
-		break;
-	case(9):
-
-		break;
-		*/
+		
 	if (mAttackPercent < 10) {
 		mAttackPercent++;
 	}
@@ -326,7 +292,6 @@ void CBoss::Update() {
 	if (mHp <= 0 && mState != EDEATH) {
 		mState = EDEATH;
 	}
-
 	mGravity  -= G;
 	mPosition.mY += mGravity;
 	CXCharacter::Update();
@@ -336,24 +301,29 @@ void CBoss::Update() {
 void CBoss::Collision(CCollider* m, CCollider* o) {
 	//コライダのとき
 	m->mType == CCollider::ESPHERE;
-	/*
+	
 		//自分がサーチ用のとき
 		if (m->mTag == CCollider::ESEARCH) {
 			//相手が弾コライダのとき
 			if (o->mType == CCollider::ESPHERE) {
 				//相手がプレイヤーのとき
 				if (o->mpParent->mTag == EPLAYER) {
-					//衝突しているとき
-					if (CCollider::Collision(m, o)) {
-						//ポインタをプレイヤーに設定
+					//if (o->mTag == CCollider::EPLAYERBODY) {
+						//衝突しているとき
+						if (CCollider::Collision(m, o)) {
+							//ポインタをプレイヤーに設定
 
-						mpPlayer = o->mpParent;
-					}
+							if (mColSearch.mRenderEnabled == true) {
+								
+								mColSearch.mRenderEnabled = false;
+							}
+						}
+					//}
 				}
 			}
 			return;
 		}
-		*/
+		
 	
 		//EENEMY2COLLIDERの時
 		if (m->mTag== CCollider::EBOSSCOLLIDERATTACK) {
@@ -368,7 +338,6 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 							if (CCollider::Collision(m, o)) {
 								if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
 								{
-								//if (CXPlayer::mAttackCount > 0) {
 									if (mHp > 0) {
 										if (mHp % 30 == 0) {
 											mColliderCount = 10;
@@ -407,20 +376,12 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 							mColliderCount = 1.5f;
 							mCollisionEnemy = mPosition - o->mpParent->mPosition;
 							mCollisionEnemy = mCollisionEnemy.Normalize();
-							
-
 						}
-
-
-
-
 					}
 				}
-
 			}
 		}
 		if (m->mTag == CCollider::EBOSSCOLLIDERHEAD) {
-
 			if (o->mType == CCollider::ETRIANGLE) {
 				CVector adjust;//調整値
 				//三角コライダと球コライダの衝突判定
@@ -428,17 +389,15 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 				if (CCollider::CollisionTriangleSphere(o, m, &adjust))
 				{
 					mPosition = mPosition + adjust;
-
 					mGravity = 0;
 				}
 			}
 		}
 		return;
-	
 }
 void CBoss::TaskCollision() {
 	//コライダの優先度変更
-	//mColSearch.ChangePriority();
+	mColSearch.ChangePriority();
 	mColSphereHead.ChangePriority();
 	mColSphereRightFront.ChangePriority();
 	mColSphereLeftFront.ChangePriority();
@@ -453,5 +412,5 @@ void CBoss::TaskCollision() {
 	//CCollisionManager::Get()->Collision(&mColSphereRightBack, COLLISIONRANGE);
 	//CCollisionManager::Get()->Collision(&mColSphereLeftBack, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSphereHead, COLLISIONRANGE);
-	//CCollisionManager::Get()->Collision(&mColSearch, COLLISIONRANGE);
+	CCollisionManager::Get()->Collision(&mColSearch, COLLISIONRANGE);
 }

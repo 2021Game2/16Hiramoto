@@ -22,31 +22,28 @@
 class CSceneGame : public CScene {
 private:
 
-	CSound mJump;
-	//CBillBoard2 mBillBoard;
 
 	//マップのインスタンス
-	CMap mMap;
 	CModel mModelC5;
-	CRock*mpRock;
-	CTree* mpTree;
-	int mSpawn;
-	CEnemySummon* mpEnemySummon;
-	CEnemy2* mpEnemy2;
-	CBoss* mpBoss;
+	int mSpawn;//敵が生成されるまでの時間
 	//CShadowMap mShadowMap;
+	CMap mMap;//フィールド	
+	CRock*mpRock;//周りの岩
+	CTree* mpTree;//木
 	//キャラクタのインスタンス
-	CXPlayer mPlayer;
+	CXPlayer mPlayer;//プレイヤー
 	//敵のインスタンス
-	CXEnemy mEnemy;
-	CEnemy3* mpEnemy3;
+	CXEnemy mEnemy;//敵１
+	CEnemy2* mpEnemy2;//敵２
+	CEnemy3* mpEnemy3;//敵３
+	CEnemySummon* mpEnemySummon;//敵２の生成場所
+	CEnemySummon* mpEnemySummon2;//敵３の生成場所
+	CBoss* mpBoss;//ボス
 public:
-
-	 CSound Bgm;
-	// static CSound Enemy2Voice;
-	static int mEnemy2Count;
-	static int mEnemy2CountStopper;
-
+    CSound Bgm;
+	static int mVoiceSwitch;//BGM SEのオンオフ切り替え
+	static int mEnemy2Count;//今生成されている敵の数
+	static int mEnemy2CountStopper;//生成できる敵の限度
 	~CSceneGame();
 	//初期化処理のオーバーライド
 	void Init();

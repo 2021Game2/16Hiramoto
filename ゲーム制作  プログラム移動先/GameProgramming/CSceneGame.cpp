@@ -15,14 +15,14 @@
 #include"CItem.h"
 #include"CRock.h"
 #include"CSound.h"
-#define ENEMYCOUNT 5
-#define BGM "SE\\BGM.wav"
-#define ATTACK1 "SE\\一撃目.wav"
-#define ATTACK2 "SE\\二撃目.wav"
-#define ATTACK3 "SE\\三撃目.wav"
-#define ATTACK4 "SE\\ジャンプ攻撃.wav"
-#define DAMAGE "SE\\ダメージ.wav"
-#define FRY "SE\\ハチの羽ばたき.wav"
+#define ENEMYCOUNT 10 //一度に出せる敵の数
+#define BGM "SE\\BGM.wav" //BGM
+#define ATTACK1 "SE\\一撃目.wav" //プレイヤーの攻撃SE１
+#define ATTACK2 "SE\\二撃目.wav" //プレイヤーの攻撃SE２
+#define ATTACK3 "SE\\三撃目.wav" //プレイヤーの攻撃SE３
+#define ATTACK4 "SE\\ジャンプ攻撃.wav" //プレイヤーのジャンプ攻撃SE
+#define DAMAGE "SE\\ダメージ.wav"  //プレイヤーダメージ時のSE
+#define FRY "SE\\ハチの羽ばたき.wav"   //敵３の移動中SE
 #define VOICE "SE\\ボス鳴き声.wav"
 #define VOICE2 "SE\\ボスの足音.wav"
 #define MOVE "SE\\サソリ鳴き声.wav"
@@ -35,7 +35,7 @@
 //CMatrix Matrix;
 int CSceneGame::mEnemy2Count = 0;
 int CSceneGame::mEnemy2CountStopper = ENEMYCOUNT;
-
+int CSceneGame::mVoiceSwitch =0 ;//0：音声なし １：音声あり
 
 CSound FirstAttack;
 CSound SecondAttack;
@@ -54,11 +54,13 @@ CSceneGame::~CSceneGame() {
 
 void CSceneGame::Init() {
 	//サウンド(wav)ファイルの読み込み
-
-	Bgm.Load(BGM);
-	//Bgm.Repeat();
-	FirstAttack.Load(ATTACK1);
 	
+	Bgm.Load(BGM);
+	if (mVoiceSwitch == 1) {
+
+	  Bgm.Repeat();
+	}
+	FirstAttack.Load(ATTACK1);
 	SecondAttack.Load(ATTACK2);
 	ThirdAttack.Load(ATTACK3);
 	JumpAttack.Load(ATTACK4);
@@ -74,7 +76,7 @@ void CSceneGame::Init() {
 	CRes::sModelX.Load(MODEL_FILE);
      //キャラクターにモデルを設定
 	mPlayer.Init(&CRes::sModelX);
-	mPlayer.mPosition = CVector(7.0f, 5.0f, 0.0f);
+	mPlayer.mPosition = CVector(-63.0f, 5.0f, -150.0f);
 	CRes::sKnight.Load(KNIGHT);
     CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//1:移動
 	CRes::sKnight.SeparateAnimationSet(0, 1530, 1830, "idle1");//2:待機
@@ -94,9 +96,6 @@ void CSceneGame::Init() {
 	mEnemy.mAnimationFrameSize = 1024;
 	//敵の配置
 	mEnemy.mPosition = CVector(700.0f, 0.0f, 0.0f);
-	
-	
-
 	
 	//カメラ初期化
 	Camera.Init();
@@ -134,26 +133,19 @@ void CSceneGame::Init() {
 	//読み込ませる
 	mpBoss->Init(&CRes::sBoss);
 	//ボスの配置
-	mpBoss->mPosition = CVector(10.0f, 10.0f, 0.0f);
+	mpBoss->mPosition = CVector(3.0f, 10.0f, 100.0f);
 	
 	new CItem(CVector(-20.0f, 2.0f, -10.0f) ,
 		CVector(), CVector(1.5f, 1.5f, 1.5f));
-	mpEnemySummon = new CEnemySummon(CVector(-40.0f, 1.0f, 0.0f),
+	mpEnemySummon = new CEnemySummon(CVector(17.0f, 1.0f, 32.0f),
 		CVector(), CVector(0.5f, 0.5f, 0.5f));
-	
-	mpRock=new CRock(CVector(-150.0f, 5.5f, 0.0f),
+
+	mpEnemySummon2 = new CEnemySummon(CVector(17.0f, 1.0f, 50.0f),
+		CVector(), CVector(0.5f, 0.5f, 0.5f));
+	mpRock=new CRock(CVector(0.0f, 5.5f, -100.0f),
 		CVector(0.0f,180.0f,0.0f), CVector(0.5f, 0.5f, 0.5f));
-		
-	/*
-	mpRock = new CRock(CVector(-100.0f, 0.0f, -100.0f),
+	mpTree = new CTree(CVector(70.0f, 0.0f, 0.0f),
 		CVector(), CVector(50.0f, 50.0f, 50.0f));
-	mpRock = new CRock(CVector(100.0f, 0.0f, 50.0f),
-		CVector(), CVector(50.0f, 50.0f, 50.0f));
-	mpRock = new CRock(CVector(100.0f, 0.0f, -100.0f),
-		CVector(), CVector(50.0f, 50.0f, 50.0f));
-		*/
-	/*mpTree = new CTree(CVector(70.0f, 0.0f, 0.0f),
-		CVector(), CVector(50.0f, 50.0f, 50.0f));*/
 	mpEnemy3=new CEnemy3(CVector(-20.0f, 50.0f, 100.0f),
 		CVector(), CVector(1000.5f, 1000.5f, 1000.5f));
 
@@ -166,67 +158,43 @@ void CSceneGame::Update() {
 	if (mSpawn >= 0) {
 		mSpawn--;
 	}
+	//Stopperに設定した数だけ敵を生成
 	if (mEnemy2Count < mEnemy2CountStopper) {
-
+		//２秒ごとに生成
 		if (mSpawn <= 0) {
 			mpEnemy2 = new CEnemy2(mpEnemySummon->mPosition, CVector(0.0f, 0.1f, 0.0f),
 				CVector(1.5f, 1.5f, 1.5f));
-	  
 			mpEnemy2->Init(&CRes::sScorp);
-		
 			mEnemy2Count++;
 			mSpawn = 120;
 		}
 	}
+	//敵が一定の数減るまで再生成しない
 	else if( mEnemy2CountStopper<=4) {
-		
 		mEnemy2CountStopper = ENEMYCOUNT;
 	}
+	//エスケープキーで終了
 	if (CKey::Push(VK_ESCAPE)) {
 		exit(0);
 	}
-
 	//更新
 	CTaskManager::Get()->Update();
 
 	//衝突処理(総当り）
 	//CCollisionManager::Get()->Collision();
 	CTaskManager::Get()->TaskCollision();
-	//Camera.Update();
-
-	//mJump.Play();
-
-
-	//mBillBoard.Update();
-
-
-
-
+	
 	return;
 }
 
 void CSceneGame::Render() {
-
-	//mBillBoard.Render();
-
-	//モデル描画
-//	CRes::sModelX.Render();
-	//mPlayer.Render();
-	////敵描画
-	//mEnemy.Render();
-
-	
-	//Camera.Render();
-
 	//タスクの描画
 	CTaskManager::Get()->Render();
-
 	//コライダの描画
 	//ここをコメントにするとすべてのコライダ非表示
 	CCollisionManager::Get()->Render();
 	//2D描画開始
 	CUtil::Start2D(0, 800, 0, 600);
-
 	mFont.DrawString("3D PROGRAMMING", 20, 20, 10, 12);
 	char buf[64];
 	if (CBoss::mHp>0) {
@@ -235,10 +203,13 @@ void CSceneGame::Render() {
 		mFont.DrawString(buf, 20, 100, 8, 16);
 		sprintf(buf, "STAMINA:%10d", CXPlayer::mStamina);
 		mFont.DrawString(buf, 20, 150, 8, 16);
-		/*
-		sprintf(buf, "STAMINA:%10d", mPosition);
+		
+		sprintf(buf, "PositionX:%f", mPlayer.mPosition.mX);
 		mFont.DrawString(buf, 20, 200, 8, 16);
-		*/
+		sprintf(buf, "PositionY:%f", mPlayer.mPosition.mY);
+		mFont.DrawString(buf, 20, 250, 8, 16);
+		sprintf(buf, "PositionZ:%f", mPlayer.mPosition.mZ);
+		mFont.DrawString(buf, 20, 300, 8, 16);
 		//sprintf(buf, "MOVE:%10d", CEnemy3::mMoveCount);
 		//mFont.DrawString(buf, 20, 200, 8, 16);
 		//sprintf(buf, "Y:%10f", mPlayer.mPosition.mY);
