@@ -190,6 +190,7 @@ void CSceneGame::Update() {
 void CSceneGame::Render() {
 	//タスクの描画
 	CTaskManager::Get()->Render();
+	mShadowMap.Render();
 	//コライダの描画
 	//ここをコメントにするとすべてのコライダ非表示
 	CCollisionManager::Get()->Render();

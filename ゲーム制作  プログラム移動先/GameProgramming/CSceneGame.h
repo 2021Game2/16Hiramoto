@@ -14,7 +14,7 @@
 #include"CEnemy3.h"
 #include"CSound.h"
 #include"CBoss.h"
-//#include"CShadowMap.h"
+#include"CShadowMap.h"
 /*
 ゲームのシーン
 */
@@ -26,7 +26,7 @@ private:
 	//マップのインスタンス
 	CModel mModelC5;
 	int mSpawn;//敵が生成されるまでの時間
-	//CShadowMap mShadowMap;
+	CShadowMap mShadowMap;
 	CMap mMap;//フィールド	
 	CRock*mpRock;//周りの岩
 	CTree* mpTree;//木

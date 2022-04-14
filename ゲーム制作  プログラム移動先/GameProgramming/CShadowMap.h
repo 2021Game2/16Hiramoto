@@ -1,6 +1,6 @@
-/*
+
 class CShadowMap {
-//private:
+private:
 	GLfloat mLightPos[3]; //光源の位置
 	GLfloat mShadowCol[4]; //影の色
 	int mTextureWidth;// デプステクスチャの幅
@@ -22,4 +22,4 @@ public:
 		float shadouCol[], float lightPos[]);
 	void Render();
 
-};*/
+};

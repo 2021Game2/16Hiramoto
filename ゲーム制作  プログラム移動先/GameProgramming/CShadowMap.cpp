@@ -1,4 +1,4 @@
-/*
+
 #include"CShadowMap.h"
 #include"CTaskManager.h"
 #include "glew.h"
@@ -277,7 +277,7 @@ void CShadowMap::Render()
 	// ŒõŒ¹‚Ì–¾‚é‚³‚ğŒ³‚Ì–¾‚é‚³‚Éİ’è //
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightcol);
 
-}*/
+}
 
 
 
