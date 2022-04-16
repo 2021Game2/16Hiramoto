@@ -1,17 +1,11 @@
 
+#include "glew.h"
+#include "glut.h"
 #include"CShadowMap.h"
 #include"CTaskManager.h"
-#include "glew.h"
 #include "CShadowMap.h"
 #include "CMatrix.h"
 
-
-#define TEXWIDTH  8192  //テクスチャ幅
-#define TEXHEIGHT  6144  //テクスチャ高さ
-
-
-float shadowColor[] = { 0.4f, 0.4f, 0.4f, 0.2f };  //影の色
-float lightPos[] = { 50.0f, 160.0f, 50.0f };  //光源の位置
 
 
 void CShadowMap::Init()
@@ -116,7 +110,7 @@ void CShadowMap::Render()
 	CMatrix	modelview; //モデルビュー変換行列の保存用
 	CMatrix	projection; //透視変換行列の保存用
 	//
-	** 第１ステップ：デプステクスチャの作成
+	// 第１ステップ：デプステクスチャの作成
 	//
 
 	/// フレームバッファオブジェクトへのレンダリング開始
@@ -144,6 +138,7 @@ void CShadowMap::Render()
 	glPushMatrix(); //現在の設定はスタックに保存
 	glLoadIdentity(); //行列の初期化
 	//光源位置から見るように行列を設定する
+	//角度を変えられる
 	gluLookAt(mLightPos[0], mLightPos[1], mLightPos[2], mLightPos[0] - 1, 0, mLightPos[2] - 1, 0.0, 1.0, 0.0);
 	// 設定したモデルビュー変換行列を保存しておく //
 	glGetFloatv(GL_MODELVIEW_MATRIX, modelview.mM[0]);
@@ -178,7 +173,7 @@ void CShadowMap::Render()
 	glEnable(GL_LIGHTING);
 	glCullFace(GL_BACK);
 	//
-	** 第２ステップ：全体の描画
+	//第２ステップ：全体の描画
 	//
 
 	//フレームバッファとデプスバッファをクリアする //

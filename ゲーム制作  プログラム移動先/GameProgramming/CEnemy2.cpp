@@ -1,7 +1,6 @@
 #include"CEnemy2.h"
 #include"CEffect.h"
 #include"CCollisionManager.h"
-#include"CBullet.h"
 #include"CSceneGame.h"
 #include"CXCharacter.h"
 #include"CUtil.h"

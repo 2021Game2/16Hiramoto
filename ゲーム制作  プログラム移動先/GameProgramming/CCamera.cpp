@@ -1,5 +1,6 @@
 #include "CCamera.h"
 #include "Ckey.h"
+#include "glew.h"
 #include "glut.h"
 #include <corecrt_math.h>
 #include <stdio.h>
@@ -115,12 +116,19 @@ void CCamera::Update() {
 	CInput::InputReset();
 
 }
-
-void CCamera::Render() {
+//Renderだと勝手に呼ばれるので場所を変える
+void CCamera::CameraRender() {
+	//カメラの位置を光源に設定できる
+	//float shadowColor[] = { 0.4f, 0.4f, 0.4f, 0.2f };  //影の色
+	//float lightPos[] = { 50.0f, 160.0f, 50.0f };  //光源の位置
+	//gluLookAt(lightPos[0], lightPos[1], lightPos[2], lightPos[0] - 1, 0, lightPos[2] - 1, 0.0, 1.0, 0.0);
 	//一度だけ呼び出す
+	
+	//カメラの位置をプレイヤーに設定
 	gluLookAt(mEye.mX, mEye.mY, mEye.mZ,
 		mCenter.mX, mCenter.mY, mCenter.mZ,
 		mUp.mX, mUp.mY, mUp.mZ);
+		
 	//カメラ行列格納
 	glGetFloatv(GL_MODELVIEW_MATRIX, mMatrix.mF);
 }

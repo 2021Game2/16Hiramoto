@@ -35,14 +35,14 @@ public:
 		const CVector &up);
 
 	void SetTarget(const CVector& target);
-
+	
 	//カメラ初期化
 	void Init();
 	//カメラ更新処理
 	void Update();
 	//カメラ適用
-	void Render();
-
+	//void Render();
+    void CameraRender();
 	void TaskCollision();
 
 	void Collision(CCollider* m, CCollider* o);

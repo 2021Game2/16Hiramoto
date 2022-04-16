@@ -15,7 +15,10 @@
 #include"CItem.h"
 #include"CRock.h"
 #include"CSound.h"
-#define ENEMYCOUNT 10 //一度に出せる敵の数
+#define ENEMY2COUNT 10 //一度に出せる敵２の数
+#define ENEMY2MINCOUNT 4 //敵２を再生成させるときの敵２の数の下限
+#define ENEMY3COUNT 10 //一度に出せる敵３の数
+#define ENEMY3MINCOUNT 4 //敵３を再生成させるときの敵３の数の下限
 #define BGM "SE\\BGM.wav" //BGM
 #define ATTACK1 "SE\\一撃目.wav" //プレイヤーの攻撃SE１
 #define ATTACK2 "SE\\二撃目.wav" //プレイヤーの攻撃SE２
@@ -34,7 +37,9 @@
 
 //CMatrix Matrix;
 int CSceneGame::mEnemy2Count = 0;
-int CSceneGame::mEnemy2CountStopper = ENEMYCOUNT;
+int CSceneGame::mEnemy2CountStopper = ENEMY2COUNT;
+int CSceneGame::mEnemy3Count = 0;
+int CSceneGame::mEnemy3CountStopper = ENEMY3COUNT;
 int CSceneGame::mVoiceSwitch =0 ;//0：音声なし １：音声あり
 
 CSound FirstAttack;
@@ -51,7 +56,10 @@ CSceneGame::~CSceneGame() {
 	Sleep(2000);
 
 }
-
+void ShadowRender() {
+	//影の影響を受ける用になる
+	CTaskManager::Get()->Render();
+}
 void CSceneGame::Init() {
 	//サウンド(wav)ファイルの読み込み
 	
@@ -146,9 +154,16 @@ void CSceneGame::Init() {
 		CVector(0.0f,180.0f,0.0f), CVector(0.5f, 0.5f, 0.5f));
 	mpTree = new CTree(CVector(70.0f, 0.0f, 0.0f),
 		CVector(), CVector(50.0f, 50.0f, 50.0f));
+	/*
 	mpEnemy3=new CEnemy3(CVector(-20.0f, 50.0f, 100.0f),
-		CVector(), CVector(1000.5f, 1000.5f, 1000.5f));
+		CVector(), CVector(1000.5f, 1000.5f, 1000.5f));*/
 
+#define TEXWIDTH  8192  //テクスチャ幅
+#define TEXHEIGHT  6144  //テクスチャ高さ
+
+	float shadowColor[] = { 0.4f, 0.4f, 0.4f, 0.2f };  //影の色
+	float lightPos[] = { 50.0f, 160.0f, 50.0f };  //光源の位置
+	mShadowMap.Init(TEXWIDTH, TEXHEIGHT, ShadowRender, shadowColor, lightPos);//影の初期化
 }
 
 
@@ -162,16 +177,35 @@ void CSceneGame::Update() {
 	if (mEnemy2Count < mEnemy2CountStopper) {
 		//２秒ごとに生成
 		if (mSpawn <= 0) {
-			mpEnemy2 = new CEnemy2(mpEnemySummon->mPosition, CVector(0.0f, 0.1f, 0.0f),
-				CVector(1.5f, 1.5f, 1.5f));
+			/*
+			mpEnemy3 = new CEnemy3(mpEnemySummon->mPosition,
+				CVector(), CVector(1000.5f, 1000.5f, 1000.5f));
+			
 			mpEnemy2->Init(&CRes::sScorp);
 			mEnemy2Count++;
+			mSpawn = 120;*/
+		}
+	}
+
+	//敵が一定の数減るまで再生成しない
+	else if( mEnemy2CountStopper<= ENEMY2MINCOUNT) {
+		mEnemy2CountStopper = ENEMY2COUNT;
+	}
+	//Stopperに設定した数だけ敵を生成
+	if (mEnemy3Count < mEnemy3CountStopper) {
+		//２秒ごとに生成
+		if (mSpawn <= 0) {
+			mpEnemy3 = new CEnemy3(mpEnemySummon2->mPosition, CVector(0.0f, 0.1f, 0.0f),
+				CVector(1.5f, 1.5f, 1.5f));
+			
+			mEnemy3Count++;
 			mSpawn = 120;
 		}
 	}
+
 	//敵が一定の数減るまで再生成しない
-	else if( mEnemy2CountStopper<=4) {
-		mEnemy2CountStopper = ENEMYCOUNT;
+	else if (mEnemy3CountStopper <= ENEMY3MINCOUNT) {
+		mEnemy3CountStopper = ENEMY3COUNT;
 	}
 	//エスケープキーで終了
 	if (CKey::Push(VK_ESCAPE)) {
@@ -189,8 +223,9 @@ void CSceneGame::Update() {
 
 void CSceneGame::Render() {
 	//タスクの描画
-	CTaskManager::Get()->Render();
-	mShadowMap.Render();
+	//CTaskManager::Get()->Render();
+	Camera.CameraRender();//カメラ設定
+	mShadowMap.Render();//影設定
 	//コライダの描画
 	//ここをコメントにするとすべてのコライダ非表示
 	CCollisionManager::Get()->Render();

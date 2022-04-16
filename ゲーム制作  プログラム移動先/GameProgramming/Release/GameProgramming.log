@@ -7,12 +7,12 @@ C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,50): warning C4101: 'cnt': ローカル変数は 1 度も使われていません。
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(104,24): warning C4101: 'state': ローカル変数は 1 度も使われていません。
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,87): warning C4101: 'dw': ローカル変数は 1 度も使われていません。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CEnemy2.cpp(257,11): warning C4553: '==': 式の結果が使用されていません。'=' を意図していますか?
+C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CEnemy2.cpp(256,11): warning C4553: '==': 式の結果が使用されていません。'=' を意図していますか?
   CEnemy3.cpp
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,50): warning C4101: 'cnt': ローカル変数は 1 度も使われていません。
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(104,24): warning C4101: 'state': ローカル変数は 1 度も使われていません。
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,87): warning C4101: 'dw': ローカル変数は 1 度も使われていません。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CEnemy3.cpp(230,11): warning C4553: '==': 式の結果が使用されていません。'=' を意図していますか?
+C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CEnemy3.cpp(231,11): warning C4553: '==': 式の結果が使用されていません。'=' を意図していますか?
   CSceneGame.cpp
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,50): warning C4101: 'cnt': ローカル変数は 1 度も使われていません。
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(104,24): warning C4101: 'state': ローカル変数は 1 度も使われていません。
@@ -21,71 +21,13 @@ C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,50): warning C4101: 'cnt': ローカル変数は 1 度も使われていません。
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(104,24): warning C4101: 'state': ローカル変数は 1 度も使われていません。
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,87): warning C4101: 'dw': ローカル変数は 1 度も使われていません。
-  CShadowMap.cpp
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.h(4,10): error C3646: 'mLightPos': 不明なオーバーライド指定子です
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.h(4,19): error C2143: 構文エラー: ',' が '[' の前にありません。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.h(4,22): error C2238: ';' の前に無効なトークンがあります。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.h(5,10): error C3646: 'mShadowCol': 不明なオーバーライド指定子です
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.h(5,20): error C2143: 構文エラー: ',' が '[' の前にありません。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.h(5,23): error C2238: ';' の前に無効なトークンがあります。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.h(8,9): error C3646: 'mDepthTextureID': 不明なオーバーライド指定子です
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.h(8,24): error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.h(9,9): error C3646: 'mFb': 不明なオーバーライド指定子です
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.h(9,12): error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.h(2,18): error C2011: 'CShadowMap': 'class' 型の再定義
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.h(2): message : 'CShadowMap' の宣言を確認してください
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(17,18): error C2027: 認識できない型 'CShadowMap' が使われています。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.h(2): message : 'CShadowMap' の宣言を確認してください
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(22,20): error C2065: 'mDepthTextureID': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(24,31): error C2065: 'mDepthTextureID': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(27,53): error C2065: 'mTextureWidth': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(27,68): error C2065: 'mTextureHeight': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(72,27): error C2065: 'mFb': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(73,43): error C2065: 'mFb': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(78,18): error C2065: 'mDepthTextureID': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(93,18): error C2027: 認識できない型 'CShadowMap' が使われています。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.h(2): message : 'CShadowMap' の宣言を確認してください
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(95,2): error C2065: 'mDepthTextureID': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(96,2): error C2065: 'mFb': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(97,2): error C2065: 'mTextureHeight': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(98,2): error C2065: 'mTextureWidth': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(99,2): error C2065: 'mpRender': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(100,2): error C2065: 'mShadowCol': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(101,2): error C2065: 'mShadowCol': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(102,2): error C2065: 'mShadowCol': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(103,2): error C2065: 'mShadowCol': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(104,2): error C2065: 'mLightPos': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(105,2): error C2065: 'mLightPos': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(106,2): error C2065: 'mLightPos': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(110,18): error C2027: 認識できない型 'CShadowMap' が使われています。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.h(2): message : 'CShadowMap' の宣言を確認してください
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(119,5): error C2065: '第１ステップ：デプステクスチャの作成': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(123,2): error C2146: 構文エラー: ';' が、識別子 '__glewBindFramebufferEXT' の前に必要です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(123,43): error C2065: 'mFb': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(132,19): error C2065: 'mTextureWidth': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(132,34): error C2065: 'mTextureHeight': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(140,33): error C2065: 'mTextureWidth': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(140,59): error C2065: 'mTextureHeight': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(140,88): error C2660: 'gluPerspective': 関数に 3 個の引数を指定できません。
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\GL\glu.h(79,15): message : 'gluPerspective' の宣言を確認してください
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(147,12): error C2065: 'mLightPos': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(147,26): error C2065: 'mLightPos': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(147,40): error C2065: 'mLightPos': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(147,54): error C2065: 'mLightPos': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(147,75): error C2065: 'mLightPos': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(147,106): error C2660: 'gluLookAt': 関数に 5 個の引数を指定できません。
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\GL\glu.h(92,15): message : 'gluLookAt' の宣言を確認してください
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(161,6): error C2065: 'mpRender': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(163,5): error C2065: 'mpRender': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(169,31): error C2065: 'mDepthTextureID': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(181,5): error C2065: '第２ステップ：全体の描画': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(185,2): error C2146: 構文エラー: ';' が、識別子 'glClear' の前に必要です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(240,6): error C2065: 'mpRender': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(242,5): error C2065: 'mpRender': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(269,35): error C2065: 'mShadowCol': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(272,6): error C2065: 'mpRender': 定義されていない識別子です。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CShadowMap.cpp(274,5): error C2065: 'mpRender': 定義されていない識別子です。
   CXPlayer.cpp
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,50): warning C4101: 'cnt': ローカル変数は 1 度も使われていません。
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(104,24): warning C4101: 'state': ローカル変数は 1 度も使われていません。
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,87): warning C4101: 'dw': ローカル変数は 1 度も使われていません。
+  コード生成しています。
+  29 of 794 functions ( 3.7%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    39 functions had inline decision re-evaluated but remain unchanged
+  コード生成が終了しました。
+  GameProgramming.vcxproj -> C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\Release\GameProgramming.exe

@@ -1,5 +1,6 @@
 #ifndef CTEXTURE_H
 #define CTEXTURE_H
+#include "glew.h"
 #include "glut.h"
 /*
 TGAファイルのヘッダフォーマット

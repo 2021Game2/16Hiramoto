@@ -1,7 +1,7 @@
 #ifndef CENEMY3_H
 #define CENEMY3_H
 //キャラクタクラスのインクルード
-#include"CCharacter.h"
+#include"CXCharacter.h"
 //コライダクラスのインクルード
 #include"CCollider.h"
 #include"CText.h"

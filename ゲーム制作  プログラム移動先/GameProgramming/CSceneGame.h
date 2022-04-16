@@ -1,5 +1,6 @@
 #ifndef CSCENEGAME_H
 #define CSCENEGAME_H
+
 #include "CScene.h"
 #include "CXPlayer.h"
 #include "CXEnemy.h"
@@ -42,8 +43,10 @@ private:
 public:
     CSound Bgm;
 	static int mVoiceSwitch;//BGM SEのオンオフ切り替え
-	static int mEnemy2Count;//今生成されている敵の数
-	static int mEnemy2CountStopper;//生成できる敵の限度
+	static int mEnemy2Count;//今生成されている敵2の数
+	static int mEnemy3Count;//今生成されている敵3の数
+	static int mEnemy2CountStopper;//生成できる敵2の限度
+	static int mEnemy3CountStopper;//生成できる敵3の限度
 	~CSceneGame();
 	//初期化処理のオーバーライド
 	void Init();

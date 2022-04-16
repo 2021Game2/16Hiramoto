@@ -1,4 +1,8 @@
 
+#ifndef CSHADOWMAP_H
+#define CSHADOWMAP_H
+#include "glew.h"
+#include "glut.h"
 class CShadowMap {
 private:
 	GLfloat mLightPos[3]; //ŒõŒ¹‚ÌˆÊ’u
@@ -23,3 +27,4 @@ public:
 	void Render();
 
 };
+#endif

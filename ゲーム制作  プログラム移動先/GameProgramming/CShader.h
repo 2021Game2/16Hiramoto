@@ -1,6 +1,6 @@
 #ifndef SHADER_HPP
 #define SHADER_HPP
-
+#include "glew.h"
 #include "glut.h"
 
 class CShader {

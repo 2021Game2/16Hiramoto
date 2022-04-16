@@ -49,7 +49,7 @@ CEnemy3::CEnemy3()
 		mModel.Load(OBJ, MTL);
 	}
 	//モデルのポインタ設定
-	mpModel = &mModel;
+	//mpModel = &mModel;
     mCollider.mTag = CCollider::EENEMY3COLLIDER;
 	mColSearch.mTag = CCollider::ESEARCH;//タグ設定
 	mColSearch2.mTag = CCollider::ESEARCH2;//タグ設定
@@ -71,6 +71,7 @@ CEnemy3::CEnemy3(const CVector& position, const CVector& rotation, const CVector
 	CTaskManager::Get()->Remove(this);//削除して
 	CTaskManager::Get()->Add(this);//追加する
 }
+
 //更新処理
 void CEnemy3::Update() {
 	//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
