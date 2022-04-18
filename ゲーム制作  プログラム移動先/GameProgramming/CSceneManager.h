@@ -17,6 +17,8 @@ public:
 	//XVˆ—
 	void Update();
 	void Render();
+
+	CScene::EScene mScene;
 };
 
 #endif

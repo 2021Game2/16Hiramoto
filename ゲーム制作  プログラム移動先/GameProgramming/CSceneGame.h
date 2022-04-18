@@ -36,7 +36,7 @@ private:
 	//“G‚ÌƒCƒ“ƒXƒ^ƒ“ƒX
 	CXEnemy mEnemy;//“G‚P
 	CEnemy2* mpEnemy2;//“G‚Q
-	CEnemy3* mpEnemy3;//“G‚R
+	//CEnemy3* mpEnemy3;//“G‚R
 	CEnemySummon* mpEnemySummon;//“G‚Q‚Ì¶¬êŠ
 	CEnemySummon* mpEnemySummon2;//“G‚R‚Ì¶¬êŠ
 	CBoss* mpBoss;//ƒ{ƒX
@@ -55,6 +55,7 @@ public:
 	//•`‰æˆ—
 	void Render();
 
+	EScene GetNextScene();
 };
 
 #endif

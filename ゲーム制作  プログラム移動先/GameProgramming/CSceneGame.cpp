@@ -9,7 +9,7 @@
 #include "Ckey.h"
 //
 #include "CMaterial.h"
-//
+#include"CScene.h"
 #include "CCollisionManager.h"
 #include"CEnemy2.h"
 #include"CItem.h"
@@ -62,7 +62,8 @@ void ShadowRender() {
 }
 void CSceneGame::Init() {
 	//ÉTÉEÉìÉh(wav)ÉtÉ@ÉCÉãÇÃì«Ç›çûÇ›
-	
+
+	mScene = EGAME;
 	Bgm.Load(BGM);
 	if (mVoiceSwitch == 1) {
 
@@ -177,13 +178,13 @@ void CSceneGame::Update() {
 	if (mEnemy2Count < mEnemy2CountStopper) {
 		//ÇQïbÇ≤Ç∆Ç…ê∂ê¨
 		if (mSpawn <= 0) {
-			/*
-			mpEnemy3 = new CEnemy3(mpEnemySummon->mPosition,
+			
+			mpEnemy2 = new CEnemy2(mpEnemySummon->mPosition,
 				CVector(), CVector(1000.5f, 1000.5f, 1000.5f));
 			
 			mpEnemy2->Init(&CRes::sScorp);
 			mEnemy2Count++;
-			mSpawn = 120;*/
+			mSpawn = 120;
 		}
 	}
 
@@ -195,8 +196,9 @@ void CSceneGame::Update() {
 	if (mEnemy3Count < mEnemy3CountStopper) {
 		//ÇQïbÇ≤Ç∆Ç…ê∂ê¨
 		if (mSpawn <= 0) {
+			/*
 			mpEnemy3 = new CEnemy3(mpEnemySummon2->mPosition, CVector(0.0f, 0.1f, 0.0f),
-				CVector(1.5f, 1.5f, 1.5f));
+				CVector(1.5f, 1.5f, 1.5f));*/
 			
 			mEnemy3Count++;
 			mSpawn = 120;
@@ -259,4 +261,9 @@ void CSceneGame::Render() {
 	CUtil::End2D();
 	//CXPlayerÇÃÉpÉâÉÅÅ[É^ìôÇÃÇQDï`âÊÇÕàÍî‘ç≈å„
 	CXPlayer::GetInstance()->Render2D();
+}
+
+CScene::EScene CSceneGame::GetNextScene()
+{
+	return mScene;
 }
