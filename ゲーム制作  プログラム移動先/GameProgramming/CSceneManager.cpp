@@ -16,7 +16,7 @@ CSceneManager::~CSceneManager() {
 //初期化処理
 void CSceneManager::Init() {
 	//シーンを生成し、ポインタを設定する
-	mpScene = new CSceneGame();
+	mpScene = new CSceneTitle();
 	//生成したクラスのメソッドが呼ばれる
 	mpScene->Init();
 }

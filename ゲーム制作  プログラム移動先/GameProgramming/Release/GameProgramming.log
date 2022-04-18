@@ -1,14 +1,7 @@
-﻿  CSceneManager.cpp
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,50): warning C4101: 'cnt': ローカル変数は 1 度も使われていません。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(104,24): warning C4101: 'state': ローカル変数は 1 度も使われていません。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(105,87): warning C4101: 'dw': ローカル変数は 1 度も使われていません。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSceneManager.cpp(38): error C2259: 'CSceneTitle': 抽象クラスをインスタンス化できません。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSceneTitle.h(4): message : 'CSceneTitle' の宣言を確認してください
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSceneManager.cpp(38): message : 次のメンバーが原因です:
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSceneManager.cpp(38): message : 'void CScene::Render(void)': は抽象型です
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CScene.h(24): message : 'CScene::Render' の宣言を確認してください
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSceneManager.cpp(38,29): error C2259: 'CSceneTitle': 抽象クラスをインスタンス化できません。
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSceneTitle.h(4): message : 'CSceneTitle' の宣言を確認してください
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSceneManager.cpp(38,29): message : 次のメンバーが原因です:
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSceneManager.cpp(38,29): message : 'void CScene::Render(void)': は抽象型です
-C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CScene.h(24): message : 'CScene::Render' の宣言を確認してください
+﻿  CSceneTitle.cpp
+  コード生成しています。
+  3 of 808 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    18 functions had inline decision re-evaluated but remain unchanged
+  コード生成が終了しました。
+  GameProgramming.vcxproj -> C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\Release\GameProgramming.exe
