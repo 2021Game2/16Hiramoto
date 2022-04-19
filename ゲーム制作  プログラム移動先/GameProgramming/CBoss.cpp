@@ -327,18 +327,18 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 	
 		//EENEMY2COLLIDERの時
 		if (m->mTag== CCollider::EBOSSCOLLIDERATTACK) {
-
 			if (o->mType == CCollider::ESPHERE) {
-
 				if (o->mpParent->mTag == EPLAYER) {
 					//相手が武器のとき
 					if (o->mTag == CCollider::EPLAYERSWORD) {
 						//衝突しているとき
 					    
 							if (CCollider::Collision(m, o)) {
+								//親をCXPlayerを元にポインタ化し、変数を参照
 								if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
 								{
 									if (mHp > 0) {
+										//30％減るごとにのけぞる
 										if (mHp % 30 == 0) {
 											mColliderCount = 10;
 											mCollisionEnemy = mPosition - o->mpParent->mPosition;
@@ -346,9 +346,7 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 											mCollisionEnemy = mCollisionEnemy.Normalize();
 											mState = EDAMAGED;
 										}
-
 										if (mBossDamageCount <= 0) {
-
 											mHp--;
 											mBossDamageCount = 10;
 										}

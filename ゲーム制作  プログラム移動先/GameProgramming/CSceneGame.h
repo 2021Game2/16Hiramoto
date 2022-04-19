@@ -27,6 +27,10 @@ private:
 	//マップのインスタンス
 	CModel mModelC5;
 	int mSpawn;//敵が生成されるまでの時間
+	int mSpawn2;
+	int mTimeMinute;
+	int mTimeSecond;
+	int mTimeCount;
 	CShadowMap mShadowMap;
 	CMap mMap;//フィールド	
 	CRock*mpRock;//周りの岩
@@ -34,9 +38,9 @@ private:
 	//キャラクタのインスタンス
 	CXPlayer mPlayer;//プレイヤー
 	//敵のインスタンス
-	CXEnemy mEnemy;//敵１
+	//CXEnemy mEnemy;//敵１
 	CEnemy2* mpEnemy2;//敵２
-	//CEnemy3* mpEnemy3;//敵３
+	CEnemy3* mpEnemy3;//敵３
 	CEnemySummon* mpEnemySummon;//敵２の生成場所
 	CEnemySummon* mpEnemySummon2;//敵３の生成場所
 	CBoss* mpBoss;//ボス
@@ -47,6 +51,7 @@ public:
 	static int mEnemy3Count;//今生成されている敵3の数
 	static int mEnemy2CountStopper;//生成できる敵2の限度
 	static int mEnemy3CountStopper;//生成できる敵3の限度
+	CSceneGame();
 	~CSceneGame();
 	//初期化処理のオーバーライド
 	void Init();

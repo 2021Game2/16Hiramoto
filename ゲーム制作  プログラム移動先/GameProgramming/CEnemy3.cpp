@@ -49,7 +49,7 @@ CEnemy3::CEnemy3()
 		mModel.Load(OBJ, MTL);
 	}
 	//モデルのポインタ設定
-	//mpModel = &mModel;
+	mpModel = &mModel;
     mCollider.mTag = CCollider::EENEMY3COLLIDER;
 	mColSearch.mTag = CCollider::ESEARCH;//タグ設定
 	mColSearch2.mTag = CCollider::ESEARCH2;//タグ設定
@@ -260,6 +260,7 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 				if (o->mTag == CCollider::EPLAYERSWORD) {
 					//衝突しているとき
 					if (CCollider::Collision(m, o)) {
+						//親をCXPlayerを元にポインタ化し、変数を参照
 						if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
 						{
 							mColliderCount = COLLIDERCOUNT;

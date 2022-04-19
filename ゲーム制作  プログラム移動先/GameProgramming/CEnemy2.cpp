@@ -138,8 +138,9 @@ void CEnemy2::Attack() {
 	    //攻撃アニメーション
 		ChangeAnimation(4, false, 120);//+５番目のアニメーションフレーム１２０
 		if (mAnimationFrame >= mAnimationFrameSize) {
+			
             mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
-			mState = EAUTOMOVE;
+			
 		}
 }	
 //ダメージ処理
@@ -199,7 +200,7 @@ void CEnemy2::Update() {
 	switch (mAnimationIndex) {
 		//攻撃アニメーション
 	case(4):
-		if (mAnimationFrame == 60) {
+		if (mAnimationFrame == 40) {
 			mEnemy2AttackHit = true;
 		}
 		if (mAnimationFrame >= mAnimationFrameSize)
@@ -207,14 +208,15 @@ void CEnemy2::Update() {
 			mEnemy2AttackHit = false;
 			ChangeAnimation(5, false,120);
 		}
-break;
+        break;
 
 	case(5):
-		if (mAnimationFrame == 60) {
+		if (mAnimationFrame == 40) {
 			mEnemy2AttackHit = true;
 		}
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
+			mState = EAUTOMOVE;
 			mEnemy2AttackHit = false;
 			
 		}
@@ -265,6 +267,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 					//衝突しているとき
 					if (CCollider::Collision(m, o)) {
 						//プレイヤーの当たり判定が有効なとき
+						//親をCXPlayerを元にポインタ化し、変数を参照
 						if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
 						{//ヒットバック＆ダメージを受ける
 							mColliderCount = 5;
@@ -304,13 +307,15 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 			CVector adjust;//調整値
 			//三角コライダと球コライダの衝突判定
 			//adjust、、、調整値
-			/*
-			if (CCollider::CollisionTriangleSphere(o, m, &adjust))
-			{
-					//衝突しない位置まで戻す
-					mPosition = mPosition + adjust;
+			if (o->mpParent->mTag == EMAP) {
+
+				if (CCollider::CollisionTriangleSphere(o, m, &adjust))
+				{
+						//衝突しない位置まで戻す
+						mPosition = mPosition + adjust;
+				}
 			}
-			*/
+			
 		}
 		return;
 	}

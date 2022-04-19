@@ -10,8 +10,8 @@
 #include <math.h>
 #define JUMP 5.0f
 #define JUMP2 10.0f
-#define STEP  20.0f
-#define STEP2 20.0f
+#define STEP  20.0f //攻撃時少し前進
+#define STEP2 200.0f //
 #define STAMINA 1000 //スタミナ
 
 #define HP_MAX 100	//HP			//体力最大値
@@ -111,8 +111,10 @@ void CXPlayer::Update()
 		mGravity = 0;
 		break;
 	case EMOVE://移動
+		mAnimationFrameSize = 60;
+		mAttackHit = false;
 			 if (CKey::Push('C')) {
-					
+				 mAnimationFrameSize = 30;
 					 mState = EDUSH;
 			 }
 			 else {
@@ -123,6 +125,8 @@ void CXPlayer::Update()
 		    }
 		break;
 	case EDUSH:
+
+		mAttackHit = false;
 			ChangeAnimation(1, true, 30);
 			if (mAnimationCount <= 0) {
 				mState = EIDLE;
@@ -130,9 +134,9 @@ void CXPlayer::Update()
 			}
 		break;
 	case EESCAPE:
+
+		mAttackHit = false;
 		ChangeAnimation(1, true, 10);
-		//攻撃時、進行方向にステップを踏む
-		mStep = STEP2;
 		if (mRotation.mX!=360.0f) {
 			mRotation.mX += 36.0f;
 		}
@@ -220,19 +224,16 @@ void CXPlayer::Update()
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
 			ChangeAnimation(8, false, 100);
-
 		}
 		break;
 	case(8):
 		if (mState == EATTACKSP) {
-
 			if (mJump >= -3.0f) {
 				mJump -= G2;
 			  mCollider2.mRenderEnabled = true;
 		
 		    }
 	    }
-
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
 			mAttackHit = false;
@@ -272,7 +273,7 @@ void CXPlayer::Update()
 		if (CKey::Push('A'))
 		{
 				Move -= SideVec;
-				mAnimationCount = 10;//0になるまでアニメーションを変更できない
+				mAnimationCount = 5;//0になるまでアニメーションを変更できない
 				if (CKey::Push('C')) {
 					if (mStamina > -1) {
 						speed = 0.30f;//スピード倍
@@ -311,7 +312,7 @@ void CXPlayer::Update()
 		{
 			Move += FrontVec;
 			//mPosition += CVector(0.0f, 0.0f, 0.1f) * mMatrixRotate;
-			mAnimationCount = 10;//0になるまでアニメーションを変更できない
+			mAnimationCount = 5;//0になるまでアニメーションを変更できない
 
 				if (CKey::Push('C')) {
 					if(mStamina > -1) {
@@ -334,7 +335,7 @@ void CXPlayer::Update()
 		{
 			Move -= FrontVec;
 			//mPosition += CVector(0.0f, 0.0f, 0.1f) * mMatrixRotate;
-			mAnimationCount = 10;//0になるまでアニメーションを変更できない
+			mAnimationCount = 5;//0になるまでアニメーションを変更できない
 
 				if (CKey::Push('C')) {
 			      if (mStamina > -1) {
@@ -438,7 +439,7 @@ void CXPlayer::Update()
 			  if (CKey::Once('C')){
 				  if (mState !=EATTACKSP) {
 					  mState = EESCAPE;
-					  mAnimationCount = 20;
+					  mAnimationCount = 30;
 					  mDamageCount = 40;
 					  mStep = STEP;//ジャンプ力を代入
 

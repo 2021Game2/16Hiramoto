@@ -17,8 +17,8 @@
 #include"CSound.h"
 #define ENEMY2COUNT 10 //àÍìxÇ…èoÇπÇÈìGÇQÇÃêî
 #define ENEMY2MINCOUNT 4 //ìGÇQÇçƒê∂ê¨Ç≥ÇπÇÈÇ∆Ç´ÇÃìGÇQÇÃêîÇÃâ∫å¿
-#define ENEMY3COUNT 10 //àÍìxÇ…èoÇπÇÈìGÇRÇÃêî
-#define ENEMY3MINCOUNT 4 //ìGÇRÇçƒê∂ê¨Ç≥ÇπÇÈÇ∆Ç´ÇÃìGÇRÇÃêîÇÃâ∫å¿
+#define ENEMY3COUNT 3//àÍìxÇ…èoÇπÇÈìGÇRÇÃêî
+#define ENEMY3MINCOUNT 1 //ìGÇRÇçƒê∂ê¨Ç≥ÇπÇÈÇ∆Ç´ÇÃìGÇRÇÃêîÇÃâ∫å¿
 #define BGM "SE\\BGM.wav" //BGM
 #define ATTACK1 "SE\\àÍåÇñ⁄.wav" //ÉvÉåÉCÉÑÅ[ÇÃçUåÇSEÇP
 #define ATTACK2 "SE\\ìÒåÇñ⁄.wav" //ÉvÉåÉCÉÑÅ[ÇÃçUåÇSEÇQ
@@ -33,7 +33,8 @@
 #define SCOPION "3DModel\\scorpid\\scorpid-monster-X-animated.X"
 #define BOSS "3DModel\\Boss\\monster-animated-character-X.X"
 #define KNIGHT "3DModel\\knight\\knight_low.x"
-
+#define TEXWIDTH  8192  //ÉeÉNÉXÉ`ÉÉïù
+#define TEXHEIGHT  6144  //ÉeÉNÉXÉ`ÉÉçÇÇ≥
 
 //CMatrix Matrix;
 int CSceneGame::mEnemy2Count = 0;
@@ -51,7 +52,15 @@ CSound Enemy3Fry;
 CSound BossVoice;
 CSound BossMove;
 CSound Enemy2Voice;
+CSceneGame::CSceneGame() 
+	:mTimeCount(0)
+	,mTimeSecond(0)
+	,mTimeMinute(0)
+	,mSpawn(0)
+    , mSpawn2(0)
+{
 
+}
 CSceneGame::~CSceneGame() {
 	Sleep(2000);
 
@@ -60,7 +69,9 @@ void ShadowRender() {
 	//âeÇÃâeãøÇéÛÇØÇÈópÇ…Ç»ÇÈ
 	CTaskManager::Get()->Render();
 }
-void CSceneGame::Init() {
+void CSceneGame::Init()
+
+{
 	//ÉTÉEÉìÉh(wav)ÉtÉ@ÉCÉãÇÃì«Ç›çûÇ›
 
 	mScene = EGAME;
@@ -86,6 +97,7 @@ void CSceneGame::Init() {
      //ÉLÉÉÉâÉNÉ^Å[Ç…ÉÇÉfÉãÇê›íË
 	mPlayer.Init(&CRes::sModelX);
 	mPlayer.mPosition = CVector(-63.0f, 5.0f, -150.0f);
+	/*
 	CRes::sKnight.Load(KNIGHT);
     CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//1:à⁄ìÆ
 	CRes::sKnight.SeparateAnimationSet(0, 1530, 1830, "idle1");//2:ë“ã@
@@ -105,7 +117,7 @@ void CSceneGame::Init() {
 	mEnemy.mAnimationFrameSize = 1024;
 	//ìGÇÃîzíu
 	mEnemy.mPosition = CVector(700.0f, 0.0f, 0.0f);
-	
+	*/
 	//ÉJÉÅÉâèâä˙âª
 	Camera.Init();
 
@@ -155,12 +167,6 @@ void CSceneGame::Init() {
 		CVector(0.0f,180.0f,0.0f), CVector(0.5f, 0.5f, 0.5f));
 	mpTree = new CTree(CVector(70.0f, 0.0f, 0.0f),
 		CVector(), CVector(50.0f, 50.0f, 50.0f));
-	/*
-	mpEnemy3=new CEnemy3(CVector(-20.0f, 50.0f, 100.0f),
-		CVector(), CVector(1000.5f, 1000.5f, 1000.5f));*/
-
-#define TEXWIDTH  8192  //ÉeÉNÉXÉ`ÉÉïù
-#define TEXHEIGHT  6144  //ÉeÉNÉXÉ`ÉÉçÇÇ≥
 
 	float shadowColor[] = { 0.4f, 0.4f, 0.4f, 0.2f };  //âeÇÃêF
 	float lightPos[] = { 50.0f, 160.0f, 50.0f };  //åıåπÇÃà íu
@@ -169,7 +175,14 @@ void CSceneGame::Init() {
 
 
 void CSceneGame::Update() {
-
+	mTimeCount++;
+	if (mTimeCount % 60 == 0) {
+		mTimeSecond++;
+	}
+	if (mTimeSecond==60) {
+		mTimeMinute++;
+		mTimeSecond = 0;
+	}
 	//ìGÇÃÉXÉ|Å[Éìä‘äu
 	if (mSpawn >= 0) {
 		mSpawn--;
@@ -178,10 +191,8 @@ void CSceneGame::Update() {
 	if (mEnemy2Count < mEnemy2CountStopper) {
 		//ÇQïbÇ≤Ç∆Ç…ê∂ê¨
 		if (mSpawn <= 0) {
-			
 			mpEnemy2 = new CEnemy2(mpEnemySummon->mPosition,
-				CVector(), CVector(1000.5f, 1000.5f, 1000.5f));
-			
+				CVector(), CVector(1.5f, 1.5f, 1.5f));
 			mpEnemy2->Init(&CRes::sScorp);
 			mEnemy2Count++;
 			mSpawn = 120;
@@ -195,13 +206,11 @@ void CSceneGame::Update() {
 	//StopperÇ…ê›íËÇµÇΩêîÇæÇØìGÇê∂ê¨
 	if (mEnemy3Count < mEnemy3CountStopper) {
 		//ÇQïbÇ≤Ç∆Ç…ê∂ê¨
-		if (mSpawn <= 0) {
-			/*
-			mpEnemy3 = new CEnemy3(mpEnemySummon2->mPosition, CVector(0.0f, 0.1f, 0.0f),
-				CVector(1.5f, 1.5f, 1.5f));*/
-			
+		if (mSpawn2 <= 0) {
+			mpEnemy3 = new CEnemy3(mpEnemySummon2->mPosition, CVector(0.0f, 0.0f, 0.0f),
+				CVector(1000.5f, 1000.5f, 1000.5f));
 			mEnemy3Count++;
-			mSpawn = 120;
+			mSpawn2 = 120;
 		}
 	}
 
@@ -233,25 +242,20 @@ void CSceneGame::Render() {
 	CCollisionManager::Get()->Render();
 	//2Dï`âÊäJén
 	CUtil::Start2D(0, 800, 0, 600);
-	mFont.DrawString("3D PROGRAMMING", 20, 20, 10, 12);
 	char buf[64];
 	if (CBoss::mHp>0) {
-
+		sprintf(buf, "%d:", mTimeMinute);
+		mFont.DrawString(buf, 200, 500, 8, 16);
+		sprintf(buf, "%d", mTimeSecond);
+		mFont.DrawString(buf, 250, 500, 8, 16);
 		sprintf(buf, "SPECIAL:%10d", CXPlayer::mSpAttack);
 		mFont.DrawString(buf, 20, 100, 8, 16);
-		sprintf(buf, "STAMINA:%10d", CXPlayer::mStamina);
-		mFont.DrawString(buf, 20, 150, 8, 16);
-		
 		sprintf(buf, "PositionX:%f", mPlayer.mPosition.mX);
 		mFont.DrawString(buf, 20, 200, 8, 16);
 		sprintf(buf, "PositionY:%f", mPlayer.mPosition.mY);
 		mFont.DrawString(buf, 20, 250, 8, 16);
 		sprintf(buf, "PositionZ:%f", mPlayer.mPosition.mZ);
 		mFont.DrawString(buf, 20, 300, 8, 16);
-		//sprintf(buf, "MOVE:%10d", CEnemy3::mMoveCount);
-		//mFont.DrawString(buf, 20, 200, 8, 16);
-		//sprintf(buf, "Y:%10f", mPlayer.mPosition.mY);
-		//mFont.DrawString(buf, 20, 250, 8, 16);
 	}
 	else if (CBoss::mHp <= 0) {
 	sprintf(buf, "GAMECLEAR" );

@@ -27,7 +27,7 @@ CEnemySummon::CEnemySummon(const CVector& position, const CVector& rotation, con
 	
 {
 	mHp = 10;
- mPosition = position;
+    mPosition = position;
 	mRotation = rotation;
 	mScale = scale;
 	mCollider.mTag = CCollider:: EENEMYSUMMON;
@@ -48,10 +48,16 @@ void CEnemySummon::Collision(CCollider* m, CCollider* o) {
 	if (m->mType == CCollider::ESPHERE) {
 		if (o->mType == CCollider::ESPHERE) {
 			if (o->mpParent->mTag ==EPLAYER) {
-				if(o->mTag==CCollider::EPLAYERSWORD)
+				if(o->mTag==CCollider::EPLAYERSWORD){
 				//衝突しているとき
-				if (CCollider::Collision(m, o)) {
-				//	mHp--;
+					if (CCollider::Collision(m, o)) {
+
+						//プレイヤーの当たり判定が有効なとき
+						if (((CXPlayer*)(o->mpParent))->mAttackHit == true) {
+
+							mHp--;
+						}
+					}
 				}
 			}
 		}
