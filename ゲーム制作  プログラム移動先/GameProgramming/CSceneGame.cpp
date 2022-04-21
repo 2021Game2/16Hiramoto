@@ -17,8 +17,8 @@
 #include"CSound.h"
 #define ENEMY2COUNT 10 //ˆê“x‚Éo‚¹‚é“G‚Q‚Ì”
 #define ENEMY2MINCOUNT 4 //“G‚Q‚ğÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚Q‚Ì”‚Ì‰ºŒÀ
-#define ENEMY3COUNT 3//ˆê“x‚Éo‚¹‚é“G‚R‚Ì”
-#define ENEMY3MINCOUNT 1 //“G‚R‚ğÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚R‚Ì”‚Ì‰ºŒÀ
+#define ENEMY3COUNT 10//ˆê“x‚Éo‚¹‚é“G‚R‚Ì”
+#define ENEMY3MINCOUNT 4 //“G‚R‚ğÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚R‚Ì”‚Ì‰ºŒÀ
 #define BGM "SE\\BGM.wav" //BGM
 #define ATTACK1 "SE\\ˆêŒ‚–Ú.wav" //ƒvƒŒƒCƒ„[‚ÌUŒ‚SE‚P
 #define ATTACK2 "SE\\“ñŒ‚–Ú.wav" //ƒvƒŒƒCƒ„[‚ÌUŒ‚SE‚Q
@@ -158,12 +158,12 @@ void CSceneGame::Init()
 	
 	new CItem(CVector(-20.0f, 2.0f, -10.0f) ,
 		CVector(), CVector(1.5f, 1.5f, 1.5f));
-	mpEnemySummon = new CEnemySummon(CVector(17.0f, 1.0f, 32.0f),
+	mpEnemySummon = new CEnemySummon(CVector(-36.0f, 1.0f,-59.0f),
 		CVector(), CVector(0.5f, 0.5f, 0.5f));
 
-	mpEnemySummon2 = new CEnemySummon(CVector(17.0f, 1.0f, 50.0f),
+	mpEnemySummon2 = new CEnemySummon(CVector(6.0f, 8.0f, 14.0f),
 		CVector(), CVector(0.5f, 0.5f, 0.5f));
-	mpRock=new CRock(CVector(0.0f, 5.5f, -100.0f),
+	mpRock=new CRock(CVector(0.0f, 0.0f, -100.0f),
 		CVector(0.0f,180.0f,0.0f), CVector(0.5f, 0.5f, 0.5f));
 	mpTree = new CTree(CVector(70.0f, 0.0f, 0.0f),
 		CVector(), CVector(50.0f, 50.0f, 50.0f));
@@ -183,11 +183,15 @@ void CSceneGame::Update() {
 		mTimeMinute++;
 		mTimeSecond = 0;
 	}
-	//“G‚ÌƒXƒ|[ƒ“ŠÔŠu
+	//“G‚Ì¶¬ŠÔŠu
 	if (mSpawn >= 0) {
 		mSpawn--;
 	}
-	//Stopper‚Éİ’è‚µ‚½”‚¾‚¯“G‚ğ¶¬
+	//“G‚Ì¶¬ŠÔŠu
+	if (mSpawn2 >= 0) {
+		mSpawn2--;
+	}
+	//mEnemy2CountStopper‚Éİ’è‚µ‚½”‚¾‚¯“G‚ğ¶¬
 	if (mEnemy2Count < mEnemy2CountStopper) {
 		//‚Q•b‚²‚Æ‚É¶¬
 		if (mSpawn <= 0) {
@@ -203,7 +207,7 @@ void CSceneGame::Update() {
 	else if( mEnemy2CountStopper<= ENEMY2MINCOUNT) {
 		mEnemy2CountStopper = ENEMY2COUNT;
 	}
-	//Stopper‚Éİ’è‚µ‚½”‚¾‚¯“G‚ğ¶¬
+	//mEnemy3CountStopper‚Éİ’è‚µ‚½”‚¾‚¯“G‚ğ¶¬
 	if (mEnemy3Count < mEnemy3CountStopper) {
 		//‚Q•b‚²‚Æ‚É¶¬
 		if (mSpawn2 <= 0) {

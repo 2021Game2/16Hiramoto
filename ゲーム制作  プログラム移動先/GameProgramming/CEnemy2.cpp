@@ -17,12 +17,8 @@ CModel CEnemy2::mModel;//モデルデータ作成
 //敵（サソリ）
 CEnemy2::CEnemy2()
 //コライダの設定
-	//:mCollider(this,&mMatrix,CVector(-0.5f,0.0f,-1.0f),1.0f)
-	//:mColSearch(this,&mMatrix,CVector(0.0f,0.0f,0.0f),200.0f)
-	//,mColSphereHead(this,&mMatrix,CVector(0.0f,0.5f,-1.0f),3.0f)
 	: mColSphereRight(this, &mMatrix, CVector(1.5f, 3.0f, 0.5f), 2.0f)
 	, mColSphereLeft(this, &mMatrix, CVector(-1.0f, 0.5f, 0.0f), 2.0f)
-	//,mpPlayer(0)
 	,mHp(HP)
 	,mJump(0.0f)
 	,mJump2(0)
@@ -39,9 +35,6 @@ CEnemy2::CEnemy2()
 {
 	mGravity = 0.20f;
 	mTag = EENEMY2;
-	//mColSearch.mTag = CCollider::ESEARCH;//タグ設定
-	//mCollider.mTag = CCollider::EENEMY2COLLIDER;
-	//mColSphereHead.mTag= CCollider::EENEMY2COLLIDER;
 		mColSphereRight.mTag= CCollider::EENEMY2COLLIDERATTACK;
 		mColSphereLeft.mTag= CCollider::EENEMY2COLLIDERATTACK;
 		mGravity = 0.20f;
@@ -68,9 +61,6 @@ void CEnemy2::Init(CModelX* model)
 {
 	CXCharacter::Init(model);
 	//合成行列の設定
-	//mCollider.mpMatrix = &mpCombinedMatrix[1];
-	//頭
-	//mColSphereHead.mpMatrix = &mpCombinedMatrix[10];
 	mColSphereRight.mpMatrix = &mpCombinedMatrix[9];
 	mColSphereLeft.mpMatrix = &mpCombinedMatrix[20];
 	mState = EAUTOMOVE;
@@ -307,14 +297,14 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 			CVector adjust;//調整値
 			//三角コライダと球コライダの衝突判定
 			//adjust、、、調整値
-			if (o->mpParent->mTag == EMAP) {
+			//if (o->mpParent->mTag == EMAP) {
 
 				if (CCollider::CollisionTriangleSphere(o, m, &adjust))
 				{
 						//衝突しない位置まで戻す
 						mPosition = mPosition + adjust;
 				}
-			}
+			//}
 			
 		}
 		return;
@@ -324,16 +314,10 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 
 void CEnemy2::TaskCollision() {
     //コライダの優先度変更
-    //mCollider.ChangePriority();
-    //mColSearch.ChangePriority();
-	//mColSphereHead.ChangePriority();
 	mColSphereRight.ChangePriority();
 	mColSphereLeft.ChangePriority();
 	//衝突処理を実行
-
 	CCollisionManager::Get()->Collision(&mColSphereRight, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSphereLeft, COLLISIONRANGE);
-	//CCollisionManager::Get()->Collision(&mColSphereHead, COLLISIONRANGE);
-	//CCollisionManager::Get()->Collision(&mColSearch, COLLISIONRANGE);
-	//CCollisionManager::Get()->Collision(&mCollider, COLLISIONRANGE);
+	
 }

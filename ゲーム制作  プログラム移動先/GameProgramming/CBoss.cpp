@@ -84,9 +84,6 @@ void CBoss::Init(CModelX* model)
 	mColSphereHead.mpMatrix = &mpCombinedMatrix[6];
     mColSphereRightFront.mpMatrix = &mpCombinedMatrix[12];//右前足
 	mColSphereLeftFront.mpMatrix = &mpCombinedMatrix[19];//左前足
-	//mColSphereRightBack.mpMatrix = &mpCombinedMatrix[27];//右後ろ足
-	//mColSphereLeftBack.mpMatrix = &mpCombinedMatrix[32];//左後ろ足
-	//mColSphereLeftBack.mpMatrix = &mpCombinedMatrix[17];
 	mState = EATTACK2;
 
 
@@ -399,16 +396,10 @@ void CBoss::TaskCollision() {
 	mColSphereHead.ChangePriority();
 	mColSphereRightFront.ChangePriority();
 	mColSphereLeftFront.ChangePriority();
-	//mColSphereRightBack.ChangePriority();
-	//mColSphereLeftBack.ChangePriority();
-
 	//衝突処理を実行
 
 	CCollisionManager::Get()->Collision(&mColSphereRightFront, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSphereLeftFront, COLLISIONRANGE);
-
-	//CCollisionManager::Get()->Collision(&mColSphereRightBack, COLLISIONRANGE);
-	//CCollisionManager::Get()->Collision(&mColSphereLeftBack, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSphereHead, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSearch, COLLISIONRANGE);
 }

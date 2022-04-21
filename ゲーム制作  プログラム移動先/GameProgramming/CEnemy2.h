@@ -13,10 +13,6 @@
 キャラクタクラスを継承	*/
 class CEnemy2 :public CXCharacter {
 private:
-
-	//コライダ
-	//CCollider mCollider;
-
 	CVector mPoint;//目標地点
 	int mHp;//体力
 	float mJump;
@@ -25,20 +21,13 @@ private:
 	int mMove;
 	int mMove2;
 	int mDamageCount;
-
 	float mColliderCount;
-
 	float mGravity;//重力
 	float mTime;//ジャンプする時の時間を計測
 	int mEnemy2StopCount;//プレイヤーのESTOPPERに当たっている間増加
-
-	//CCollider mColSphereHead;
 	CCollider mColSphereRight;
 	CCollider mColSphereLeft;
 	CVector mCollisionEnemy;
-
-	//CCollider mColSearch;//サーチ用コライダ
-
 	float mPlayerMarkingX;//プレイヤーと敵のX座標の差
 	float mPlayerMarkingZ;//プレイヤーと敵のZ座標の差
 	float mRotationCount;
@@ -46,7 +35,6 @@ private:
 	int mEnemyVoice;
 	float CurveCount;
 	CCharacter* mpPlayer;//プレイヤーのポインタ
-	//CXPlayer* mpPointPlayer;
 public:
 	bool mEnemy2AttackHit;
 	//モデルデータ
@@ -55,7 +43,6 @@ public:
 	CEnemy2();
 	static int mEnemy2AttackCount;
 	void Init(CModelX* model);
-	
 	//CEnemy2(位置、回転、拡縮）
 	CEnemy2(const CVector& position, const CVector& rotation, const CVector& scale);
 	//更新処理

@@ -288,6 +288,7 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 			}
 		}
 		
+		
 	}
 	return;
 }
@@ -297,8 +298,6 @@ void CEnemy3::TaskCollision() {
 	mCollider.ChangePriority();
 	//Õ“Ëˆ—‚ðŽÀs
 	CCollisionManager::Get()->Collision(&mColSearch, COLLISIONRANGE);
-	//Õ“Ëˆ—‚ðŽÀs
 	CCollisionManager::Get()->Collision(&mColSearch2, COLLISIONRANGE);
-	//Õ“Ëˆ—‚ðŽÀs
 	CCollisionManager::Get()->Collision(&mCollider, COLLISIONRANGE);
 }

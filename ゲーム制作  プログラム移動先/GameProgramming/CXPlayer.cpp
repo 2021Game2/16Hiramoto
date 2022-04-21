@@ -14,8 +14,8 @@
 #define STEP2 200.0f //
 #define STAMINA 1000 //スタミナ
 
-#define HP_MAX 100	//HP			//体力最大値
-#define STAMINA_MAX 1000		//スタミナ最大値
+#define HP_MAX 100				//体力最大値
+#define STAMINA_MAX 400		//スタミナ最大値
 #define GAUGE_WID_MAX 400.0f	//ゲージの幅の最大値
 #define GAUGE_LEFT 20			//ゲージ描画時の左端
 #define IMAGE_GAUGE "Resource\\Gauge.png"		//ゲージ画像
@@ -43,12 +43,8 @@ CXPlayer* CXPlayer::GetInstance()
 	return mpPlayerInstance;
 }
 CXPlayer::CXPlayer()
-
-	//: mColSphereBody(this, nullptr, CVector(0.0f,1.1f,0.0f), 0.5f)//体のコライダ
-	//, mColSphereHead(this, nullptr, CVector(0.0f, 5.0f, -3.0f), 0.5f)
 	: mColSphereSword(this, nullptr, CVector(-10.0f, 10.0f, 50.0f), 4.5f)//剣のコライダ１
 	, mColSphereFoot(this, nullptr, CVector(0.0f, 0.0f, -3.0f), 2.0f)//足付近のコライダ
-	//,mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 5.0f)//ストッパー
 	, mCollider2(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 10.0f)//剣のコライダ２
 	, mJump(0.0f)
 	, mGravity(0.0f)
@@ -67,10 +63,6 @@ CXPlayer::CXPlayer()
 	mColSphereSword.mTag = CCollider::EPLAYERSWORD;
 	mCollider2.mTag = CCollider::EPLAYERSWORD;
 	mColSphereFoot.mTag = CCollider::EPLAYERBODY;
-	//mColSphereBody.mTag = CCollider::EPLAYERBODY;
-	//mColSphereHead.mTag = CCollider::EPLAYERBODY;
-	//mCollider.mTag = CCollider::ESTOPPER;
-
 	//this＝プレイヤーそのもの
 	mpPlayerInstance = this;
 	mImageGauge.Load(IMAGE_GAUGE);
@@ -85,20 +77,14 @@ void CXPlayer::Init(CModelX* model)
 {
 	CXCharacter::Init(model);
 	//合成行列の設定
-	//mColSphereBody.mpMatrix = &mpCombinedMatrix[9];
-	//頭
-	//mColSphereHead.mpMatrix = &mpCombinedMatrix[12];
 	//剣
 	mColSphereSword.mpMatrix = &mpCombinedMatrix[22];
-
 	//合成行列の設定
 	mColSphereFoot.mpMatrix = &mpCombinedMatrix[2];
 	mGravity = 0.20f;
 	mState = EIDLE;
 	mRotation.mY += 180.0f;
-
 	mCollider2.mRenderEnabled = false;
-
 }
 
 void CXPlayer::Update()
@@ -696,23 +682,13 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 
 void CXPlayer::TaskCollision() {
 	//コライダの優先度変更
-	//mColSphereBody.ChangePriority();
 	mColSphereSword.ChangePriority();
 	mColSphereFoot.ChangePriority();
-	//mCollider.ChangePriority();
 	mCollider2.ChangePriority();
-
 	//衝突処理を実行
-;
-//CCollisionManager::Get()->Collision(&mColSphereBody, COLLISIONRANGE);
-//CCollisionManager::Get()->Collision(&mCollider, COLLISIONRANGE);
-CCollisionManager::Get()->Collision(&mCollider2, COLLISIONRANGE);
-CCollisionManager::Get()->Collision(&mColSphereFoot, COLLISIONRANGE);
-CCollisionManager::Get()->Collision(&mColSphereSword, COLLISIONRANGE);
-
-
-
-
+	CCollisionManager::Get()->Collision(&mCollider2, COLLISIONRANGE);
+	CCollisionManager::Get()->Collision(&mColSphereFoot, COLLISIONRANGE);
+	CCollisionManager::Get()->Collision(&mColSphereSword, COLLISIONRANGE);
 }
 void CXPlayer::Render2D()
 {
