@@ -15,7 +15,7 @@ CCollider::CCollider()
 //コンストラクタ
 //CCollider(親, 位置, 回転, 拡縮, 半径)
 CCollider::CCollider(CCharacter *parent, CMatrix *matrix,
-	CVector position, float radius)
+	CVector position, float radius,float height)
 	: CCollider()
 {
 	//親設定
@@ -155,7 +155,56 @@ bool CCollider::CollisionTriangleSphere(CCollider *t, CCollider *s, CVector *a)
 	//三角コライダと線コライダの衝突処理
 	return CollisionTriangleLine(t, &line, a);
 }
+//マップとコライダ用の衝突判定
+bool CCollider::CollisionSphere(CCollider* m, CCollider* o, CVector* a) {
+	//各コライダの中心座標を求める
+	//原点×コライダの変換行列×親の変換行列
+	CVector mpos = m->mPosition * *m->mpMatrix;
+	CVector opos = o->mPosition * *o->mpMatrix;
+	//中心から中心へのベクトルを求める
+	CVector lpos = mpos - opos;
 
+	//中心の距離が半径の合計より小さいと衝突
+	float len = ((m->mRadius + o->mRadius) - lpos.Length());
+	if (len > 0.0f) {
+		//衝突分の調整値
+		*a = (opos - mpos).Normalize() * len;
+		//衝突している
+		return  true;
+	}
+	*a = CVector(0.0f, 0.0f, 0.0f);
+	//衝突していない
+	return false;
+}
+
+//押しのけ用
+bool CCollider::CollisionSylinder(CCollider* m, CCollider* o, CVector* adjust)
+{
+	CVector mpos = m->mPosition * *m->mpMatrix;
+	CVector opos = o->mPosition * *o->mpMatrix;
+
+	if ((mpos.mY > opos.mY + o->mHeight) || (mpos.mY + m->mHeight < opos.mY)) {
+		return false;
+	}
+
+	CVector mpos2 = mpos;
+	CVector opos2 = opos;
+	mpos2.mY = 0.0f;
+	opos2.mY = 0.0f;
+	//中心から中心へのベクトルを求める
+	mpos2 = opos2 - mpos2;
+	//中心の距離が半径の合計より小さいと衝突
+	float len = mpos2.Length();
+	float radius = m->mRadius + o->mRadius;
+	if (radius > mpos2.Length()) {
+		//衝突している
+		*adjust = mpos2 * (radius - len);
+		return  true;
+	}
+	//衝突していない
+	return false;
+
+}
 //優先度の変更
 void CCollider::ChangePriority()
 {

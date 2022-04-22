@@ -21,12 +21,13 @@ private:
 	int mMove;
 	int mMove2;
 	int mDamageCount;
+	int mEffectCount;
 	float mColliderCount;
-	float mGravity;//重力
 	float mTime;//ジャンプする時の時間を計測
 	int mEnemy2StopCount;//プレイヤーのESTOPPERに当たっている間増加
 	CCollider mColSphereRight;
 	CCollider mColSphereLeft;
+	CCollider mColSphereBody;
 	CVector mCollisionEnemy;
 	float mPlayerMarkingX;//プレイヤーと敵のX座標の差
 	float mPlayerMarkingZ;//プレイヤーと敵のZ座標の差
@@ -41,7 +42,6 @@ public:
 	static CModel mModel;
 	//コンストラクタ	
 	CEnemy2();
-	static int mEnemy2AttackCount;
 	void Init(CModelX* model);
 	//CEnemy2(位置、回転、拡縮）
 	CEnemy2(const CVector& position, const CVector& rotation, const CVector& scale);

@@ -28,7 +28,6 @@ CModel CEnemy3::mModel;//モデルデータ作成
 CEnemy3::CEnemy3()
 //コライダの設定
 	:mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 5.0f)
-	, mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 50.0f)
 	, mColSearch2(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f),70.0f)
 	, mpPlayer(0)
 	, mHp(HP)
@@ -50,9 +49,8 @@ CEnemy3::CEnemy3()
 	}
 	//モデルのポインタ設定
 	mpModel = &mModel;
-    mCollider.mTag = CCollider::EENEMY3COLLIDER;
-	mColSearch.mTag = CCollider::ESEARCH;//タグ設定
-	mColSearch2.mTag = CCollider::ESEARCH2;//タグ設定
+    mCollider.mTag = CCollider::EENEMY3COLLIDERBODY;
+	mColSearch2.mTag = CCollider::EENEMY3ESEARCH2;//タグ設定
 }
 
 //CEnemy(位置、回転、拡縮）
@@ -228,11 +226,11 @@ void CEnemy3::Update() {
 }
 //Collision(コライダ１，コライダ２，）
 void CEnemy3::Collision(CCollider* m, CCollider* o) {
-	m->mType == CCollider::ESPHERE;
+	m->mType = CCollider::ESPHERE;
 	//自分がサーチ用のとき
 
 	if (m->mpParent->mTag == EENEMY3) {
-		if (m->mTag == CCollider::ESEARCH2) {
+		if (m->mTag == CCollider::EENEMY3ESEARCH2) {
 			//相手が弾コライダのとき
 			if (o->mType == CCollider::ESPHERE) {
 				//相手がプレイヤーのとき、
@@ -253,7 +251,8 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 			return;
 		}
 	}
-	if (m->mTag == CCollider::EENEMY3COLLIDER) {
+	
+	if (m->mTag == CCollider::EENEMY3COLLIDERBODY) {
 		if (o->mType == CCollider::ESPHERE) {
 			//相手が武器のとき、
 			if (o->mpParent->mTag == EPLAYER) {
@@ -277,15 +276,18 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 			}
 		}
 		if (o->mType == CCollider::ETRIANGLE) {
-			CVector adjust;//調整値
-			//三角コライダと球コライダの衝突判定
-			//adjust、、、調整値
-			if (CCollider::CollisionTriangleSphere(o, m, &adjust))
-			{
-					//衝突しない位置まで戻す
-					mPosition = mPosition + adjust;
+			if (mMoveCount == 1) {
+				CVector adjust;//調整値
+				//三角コライダと球コライダの衝突判定
+				//adjust、、、調整値
+				if (CCollider::CollisionTriangleSphere(o, m, &adjust))
+				{
+						//衝突しない位置まで戻す
+						mPosition = mPosition + adjust;
 					
+				}
 			}
+			
 		}
 		
 		
@@ -293,11 +295,9 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 	return;
 }
 void CEnemy3::TaskCollision() {
-	mColSearch.ChangePriority();
 	mColSearch2.ChangePriority();
 	mCollider.ChangePriority();
 	//衝突処理を実行
-	CCollisionManager::Get()->Collision(&mColSearch, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSearch2, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mCollider, COLLISIONRANGE);
 }

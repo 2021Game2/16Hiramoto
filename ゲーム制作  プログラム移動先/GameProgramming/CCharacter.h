@@ -30,6 +30,7 @@ public:
 		EENEMY3,
 		EBOSS,
 		EMAP,
+		EFIELD,
 	};
 	ETag mTag;
 	CModel *mpModel; //モデルのポインタ

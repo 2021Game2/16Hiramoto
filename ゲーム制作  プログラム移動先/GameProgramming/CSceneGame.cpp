@@ -15,9 +15,9 @@
 #include"CItem.h"
 #include"CRock.h"
 #include"CSound.h"
-#define ENEMY2COUNT 10 //ˆê“x‚Éo‚¹‚é“G‚Q‚Ì”
+#define ENEMY2COUNT 1 //ˆê“x‚Éo‚¹‚é“G‚Q‚Ì”
 #define ENEMY2MINCOUNT 4 //“G‚Q‚ğÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚Q‚Ì”‚Ì‰ºŒÀ
-#define ENEMY3COUNT 10//ˆê“x‚Éo‚¹‚é“G‚R‚Ì”
+#define ENEMY3COUNT 5//ˆê“x‚Éo‚¹‚é“G‚R‚Ì”
 #define ENEMY3MINCOUNT 4 //“G‚R‚ğÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚R‚Ì”‚Ì‰ºŒÀ
 #define BGM "SE\\BGM.wav" //BGM
 #define ATTACK1 "SE\\ˆêŒ‚–Ú.wav" //ƒvƒŒƒCƒ„[‚ÌUŒ‚SE‚P
@@ -163,10 +163,13 @@ void CSceneGame::Init()
 
 	mpEnemySummon2 = new CEnemySummon(CVector(6.0f, 8.0f, 14.0f),
 		CVector(), CVector(0.5f, 0.5f, 0.5f));
+	/*
 	mpRock=new CRock(CVector(0.0f, 0.0f, -100.0f),
-		CVector(0.0f,180.0f,0.0f), CVector(0.5f, 0.5f, 0.5f));
-	mpTree = new CTree(CVector(70.0f, 0.0f, 0.0f),
-		CVector(), CVector(50.0f, 50.0f, 50.0f));
+		CVector(0.0f,180.0f,0.0f), CVector(0.5f, 0.5f, 0.5f));*/
+	/*
+	mpField = new CField(CVector(0.0f, 0.0f, 0.0f),
+		CVector(), CVector(0.5f, 0.5f, 0.5f));
+	*/
 
 	float shadowColor[] = { 0.4f, 0.4f, 0.4f, 0.2f };  //‰e‚ÌF
 	float lightPos[] = { 50.0f, 160.0f, 50.0f };  //ŒõŒ¹‚ÌˆÊ’u

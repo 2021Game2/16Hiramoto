@@ -5,8 +5,8 @@
 #include"CColliderTriangle.h"
 #include"CRock.h"
 #include"CCollider.h"
-#define OBJ "3DModel\\Ground2\\Ground.obj"
-#define MTL "3DModel\\Ground2\\Ground.mtl"
+#define OBJ "3DModel\\Ground\\Ground.obj"
+#define MTL "3DModel\\Ground\\Ground.mtl"
 
 CModel CRock::mModel;//モデルデータ作成
 
@@ -32,6 +32,10 @@ CRock::CRock(const CVector& position, const CVector& rotation, const CVector& sc
 	}
 	mColliderMesh.Set(this, &mMatrix, &mModel);//モデルをコライダにする
     mTag = EROCK;
+}
+void CRock::Collision(CCollider* m, CCollider* o) {
+	m->mpParent->mTag = EROCK;
+
 }
 void CRock::Update() {
 	//CCharacterの更新

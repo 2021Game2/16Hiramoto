@@ -1,5 +1,5 @@
-#include "CInput.h"
 #include <windows.h>
+#include "CInput.h"
 #include <stdio.h>
 
 //ウィンドウポインタ

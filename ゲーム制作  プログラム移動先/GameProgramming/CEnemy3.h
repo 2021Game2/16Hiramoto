@@ -26,7 +26,6 @@ private:
 	int mFireCount;
 	int mEnemy3Fry;
 	CVector mCollisionEnemy;
-	CCollider mColSearch;//サーチ用コライダ
 	CCollider mColSearch2;//サーチ用コライダ
 
 	int mEnemyDamage;
@@ -45,7 +44,6 @@ public:
 	void Attack();
 	void Idle();
 	static int mMoveCount;
-	//CEnemy2(位置、回転、拡縮）
 	CEnemy3(const CVector& position, const CVector& rotation, const CVector& scale);
 	//更新処理
 	void Update();

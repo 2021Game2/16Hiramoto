@@ -81,7 +81,7 @@ void CSceneTitle::Update()
 
 	mFont.DrawString("GAMESTART", 240, 220, 20, 20);
 
-	mFont.DrawString("RECORD", 300, 120, 20, 20);
+	//mFont.DrawString("RECORD", 300, 120, 20, 20);
 
 	CUtil::End2D();
 }

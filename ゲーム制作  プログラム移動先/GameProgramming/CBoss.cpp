@@ -297,7 +297,7 @@ void CBoss::Update() {
 //Collision(コライダ１，コライダ２，）
 void CBoss::Collision(CCollider* m, CCollider* o) {
 	//コライダのとき
-	m->mType == CCollider::ESPHERE;
+	m->mType = CCollider::ESPHERE;
 	
 		//自分がサーチ用のとき
 		if (m->mTag == CCollider::ESEARCH) {
@@ -305,7 +305,7 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 			if (o->mType == CCollider::ESPHERE) {
 				//相手がプレイヤーのとき
 				if (o->mpParent->mTag == EPLAYER) {
-					//if (o->mTag == CCollider::EPLAYERBODY) {
+					if (o->mTag == CCollider::EPLAYERBODY) {
 						//衝突しているとき
 						if (CCollider::Collision(m, o)) {
 							//ポインタをプレイヤーに設定
@@ -315,7 +315,7 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 								mColSearch.mRenderEnabled = false;
 							}
 						}
-					//}
+					}
 				}
 			}
 			return;

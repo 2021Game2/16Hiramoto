@@ -12,10 +12,10 @@
 #define JUMP2 10.0f
 #define STEP  20.0f //攻撃時少し前進
 #define STEP2 200.0f //
-#define STAMINA 1000 //スタミナ
+#define STAMINA 400 //スタミナ
 
 #define HP_MAX 100				//体力最大値
-#define STAMINA_MAX 400		//スタミナ最大値
+#define STAMINA_MAX 1000		//スタミナ最大値
 #define GAUGE_WID_MAX 400.0f	//ゲージの幅の最大値
 #define GAUGE_LEFT 20			//ゲージ描画時の左端
 #define IMAGE_GAUGE "Resource\\Gauge.png"		//ゲージ画像
@@ -411,7 +411,6 @@ void CXPlayer::Update()
 					  mSpAttack -= 30;//特殊攻撃のゲージ減少
 					 mAnimationCount = 200;//0になるまでアニメーションが変わらない
 					 mAttackCount = 100;
-					 //mPosition.mY = 1.0f;// mJump* mTime - 0.5 * mGravity * mTime * mTime;
 				 }
 			 }
 		 }
@@ -505,20 +504,17 @@ void CXPlayer::Update()
 		
 		 
 
-			 //マップに接触していない間ずっと重力がかかる
-		
+		 //マップに接触していない間ずっと重力がかかる
 		 if (mState != EATTACKSP) {
-
 			 if (mJump >= -0.1) {
 
-			 mJump -= G;
+			   mJump -= G;
 			 }
 		 }
 		 if (mState != EESCAPE) {
-
 			  mPosition.mY += mJump;
 		 }
-		// }
+		
 		//アイテム取得時に武器の当たり判定拡大
 		 if (CItem::mItemCount > 0) {
 			mColSphereSword.mRadius = 7.5f;
@@ -551,7 +547,6 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 				//親が三角コライダ
 				if (o->mType == CCollider::ETRIANGLE) {
 					//親が三角コライダ
-				//	if (o->mpParent->mTag == EMAP) {
 
 						CVector adjust;//調整用ベクトル
 						if (CCollider::CollisionTriangleSphere(o, m, &adjust)) {
@@ -559,19 +554,14 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 							if (mState != EESCAPE) {
 								mGravity = 0;
 								mJump = 0;
-								//三角形と線分の衝突判定
-								//CCollider::CollisionTriangleLine(o, m, &adjust);
 								//位置の更新（mPosition+adjust)
 								mPosition = mPosition + adjust;
-
 								//行列の更新
 								CTransform::Update();
 							}
 
 						}
 
-
-					//}
 				}
 				//球コライダ
 				if (o->mType == CCollider::ESPHERE) {
@@ -650,6 +640,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 
 
 			}
+			/*
 					//プレイヤーの剣
 					else if (m->mTag == CCollider::EPLAYERSWORD) {
 						//球コライダ
@@ -663,7 +654,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 											//o->mpParent->Collision(o, m);
 
 												//特殊攻撃のゲージ増加
- 											mSpAttack += 2;
+ 											//mSpAttack += 2;
 											break;
 										}
 									}
@@ -672,7 +663,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 						}
 					}
 
-			break;
+			break;*/
 		}
 	}
 		

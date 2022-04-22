@@ -7,6 +7,11 @@
 #include"CCollisionManager.h"
 #define OBJ "3DModel\\EnemySummon\\egg.obj"
 #define MTL "3DModel\\EnemySummon\\egg.mtl"
+
+#define HP_MAX 100				//体力最大値
+#define GAUGE_WID_MAX 400.0f	//ゲージの幅の最大値
+#define GAUGE_LEFT 20			//ゲージ描画時の左端
+#define IMAGE_GAUGE "Resource\\Gauge.png"		//ゲージ画像
 CModel CEnemySummon::mModel;
 CEnemySummon::CEnemySummon()
     :mHp(0)

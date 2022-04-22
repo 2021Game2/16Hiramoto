@@ -10,15 +10,15 @@
 #define ROTATION 180.0f
 #define JUMP 2.0f
 #define G 0.1f
-int CEnemy2::mEnemy2AttackCount = 0;
  extern CSound Enemy2Voice;
 CModel CEnemy2::mModel;//モデルデータ作成
 //デフォルトコンストラクタ
 //敵（サソリ）
 CEnemy2::CEnemy2()
 //コライダの設定
-	: mColSphereRight(this, &mMatrix, CVector(1.5f, 3.0f, 0.5f), 2.0f)
-	, mColSphereLeft(this, &mMatrix, CVector(-1.0f, 0.5f, 0.0f), 2.0f)
+	: mColSphereRight(this,&mMatrix, CVector(1.5f, 3.0f, 0.5f), 2.0f)
+	, mColSphereLeft(this,&mMatrix,  CVector(-1.0f, 0.5f, 0.0f), 2.0f)
+	, mColSphereBody(this,&mMatrix,  CVector(0.0f,1.0f,0.0f),2.0f)
 	,mHp(HP)
 	,mJump(0.0f)
 	,mJump2(0)
@@ -26,18 +26,16 @@ CEnemy2::CEnemy2()
 	,mMove(0)
 	,mMove2(0)
 	, mColliderCount(0.0f)
-	,mGravity(0.0f)
 	,mTime(0.0f)
 	,CurveCount(0.0f)
 	,mEnemyVoice(0)
 	, mDamageCount(0)
 	,mEnemy2AttackHit(false)
 {
-	mGravity = 0.20f;
 	mTag = EENEMY2;
-		mColSphereRight.mTag= CCollider::EENEMY2COLLIDERATTACK;
-		mColSphereLeft.mTag= CCollider::EENEMY2COLLIDERATTACK;
-		mGravity = 0.20f;
+	mColSphereRight.mTag= CCollider::EENEMY2COLLIDERATTACK;
+	mColSphereLeft.mTag= CCollider::EENEMY2COLLIDERATTACK;
+	mColSphereBody.mTag = CCollider::EENEMY2COLLIDERBODY;
 }
 
 //CEnemy(位置、回転、拡縮）
@@ -63,6 +61,7 @@ void CEnemy2::Init(CModelX* model)
 	//合成行列の設定
 	mColSphereRight.mpMatrix = &mpCombinedMatrix[9];
 	mColSphereLeft.mpMatrix = &mpCombinedMatrix[20];
+	mColSphereBody.mpMatrix = &mpCombinedMatrix[0];
 	mState = EAUTOMOVE;
 }
 //待機処理
@@ -71,8 +70,6 @@ void CEnemy2::Idle() {
 		ChangeAnimation(8, true, 60);
 		mMove++;
 		if (mMove >= 300) {
-            //当たり判定が適用される時間
-			mEnemy2AttackCount = 120;
 			//60溜まった状態でアニメーションが終わると攻撃処理に移行
 			if (mAnimationFrame >= mAnimationFrameSize)
 			{
@@ -126,25 +123,32 @@ void CEnemy2::AutoMove() {
 //攻撃処理
 void CEnemy2::Attack() {
 	    //攻撃アニメーション
-		ChangeAnimation(4, false, 120);//+５番目のアニメーションフレーム１２０
+		ChangeAnimation(4, false, 120);
 		if (mAnimationFrame >= mAnimationFrameSize) {
-			
-            mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
-			
+			mMove = 0;
+			mState = EAUTOMOVE;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
+        
 		}
 }	
 //ダメージ処理
 void CEnemy2::Damaged() {
 	//体力減少
 	mHp--;
+	//無敵時間付与
 	if (mDamageCount < 60) {
 		mDamageCount++;
 	}
-	//吹き飛ぶ（X,Z軸)
+	//爆発エフェクト付与
+	if (mEffectCount % 15 == 0) {
+		//エフェクト生成
+		new CEffect(mPosition, 1.0f, 1.0f, "exp.tga", 4, 4, 2);
+	}
+	//ヒットバック（X,Z軸)
 	if (mColliderCount > 0) {
 		mColliderCount--;
 		mPosition = mPosition + mCollisionEnemy * mColliderCount;
 	}
+
 	if (mDamageCount >= 60) {
 	//ダメージのあとは移動処理
     mState = EAUTOMOVE;
@@ -163,7 +167,7 @@ void CEnemy2::Death() {
 		}
 		mHp--;
 		//15フレームごとにエフェクト
-		if (mHp % 15 == 0) {
+		if (mEffectCount % 15 == 0) {
 			//エフェクト生成
 			new CEffect(mPosition, 1.0f, 1.0f, "exp.tga", 4, 4, 2);
 		}
@@ -185,32 +189,22 @@ void CEnemy2::Death() {
 
 //更新処理
 void CEnemy2::Update() {
+	mEffectCount--;
 	//mpPlayer = mpPointPlayer;
 	//アニメーションの管理
 	switch (mAnimationIndex) {
 		//攻撃アニメーション
 	case(4):
-		if (mAnimationFrame == 40) {
+		if (mAnimationFrame == 30) {
 			mEnemy2AttackHit = true;
 		}
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
-			mEnemy2AttackHit = false;
-			ChangeAnimation(5, false,120);
-		}
-        break;
-
-	case(5):
-		if (mAnimationFrame == 40) {
-			mEnemy2AttackHit = true;
-		}
-		if (mAnimationFrame >= mAnimationFrameSize)
-		{
-			mState = EAUTOMOVE;
 			mEnemy2AttackHit = false;
 			
 		}
-		break;
+        break;
+		
 	}
 	//処理を行動ごとに分割
 	switch (mState) {
@@ -230,10 +224,10 @@ void CEnemy2::Update() {
 		Death();
 		break;
 	}
+	mPosition.mY -= 0.1f;
 	mEnemyVoice++;
 	if (mEnemyVoice>=180) {
 		if (CSceneGame::mVoiceSwitch == 1) {
-
 			Enemy2Voice.Play();
 		}
 		mEnemyVoice = 0;
@@ -245,7 +239,7 @@ void CEnemy2::Update() {
 //Collision(コライダ１，コライダ２，）
 void CEnemy2::Collision(CCollider* m, CCollider* o) {
 
-	m->mType == CCollider::ESPHERE;
+	m->mType = CCollider::ESPHERE;
 	//EENEMY2COLLIDER(両ハサミのコライダ）の時
 	if (m->mTag == CCollider::EENEMY2COLLIDERATTACK) {
 
@@ -260,14 +254,22 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 						//親をCXPlayerを元にポインタ化し、変数を参照
 						if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
 						{//ヒットバック＆ダメージを受ける
-							mColliderCount = 5;
-							mCollisionEnemy = mPosition - o->mpParent->mPosition;
-							mCollisionEnemy.mY = 0;
-							mCollisionEnemy = mCollisionEnemy.Normalize();
-							mState = EDAMAGED;
-							if (mHp <= 0) {
-								mJump = JUMP;
-								mState = EDEATH;
+							if (mDamageCount <= 0) {
+								//プレイヤーのジャンプ攻撃必要ポイント増加
+								((CXPlayer*)(o->mpParent))->mSpAttack++;
+								mEffectCount = 0;
+								//ヒットバック付与
+								mColliderCount = 5;
+								mCollisionEnemy = mPosition - o->mpParent->mPosition;
+								//HPが０のとき以外は前後左右に吹っ飛ぶ
+								mCollisionEnemy.mY = 0;
+								mCollisionEnemy = mCollisionEnemy.Normalize();
+							    //ダメージ処理に移行
+								mState = EDAMAGED;
+								if (mHp <= 0) {
+									mJump = JUMP;
+									mState = EDEATH;
+							    }
 							}
 						}
 					}
@@ -292,7 +294,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 		}
 	}
 	//ETRIANGLE(マップなどのコライダ）
-	if (m->mTag == CCollider::EENEMY2COLLIDERATTACK) {
+	if (m->mTag == CCollider::EENEMY2COLLIDERBODY) {
 		if (o->mType == CCollider::ETRIANGLE) {
 			CVector adjust;//調整値
 			//三角コライダと球コライダの衝突判定
@@ -308,6 +310,13 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 			
 		}
 		return;
+		if (o->mTag == CCollider::EENEMY2COLLIDERBODY) {
+			CVector adjust;
+			if (CCollider::CollisionSphere(o, m, &adjust)) {
+				//衝突しない位置まで戻す
+				mPosition = mPosition + adjust;
+			}
+		}
 	}
 	
 }
@@ -316,8 +325,10 @@ void CEnemy2::TaskCollision() {
     //コライダの優先度変更
 	mColSphereRight.ChangePriority();
 	mColSphereLeft.ChangePriority();
+	mColSphereBody.ChangePriority();
 	//衝突処理を実行
 	CCollisionManager::Get()->Collision(&mColSphereRight, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSphereLeft, COLLISIONRANGE);
+	CCollisionManager::Get()->Collision(&mColSphereBody, COLLISIONRANGE);
 	
 }
