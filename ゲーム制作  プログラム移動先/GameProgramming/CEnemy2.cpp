@@ -299,14 +299,12 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 			CVector adjust;//調整値
 			//三角コライダと球コライダの衝突判定
 			//adjust、、、調整値
-			//if (o->mpParent->mTag == EMAP) {
-
 				if (CCollider::CollisionTriangleSphere(o, m, &adjust))
 				{
 						//衝突しない位置まで戻す
 						mPosition = mPosition + adjust;
 				}
-			//}
+			
 			
 		}
 		return;

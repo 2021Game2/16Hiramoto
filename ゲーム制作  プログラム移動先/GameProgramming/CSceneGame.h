@@ -11,7 +11,7 @@
 #include"CEnemy2.h"
 #include"CBillBoard2.h"
 #include"CRock.h"
-#include"CField.h"
+#include"CTree.h"
 #include"CEnemy3.h"
 #include"CSound.h"
 #include"CBoss.h"
@@ -34,7 +34,7 @@ private:
 	CShadowMap mShadowMap;
 	CMap mMap;//フィールド	
 	CRock*mpRock;//周りの岩
-	CField* mpField;//木
+	CTree* mpTree;//木
 	//キャラクタのインスタンス
 	CXPlayer mPlayer;//プレイヤー
 	//敵のインスタンス
