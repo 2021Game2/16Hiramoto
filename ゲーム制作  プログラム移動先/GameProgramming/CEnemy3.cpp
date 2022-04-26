@@ -205,7 +205,8 @@ void CEnemy3::Update() {
 	mCount++;
 	if (mHp <= -70) {
 		mEnabled = false;
-
+		CSceneGame::mEnemy3Count--;
+		CSceneGame::mEnemy3CountStopper--;
 	}
 	if (mJump > 0) {
 		mJump--;

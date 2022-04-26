@@ -31,14 +31,22 @@ void CTaskManager::Add(CTask *addTask)
 {
 	//mHead‚ÌŽŸ‚©‚çŒŸõ
 	CTask *task = mHead.mpNext;
-
+	while (addTask->mPriority < task->mPriority)
+	{
+		if (task->mpNext == nullptr) {
+			break;
+		}
+		task = task->mpNext; //ŽŸ‚Ö
+	}
+	//task->mpNext == nullptr‚¾‚Á‚½‚çbreak‚³‚¹‚é
 	//—Dæ“x‚Ì‘å‚«‚¢‡‚É‘}“ü‚·‚é
 	//‘}“üˆÊ’u‚ÌŒŸõi—Dæ“x‚ª“¯‚¶‚©‘å‚«‚­‚È‚Á‚½‘Oj
 	//mPriority>=0‚Ì‚±‚Æ
+	/*
 	while(addTask->mPriority < task->mPriority)
 	{
 		task = task->mpNext; //ŽŸ‚Ö
-	}
+	}*/
 
 	//addTask‚ÌŽŸ‚ðtask
 	addTask->mpNext = task;

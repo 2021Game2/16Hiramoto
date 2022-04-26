@@ -48,9 +48,9 @@ CXPlayer::CXPlayer()
 	, mCollider2(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 10.0f)//剣のコライダ２
 	, mJump(0.0f)
 	, mGravity(0.0f)
-	,mSpaceCount1(0)
-	,mSpaceCount2(0)
-	,mSpaceCount3(0)
+	,mSpaceCount1(true)
+	,mSpaceCount2(false)
+	,mSpaceCount3(false)
 	, mDamageCount(0)
 	,mAnimationCount(0)
 	,mColliderCount(1.0f)
@@ -344,7 +344,7 @@ void CXPlayer::Update()
 		 //無敵時間中じゃないとき
 		 //if (mDamageCount <= 0) {
 			 //攻撃１が使えるとき
-			 if (mSpaceCount1 == 0) {
+			 if (mSpaceCount1 == true) {
 
 				 if (mAttackCount <= 0) {
 					 if (CKey::Once(' '))
@@ -354,8 +354,8 @@ void CXPlayer::Update()
 							 FirstAttack.Play();
 						 }
 						 mState = EATTACK1;
-						 mSpaceCount1 = 1;//１回目の攻撃のフラグ
-						 mSpaceCount2 = 0;
+						 mSpaceCount1 = false;//１回目の攻撃のフラグ
+						 mSpaceCount2 =true;
 						mAttackCount = 10;//当たり判定が適用される時間
 						 mAnimationCount = 50;//0になるまでアニメーションが変わらない
 						 mStep = STEP;
@@ -364,7 +364,7 @@ void CXPlayer::Update()
 			 }
 
 			 //2回目の攻撃
-			 else if (mSpaceCount2 == 0) {
+			 else if (mSpaceCount2 == true) {
 				 if (mAttackCount <= 0) {
 					 if (CKey::Once(' ')) {
 
@@ -372,8 +372,8 @@ void CXPlayer::Update()
 							 SecondAttack.Play();
 						 }
 						 mState = EATTACK2;
-						 mSpaceCount2 = 1;//２回目の攻撃のフラグ
-						 mSpaceCount3 = 0;
+						 mSpaceCount2 = false;//２回目の攻撃のフラグ
+						 mSpaceCount3 = true;
 						 mAttackCount = 10;//当たり判定が適用される時間
 						 mAnimationCount = 50;//0になるまでアニメーションが変わらない
 						 mStep = STEP;
@@ -381,7 +381,7 @@ void CXPlayer::Update()
 				 }
 			 }
 			 //３回目の攻撃
-			 else if (mSpaceCount3 == 0) {
+			 else if (mSpaceCount3 == true) {
 				 if (mAttackCount <= 0) {
 					 if (CKey::Once(' ')) {
 
@@ -390,8 +390,8 @@ void CXPlayer::Update()
 						 }
 						 mState = EATTACK3;
 						 mAnimationCount = 50;//0になるまでアニメーションが変わらない
-						 mSpaceCount3 = 1;//３回目の攻撃のフラグ
-						 mSpaceCount1 = 0;
+						 mSpaceCount3 = false;//３回目の攻撃のフラグ
+						 mSpaceCount1 = true;
 						 mAttackCount = 30;//当たり判定が適用される時間
 						 mStep = STEP;//ジャンプ力を代入
 					 }
@@ -485,12 +485,12 @@ void CXPlayer::Update()
 	     }
 		 //アニメーションが終わるたびに攻撃モーション最初から
 		 if (mAnimationCount <= 0) {
-			 mSpaceCount1 = 0;
-			 mSpaceCount2 = 0;
-			 mSpaceCount3 = 0;
+			 mSpaceCount1 = true;
+			 mSpaceCount2 = false;
+			 mSpaceCount3 = false;
 		 }
 		 //スタミナ回復
-		 if (mStamina < 1000) {
+		 if (mStamina < STAMINA_MAX) {
 			mStamina++;
 		 }
 		 //攻撃アニメーション中
@@ -550,14 +550,16 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 
 						CVector adjust;//調整用ベクトル
 						if (CCollider::CollisionTriangleSphere(o, m, &adjust)) {
+							if (o->mpParent->mTag == EMAP) {
 
-							if (mState != EESCAPE) {
-								mGravity = 0;
-								mJump = 0;
-								//位置の更新（mPosition+adjust)
-								mPosition = mPosition + adjust;
-								//行列の更新
-								CTransform::Update();
+								if (mState != EESCAPE) {
+									mGravity = 0;
+									mJump = 0;
+									//位置の更新（mPosition+adjust)
+									mPosition = mPosition + adjust;
+									//行列の更新
+									CTransform::Update();
+								}
 							}
 
 						}
@@ -640,30 +642,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 
 
 			}
-			/*
-					//プレイヤーの剣
-					else if (m->mTag == CCollider::EPLAYERSWORD) {
-						//球コライダ
-						if (o->mType == CCollider::ESPHERE) {
-							//敵（２）
-							if (o->mpParent->mTag == EENEMY2) {
-								//敵のコライダ
-								if (o->mTag == CCollider::EENEMY2COLLIDERATTACK) {
-									if (mAttackHit == true) {
-										if (CCollider::Collision(m, o)) {
-											//o->mpParent->Collision(o, m);
-
-												//特殊攻撃のゲージ増加
- 											//mSpAttack += 2;
-											break;
-										}
-									}
-								}
-							}
-						}
-					}
-
-			break;*/
+			
 		}
 	}
 		

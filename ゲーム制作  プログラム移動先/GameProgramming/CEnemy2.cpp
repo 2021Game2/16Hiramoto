@@ -308,11 +308,14 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 			
 		}
 		return;
-		if (o->mTag == CCollider::EENEMY2COLLIDERBODY) {
-			CVector adjust;
-			if (CCollider::CollisionSphere(o, m, &adjust)) {
-				//è’ìÀÇµÇ»Ç¢à íuÇ‹Ç≈ñﬂÇ∑
-				mPosition = mPosition + adjust;
+		if (o->mpParent->mTag == EENEMY2) {
+
+			if (o->mTag == CCollider::EENEMY2COLLIDERBODY) {
+				CVector adjust;
+				if (CCollider::CollisionSylinder(o, m, &adjust)) {
+					//è’ìÀÇµÇ»Ç¢à íuÇ‹Ç≈ñﬂÇ∑
+					mPosition = mPosition + adjust;
+				}
 			}
 		}
 	}

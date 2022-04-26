@@ -165,10 +165,10 @@ void CSceneGame::Init()
 		CVector(), CVector(0.5f, 0.5f, 0.5f));
 	/*
 	mpRock=new CRock(CVector(0.0f, 0.0f, -100.0f),
-		CVector(0.0f,180.0f,0.0f), CVector(0.5f, 0.5f, 0.5f));*/
-	
+		CVector(0.0f,180.0f,0.0f), CVector(0.5f, 0.5f, 0.5f));
+	*/
 	mpTree = new CTree(CVector(0.0f, 0.0f, 0.0f),
-		CVector(), CVector(0.5f, 0.5f, 0.5f));
+		CVector(), CVector(10.5f, 10.5f, 10.5f));
 	
 
 	float shadowColor[] = { 0.4f, 0.4f, 0.4f, 0.2f };  //âeÇÃêF

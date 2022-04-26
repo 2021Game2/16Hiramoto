@@ -25,9 +25,9 @@ public:
     CVector mCollisionEnemy;//プレイヤーと敵のコライダーの位置の差
 
 	CTexture mTexture;
-	int mSpaceCount1;//一回目の攻撃の総フレーム
-	int mSpaceCount2;//２回めの攻撃の総フレーム
-	int mSpaceCount3;//３回めの攻撃の総フレーム
+	bool mSpaceCount1;//1回目の攻撃のフラグ
+	bool mSpaceCount2;//２回目の攻撃のフラグ
+	bool mSpaceCount3;//３回目の攻撃のフラグ
 	static int mStamina;//スタミナの数値
 	int mDamageCount;//ダメージを受けた直後の無敵時間
 	float mJump;//ジャンプする時の初速度
