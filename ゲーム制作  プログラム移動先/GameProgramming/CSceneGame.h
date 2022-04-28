@@ -45,8 +45,14 @@ private:
 	CEnemySummon* mpEnemySummon2;//敵３の生成場所
 	CBoss* mpBoss;//ボス
 public:
-    CSound Bgm;
-	static int mVoiceSwitch;//BGM SEのオンオフ切り替え
+	int mBgmCount;
+
+    CSound mBgmStart;
+	CSound mBgmBattle;
+	CSound mBgmBossBattle;
+	CSound mBgmGameClear;
+	CSound mBgmGameOver;
+	static bool mVoiceSwitch;//BGM SEのオンオフ切り替え
 	static int mEnemy2Count;//今生成されている敵2の数
 	static int mEnemy3Count;//今生成されている敵3の数
 	static int mEnemy2CountStopper;//生成できる敵2の限度

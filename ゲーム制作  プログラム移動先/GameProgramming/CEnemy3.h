@@ -26,12 +26,13 @@ private:
 	int mFireCount;
 	int mEnemy3Fry;
 	CVector mCollisionEnemy;
-	CCollider mColSearch2;//サーチ用コライダ
 
 	int mEnemyDamage;
 
 	CCharacter* mpPlayer;//プレイヤーのポインタ
 public:
+
+	CCollider mColSearch2;//サーチ用コライダ
 	//モデルデータ
 	static CModel mModel;
 	//コライダ

@@ -142,16 +142,20 @@ public:
 	/*
 	サウンド再生（リピート）
 	*/
+
 	void Repeat()
 	{
-		if (mpSourceVoice)
-		{
-			Stop();
-			mBufinfo.LoopCount = XAUDIO2_LOOP_INFINITE;
-			HRESULT hr = mpSourceVoice->SubmitSourceBuffer(&mBufinfo, NULL);
-			if (FAILED(hr)) return;
-			mpSourceVoice->Start();
-		}
+			if (mpSourceVoice)
+			{
+
+				Stop();
+				mBufinfo.LoopCount = XAUDIO2_LOOP_INFINITE;
+				HRESULT hr = mpSourceVoice->SubmitSourceBuffer(&mBufinfo, NULL);
+				if (FAILED(hr)) return;
+				mpSourceVoice->Start();
+				
+			}
+		
 	}
 	/*
 	サウンド停止

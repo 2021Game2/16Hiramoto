@@ -227,12 +227,14 @@ void CEnemy2::Update() {
 	mPosition.mY -= 0.1f;
 	mEnemyVoice++;
 	if (mEnemyVoice>=180) {
-		if (CSceneGame::mVoiceSwitch == 1) {
+		if (CSceneGame::mVoiceSwitch == true) {
 			Enemy2Voice.Play();
 		}
 		mEnemyVoice = 0;
 	}
-	
+	if (mHp <= 0) {
+		mState = EDEATH;
+	}
 	CXCharacter::Update();
 }
 
@@ -268,7 +270,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 								mState = EDAMAGED;
 								if (mHp <= 0) {
 									mJump = JUMP;
-									mState = EDEATH;
+									
 							    }
 							}
 						}

@@ -51,6 +51,7 @@ CEnemy3::CEnemy3()
 	mpModel = &mModel;
     mCollider.mTag = CCollider::EENEMY3COLLIDERBODY;
 	mColSearch2.mTag = CCollider::EENEMY3ESEARCH2;//タグ設定
+	
 }
 
 //CEnemy(位置、回転、拡縮）
@@ -125,6 +126,10 @@ void CEnemy3::Update() {
 		}
 		if (mCount >= 120) {
 			mCount = 0;
+
+			if (mColSearch2.mRenderEnabled == false) {
+				//mMoveCount = 1;
+			}
 		}
 		break;
 		//移動（まっすぐ移動）
@@ -167,7 +172,7 @@ void CEnemy3::Update() {
 		break;
 		//移動４（右前に移動（元の位置に戻る）
 	case(4):
-		if (mCount <= 30) {
+		if (mCount < 30) {
 			mPosition = mPosition + CVector(1.5f, VELOCITY, 0.5f) * mMatrixRotate;
 		}
 		if (mCount >= 30) {
@@ -216,12 +221,15 @@ void CEnemy3::Update() {
 	}
 	mEnemy3Fry++;
 	if (mEnemy3Fry >= 300) {
-		if (CSceneGame::mVoiceSwitch == 1) {
+		if (CSceneGame::mVoiceSwitch == true) {
 			Enemy3Fry.Play();
 		}
 		mEnemy3Fry = 0;
 	}
 
+	if (mColSearch2.mRenderEnabled == true) {
+		mMoveCount = 0;
+	}
 
 
 }
@@ -242,7 +250,6 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 
 							if (mColSearch2.mRenderEnabled == true) {
 								mCount = 0;
-								mMoveCount = 1;
 								mColSearch2.mRenderEnabled = false;
 							}
 						}

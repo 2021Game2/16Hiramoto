@@ -14,7 +14,7 @@
 class CEnemy2 :public CXCharacter {
 private:
 	CVector mPoint;//目標地点
-	int mHp;//体力
+	
 	float mJump;
 	int mJump2;
 	CText mText;
@@ -37,6 +37,7 @@ private:
 	float CurveCount;
 	CCharacter* mpPlayer;//プレイヤーのポインタ
 public:
+	int mHp;//体力
 	bool mEnemy2AttackHit;
 	//モデルデータ
 	static CModel mModel;

@@ -33,11 +33,11 @@ private:
 	CVector mCollisionEnemy;
 	int mEnemyDamage;
 
-	CCollider mColSearch;//サーチ用コライダ
 
 	CCharacter* mpPlayer;//プレイヤーのポインタ
 public:
 	
+	CCollider mColSearch;//サーチ用コライダ
 	 bool mBossAttackHit;
 	static int mBossAttackCount;
 	//モデルデータ

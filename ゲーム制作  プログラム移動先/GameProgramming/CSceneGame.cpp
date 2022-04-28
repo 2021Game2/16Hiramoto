@@ -19,16 +19,20 @@
 #define ENEMY2MINCOUNT 4 //敵２を再生成させるときの敵２の数の下限
 #define ENEMY3COUNT 5//一度に出せる敵３の数
 #define ENEMY3MINCOUNT 4 //敵３を再生成させるときの敵３の数の下限
-#define BGM "SE\\BGM.wav" //BGM
-#define ATTACK1 "SE\\一撃目.wav" //プレイヤーの攻撃SE１
-#define ATTACK2 "SE\\二撃目.wav" //プレイヤーの攻撃SE２
-#define ATTACK3 "SE\\三撃目.wav" //プレイヤーの攻撃SE３
-#define ATTACK4 "SE\\ジャンプ攻撃.wav" //プレイヤーのジャンプ攻撃SE
-#define DAMAGE "SE\\ダメージ.wav"  //プレイヤーダメージ時のSE
-#define FRY "SE\\ハチの羽ばたき.wav"   //敵３の移動中SE
-#define VOICE "SE\\ボス鳴き声.wav"
-#define VOICE2 "SE\\ボスの足音.wav"
-#define MOVE "SE\\サソリ鳴き声.wav"
+#define BGMSTART "BGM\\BGMSTART.wav" //BGM
+#define BGMBATTLE "BGM\\BGMBATTLE.wav"
+#define BGMBOSSBATTLE "BGM\\BGMBOSSBATTLE.wav"
+#define BGMGAMECLEAR "BGM\\BGMGAMECLEAR.wav"
+#define BGMGAMEOVER "BGM\\BGMGAMEOVER.wav"
+#define ATTACK1 "SE\\PlayerAttack1.wav" //プレイヤーの攻撃SE１
+#define ATTACK2 "SE\\PlayerAttack2.wav" //プレイヤーの攻撃SE２
+#define ATTACK3 "SE\\PlayerAttack3.wav" //プレイヤーの攻撃SE３
+#define ATTACKSP "SE\\PlayerAttacksp.wav" //プレイヤーのジャンプ攻撃SE
+#define DAMAGE "SE\\Damage.wav"  //プレイヤーダメージ時のSE
+#define FRY "SE\\Beefly.wav"   //敵３の移動中SE
+#define BOSSVOICE "SE\\BossVoice.wav"
+#define BOSSWORK "SE\\BossWork.wav"
+#define ENEMYVOICE "SE\\ScopionVoice.wav"
 #define FONT "FontG.png"
 #define SCOPION "3DModel\\scorpid\\scorpid-monster-X-animated.X"
 #define BOSS "3DModel\\Boss\\monster-animated-character-X.X"
@@ -41,13 +45,13 @@ int CSceneGame::mEnemy2Count = 0;
 int CSceneGame::mEnemy2CountStopper = ENEMY2COUNT;
 int CSceneGame::mEnemy3Count = 0;
 int CSceneGame::mEnemy3CountStopper = ENEMY3COUNT;
-int CSceneGame::mVoiceSwitch =0 ;//0：音声なし １：音声あり
+bool CSceneGame::mVoiceSwitch =false ;//false：音声なし true：音声あり
 
-CSound FirstAttack;
-CSound SecondAttack;
-CSound ThirdAttack;
-CSound JumpAttack;
-CSound Damage;
+CSound PlayerFirstAttack;
+CSound PlayerSecondAttack;
+CSound PlayerThirdAttack;
+CSound PlayerJumpAttack;
+CSound PlayerDamage;
 CSound Enemy3Fry;
 CSound BossVoice;
 CSound BossMove;
@@ -58,6 +62,7 @@ CSceneGame::CSceneGame()
 	,mTimeMinute(0)
 	,mSpawn(0)
     , mSpawn2(0)
+	,mBgmCount(1)
 {
 
 }
@@ -73,23 +78,23 @@ void CSceneGame::Init()
 
 {
 	//サウンド(wav)ファイルの読み込み
-
 	mScene = EGAME;
-	Bgm.Load(BGM);
-	if (mVoiceSwitch == 1) {
-
-	  Bgm.Repeat();
-	}
-	FirstAttack.Load(ATTACK1);
-	SecondAttack.Load(ATTACK2);
-	ThirdAttack.Load(ATTACK3);
-	JumpAttack.Load(ATTACK4);
-	Damage.Load(DAMAGE);
+	//BGM,SEの読み込み
+	PlayerFirstAttack.Load(ATTACK1);
+	PlayerSecondAttack.Load(ATTACK2);
+	PlayerThirdAttack.Load(ATTACK3);
+	PlayerJumpAttack.Load(ATTACKSP);
+	PlayerDamage.Load(DAMAGE);
 	Enemy3Fry.Load(FRY);
-	BossVoice.Load(VOICE);
-	BossMove.Load(MOVE);
-	Enemy2Voice.Load(VOICE2);
-   
+	BossVoice.Load(BOSSVOICE);
+	BossMove.Load(BOSSWORK);
+	Enemy2Voice.Load(ENEMYVOICE);
+	mBgmStart.Load(BGMSTART);
+	mBgmBattle.Load(BGMBATTLE);
+	mBgmBossBattle.Load(BGMBOSSBATTLE);
+	mBgmGameClear.Load(BGMGAMECLEAR);
+	mBgmGameOver.Load(BGMGAMEOVER);
+	
 	//テキストフォントの読み込みと設定
 	mFont.LoadTexture(FONT, 1, 4096 / 64);
 	
@@ -170,7 +175,6 @@ void CSceneGame::Init()
 	mpTree = new CTree(CVector(0.0f, 0.0f, 0.0f),
 		CVector(), CVector(10.5f, 10.5f, 10.5f));
 	
-
 	float shadowColor[] = { 0.4f, 0.4f, 0.4f, 0.2f };  //影の色
 	float lightPos[] = { 50.0f, 160.0f, 50.0f };  //光源の位置
 	mShadowMap.Init(TEXWIDTH, TEXHEIGHT, ShadowRender, shadowColor, lightPos);//影の初期化
@@ -178,6 +182,27 @@ void CSceneGame::Init()
 
 
 void CSceneGame::Update() {
+	if (mVoiceSwitch == true) {
+		switch (mBgmCount) {
+		case 1:
+			mBgmStart.Repeat();
+			break;
+		case 2:
+			mBgmBattle.Repeat();
+			break;
+		case 3:
+			mBgmBossBattle.Repeat();
+			break;
+		case 4:
+			mBgmGameClear.Repeat();
+			break;
+		case 5:
+			mBgmGameOver.Repeat();
+			break;
+		}
+	}
+
+
 	mTimeCount++;
 	if (mTimeCount % 60 == 0) {
 		mTimeSecond++;
@@ -229,6 +254,35 @@ void CSceneGame::Update() {
 	if (CKey::Push(VK_ESCAPE)) {
 		exit(0);
 	}
+
+	if (mpEnemy3->mColSearch2.mEnabled == false || mpEnemy2->mHp==0) {
+		mBgmCount = 2;
+	}
+	if (mpBoss->mColSearch.mEnabled == false) {
+		mBgmCount = 3;
+	}
+	if (mpBoss->mHp <= 0) {
+		mBgmCount = 4;
+	}
+	if (mPlayer.mHp <= 0) {
+		mBgmCount = 5;
+	}
+
+	if (mBgmCount != 1) {
+		mBgmStart.Stop();
+	}
+	if (mBgmCount != 2) {
+		mBgmBattle.Stop();
+	}
+	if (mBgmCount != 3) {
+		mBgmBossBattle.Stop();
+	}
+	if (mBgmCount != 4) {
+		mBgmGameClear.Stop();
+	}
+	if (mBgmCount != 5) {
+		mBgmGameOver.Stop();
+	}
 	//更新
 	CTaskManager::Get()->Update();
 
@@ -257,11 +311,11 @@ void CSceneGame::Render() {
 		mFont.DrawString(buf, 250, 500, 8, 16);
 		sprintf(buf, "SPECIAL:%10d", CXPlayer::mSpAttack);
 		mFont.DrawString(buf, 20, 100, 8, 16);
-		sprintf(buf, "PositionX:%f", mPlayer.mPosition.mX);
+		sprintf(buf, "POSITIONX:%f", mPlayer.mPosition.mX);
 		mFont.DrawString(buf, 20, 200, 8, 16);
-		sprintf(buf, "PositionY:%f", mPlayer.mPosition.mY);
+		sprintf(buf, "POSITIONY:%f", mPlayer.mPosition.mY);
 		mFont.DrawString(buf, 20, 250, 8, 16);
-		sprintf(buf, "PositionZ:%f", mPlayer.mPosition.mZ);
+		sprintf(buf, "POSITIONZ:%f", mPlayer.mPosition.mZ);
 		mFont.DrawString(buf, 20, 300, 8, 16);
 	}
 	else if (CBoss::mHp <= 0) {

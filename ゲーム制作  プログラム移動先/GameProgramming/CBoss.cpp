@@ -120,7 +120,7 @@ void CBoss::Idle() {
 void CBoss::AutoMove() {
 	//歩く
 
-	if (CSceneGame::mVoiceSwitch == 1) {
+	if (CSceneGame::mVoiceSwitch == true) {
 		BossMove.Play();
 	}
 	//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
@@ -251,7 +251,7 @@ void CBoss::Update() {
 	case(5):
 		if (mAnimationFrame == 30) {
 			mBossAttackHit = true;
-			if (CSceneGame::mVoiceSwitch == 1) {
+			if (CSceneGame::mVoiceSwitch == true) {
 				BossVoice.Play();
 			}
 		}
@@ -264,7 +264,7 @@ void CBoss::Update() {
 	case(6):
 		if (mAnimationFrame == 30) {
 			mBossAttackHit = true;
-			if (CSceneGame::mVoiceSwitch == 1) {
+			if (CSceneGame::mVoiceSwitch == true) {
 			  BossVoice.Play();
 			 }
 		}

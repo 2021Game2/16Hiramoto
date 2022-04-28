@@ -30,11 +30,11 @@ int CXPlayer::mStamina = STAMINA_MAX;
 int CXPlayer::mAttackCount = 0;
 int CXPlayer::mHp = HP_MAX;
 
-extern CSound FirstAttack;
-extern CSound SecondAttack;
-extern CSound ThirdAttack;
-extern CSound JumpAttack;
-extern CSound Damage;
+extern CSound PlayerFirstAttack;
+extern CSound PlayerSecondAttack;
+extern CSound PlayerThirdAttack;
+extern CSound PlayerJumpAttack;
+extern CSound PlayerDamage;
 
 CXPlayer* CXPlayer::mpPlayerInstance;
 //プレイヤーのポインタを返すことで、座標などが参照できるようになる
@@ -157,8 +157,8 @@ void CXPlayer::Update()
 		break;
 	case EDAMAGED://ダメージ
 
-		if (CSceneGame::mVoiceSwitch == 1) {
-			Damage.Play();
+		if (CSceneGame::mVoiceSwitch == true) {
+			PlayerDamage.Play();
 		}
 		ChangeAnimation(4, false, 10);
 		break;
@@ -350,8 +350,8 @@ void CXPlayer::Update()
 					 if (CKey::Once(' '))
 					 {
 
-						 if (CSceneGame::mVoiceSwitch == 1) {
-							 FirstAttack.Play();
+						 if (CSceneGame::mVoiceSwitch == true) {
+							 PlayerFirstAttack.Play();
 						 }
 						 mState = EATTACK1;
 						 mSpaceCount1 = false;//１回目の攻撃のフラグ
@@ -368,8 +368,8 @@ void CXPlayer::Update()
 				 if (mAttackCount <= 0) {
 					 if (CKey::Once(' ')) {
 
-						 if (CSceneGame::mVoiceSwitch == 1) {
-							 SecondAttack.Play();
+						 if (CSceneGame::mVoiceSwitch == true) {
+							 PlayerSecondAttack.Play();
 						 }
 						 mState = EATTACK2;
 						 mSpaceCount2 = false;//２回目の攻撃のフラグ
@@ -385,8 +385,8 @@ void CXPlayer::Update()
 				 if (mAttackCount <= 0) {
 					 if (CKey::Once(' ')) {
 
-						 if (CSceneGame::mVoiceSwitch == 1) {
-							 ThirdAttack.Play();
+						 if (CSceneGame::mVoiceSwitch == true) {
+							 PlayerThirdAttack.Play();
 						 }
 						 mState = EATTACK3;
 						 mAnimationCount = 50;//0になるまでアニメーションが変わらない
@@ -403,8 +403,8 @@ void CXPlayer::Update()
 			 if (CKey::Once('F')) {
 			     if (mAttackCount <= 0) {
 
-					 if (CSceneGame::mVoiceSwitch == 1) {
-						 JumpAttack.Play();
+					 if (CSceneGame::mVoiceSwitch == true) {
+						 PlayerJumpAttack.Play();
 					 }
 					 mState = EATTACKSP;
 					 mJump = JUMP;//ジャンプ力を代入
