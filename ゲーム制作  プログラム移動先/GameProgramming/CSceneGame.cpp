@@ -168,10 +168,10 @@ void CSceneGame::Init()
 
 	mpEnemySummon2 = new CEnemySummon(CVector(6.0f, 8.0f, 14.0f),
 		CVector(), CVector(0.5f, 0.5f, 0.5f));
-	/*
+	
 	mpRock=new CRock(CVector(0.0f, 0.0f, -100.0f),
 		CVector(0.0f,180.0f,0.0f), CVector(0.5f, 0.5f, 0.5f));
-	*/
+	
 	mpTree = new CTree(CVector(0.0f, 0.0f, 0.0f),
 		CVector(), CVector(10.5f, 10.5f, 10.5f));
 	

@@ -31,6 +31,7 @@ void CTaskManager::Add(CTask *addTask)
 {
 	//mHead‚ÌŽŸ‚©‚çŒŸõ
 	CTask *task = mHead.mpNext;
+	
 	while (addTask->mPriority < task->mPriority)
 	{
 		if (task->mpNext == nullptr) {
