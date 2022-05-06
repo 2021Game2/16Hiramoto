@@ -16,7 +16,7 @@ private:
 
 	CTexture mImageGauge; //ゲージ画像
 public:
-
+	CVector mPositionZ;
 	 bool mAttackHit;
 	//コライダの宣言
 	CCollider mColSphereSword;	//剣

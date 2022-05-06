@@ -525,7 +525,6 @@ void CXPlayer::Update()
 			mPosition = mPosition + mCollisionEnemy * mColliderCount;
 			
 		 }
-
 	    //注視点設定
 	    Camera.SetTarget(mPosition);
 	    CXCharacter::Update();
@@ -548,11 +547,37 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 				if (o->mType == CCollider::ETRIANGLE) {
 					//親が三角コライダ
 
+		            //左向き（X軸）のベクトルを求める
+					CVector vx = CVector(1.0f, 0.0f, 0.0f) * mMatrixRotate;
+					//上向き（Y軸）のベクトルを求める
+					CVector vy = CVector(0.0f, 1.0f, 0.0f) * mMatrixRotate;
+					//前方向（Z軸）のベクトルを求める
+					CVector vz = CVector(0.0f, 0.0f, 1.0f) * mMatrixRotate;
+					vz.Normalize();
+
 						CVector adjust;//調整用ベクトル
 						if (CCollider::CollisionTriangleSphere(o, m, &adjust)) {
-							if (o->mpParent->mTag == EMAP) {
+							
 
 								if (mState != EESCAPE) {
+									/*
+									//Xベクトル＝プレイヤーの前方向ベクトルとCColliderMeshの法線の外積
+									CVector mVectorX=vz.Cross(図形の法線);
+									//Zベクトル＝XベクトルとCColliderMeshの法線の外積
+									CVector mVectorZ = mVectorX.Cross(図形の法線);
+									//YベクトルはCColliderMeshの法線と同じ
+									CVector mVectorY = 図形の法線;
+									//X軸の回転値の計算
+									//Z軸とY座標でアークサインをとって角度を求める
+									//アークサイン（
+									asin();
+									//求めた角度をラジアンに治す
+									度数=角度*(180.0f / M_PI);
+									*/
+
+									//Y軸の回転値の計算
+									//ZベクトルのX座標とZ座標でタンジェントを取る
+									//タンジェント（高さ/底辺）
 									mGravity = 0;
 									mJump = 0;
 									//位置の更新（mPosition+adjust)
@@ -560,7 +585,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 									//行列の更新
 									CTransform::Update();
 								}
-							}
+							
 
 						}
 

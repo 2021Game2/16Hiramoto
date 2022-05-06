@@ -309,7 +309,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 			
 			
 		}
-		return;
+		
 		if (o->mpParent->mTag == EENEMY2) {
 
 			if (o->mTag == CCollider::EENEMY2COLLIDERBODY) {
@@ -320,6 +320,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 				}
 			}
 		}
+		return;
 	}
 	
 }

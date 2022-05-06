@@ -227,10 +227,7 @@ void CEnemy3::Update() {
 		mEnemy3Fry = 0;
 	}
 
-	if (mColSearch2.mRenderEnabled == true) {
-		mMoveCount = 0;
-	}
-
+	
 
 }
 //Collision(コライダ１，コライダ２，）
@@ -250,6 +247,9 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 
 							if (mColSearch2.mRenderEnabled == true) {
 								mCount = 0;
+								if (mMoveCount == 0) {
+									mMoveCount = 1;
+								}
 								mColSearch2.mRenderEnabled = false;
 							}
 						}
@@ -281,6 +281,28 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 					}
 				}
 
+			}
+		}
+
+		if (o->mpParent->mTag == EENEMY2) {
+
+			if (o->mTag == CCollider::EENEMY2COLLIDERBODY) {
+				CVector adjust;
+				if (CCollider::CollisionSylinder(o, m, &adjust)) {
+					//衝突しない位置まで戻す
+					mPosition = mPosition + adjust;
+				}
+			}
+		}
+
+		if (o->mpParent->mTag == EENEMY3) {
+
+			if (o->mTag == CCollider::EENEMY3COLLIDERBODY) {
+				CVector adjust;
+				if (CCollider::CollisionSylinder(o, m, &adjust)) {
+					//衝突しない位置まで戻す
+					mPosition = mPosition + adjust;
+				}
 			}
 		}
 		if (o->mType == CCollider::ETRIANGLE) {

@@ -70,6 +70,7 @@ public:
 	//retrun:true（衝突している）false(衝突していない)
 	//調整値:衝突しない位置まで戻す値
 	static bool CollisionTriangleSphere(CCollider *triangle, CCollider *sphere, CVector *adjust);
+	
 	static bool CollisionSylinder(CCollider* m, CCollider* o, CVector* adjust);
 	//CollisionSphere(球コライダ、球コライダ、調整値)
 	static bool CollisionSphere(CCollider* m, CCollider* o, CVector* adjust);

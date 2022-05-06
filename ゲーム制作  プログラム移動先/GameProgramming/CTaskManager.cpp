@@ -47,8 +47,8 @@ void CTaskManager::Add(CTask *addTask)
 	while(addTask->mPriority < task->mPriority)
 	{
 		task = task->mpNext; //ŽŸ‚Ö
-	}*/
-
+	}
+	*/
 	//addTask‚ÌŽŸ‚ðtask
 	addTask->mpNext = task;
 	//addTask‚Ì‘O‚ðtask‚Ì‘O‚É

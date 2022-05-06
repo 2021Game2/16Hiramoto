@@ -38,6 +38,15 @@ void CRock::Collision(CCollider* m, CCollider* o) {
 
 }
 void CRock::Update() {
+
+	//左向き（X軸）のベクトルを求める
+	CVector vx = CVector(1.0f, 0.0f, 0.0f) * mMatrixRotate;
+	//上向き（Y軸）のベクトルを求める
+	CVector vy = CVector(0.0f, 1.0f, 0.0f) * mMatrixRotate;
+	//前方向（Z軸）のベクトルを求める
+	CVector vz = CVector(0.0f, 0.0f, 1.0f) * mMatrixRotate;
+
+
 	//CCharacterの更新
 	CTransform::Update();
 }

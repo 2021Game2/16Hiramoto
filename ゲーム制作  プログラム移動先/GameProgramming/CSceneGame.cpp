@@ -15,9 +15,9 @@
 #include"CItem.h"
 #include"CRock.h"
 #include"CSound.h"
-#define ENEMY2COUNT 5 //ˆê“x‚Éo‚¹‚é“G‚Q‚Ì”
+#define ENEMY2COUNT 1 //ˆê“x‚Éo‚¹‚é“G‚Q‚Ì”
 #define ENEMY2MINCOUNT 4 //“G‚Q‚ðÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚Q‚Ì”‚Ì‰ºŒÀ
-#define ENEMY3COUNT 5//ˆê“x‚Éo‚¹‚é“G‚R‚Ì”
+#define ENEMY3COUNT 1//ˆê“x‚Éo‚¹‚é“G‚R‚Ì”
 #define ENEMY3MINCOUNT 4 //“G‚R‚ðÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚R‚Ì”‚Ì‰ºŒÀ
 #define BGMSTART "BGM\\BGMSTART.wav" //BGM
 #define BGMBATTLE "BGM\\BGMBATTLE.wav"
