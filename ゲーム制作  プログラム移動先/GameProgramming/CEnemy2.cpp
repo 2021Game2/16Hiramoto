@@ -21,16 +21,18 @@ CEnemy2::CEnemy2()
 	, mColSphereBody(this,&mMatrix,  CVector(0.0f,1.0f,0.0f),2.0f)
 	,mHp(HP)
 	,mJump(0.0f)
-	,mJump2(0)
+	
 	, mEnemyDamage(60)
 	,mMove(0)
-	,mMove2(0)
+	,mMoveCount(false)
 	, mColliderCount(0.0f)
 	,mTime(0.0f)
 	,CurveCount(0.0f)
 	,mEnemyVoice(0)
 	, mDamageCount(0)
 	,mEnemy2AttackHit(false)
+	,mEnemyLevel(0)
+	,mEnemyHpPercent(1.0f)
 {
 	mTag = EENEMY2;
 	mColSphereRight.mTag= CCollider::EENEMY2COLLIDERATTACK;
@@ -53,6 +55,7 @@ CEnemy2::CEnemy2(const CVector& position, const CVector& rotation, const CVector
 	mPriority = 1;
 	CTaskManager::Get()->Remove(this);//削除して
 	CTaskManager::Get()->Add(this);//追加する
+	mHp = mHp * mEnemyHpPercent;
 }
 
 void CEnemy2::Init(CModelX* model)
@@ -66,7 +69,7 @@ void CEnemy2::Init(CModelX* model)
 }
 //待機処理
 void CEnemy2::Idle() {
-	//60溜まるまで待機のアニメーション
+	    //60溜まるまで待機のアニメーション
 		ChangeAnimation(8, true, 60);
 		mMove++;
 		if (mMove >= 300) {
@@ -78,7 +81,9 @@ void CEnemy2::Idle() {
 		}
 		//60溜まる前にアニメーションが終わったら移動処理に移行
 	    else if (mAnimationFrame >= mAnimationFrameSize) {
-            mState = EAUTOMOVE;
+			if (mMoveCount == true) {
+             mState = EAUTOMOVE;
+			}
 		}
 }		
 //移動処理
@@ -189,6 +194,9 @@ void CEnemy2::Death() {
 
 //更新処理
 void CEnemy2::Update() {
+	mEnemyLevel = rand() % 10 + 1;
+	mEnemyHpPercent += mEnemyLevel / 10;
+	
 	mEffectCount--;
 	//mpPlayer = mpPointPlayer;
 	//アニメーションの管理
@@ -232,9 +240,6 @@ void CEnemy2::Update() {
 		}
 		mEnemyVoice = 0;
 	}
-	if (mHp <= 0) {
-		mState = EDEATH;
-	}
 	CXCharacter::Update();
 }
 
@@ -260,18 +265,23 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 								//プレイヤーのジャンプ攻撃必要ポイント増加
 								((CXPlayer*)(o->mpParent))->mSpAttack++;
 								mEffectCount = 0;
-								//ヒットバック付与
+								//ヒットバック付与 
 								mColliderCount = 5;
 								mCollisionEnemy = mPosition - o->mpParent->mPosition;
 								//HPが０のとき以外は前後左右に吹っ飛ぶ
 								mCollisionEnemy.mY = 0;
 								mCollisionEnemy = mCollisionEnemy.Normalize();
 							    //ダメージ処理に移行
-								mState = EDAMAGED;
-								if (mHp <= 0) {
+								if (mHp > 0) {
+
+								 mState = EDAMAGED;
+
+								}
+								else if (mHp <= 0) {
 									mJump = JUMP;
-									
-							    }
+									mState = EDEATH;
+
+								}
 							}
 						}
 					}
@@ -333,6 +343,6 @@ void CEnemy2::TaskCollision() {
 	//衝突処理を実行
 	CCollisionManager::Get()->Collision(&mColSphereRight, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSphereLeft, COLLISIONRANGE);
-	CCollisionManager::Get()->Collision(&mColSphereBody, COLLISIONRANGE);
+	CCollisionManager::Get()->Collision(&mColSphereBody, COLLISIONRANGEFIELD);
 	
 }

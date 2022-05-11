@@ -15,19 +15,16 @@ class CEnemy2 :public CXCharacter {
 private:
 	CVector mPoint;//目標地点
 	
-	float mJump;
-	int mJump2;
-	CText mText;
-	int mMove;
-	int mMove2;
-	int mDamageCount;
-	int mEffectCount;
-	float mColliderCount;
+	float mJump;//ダメージを受けたときに飛び上がる
+	int mMove;//待機ー＞攻撃に移るまでの数
+	int mDamageCount;//無敵時間
+	int mEffectCount;//エフェクトを表示させる時間
+	float mColliderCount;//ヒットバックさせる量
 	float mTime;//ジャンプする時の時間を計測
 	int mEnemy2StopCount;//プレイヤーのESTOPPERに当たっている間増加
-	CCollider mColSphereRight;
-	CCollider mColSphereLeft;
-	CCollider mColSphereBody;
+	CCollider mColSphereRight;//右ハサミのコライダ
+	CCollider mColSphereLeft;//左ハサミのコライダ
+	CCollider mColSphereBody;//体のコライダ
 	CVector mCollisionEnemy;
 	float mPlayerMarkingX;//プレイヤーと敵のX座標の差
 	float mPlayerMarkingZ;//プレイヤーと敵のZ座標の差
@@ -37,6 +34,9 @@ private:
 	float CurveCount;
 	CCharacter* mpPlayer;//プレイヤーのポインタ
 public:
+	unsigned int mEnemyLevel;
+	float mEnemyHpPercent;
+	bool mMoveCount;
 	int mHp;//体力
 	bool mEnemy2AttackHit;
 	//モデルデータ

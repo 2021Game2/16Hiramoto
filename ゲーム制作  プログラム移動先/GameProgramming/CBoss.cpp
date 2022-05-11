@@ -42,7 +42,7 @@ CBoss::CBoss()
 	, mTime(0.0f)
 	, mBossDamageCount(0)
 	, mBossAttackHit(false)
-	
+	,mColSearchCount(false)
 {
 
 	mGravity = 0.20f;
@@ -309,7 +309,7 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 						//衝突しているとき
 						if (CCollider::Collision(m, o)) {
 							//ポインタをプレイヤーに設定
-
+							mColSearchCount = true;
 							if (mColSearch.mRenderEnabled == true) {
 								
 								mColSearch.mRenderEnabled = false;
@@ -336,7 +336,7 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 								{
 									if (mHp > 0) {
 										//30％減るごとにのけぞる
-										if (mHp % 30 == 0) {
+										if (mHp / 30 == 0) {
 											mColliderCount = 10;
 											mCollisionEnemy = mPosition - o->mpParent->mPosition;
 											mCollisionEnemy.mY = 0;
@@ -400,6 +400,6 @@ void CBoss::TaskCollision() {
 
 	CCollisionManager::Get()->Collision(&mColSphereRightFront, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSphereLeftFront, COLLISIONRANGE);
-	CCollisionManager::Get()->Collision(&mColSphereHead, COLLISIONRANGE);
+	CCollisionManager::Get()->Collision(&mColSphereHead, COLLISIONRANGEFIELD);
 	CCollisionManager::Get()->Collision(&mColSearch, COLLISIONRANGE);
 }

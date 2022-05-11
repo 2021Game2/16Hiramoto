@@ -15,27 +15,27 @@
 #include"CItem.h"
 #include"CRock.h"
 #include"CSound.h"
-#define ENEMY2COUNT 1 //ˆê“x‚Éo‚¹‚é“G‚Q‚Ì”
+#define ENEMY2COUNT 3 //ˆê“x‚Éo‚¹‚é“G‚Q‚Ì”
 #define ENEMY2MINCOUNT 4 //“G‚Q‚ðÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚Q‚Ì”‚Ì‰ºŒÀ
 #define ENEMY3COUNT 1//ˆê“x‚Éo‚¹‚é“G‚R‚Ì”
 #define ENEMY3MINCOUNT 4 //“G‚R‚ðÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚R‚Ì”‚Ì‰ºŒÀ
 #define BGMSTART "BGM\\BGMSTART.wav" //BGM
-#define BGMBATTLE "BGM\\BGMBATTLE.wav"
-#define BGMBOSSBATTLE "BGM\\BGMBOSSBATTLE.wav"
-#define BGMGAMECLEAR "BGM\\BGMGAMECLEAR.wav"
-#define BGMGAMEOVER "BGM\\BGMGAMEOVER.wav"
+#define BGMBATTLE "BGM\\BGMBATTLE.wav" //ƒoƒgƒ‹’†‚ÌBGM
+#define BGMBOSSBATTLE "BGM\\BGMBOSSBATTLE.wav" // ƒ{ƒX‚Æí‚Á‚Ä‚¢‚é‚Æ‚«‚ÌBGM
+#define BGMGAMECLEAR "BGM\\BGMGAMECLEAR.wav" //ƒQ[ƒ€ƒNƒŠƒAŽž‚ÌBGM
+#define BGMGAMEOVER "BGM\\BGMGAMEOVER.wav" //ƒQ[ƒ€ƒI[ƒo[Žž‚ÌBGM
 #define ATTACK1 "SE\\PlayerAttack1.wav" //ƒvƒŒƒCƒ„[‚ÌUŒ‚SE‚P
 #define ATTACK2 "SE\\PlayerAttack2.wav" //ƒvƒŒƒCƒ„[‚ÌUŒ‚SE‚Q
 #define ATTACK3 "SE\\PlayerAttack3.wav" //ƒvƒŒƒCƒ„[‚ÌUŒ‚SE‚R
 #define ATTACKSP "SE\\PlayerAttacksp.wav" //ƒvƒŒƒCƒ„[‚ÌƒWƒƒƒ“ƒvUŒ‚SE
 #define DAMAGE "SE\\Damage.wav"  //ƒvƒŒƒCƒ„[ƒ_ƒ[ƒWŽž‚ÌSE
-#define FRY "SE\\Beefly.wav"   //“G‚R‚ÌˆÚ“®’†SE
-#define BOSSVOICE "SE\\BossVoice.wav"
-#define BOSSWORK "SE\\BossWork.wav"
-#define ENEMYVOICE "SE\\ScopionVoice.wav"
-#define FONT "FontG.png"
-#define SCOPION "3DModel\\scorpid\\scorpid-monster-X-animated.X"
-#define BOSS "3DModel\\Boss\\monster-animated-character-X.X"
+#define FRY "SE\\Beefly.wav"  //“G‚R‚ÌˆÚ“®’†SE
+#define BOSSVOICE "SE\\BossVoice.wav"//ƒ{ƒX‚Ì–Â‚«º
+#define BOSSWORK "SE\\BossWork.wav" //ƒ{ƒX‚Ì‘«‰¹
+#define ENEMYVOICE "SE\\ScopionVoice.wav" //“G‚Q‚Ì–Â‚«º
+#define FONT "FontG.png"  //ƒQ[ƒ€‚ÉŽg‚í‚ê‚Ä‚¢‚é•¶Žš‚Ìƒf[ƒ^
+#define SCOPION "3DModel\\scorpid\\scorpid-monster-X-animated.X" //“G‚Q‚ÌXƒtƒ@ƒCƒ‹
+#define BOSS "3DModel\\Boss\\monster-animated-character-X.X" // ƒ{ƒX‚ÌXƒtƒ@ƒCƒ‹
 #define KNIGHT "3DModel\\knight\\knight_low.x"
 #define TEXWIDTH  8192  //ƒeƒNƒXƒ`ƒƒ•
 #define TEXHEIGHT  6144  //ƒeƒNƒXƒ`ƒƒ‚‚³
@@ -45,7 +45,7 @@ int CSceneGame::mEnemy2Count = 0;
 int CSceneGame::mEnemy2CountStopper = ENEMY2COUNT;
 int CSceneGame::mEnemy3Count = 0;
 int CSceneGame::mEnemy3CountStopper = ENEMY3COUNT;
-bool CSceneGame::mVoiceSwitch =false ;//falseF‰¹º‚È‚µ trueF‰¹º‚ ‚è
+bool CSceneGame::mVoiceSwitch =false;//falseF‰¹º‚È‚µ trueF‰¹º‚ ‚è
 
 CSound PlayerFirstAttack;
 CSound PlayerSecondAttack;
@@ -63,6 +63,7 @@ CSceneGame::CSceneGame()
 	,mSpawn(0)
     , mSpawn2(0)
 	,mBgmCount(1)
+	,mBgmCountCheck(false)
 {
 
 }
@@ -160,7 +161,7 @@ void CSceneGame::Init()
 	mpBoss->Init(&CRes::sBoss);
 	//ƒ{ƒX‚Ì”z’u
 	mpBoss->mPosition = CVector(3.0f, 10.0f, 100.0f);
-	
+	 
 	new CItem(CVector(-20.0f, 2.0f, -10.0f) ,
 		CVector(), CVector(1.5f, 1.5f, 1.5f));
 	mpEnemySummon = new CEnemySummon(CVector(-36.0f, 1.0f,-59.0f),
@@ -178,31 +179,53 @@ void CSceneGame::Init()
 	float shadowColor[] = { 0.4f, 0.4f, 0.4f, 0.2f };  //‰e‚ÌF
 	float lightPos[] = { 50.0f, 160.0f, 50.0f };  //ŒõŒ¹‚ÌˆÊ’u
 	mShadowMap.Init(TEXWIDTH, TEXHEIGHT, ShadowRender, shadowColor, lightPos);//‰e‚Ì‰Šú‰»
+	
+
 }
 
 
 void CSceneGame::Update() {
+	
 	if (mVoiceSwitch == true) {
 		switch (mBgmCount) {
 		case 1:
-			mBgmStart.Repeat();
-			break;
+			if (mBgmCountCheck == false) {
+				mBgmCountCheck = true;
+				mBgmStart.Play();
+               
+			}
+			 break;
 		case 2:
-			mBgmBattle.Repeat();
-			break;
+			if (mBgmCountCheck == false) {
+				mBgmCountCheck = true;
+				mBgmBattle.Play();
+
+			}
+			   break;
 		case 3:
-			mBgmBossBattle.Repeat();
+			if (mBgmCountCheck == false) {
+				mBgmCountCheck = true;
+				mBgmBossBattle.Play();
+			}
+
 			break;
 		case 4:
-			mBgmGameClear.Repeat();
-			break;
+			if (mBgmCountCheck == false) {
+				mBgmCountCheck = true;
+				mBgmGameClear.Play();
+
+			}
+
+			   break;
 		case 5:
-			mBgmGameOver.Repeat();
-			break;
+			if (mBgmCountCheck == false) {
+				mBgmCountCheck = true;
+				mBgmGameOver.Play();
+			  
+			}
+            break;
 		}
 	}
-
-
 	mTimeCount++;
 	if (mTimeCount % 60 == 0) {
 		mTimeSecond++;
@@ -256,15 +279,25 @@ void CSceneGame::Update() {
 	}
 
 	if (mpEnemy3->mColSearch2.mEnabled == false || mpEnemy2->mHp==0) {
+		
+		mBgmCountCheck = false;
 		mBgmCount = 2;
+		mBgmBattle.Repeat();
+		
 	}
-	if (mpBoss->mColSearch.mEnabled == false) {
+	if (mpBoss->mColSearchCount == true) {
+	
+		mBgmCountCheck = false;
 		mBgmCount = 3;
+		mBgmBossBattle.Repeat();
 	}
 	if (mpBoss->mHp <= 0) {
+		mBgmCountCheck = false;
 		mBgmCount = 4;
+		
 	}
 	if (mPlayer.mHp <= 0) {
+		mBgmCountCheck = false;
 		mBgmCount = 5;
 	}
 

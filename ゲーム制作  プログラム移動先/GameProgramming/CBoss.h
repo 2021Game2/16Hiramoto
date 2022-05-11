@@ -38,6 +38,7 @@ private:
 public:
 	
 	CCollider mColSearch;//サーチ用コライダ
+	bool mColSearchCount;
 	 bool mBossAttackHit;
 	static int mBossAttackCount;
 	//モデルデータ

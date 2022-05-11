@@ -46,7 +46,7 @@ private:
 	CBoss* mpBoss;//É{ÉX
 public:
 	int mBgmCount;
-
+	bool mBgmCountCheck;
     CSound mBgmStart;
 	CSound mBgmBattle;
 	CSound mBgmBossBattle;

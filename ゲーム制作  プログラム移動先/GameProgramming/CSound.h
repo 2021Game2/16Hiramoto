@@ -27,12 +27,10 @@ class CSound {
 	char	 file[100];
 public:
 
-
+	
 	CSound()
 		: mpSourceVoice(0)
 		, g_hmmio(0)
-
-
 	{
 		file[0] = 0;
 		if (mNum == 0) {

@@ -14,7 +14,7 @@
 #define STEP2 200.0f //
 #define STAMINA 400 //スタミナ
 
-#define HP_MAX 100				//体力最大値
+#define HP_MAX 10				//体力最大値
 #define STAMINA_MAX 1000		//スタミナ最大値
 #define GAUGE_WID_MAX 400.0f	//ゲージの幅の最大値
 #define GAUGE_LEFT 20			//ゲージ描画時の左端
@@ -43,7 +43,7 @@ CXPlayer* CXPlayer::GetInstance()
 	return mpPlayerInstance;
 }
 CXPlayer::CXPlayer()
-	: mColSphereSword(this, nullptr, CVector(-10.0f, 10.0f, 50.0f), 4.5f)//剣のコライダ１
+	: mColSphereSword(this, nullptr, CVector(-10.0f, 10.0f, 50.0f), 2.5f)//剣のコライダ１
 	, mColSphereFoot(this, nullptr, CVector(0.0f, 0.0f, -3.0f), 2.0f)//足付近のコライダ
 	, mCollider2(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 10.0f)//剣のコライダ２
 	, mJump(0.0f)
@@ -682,7 +682,7 @@ void CXPlayer::TaskCollision() {
 	mCollider2.ChangePriority();
 	//衝突処理を実行
 	CCollisionManager::Get()->Collision(&mCollider2, COLLISIONRANGE);
-	CCollisionManager::Get()->Collision(&mColSphereFoot, COLLISIONRANGE);
+	CCollisionManager::Get()->Collision(&mColSphereFoot, COLLISIONRANGEFIELD);
 	CCollisionManager::Get()->Collision(&mColSphereSword, COLLISIONRANGE);
 }
 void CXPlayer::Render2D()

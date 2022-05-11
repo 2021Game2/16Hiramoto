@@ -329,5 +329,5 @@ void CEnemy3::TaskCollision() {
 	mCollider.ChangePriority();
 	//Õ“Ëˆ—‚ðŽÀs
 	CCollisionManager::Get()->Collision(&mColSearch2, COLLISIONRANGE);
-	CCollisionManager::Get()->Collision(&mCollider, COLLISIONRANGE);
+	CCollisionManager::Get()->Collision(&mCollider, COLLISIONRANGEFIELD);
 }

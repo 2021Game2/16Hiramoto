@@ -14,7 +14,7 @@ CMap::CMap()
 
 	mModel.Load(OBJ, MTL);//モデルを読み込む
 	mpModel = &mModel;//モデルのポインタ化(描画するときに必要)
-		mColliderMesh.Set(this, &mMatrix, &mModel);//モデルをコライダにする
+		//mColliderMesh.Set(this, &mMatrix, &mModel);//モデルをコライダにする
 	
 }
 void CMap::TaskCollision() {
