@@ -44,7 +44,7 @@ CXPlayer* CXPlayer::GetInstance()
 }
 CXPlayer::CXPlayer()
 	: mColSphereSword(this, nullptr, CVector(-10.0f, 10.0f, 50.0f), 2.5f)//剣のコライダ１
-	, mColSphereFoot(this, nullptr, CVector(0.0f, 0.0f, -3.0f), 2.0f)//足付近のコライダ
+	, mColSphereFoot(this, nullptr, CVector(0.0f, 0.0f, -3.0f), 3.0f)//足付近のコライダ
 	, mCollider2(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 10.0f)//剣のコライダ２
 	, mJump(0.0f)
 	, mGravity(0.0f)
