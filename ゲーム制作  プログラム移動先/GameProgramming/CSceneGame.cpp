@@ -15,6 +15,8 @@
 #include"CItem.h"
 #include"CRock.h"
 #include"CSound.h"
+
+#define HP 30
 #define ENEMY2COUNT 3 //ˆê“x‚Éo‚¹‚é“G‚Q‚Ì”
 #define ENEMY2MINCOUNT 4 //“G‚Q‚ðÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚Q‚Ì”‚Ì‰ºŒÀ
 #define ENEMY3COUNT 1//ˆê“x‚Éo‚¹‚é“G‚R‚Ì”
@@ -45,7 +47,7 @@ int CSceneGame::mEnemy2Count = 0;
 int CSceneGame::mEnemy2CountStopper = ENEMY2COUNT;
 int CSceneGame::mEnemy3Count = 0;
 int CSceneGame::mEnemy3CountStopper = ENEMY3COUNT;
-bool CSceneGame::mVoiceSwitch =false;//falseF‰¹º‚È‚µ trueF‰¹º‚ ‚è
+bool CSceneGame::mVoiceSwitch =true;//falseF‰¹º‚È‚µ trueF‰¹º‚ ‚è
 
 CSound PlayerFirstAttack;
 CSound PlayerSecondAttack;
@@ -63,7 +65,8 @@ CSceneGame::CSceneGame()
 	,mSpawn(0)
     , mSpawn2(0)
 	,mBgmCount(1)
-	,mBgmCountCheck(false)
+	,mBgmCountCheck(true)
+	,mBgmCountCheck2(true)
 {
 
 }
@@ -103,6 +106,8 @@ void CSceneGame::Init()
      //ƒLƒƒƒ‰ƒNƒ^[‚Éƒ‚ƒfƒ‹‚ðÝ’è
 	mPlayer.Init(&CRes::sModelX);
 	mPlayer.mPosition = CVector(-63.0f, 5.0f, -150.0f);
+
+	mPlayer.mPosition = CVector(-56.0f, 5.0f, -49.0f);
 	/*
 	CRes::sKnight.Load(KNIGHT);
     CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//1:ˆÚ“®
@@ -183,49 +188,71 @@ void CSceneGame::Init()
 
 }
 
+void CSceneGame::BgmStart() {
 
-void CSceneGame::Update() {
-	
+    if (mVoiceSwitch == true) {
+	    if (mBgmCountCheck2 == true){
+			mBgmStart.Repeat();
+			mBgmCountCheck2 = false;
+		}
+    }
+}
+void CSceneGame::BgmBattle() {
+
 	if (mVoiceSwitch == true) {
-		switch (mBgmCount) {
-		case 1:
-			if (mBgmCountCheck == false) {
-				mBgmCountCheck = true;
-				mBgmStart.Play();
-               
-			}
-			 break;
-		case 2:
-			if (mBgmCountCheck == false) {
-				mBgmCountCheck = true;
-				mBgmBattle.Play();
-
-			}
-			   break;
-		case 3:
-			if (mBgmCountCheck == false) {
-				mBgmCountCheck = true;
-				mBgmBossBattle.Play();
-			}
-
-			break;
-		case 4:
-			if (mBgmCountCheck == false) {
-				mBgmCountCheck = true;
-				mBgmGameClear.Play();
-
-			}
-
-			   break;
-		case 5:
-			if (mBgmCountCheck == false) {
-				mBgmCountCheck = true;
-				mBgmGameOver.Play();
-			  
-			}
-            break;
+		if (mBgmCountCheck2 == true) {
+			mBgmBattle.Repeat();
+			mBgmCountCheck2 = false;
 		}
 	}
+}
+void CSceneGame::BgmBoss() {
+
+	if (mVoiceSwitch == true) {
+		if (mBgmCountCheck2 == true) {
+			mBgmBossBattle.Repeat();
+			mBgmCountCheck2 = false;
+		}
+	}
+}
+void CSceneGame::BgmGameOver() {
+
+	if (mVoiceSwitch == true) {
+		if (mBgmCountCheck2 == true) {
+			mBgmGameOver.Repeat();
+			mBgmCountCheck2 = false;
+		}
+		
+	}
+}
+void CSceneGame::BgmGameClear() {
+
+	if (mVoiceSwitch == true) {
+		if (mBgmCountCheck2 == true) {
+			mBgmGameClear.Repeat();
+		}
+	}
+}
+void CSceneGame::Update() {
+	
+		switch (mBgmCount) {
+		case 1:
+			 BgmStart();
+			 break;
+		case 2:
+			 BgmBattle();
+			   break;
+		case 3:
+			 BgmBoss();
+			break;
+		case 4:
+			 BgmGameClear();
+			   break;
+		case 5:
+			 BgmGameOver();
+            break;
+		}
+	
 	mTimeCount++;
 	if (mTimeCount % 60 == 0) {
 		mTimeSecond++;
@@ -279,43 +306,39 @@ void CSceneGame::Update() {
 	}
 
 	if (mpEnemy3->mColSearch2.mEnabled == false || mpEnemy2->mHp==0) {
-		
 		mBgmCountCheck = false;
 		mBgmCount = 2;
-		mBgmBattle.Repeat();
-		
 	}
-	if (mpBoss->mColSearchCount == true) {
-	
+	if (mpBoss->mColSearchCount == true||mpBoss->mHp<HP) {
 		mBgmCountCheck = false;
 		mBgmCount = 3;
-		mBgmBossBattle.Repeat();
+		mpEnemy2->mHp = 0;
+		mpEnemy3->mHp = 0;
 	}
 	if (mpBoss->mHp <= 0) {
 		mBgmCountCheck = false;
 		mBgmCount = 4;
-		
 	}
 	if (mPlayer.mHp <= 0) {
 		mBgmCountCheck = false;
 		mBgmCount = 5;
 	}
+	if (mBgmCountCheck2 == false) {
 
-	if (mBgmCount != 1) {
-		mBgmStart.Stop();
+		if (mBgmCountCheck ==false) {
+			mBgmStart.Stop();
+			mBgmBattle.Stop();
+			mBgmBossBattle.Stop();
+			mBgmGameClear.Stop();
+			mBgmGameOver.Stop();
+			mBgmCountCheck2 = true;
+		}
 	}
-	if (mBgmCount != 2) {
-		mBgmBattle.Stop();
+	if (mBgmCountCheck2 == true) {
+     mBgmCountCheck = true;
 	}
-	if (mBgmCount != 3) {
-		mBgmBossBattle.Stop();
-	}
-	if (mBgmCount != 4) {
-		mBgmGameClear.Stop();
-	}
-	if (mBgmCount != 5) {
-		mBgmGameOver.Stop();
-	}
+		
+	
 	//XV
 	CTaskManager::Get()->Update();
 

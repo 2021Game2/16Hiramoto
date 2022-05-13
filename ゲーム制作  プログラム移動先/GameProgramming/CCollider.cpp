@@ -7,6 +7,8 @@ CCollider::CCollider()
 , mpMatrix(&mMatrix)
 , mType(ESPHERE)
 , mTag(EPLAYERBODY)
+,  mPos(0.0f,0.0f,0.0f)
+, mIsStatic(false)
 {
 	//コリジョンマネージャyに追加
 	CCollisionManager::Get()->Add(this);
@@ -141,6 +143,17 @@ bool CCollider::CollisionTriangleLine(CCollider *t, CCollider *l, CVector *a) {
 //調整値:衝突しない位置まで戻す値
 bool CCollider::CollisionTriangleSphere(CCollider *t, CCollider *s, CVector *a)
 {
+	//trueなら衝突判定実行
+
+	if (t->mIsStatic) {
+		CVector pos = s -> mPosition * *s->mpMatrix;
+		//三角形の中心とコライダ（半径*４）の距離を計測
+		if ((t->mPos - pos).Length() > s->mRadius * 4.0f) {
+			//距離が離れていれば実行しない
+			return false;
+		}
+	}
+
 	CVector v[3], sv, ev;
 	//各コライダの頂点をワールド座標へ変換
 	v[0] = t->mV[0] * *t->mpMatrix;

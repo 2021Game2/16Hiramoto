@@ -16,7 +16,7 @@ private:
 	CCollider mCollider;
 	CBullet* mpBullet;
 	CVector mPoint;//目標地点
-	int mHp;//体力
+	
 	int mJump;
 	int mJump2;
 	CText mText;
@@ -31,7 +31,7 @@ private:
 
 	CCharacter* mpPlayer;//プレイヤーのポインタ
 public:
-
+int mHp;//体力
 	CCollider mColSearch2;//サーチ用コライダ
 	//モデルデータ
 	static CModel mModel;

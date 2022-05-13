@@ -17,6 +17,11 @@ void CColliderTriangle::Set(CCharacter *parent, CMatrix *matrix
 	mV[0] = v0;
 	mV[1] = v1;
 	mV[2] = v2;
+	//三角形の中心位置を保持
+	//三角形の重心＝（頂点１座標+頂点２座標+頂点３座標）/3
+	mPos = (mV[0] * *mpMatrix + mV[1] * *mpMatrix + mV[2] * *mpMatrix) * (1.0f / 3.0f);
+	mIsStatic = true;
+		
 }
 
 void CColliderTriangle::Render()

@@ -109,7 +109,6 @@
     <ClCompile Include="CEnemy.cpp" />
     <ClCompile Include="CEnemy2.cpp" />
     <ClCompile Include="CEnemy3.cpp" />
-    <ClCompile Include="CEnemyManager.cpp" />
     <ClCompile Include="CEnemySummon.cpp" />
     <ClCompile Include="CInput.cpp" />
     <ClCompile Include="CItem.cpp" />

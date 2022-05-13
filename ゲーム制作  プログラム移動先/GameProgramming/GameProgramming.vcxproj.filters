@@ -141,9 +141,6 @@
     <ClCompile Include="CRock.cpp">
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
-    <ClCompile Include="CEnemyManager.cpp">
-      <Filter>ソース ファイル\Base</Filter>
-    </ClCompile>
     <ClCompile Include="CTree.cpp">
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>

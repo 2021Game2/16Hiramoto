@@ -48,7 +48,8 @@ public:
 	CMatrix *mpMatrix;//親行列
 	float mRadius;	//半径
 	float mHeight;	//高さ
-
+	CVector mPos;//三角形の中心
+	bool mIsStatic;//コライダメッシュコライダの衝突判定をするかどうかのフラグ
 	//デフォルトコンストラクタ
 	CCollider();
 

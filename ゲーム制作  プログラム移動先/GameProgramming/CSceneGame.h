@@ -46,7 +46,8 @@ private:
 	CBoss* mpBoss;//ボス
 public:
 	int mBgmCount;
-	bool mBgmCountCheck;
+	bool mBgmCountCheck;//BGMを流すか止めるか分けるフラグ
+	bool mBgmCountCheck2;//BGMが連続で再生しないようにするフラグ
     CSound mBgmStart;
 	CSound mBgmBattle;
 	CSound mBgmBossBattle;
@@ -65,7 +66,11 @@ public:
 	void Update();
 	//描画処理
 	void Render();
-
+	void BgmStart();
+	void BgmBattle();
+	void BgmBoss();
+	void BgmGameOver();
+	void BgmGameClear();
 	EScene GetNextScene();
 };
 
