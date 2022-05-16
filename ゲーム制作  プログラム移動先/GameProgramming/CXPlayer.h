@@ -10,12 +10,14 @@
 
 #include"CTexture.h"
 #include"CSound.h"
+class CItem;
 class CXPlayer : public CXCharacter
 {
 private:
 
 	CTexture mImageGauge; //ゲージ画像
 public:
+	//CItem mItem;
 	CVector mPositionZ;
 	 bool mAttackHit;
 	//コライダの宣言

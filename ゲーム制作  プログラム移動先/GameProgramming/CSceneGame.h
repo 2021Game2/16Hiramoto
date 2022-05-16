@@ -45,14 +45,16 @@ private:
 	CEnemySummon* mpEnemySummon2;//敵３の生成場所
 	CBoss* mpBoss;//ボス
 public:
-	int mBgmCount;
-	bool mBgmCountCheck;//BGMを流すか止めるか分けるフラグ
-	bool mBgmCountCheck2;//BGMが連続で再生しないようにするフラグ
+
     CSound mBgmStart;
 	CSound mBgmBattle;
 	CSound mBgmBossBattle;
 	CSound mBgmGameClear;
 	CSound mBgmGameOver;
+	 int mBgmCount;
+	 bool mBgmBattleStopper;
+	bool mBgmCountCheck;//BGMを流すか止めるか分けるフラグ
+	bool mBgmCountCheck2;//BGMが連続で再生しないようにするフラグ
 	static bool mVoiceSwitch;//BGM SEのオンオフ切り替え
 	static int mEnemy2Count;//今生成されている敵2の数
 	static int mEnemy3Count;//今生成されている敵3の数

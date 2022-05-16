@@ -167,7 +167,7 @@ void CBoss::AutoMove() {
 //攻撃処理
 void CBoss::Attack() {
 	//攻撃アニメーション
-	ChangeAnimation(5, false, 40);
+	ChangeAnimation(5, false, 80);
 	//攻撃のあとは移動処理に移行
 	if (mAnimationFrame >= mAnimationFrameSize) {
 			mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
@@ -177,7 +177,7 @@ void CBoss::Attack() {
 //攻撃処理
 void CBoss::Attack2() {
 	//攻撃アニメーション
-	ChangeAnimation(6, false, 40);
+	ChangeAnimation(6, false, 80);
 	//攻撃のあとは移動処理に移行
 	if (mAnimationFrame>=mAnimationFrameSize) {
 			mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる

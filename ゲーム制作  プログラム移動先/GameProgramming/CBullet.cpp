@@ -63,6 +63,7 @@ void CBullet::Collision(CCollider *m, CCollider *o) {
 					if (CCollider::Collision(m, o)) {
 						
 				     mEnabled = false;
+					
 					}
 				}
 		    }

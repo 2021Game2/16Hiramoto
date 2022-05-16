@@ -18,18 +18,17 @@ CEnemy2::CEnemy2()
 //コライダの設定
 	: mColSphereRight(this,&mMatrix, CVector(1.5f, 3.0f, 0.5f), 2.0f)
 	, mColSphereLeft(this,&mMatrix,  CVector(-1.0f, 0.5f, 0.0f), 2.0f)
-	, mColSphereBody(this,&mMatrix,  CVector(0.0f,1.0f,0.0f),2.0f)
+	, mColSphereBody(this,&mMatrix,  CVector(0.0f,1.0f,0.0f),3.0f)
 	,mHp(HP)
 	,mJump(0.0f)
-	
 	, mEnemyDamage(60)
 	,mMove(0)
 	,mMoveCount(false)
-	, mColliderCount(0.0f)
+	,mColliderCount(0.0f)
 	,mTime(0.0f)
 	,CurveCount(0.0f)
 	,mEnemyVoice(0)
-	, mDamageCount(0)
+	,mDamageCount(0)
 	,mEnemy2AttackHit(false)
 	,mEnemyLevel(0)
 	,mEnemyHpPercent(1.0f)
@@ -137,8 +136,7 @@ void CEnemy2::Attack() {
 }	
 //ダメージ処理
 void CEnemy2::Damaged() {
-	//体力減少
-	mHp--;
+	
 	//無敵時間付与
 	if (mDamageCount < 60) {
 		mDamageCount++;
@@ -265,6 +263,8 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 								//プレイヤーのジャンプ攻撃必要ポイント増加
 								((CXPlayer*)(o->mpParent))->mSpAttack++;
 								mEffectCount = 0;
+								//体力減少 
+								mHp--;
 								//ヒットバック付与 
 								mColliderCount = 5;
 								mCollisionEnemy = mPosition - o->mpParent->mPosition;

@@ -42,11 +42,16 @@
 #define TEXWIDTH  8192  //テクスチャ幅
 #define TEXHEIGHT  6144  //テクスチャ高さ
 
+#define INIT_POSE CVector(0.0f, 0.0f, 1.0f) //初期の姿勢
+#define VELOCITY CVector(0.0f, 0.0f, 2.0f) //移動速度
+#define ROTATE_V CVector(0.0f, 2.0f, 0.0f) //回転速度
+#define COLLIDER_POS CVector(0.0f, 7.0f, 0.0f) //コライダの位置
 //CMatrix Matrix;
 int CSceneGame::mEnemy2Count = 0;
 int CSceneGame::mEnemy2CountStopper = ENEMY2COUNT;
 int CSceneGame::mEnemy3Count = 0;
 int CSceneGame::mEnemy3CountStopper = ENEMY3COUNT;
+
 bool CSceneGame::mVoiceSwitch =true;//false：音声なし true：音声あり
 
 CSound PlayerFirstAttack;
@@ -67,6 +72,7 @@ CSceneGame::CSceneGame()
 	,mBgmCount(1)
 	,mBgmCountCheck(true)
 	,mBgmCountCheck2(true)
+	,mBgmBattleStopper(true)
 {
 
 }
@@ -101,109 +107,116 @@ void CSceneGame::Init()
 	
 	//テキストフォントの読み込みと設定
 	mFont.LoadTexture(FONT, 1, 4096 / 64);
-	
-	CRes::sModelX.Load(MODEL_FILE);
-     //キャラクターにモデルを設定
-	mPlayer.Init(&CRes::sModelX);
-	mPlayer.mPosition = CVector(-63.0f, 5.0f, -150.0f);
 
-	mPlayer.mPosition = CVector(-56.0f, 5.0f, -49.0f);
-	/*
-	CRes::sKnight.Load(KNIGHT);
-    CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//1:移動
-	CRes::sKnight.SeparateAnimationSet(0, 1530, 1830, "idle1");//2:待機
-	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//3:ダミー
-	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//4:ダミー
-	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//5:ダミー
-	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//6:ダミー
-	CRes::sKnight.SeparateAnimationSet(0, 440, 520, "attack1");//7:Attack1
-	CRes::sKnight.SeparateAnimationSet(0, 520, 615, "attack2");//8:Attack2
-	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//9:ダミー
-	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//10:ダミー
-	CRes::sKnight.SeparateAnimationSet(0, 1160, 1260, "death1");//11:ダウン
-	
+CRes::sModelX.Load(MODEL_FILE);
+//キャラクターにモデルを設定
+mPlayer.Init(&CRes::sModelX);
+mPlayer.mPosition = CVector(-63.0f, 5.0f, -150.0f);
 
-	//敵の初期設定
-	mEnemy.Init(&CRes::sKnight);
-	mEnemy.mAnimationFrameSize = 1024;
-	//敵の配置
-	mEnemy.mPosition = CVector(700.0f, 0.0f, 0.0f);
+mPlayer.mPosition = CVector(-56.0f, 5.0f, -49.0f);
+/*
+CRes::sKnight.Load(KNIGHT);
+CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//1:移動
+CRes::sKnight.SeparateAnimationSet(0, 1530, 1830, "idle1");//2:待機
+CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//3:ダミー
+CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//4:ダミー
+CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//5:ダミー
+CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//6:ダミー
+CRes::sKnight.SeparateAnimationSet(0, 440, 520, "attack1");//7:Attack1
+CRes::sKnight.SeparateAnimationSet(0, 520, 615, "attack2");//8:Attack2
+CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//9:ダミー
+CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//10:ダミー
+CRes::sKnight.SeparateAnimationSet(0, 1160, 1260, "death1");//11:ダウン
+
+
+//敵の初期設定
+mEnemy.Init(&CRes::sKnight);
+mEnemy.mAnimationFrameSize = 1024;
+//敵の配置
+mEnemy.mPosition = CVector(700.0f, 0.0f, 0.0f);
+*/
+//カメラ初期化
+Camera.Init();
+
+CRes::sScorp.Load(SCOPION);
+CRes::sScorp.SeparateAnimationSet(0, 0, 72, "walk");
+CRes::sScorp.SeparateAnimationSet(0, 72, 120, "strafe left");
+CRes::sScorp.SeparateAnimationSet(0, 120, 168, "strafe right");
+CRes::sScorp.SeparateAnimationSet(0, 168, 220, "attack");
+CRes::sScorp.SeparateAnimationSet(0, 292, 350, "attack2");
+CRes::sScorp.SeparateAnimationSet(0, 350, 440, "attack3");
+CRes::sScorp.SeparateAnimationSet(0, 220, 292, "death");
+CRes::sScorp.SeparateAnimationSet(0, 660, 760, "idle");
+CRes::sScorp.SeparateAnimationSet(0, 761, 849, "idle2");
+CRes::sScorp.SeparateAnimationSet(0, 850, 880, "gethit");
+CRes::sScorp.SeparateAnimationSet(0, 880, 950, "gethit2");
+CRes::sScorp.SeparateAnimationSet(0, 951, 1015, "jump");
+
+
+//アニメーションを読み込む
+CRes::sBoss.Load(BOSS);
+CRes::sBoss.SeparateAnimationSet(0, 0, 30, "walk");
+CRes::sBoss.SeparateAnimationSet(0, 0, 120, "walk");
+CRes::sBoss.SeparateAnimationSet(0, 150, 190, "run");
+CRes::sBoss.SeparateAnimationSet(0, 150, 210, "run");
+CRes::sBoss.SeparateAnimationSet(0, 250, 333, "attack - 01");
+CRes::sBoss.SeparateAnimationSet(0, 320, 400, "attack - 02");
+CRes::sBoss.SeparateAnimationSet(0, 390, 418, "death - 01");
+CRes::sBoss.SeparateAnimationSet(0, 478, 500, "growl");
+CRes::sBoss.SeparateAnimationSet(0, 500, 550, "death - 02");
+CRes::sBoss.SeparateAnimationSet(0, 565, 650, "death - 03");
+//新しく作る
+mpBoss = new CBoss(CVector(0.0f, 10.0f, 0.0f),
+	CVector(0.0f, 0.0f, 0.0f), CVector(0.5f, 0.5f, 0.5f));
+//読み込ませる
+mpBoss->Init(&CRes::sBoss);
+//ボスの配置
+mpBoss->mPosition = CVector(3.0f, 10.0f, 100.0f);
+
+new CItem(CVector(-20.0f, 2.0f, -10.0f),
+	CVector(), CVector(1.5f, 1.5f, 1.5f));
+mpEnemySummon = new CEnemySummon(CVector(-36.0f, 1.0f, -59.0f),
+	CVector(), CVector(0.5f, 0.5f, 0.5f));
+
+mpEnemySummon2 = new CEnemySummon(CVector(6.0f, 8.0f, 14.0f),
+	CVector(), CVector(0.5f, 0.5f, 0.5f));
+
+mpRock = new CRock(CVector(0.0f, 0.0f, -100.0f),
+	CVector(0.0f, 180.0f, 0.0f), CVector(0.5f, 0.5f, 0.5f));
+/*
+mpTree = new CTree(CVector(0.0f, 0.0f, 0.0f),
+	CVector(), CVector(10.5f, 10.5f, 10.5f));
 	*/
-	//カメラ初期化
-	Camera.Init();
+float shadowColor[] = { 0.4f, 0.4f, 0.4f, 0.2f };  //影の色
+float lightPos[] = { 50.0f, 160.0f, 50.0f };  //光源の位置
+mShadowMap.Init(TEXWIDTH, TEXHEIGHT, ShadowRender, shadowColor, lightPos);//影の初期化
 
-    CRes::sScorp.Load(SCOPION);
-	CRes::sScorp.SeparateAnimationSet(0, 0, 72, "walk");
-	CRes::sScorp.SeparateAnimationSet(0, 72, 120, "strafe left");
-	CRes::sScorp.SeparateAnimationSet(0, 120, 168, "strafe right");
-	CRes::sScorp.SeparateAnimationSet(0, 168, 220, "attack");
-	CRes::sScorp.SeparateAnimationSet(0, 292, 350, "attack2");
-	CRes::sScorp.SeparateAnimationSet(0, 350, 440, "attack3");
-	CRes::sScorp.SeparateAnimationSet(0, 220,292, "death");
-	CRes::sScorp.SeparateAnimationSet(0, 660,760, "idle");
-	CRes::sScorp.SeparateAnimationSet(0, 761, 849, "idle2");
-	CRes::sScorp.SeparateAnimationSet(0, 850, 880, "gethit");
-	CRes::sScorp.SeparateAnimationSet(0, 880, 950, "gethit2");
-	CRes::sScorp.SeparateAnimationSet(0, 951, 1015, "jump");
-
-
-	//アニメーションを読み込む
- 	CRes::sBoss.Load(BOSS);
-	CRes::sBoss.SeparateAnimationSet(0, 0, 30, "walk");
-	CRes::sBoss.SeparateAnimationSet(0, 0, 120, "walk");
-	CRes::sBoss.SeparateAnimationSet(0, 150, 190, "run");
-	CRes::sBoss.SeparateAnimationSet(0, 150, 210, "run");
-	CRes::sBoss.SeparateAnimationSet(0, 250, 333, "attack - 01");
-	CRes::sBoss.SeparateAnimationSet(0, 320, 400, "attack - 02");
-	CRes::sBoss.SeparateAnimationSet(0, 390, 418, "death - 01");
-	CRes::sBoss.SeparateAnimationSet(0, 478, 500, "growl");
-	CRes::sBoss.SeparateAnimationSet(0, 500, 550, "death - 02" );
-	CRes::sBoss.SeparateAnimationSet(0, 565, 650, "death - 03");
-	//新しく作る
-	mpBoss = new CBoss(CVector(0.0f, 10.0f, 0.0f), 
-		CVector(0.0f, 0.0f, 0.0f), CVector(0.5f, 0.5f, 0.5f));
-	//読み込ませる
-	mpBoss->Init(&CRes::sBoss);
-	//ボスの配置
-	mpBoss->mPosition = CVector(3.0f, 10.0f, 100.0f);
-	 
-	new CItem(CVector(-20.0f, 2.0f, -10.0f) ,
-		CVector(), CVector(1.5f, 1.5f, 1.5f));
-	mpEnemySummon = new CEnemySummon(CVector(-36.0f, 1.0f,-59.0f),
-		CVector(), CVector(0.5f, 0.5f, 0.5f));
-
-	mpEnemySummon2 = new CEnemySummon(CVector(6.0f, 8.0f, 14.0f),
-		CVector(), CVector(0.5f, 0.5f, 0.5f));
-	
-	mpRock=new CRock(CVector(0.0f, 0.0f, -100.0f),
-		CVector(0.0f,180.0f,0.0f), CVector(0.5f, 0.5f, 0.5f));
-	
-	mpTree = new CTree(CVector(0.0f, 0.0f, 0.0f),
-		CVector(), CVector(10.5f, 10.5f, 10.5f));
-	
-	float shadowColor[] = { 0.4f, 0.4f, 0.4f, 0.2f };  //影の色
-	float lightPos[] = { 50.0f, 160.0f, 50.0f };  //光源の位置
-	mShadowMap.Init(TEXWIDTH, TEXHEIGHT, ShadowRender, shadowColor, lightPos);//影の初期化
-	
 
 }
 
 void CSceneGame::BgmStart() {
 
-    if (mVoiceSwitch == true) {
-	    if (mBgmCountCheck2 == true){
+	if (mVoiceSwitch == true) {
+		if (mBgmCountCheck2 == true) {
 			mBgmStart.Repeat();
 			mBgmCountCheck2 = false;
 		}
-    }
+	}
 }
 void CSceneGame::BgmBattle() {
 
 	if (mVoiceSwitch == true) {
 		if (mBgmCountCheck2 == true) {
-			mBgmBattle.Repeat();
-			mBgmCountCheck2 = false;
+			if (mBgmBattleStopper == true) {
+
+
+				mBgmBattle.Repeat();
+				mBgmCountCheck2 = false;
+				mBgmBattleStopper = false;
+			}
+		
 		}
+
 	}
 }
 void CSceneGame::BgmBoss() {
@@ -307,21 +320,29 @@ void CSceneGame::Update() {
 
 	if (mpEnemy3->mColSearch2.mEnabled == false || mpEnemy2->mHp==0) {
 		mBgmCountCheck = false;
-		mBgmCount = 2;
+		
+		  mBgmCount = 2;
+		
 	}
 	if (mpBoss->mColSearchCount == true||mpBoss->mHp<HP) {
 		mBgmCountCheck = false;
-		mBgmCount = 3;
-		mpEnemy2->mHp = 0;
-		mpEnemy3->mHp = 0;
+		
+			mBgmCount = 3;
+			mpEnemy2->mHp = 0;
+			mpEnemy3->mHp = 0;
+		
 	}
 	if (mpBoss->mHp <= 0) {
 		mBgmCountCheck = false;
-		mBgmCount = 4;
+		
+			mBgmCount = 4;
+		
 	}
 	if (mPlayer.mHp <= 0) {
 		mBgmCountCheck = false;
+
 		mBgmCount = 5;
+
 	}
 	if (mBgmCountCheck2 == false) {
 
@@ -331,7 +352,7 @@ void CSceneGame::Update() {
 			mBgmBossBattle.Stop();
 			mBgmGameClear.Stop();
 			mBgmGameOver.Stop();
-			mBgmCountCheck2 = true;
+			
 		}
 	}
 	if (mBgmCountCheck2 == true) {
