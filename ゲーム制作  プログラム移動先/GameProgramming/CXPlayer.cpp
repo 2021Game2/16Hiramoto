@@ -6,8 +6,18 @@
 #include"CSceneGame.h"
 #include"CEnemy2.h"
 #include"CBoss.h"
+#include"CItem.h"
+#include"CSound.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
+#define ATTACK1 "Resource\\png,tga\\Attack1.png"
+#define ATTACK2 "Resource\\png,tga\\Attack2.png"
+#define ATTACK3 "Resource\\png,tga\\Attack3.png"
+#define ATTACKSP "Resource\\png,tga\\AttackSp.png"
+#define DAMAGE "Resource\\png,tga\\Damage.png"
+#define ATTACKCOUNT1 20
+#define ATTACKCOUNT2 20
+#define ATTACKCOUNT3 40
 #define JUMP 5.0f
 #define JUMP2 10.0f
 #define STEP  20.0f //攻撃時少し前進
@@ -18,11 +28,9 @@
 #define STAMINA_MAX 1000		//スタミナ最大値
 #define GAUGE_WID_MAX 400.0f	//ゲージの幅の最大値
 #define GAUGE_LEFT 20			//ゲージ描画時の左端
-#define IMAGE_GAUGE "Resource\\Gauge.png"		//ゲージ画像
+#define IMAGE_GAUGE "Resource\\png,tga\\Gauge.png"		//ゲージ画像
 #define G 0.1f
 #define G2 2.0f
-#include"CItem.h"
-#include"CSound.h"
 
 
 int CXPlayer::mSpAttack = 0;
@@ -132,18 +140,18 @@ void CXPlayer::Update()
 		}
 		break;
 	case EATTACK1://攻撃
-		if (mAttackCount>0) {
+		if (mAttackCount>ATTACKCOUNT1/2) {
 		ChangeAnimation(3, false, 20);//+4番目のアニメーションのフレーム３０
 		}
 		break;
 	case EATTACK2://攻撃
-		if (mAttackCount>0) {
+		if (mAttackCount>ATTACKCOUNT2/2) {
 		
 		ChangeAnimation(5, false, 20);//+６番目のアニメーションのフレーム３０
 		}
 		break;
 	case EATTACK3://攻撃
-		if (mAttackCount>0) {
+		if (mAttackCount>ATTACKCOUNT3/2) {
 		
 		ChangeAnimation(7, false, 30);//+８番目のアニメーションのフレーム３０
 		
@@ -170,6 +178,10 @@ void CXPlayer::Update()
 	switch (mAnimationIndex) {
 	case(3): 
 		if (mAnimationFrame == 15) {
+
+			//エフェクト生成
+			
+			mEffect1=new CEffect(CVector(mPosition.mX,mPosition.mY+1.0f,mPosition.mZ-5.0f), 3.0f, 3.0f, ATTACK1, 2, 5, 3);
 			mAttackHit = true;
 		}
 		if (mAnimationFrame >= mAnimationFrameSize)
@@ -186,7 +198,10 @@ void CXPlayer::Update()
 		break;
 	case(5):
 		if (mAnimationFrame == 15) {
+
+			mEffect2 = new CEffect(CVector(mPosition.mX, mPosition.mY + 1.0f, mPosition.mZ - 5.0f), 3.0f, 3.0f, ATTACK2, 3, 5, 3);
 			mAttackHit = true;
+			
 		}
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
@@ -205,6 +220,8 @@ void CXPlayer::Update()
 			mJump -= G;
 		}
 		if (mAnimationFrame == 15) {
+
+			mEffect3 = new CEffect(CVector(mPosition.mX, mPosition.mY + 1.0f, mPosition.mZ - 5.0f), 3.0f, 3.0f, ATTACK3, 3, 5, 3);
 			mAttackHit = true;
 		}
 		if (mAnimationFrame >= mAnimationFrameSize)
@@ -215,7 +232,10 @@ void CXPlayer::Update()
 	case(8):
 		if (mState == EATTACKSP) {
 			if (mJump >= -3.0f) {
+
+				mEffectSp = new CEffect(CVector(mPosition.mX, mPosition.mY + 1.0f, mPosition.mZ - 5.0f), 3.0f, 3.0f, ATTACKSP, 4, 5, 3);
 				mJump -= G2;
+
 			  mCollider2.mRenderEnabled = true;
 		
 		    }
@@ -320,6 +340,10 @@ void CXPlayer::Update()
 		else if (CKey::Push('S'))
 		{
 			Move -= FrontVec;
+			if (mEffect1->w > 0) {
+
+		    	mEffect1->w
+			}
 			//mPosition += CVector(0.0f, 0.0f, 0.1f) * mMatrixRotate;
 			mAnimationCount = 5;//0になるまでアニメーションを変更できない
 
@@ -356,7 +380,7 @@ void CXPlayer::Update()
 						 mState = EATTACK1;
 						 mSpaceCount1 = false;//１回目の攻撃のフラグ
 						 mSpaceCount2 =true;
-						mAttackCount = 10;//当たり判定が適用される時間
+						mAttackCount = ATTACKCOUNT1;//当たり判定が適用される時間
 						 mAnimationCount = 50;//0になるまでアニメーションが変わらない
 						 mStep = STEP;
 					 }
@@ -374,7 +398,7 @@ void CXPlayer::Update()
 						 mState = EATTACK2;
 						 mSpaceCount2 = false;//２回目の攻撃のフラグ
 						 mSpaceCount3 = true;
-						 mAttackCount = 10;//当たり判定が適用される時間
+						 mAttackCount = ATTACKCOUNT2;//当たり判定が適用される時間
 						 mAnimationCount = 50;//0になるまでアニメーションが変わらない
 						 mStep = STEP;
 					 }
@@ -392,12 +416,12 @@ void CXPlayer::Update()
 						 mAnimationCount = 50;//0になるまでアニメーションが変わらない
 						 mSpaceCount3 = false;//３回目の攻撃のフラグ
 						 mSpaceCount1 = true;
-						 mAttackCount = 30;//当たり判定が適用される時間
+						 mAttackCount = ATTACKCOUNT3;//当たり判定が適用される時間
 						 mStep = STEP;//ジャンプ力を代入
 					 }
 				 }
 			 }
-		// }
+		
 		 //ジャンプ攻撃
 		 if (mSpAttack >= 30) {
 			 if (CKey::Once('F')) {

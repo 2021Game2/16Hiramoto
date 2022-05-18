@@ -8,6 +8,7 @@
 
 
 int CItem::mItemCount = 0;
+bool CItem::mItemAttackHit = false;
 CModel CItem::mModel;//モデルデータ作成
 CItem::CItem(const CVector& position, const CVector& rotation, const CVector& scale)
 	: CItem()
@@ -26,7 +27,7 @@ CItem::CItem(const CVector& position, const CVector& rotation, const CVector& sc
 	CTaskManager::Get()->Add(this);//追加する
 }
 CItem::CItem() 
-	: mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 4.0f)
+	: mCollider(this, &mMatrix, CVector(0.0f, 2.0f, 0.0f), 4.0f,3.0f)
 	
 {
 	//モデルのポインタ設定
@@ -41,6 +42,7 @@ void CItem::Update() {
 	CXPlayer* tPlayer = CXPlayer::GetInstance();
 	if (mItemCount > 0) {
 	     mItemCount--;
+		 mItemAttackHit = true;
 		if (mRotation.mX < 90.0f) {
 			mRotation = CVector(90.0f, 0.0f, 0.0f);
 		}
@@ -48,13 +50,19 @@ void CItem::Update() {
 	  CCollider mCollider2;
 
 	  mPosition.mX = tPlayer->mPosition.mX;
-	  mPosition.mY = tPlayer->mPosition.mY;
+	  mPosition.mY = tPlayer->mPosition.mY+1.0f;
 	  mPosition.mZ = tPlayer->mPosition.mZ;
 
 	}
-    mRotation.mY++;
-//CCharacterの更新
-CTransform::Update();
+	if (mItemAttackHit == true&&mItemCount == 0) {
+		mEnabled = false;
+	}
+	if (mItemAttackHit = false) {
+
+       mRotation.mY++;
+	}
+    //CCharacterの更新
+    CTransform::Update();
 
 //自分の行列に親の行列を掛けて、最終的な合成行列にする
 
@@ -69,8 +77,7 @@ void CItem::Collision(CCollider* m, CCollider* o) {
 				//衝突しているとき
 				if (CCollider::Collision(m, o)) {
 					mItemCount = 1800;
-					mCollider.mTag = CCollider::EPLAYERSWORD;
-					//mEnabled = false;
+					
 				}
 
 			}

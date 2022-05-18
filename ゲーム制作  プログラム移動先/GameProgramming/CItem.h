@@ -12,7 +12,7 @@ private:
 	CCollider mCollider;
 
 public:
-
+	static bool mItemAttackHit;
 	//モデルデータ
 	static CModel mModel;
 	static int mItemCount;

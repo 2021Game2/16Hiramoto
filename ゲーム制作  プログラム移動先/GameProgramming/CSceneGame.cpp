@@ -17,7 +17,7 @@
 #include"CSound.h"
 
 #define HP 30
-#define ENEMY2COUNT 3 //一度に出せる敵２の数
+#define ENEMY2COUNT 20 //一度に出せる敵２の数
 #define ENEMY2MINCOUNT 4 //敵２を再生成させるときの敵２の数の下限
 #define ENEMY3COUNT 1//一度に出せる敵３の数
 #define ENEMY3MINCOUNT 4 //敵３を再生成させるときの敵３の数の下限
@@ -35,7 +35,7 @@
 #define BOSSVOICE "SE\\BossVoice.wav"//ボスの鳴き声
 #define BOSSWORK "SE\\BossWork.wav" //ボスの足音
 #define ENEMYVOICE "SE\\ScopionVoice.wav" //敵２の鳴き声
-#define FONT "FontG.png"  //ゲームに使われている文字のデータ
+#define FONT "Resource\\png,tga\\FontG.png"  //ゲームに使われている文字のデータ
 #define SCOPION "3DModel\\scorpid\\scorpid-monster-X-animated.X" //敵２のXファイル
 #define BOSS "3DModel\\Boss\\monster-animated-character-X.X" // ボスのXファイル
 #define KNIGHT "3DModel\\knight\\knight_low.x"
@@ -52,7 +52,7 @@ int CSceneGame::mEnemy2CountStopper = ENEMY2COUNT;
 int CSceneGame::mEnemy3Count = 0;
 int CSceneGame::mEnemy3CountStopper = ENEMY3COUNT;
 
-bool CSceneGame::mVoiceSwitch =true;//false：音声なし true：音声あり
+bool CSceneGame::mVoiceSwitch =false;//false：音声なし true：音声あり
 
 CSound PlayerFirstAttack;
 CSound PlayerSecondAttack;
@@ -183,10 +183,10 @@ mpEnemySummon2 = new CEnemySummon(CVector(6.0f, 8.0f, 14.0f),
 
 mpRock = new CRock(CVector(0.0f, 0.0f, -100.0f),
 	CVector(0.0f, 180.0f, 0.0f), CVector(0.5f, 0.5f, 0.5f));
-/*
+
 mpTree = new CTree(CVector(0.0f, 0.0f, 0.0f),
 	CVector(), CVector(10.5f, 10.5f, 10.5f));
-	*/
+	
 float shadowColor[] = { 0.4f, 0.4f, 0.4f, 0.2f };  //影の色
 float lightPos[] = { 50.0f, 160.0f, 50.0f };  //光源の位置
 mShadowMap.Init(TEXWIDTH, TEXHEIGHT, ShadowRender, shadowColor, lightPos);//影の初期化
@@ -287,10 +287,10 @@ void CSceneGame::Update() {
 		//２秒ごとに生成
 		if (mSpawn <= 0) {
 			mpEnemy2 = new CEnemy2(mpEnemySummon->mPosition,
-				CVector(), CVector(1.5f, 1.5f, 1.5f));
+				CVector(), CVector(0.75f, 0.75f, 0.75f));
 			mpEnemy2->Init(&CRes::sScorp);
 			mEnemy2Count++;
-			mSpawn = 120;
+			mSpawn = 0;
 		}
 	}
 
@@ -377,7 +377,7 @@ void CSceneGame::Render() {
 	mShadowMap.Render();//影設定
 	//コライダの描画
 	//ここをコメントにするとすべてのコライダ非表示
-	CCollisionManager::Get()->Render();
+	//CCollisionManager::Get()->Render();
 	//2D描画開始
 	CUtil::Start2D(0, 800, 0, 600);
 	char buf[64];

@@ -1,6 +1,7 @@
 #ifndef CXPLAYER_H
 #define CXPLAYER_H
 
+#include"CEffect.h"
 #include "CXCharacter.h"
 #include "CCollider.h"
 #include"CColliderLine.h"
@@ -17,7 +18,13 @@ private:
 
 	CTexture mImageGauge; //ゲージ画像
 public:
-	//CItem mItem;
+	CEffect* mEffect1;
+
+	CEffect* mEffect2;
+	CEffect* mEffect3;
+
+	CEffect* mEffectSp;
+
 	CVector mPositionZ;
 	 bool mAttackHit;
 	//コライダの宣言

@@ -5,6 +5,8 @@
 #include"CXCharacter.h"
 #include"CUtil.h"
 #include"CText.h"
+#include"CItem.h"
+#define DAMAGEEFFECT "Resource\\png,tga\\exp.tga"
 #define HP 30
 #define VELOCITY 0.2f //マクロ
 #define ROTATION 180.0f
@@ -18,7 +20,7 @@ CEnemy2::CEnemy2()
 //コライダの設定
 	: mColSphereRight(this,&mMatrix, CVector(1.5f, 3.0f, 0.5f), 2.0f)
 	, mColSphereLeft(this,&mMatrix,  CVector(-1.0f, 0.5f, 0.0f), 2.0f)
-	, mColSphereBody(this,&mMatrix,  CVector(0.0f,1.0f,0.0f),3.0f)
+	, mColSphereBody(this,&mMatrix,  CVector(0.0f,1.0f,0.0f),2.0f)
 	,mHp(HP)
 	,mJump(0.0f)
 	, mEnemyDamage(60)
@@ -155,7 +157,7 @@ void CEnemy2::Damaged() {
 	if (mDamageCount >= 60) {
 	//ダメージのあとは移動処理
     mState = EAUTOMOVE;
-	mDamageCount = 0;
+	
 	}
 }		
 //死亡処理
@@ -172,7 +174,7 @@ void CEnemy2::Death() {
 		//15フレームごとにエフェクト
 		if (mEffectCount % 15 == 0) {
 			//エフェクト生成
-			new CEffect(mPosition, 1.0f, 1.0f, "exp.tga", 4, 4, 2);
+			new CEffect(mPosition, 1.0f, 1.0f, DAMAGEEFFECT, 4, 4, 2);
 		}
 		CTransform::Update();
 	}
@@ -238,6 +240,10 @@ void CEnemy2::Update() {
 		}
 		mEnemyVoice = 0;
 	}
+
+	if (mState != EDAMAGED) {
+		mDamageCount = 0;
+	}
 	CXCharacter::Update();
 }
 
@@ -250,7 +256,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 
 		if (o->mType == CCollider::ESPHERE) {
 
-			if (o->mpParent->mTag == EPLAYER) {
+			if (o->mpParent->mTag == EPLAYER|| o->mpParent->mTag == EITEM) {
 				//相手がプレイヤーの武器のとき
 				if (o->mTag == CCollider::EPLAYERSWORD) {
 					//衝突しているとき
@@ -266,7 +272,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 								//体力減少 
 								mHp--;
 								//ヒットバック付与 
-								mColliderCount = 5;
+								mColliderCount = 3.0f;
 								mCollisionEnemy = mPosition - o->mpParent->mPosition;
 								//HPが０のとき以外は前後左右に吹っ飛ぶ
 								mCollisionEnemy.mY = 0;
@@ -283,6 +289,37 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 
 								}
 							}
+						}
+					}
+				}
+				if (o->mTag == CCollider::EITEMCOLLIDER) {
+					//衝突しているとき
+					if (CCollider::Collision(m, o)) {
+						//プレイヤーの当たり判定が有効なとき
+						//親をCXPlayerを元にポインタ化し、変数を参照
+						if (((CItem*)(o->mpParent))->mItemAttackHit == true)
+						{//ヒットバック＆ダメージを受ける
+							//if (mDamageCount <= 0) {
+								//プレイヤーのジャンプ攻撃必要ポイント増加
+								((CXPlayer*)(o->mpParent))->mSpAttack++;
+								mEffectCount = 0;
+								//体力減少 
+								mHp--;
+								//ヒットバック付与 
+								mColliderCount = 1.5f;
+								mCollisionEnemy = mPosition - o->mpParent->mPosition;
+								//HPが０のとき以外は前後左右に吹っ飛ぶ
+								mCollisionEnemy.mY = 0;
+								mCollisionEnemy = mCollisionEnemy.Normalize();
+								//ダメージ処理に移行
+								if (mHp > 0) {
+									mState = EDAMAGED;
+								}
+								else if (mHp <= 0) {
+									mJump = JUMP;
+									mState = EDEATH;
+								}
+							//}
 						}
 					}
 				}

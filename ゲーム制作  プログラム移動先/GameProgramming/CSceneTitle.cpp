@@ -7,8 +7,8 @@
 
 #include "CInput.h"
 
-#define FONT "FontG.png" //フォント
-#define IMAGE_BUTTONBACK "Resource\\Gauge.png" //ボタン背景画像
+#define FONT "Resource\\png,tga\\FontG.png" //フォント
+#define IMAGE_BUTTONBACK "Resource\\png,tga\\Gauge.png" //ボタン背景画像
 
 CSceneTitle::CSceneTitle()
 	:mSelect(EBACKGROUND)

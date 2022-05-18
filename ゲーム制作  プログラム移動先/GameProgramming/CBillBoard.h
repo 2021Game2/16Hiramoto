@@ -12,7 +12,7 @@ public:
 	//マテリアル
 	CMaterial mMaterial;
 	//コンストラクタ
-	CBillBoard();
+	//CBillBoard();
 	//CBillBoard(位置, 幅, 高さ)
 	CBillBoard(CVector pos, float w, float h);
 	//位置と大きさの設定

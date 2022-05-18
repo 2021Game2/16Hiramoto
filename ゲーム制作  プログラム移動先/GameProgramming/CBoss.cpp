@@ -6,7 +6,7 @@
 #include"CXCharacter.h"
 #include"CUtil.h"
 #include"CText.h"
-
+#define DAMAGEEFFECT "Resource\\png,tga\\exp.tga"
 #define HP 30
 
 #define VELOCITY 0.5f //マクロ
@@ -98,11 +98,9 @@ void CBoss::Idle() {
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
 			if (mAttackPercent <= 5) {
-           
 			mState = EATTACK;
 		    }
 			else if(mAttackPercent > 5) {
-				
 				mState = EATTACK2;
 			}
 		}
@@ -327,7 +325,7 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 			if (o->mType == CCollider::ESPHERE) {
 				if (o->mpParent->mTag == EPLAYER) {
 					//相手が武器のとき
-					if (o->mTag == CCollider::EPLAYERSWORD) {
+					if (o->mTag == CCollider::EPLAYERSWORD || o->mpParent->mTag == EITEM) {
 						//衝突しているとき
 					    
 							if (CCollider::Collision(m, o)) {
@@ -380,7 +378,7 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 			if (o->mType == CCollider::ETRIANGLE) {
 				CVector adjust;//調整値
 				//三角コライダと球コライダの衝突判定
-				//adjust、、、調整値
+				//adjust、、、調整値	
 				if (CCollider::CollisionTriangleSphere(o, m, &adjust))
 				{
 					mPosition = mPosition + adjust;

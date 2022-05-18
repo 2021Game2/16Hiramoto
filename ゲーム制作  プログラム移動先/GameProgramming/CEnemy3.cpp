@@ -8,8 +8,10 @@
 #include"CXCharacter.h"
 #include"CSound.h"
 #include"CSceneGame.h"
+#include"CItem.h"
 #define OBJ "3DModel\\Bee\\BEE1.obj"//モデルのファイル
 #define MTL "3DModel\\Bee\\BEE1.mtl"//モデルのマテリアルファイル
+#define DAMAGEEFFECT "Resource\\png,tga\\exp.tga"
 #define HP 1
 #define VELOCITY 0.05f //行動１
 #define VELOCITY1  -0.1f//行動１
@@ -203,7 +205,7 @@ void CEnemy3::Update() {
 		//15フレームごとにエフェクト
 		if (mHp % 15 == 0) {
 			//エフェクト生成
-			new CEffect(mPosition, 1.0f, 1.0f, "exp.tga", 4, 4, 2);
+			new CEffect(mPosition, 1.0f, 1.0f, DAMAGEEFFECT, 4, 4, 2);
 		}
 		CTransform::Update();
 	}
@@ -263,7 +265,7 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 	if (m->mTag == CCollider::EENEMY3COLLIDERBODY) {
 		if (o->mType == CCollider::ESPHERE) {
 			//相手が武器のとき、
-			if (o->mpParent->mTag == EPLAYER) {
+			if (o->mpParent->mTag == EPLAYER || o->mpParent->mTag == EITEM) {
 				if (o->mTag == CCollider::EPLAYERSWORD) {
 					//衝突しているとき
 					if (CCollider::Collision(m, o)) {
@@ -281,6 +283,20 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 					}
 				}
 
+				if (o->mTag == CCollider::EITEMCOLLIDER) {
+					//衝突しているとき
+					if (CCollider::Collision(m, o)) {
+						if (((CItem*)(o->mpParent))->mItemAttackHit == true)
+						{
+							mColliderCount = COLLIDERCOUNT;
+							mCollisionEnemy = mPosition - o->mpParent->mPosition;
+							mCollisionEnemy.mY = 0;
+							mCollisionEnemy = mCollisionEnemy.Normalize();
+							mJump = JUMP;
+							mHp--;
+						}
+					}
+				}
 			}
 		}
 

@@ -2,11 +2,11 @@
 #include "CCamera.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
-
+/*
 CBillBoard::CBillBoard()
 {
 
-}
+}*/
 
 CBillBoard::CBillBoard(CVector pos, float w, float h)
 {
