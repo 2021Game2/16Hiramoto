@@ -52,7 +52,12 @@ public:
 	CSound mBgmGameClear;
 	CSound mBgmGameOver;
 	 int mBgmCount;
+	 bool mBgmStartStopper;
 	 bool mBgmBattleStopper;
+	 bool mBgmBossStopper;
+	 bool mBgmOverStopper;
+	 bool mBgmClearStopper;
+
 	bool mBgmCountCheck;//BGMを流すか止めるか分けるフラグ
 	bool mBgmCountCheck2;//BGMが連続で再生しないようにするフラグ
 	static bool mVoiceSwitch;//BGM SEのオンオフ切り替え

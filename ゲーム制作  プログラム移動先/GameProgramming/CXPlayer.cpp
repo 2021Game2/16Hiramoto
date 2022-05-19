@@ -340,10 +340,6 @@ void CXPlayer::Update()
 		else if (CKey::Push('S'))
 		{
 			Move -= FrontVec;
-			if (mEffect1->w > 0) {
-
-		    	mEffect1->w
-			}
 			//mPosition += CVector(0.0f, 0.0f, 0.1f) * mMatrixRotate;
 			mAnimationCount = 5;//0になるまでアニメーションを変更できない
 

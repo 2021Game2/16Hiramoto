@@ -52,7 +52,7 @@ int CSceneGame::mEnemy2CountStopper = ENEMY2COUNT;
 int CSceneGame::mEnemy3Count = 0;
 int CSceneGame::mEnemy3CountStopper = ENEMY3COUNT;
 
-bool CSceneGame::mVoiceSwitch =false;//false：音声なし true：音声あり
+bool CSceneGame::mVoiceSwitch =true;//false：音声なし true：音声あり
 
 CSound PlayerFirstAttack;
 CSound PlayerSecondAttack;
@@ -72,7 +72,11 @@ CSceneGame::CSceneGame()
 	,mBgmCount(1)
 	,mBgmCountCheck(true)
 	,mBgmCountCheck2(true)
+	,mBgmStartStopper(true)
 	,mBgmBattleStopper(true)
+	,mBgmBossStopper(true)
+    ,mBgmOverStopper(true)
+    ,mBgmClearStopper(true)
 {
 
 }
@@ -197,21 +201,21 @@ mShadowMap.Init(TEXWIDTH, TEXHEIGHT, ShadowRender, shadowColor, lightPos);//影の
 void CSceneGame::BgmStart() {
 
 	if (mVoiceSwitch == true) {
-		if (mBgmCountCheck2 == true) {
-			mBgmStart.Repeat();
-			mBgmCountCheck2 = false;
+		if (mBgmCountCheck == true) {
+			if (mBgmStartStopper == true) {
+
+			 mBgmStart.Repeat();
+			 mBgmStartStopper = false;
+			}
 		}
 	}
 }
 void CSceneGame::BgmBattle() {
 
 	if (mVoiceSwitch == true) {
-		if (mBgmCountCheck2 == true) {
+		if (mBgmCountCheck == true) {
 			if (mBgmBattleStopper == true) {
-
-
 				mBgmBattle.Repeat();
-				mBgmCountCheck2 = false;
 				mBgmBattleStopper = false;
 			}
 		
@@ -222,18 +226,24 @@ void CSceneGame::BgmBattle() {
 void CSceneGame::BgmBoss() {
 
 	if (mVoiceSwitch == true) {
-		if (mBgmCountCheck2 == true) {
-			mBgmBossBattle.Repeat();
-			mBgmCountCheck2 = false;
+		if (mBgmCountCheck == true) {
+			if (mBgmBossStopper==true) {
+
+				mBgmBossBattle.Repeat();
+				mBgmBossStopper = false;
+			}
+				
 		}
 	}
 }
 void CSceneGame::BgmGameOver() {
 
 	if (mVoiceSwitch == true) {
-		if (mBgmCountCheck2 == true) {
-			mBgmGameOver.Repeat();
-			mBgmCountCheck2 = false;
+		if (mBgmCountCheck == true) {
+			if (mBgmOverStopper == true) {
+				mBgmGameOver.Repeat();
+				mBgmOverStopper = false;
+			}
 		}
 		
 	}
@@ -241,14 +251,19 @@ void CSceneGame::BgmGameOver() {
 void CSceneGame::BgmGameClear() {
 
 	if (mVoiceSwitch == true) {
-		if (mBgmCountCheck2 == true) {
-			mBgmGameClear.Repeat();
+		if (mBgmCountCheck == true) {
+			if (mBgmClearStopper == true) {
+				mBgmGameClear.Repeat();
+				mBgmClearStopper = false;
+
+			}
 		}
 	}
 }
 void CSceneGame::Update() {
 	
 		switch (mBgmCount) {
+			
 		case 1:
 			 BgmStart();
 			 break;
@@ -320,13 +335,10 @@ void CSceneGame::Update() {
 
 	if (mpEnemy3->mColSearch2.mEnabled == false || mpEnemy2->mHp==0) {
 		mBgmCountCheck = false;
-		
 		  mBgmCount = 2;
-		
 	}
 	if (mpBoss->mColSearchCount == true||mpBoss->mHp<HP) {
 		mBgmCountCheck = false;
-		
 			mBgmCount = 3;
 			mpEnemy2->mHp = 0;
 			mpEnemy3->mHp = 0;
@@ -334,17 +346,14 @@ void CSceneGame::Update() {
 	}
 	if (mpBoss->mHp <= 0) {
 		mBgmCountCheck = false;
-		
 			mBgmCount = 4;
 		
 	}
 	if (mPlayer.mHp <= 0) {
 		mBgmCountCheck = false;
-
 		mBgmCount = 5;
 
 	}
-	if (mBgmCountCheck2 == false) {
 
 		if (mBgmCountCheck ==false) {
 			mBgmStart.Stop();
@@ -352,12 +361,9 @@ void CSceneGame::Update() {
 			mBgmBossBattle.Stop();
 			mBgmGameClear.Stop();
 			mBgmGameOver.Stop();
-			
+			mBgmCountCheck = true;
 		}
-	}
-	if (mBgmCountCheck2 == true) {
-     mBgmCountCheck = true;
-	}
+	
 		
 	
 	//更新
@@ -377,7 +383,7 @@ void CSceneGame::Render() {
 	mShadowMap.Render();//影設定
 	//コライダの描画
 	//ここをコメントにするとすべてのコライダ非表示
-	//CCollisionManager::Get()->Render();
+	CCollisionManager::Get()->Render();
 	//2D描画開始
 	CUtil::Start2D(0, 800, 0, 600);
 	char buf[64];
