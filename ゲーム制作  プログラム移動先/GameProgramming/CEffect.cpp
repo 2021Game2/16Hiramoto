@@ -1,17 +1,35 @@
 #include "CEffect.h"
+#include <cassert>
 
-CMaterial CEffect::sMaterial; //マテリアル.テクスチャ
+CMaterial CEffect::sMaterial[CEffect::EFF_MAX]; //マテリアル.テクスチャ
 
-CEffect::CEffect(const CVector &pos, float w, float h, char *texture, int row, int col, int fps)
-: CBillBoard(pos, w, h), mRows(row), mCols(col), mFps(fps), mFrame(0)
+void CEffect::TexPreLoad()
+{
+	static char* LoadPath[] = {
+		"Resource\\png,tga\\Attack1.png",	//EFF_ATTACK1
+		"Resource\\png,tga\\Attack2.png",	//EFF_ATTACK2
+		"Resource\\png,tga\\Attack3.png",	//EFF_ATTACK3
+		"Resource\\png,tga\\AttackSp.png",	//EFF_ATTACKSP
+		"Resource\\png,tga\\Damage.png",	//EFF_DAMAGE
+		"Resource\\png,tga\\exp.tga",		//EFF_EXP
+	};
+
+	for (int i = 0; i < EFF_MAX; i++) {
+
+		//テクスチャを読んでない場合は読む
+		if (sMaterial[i].mTexture.mId == 0)
+		{
+			sMaterial[i].mTexture.Load(LoadPath[i]);
+			sMaterial[i].mDiffuse[0] = sMaterial[i].mDiffuse[1] =
+			sMaterial[i].mDiffuse[2] = sMaterial[i].mDiffuse[3] = 1.0f;
+		}
+	}
+}
+CEffect::CEffect(const CVector& pos, float w, float h, CEffect::EffType efftype, int row, int col, int fps)
+	: CBillBoard(pos, w, h), mRows(row), mCols(col), mFps(fps), mFrame(0), mEffType(efftype)
 {
 	//テクスチャを読んでない場合は読む
-	if (sMaterial.mTexture.mId == 0)
-	{
-		sMaterial.mTexture.Load(texture);
-		sMaterial.mDiffuse[0] = sMaterial.mDiffuse[1] =
-			sMaterial.mDiffuse[2] = sMaterial.mDiffuse[3] = 1.0f;
-	}
+	assert(sMaterial[efftype].mTexture.mId != 0);
 }
 void CEffect::MoveUpdate() {
 	
@@ -47,6 +65,6 @@ void CEffect::Update() {
 void CEffect::Render()
 {
 	glDisable(GL_DEPTH_TEST); //深度テスト無効
-	CBillBoard::Render(&sMaterial);
+	CBillBoard::Render(&sMaterial[mEffType]);
 	glEnable(GL_DEPTH_TEST); //深度テスト有効
 }

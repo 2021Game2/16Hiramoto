@@ -205,7 +205,7 @@ void CEnemy3::Update() {
 		//15フレームごとにエフェクト
 		if (mHp % 15 == 0) {
 			//エフェクト生成
-			new CEffect(mPosition, 1.0f, 1.0f, DAMAGEEFFECT, 4, 4, 2);
+			new CEffect(mPosition, 1.0f, 1.0f,CEffect::EFF_EXP, 4, 4, 2);
 		}
 		CTransform::Update();
 	}

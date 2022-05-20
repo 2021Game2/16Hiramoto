@@ -17,7 +17,7 @@
 #include"CSound.h"
 
 #define HP 30
-#define ENEMY2COUNT 20 //ˆê“x‚Éo‚¹‚é“G‚Q‚Ì”
+#define ENEMY2COUNT 1 //ˆê“x‚Éo‚¹‚é“G‚Q‚Ì”
 #define ENEMY2MINCOUNT 4 //“G‚Q‚ðÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚Q‚Ì”‚Ì‰ºŒÀ
 #define ENEMY3COUNT 1//ˆê“x‚Éo‚¹‚é“G‚R‚Ì”
 #define ENEMY3MINCOUNT 4 //“G‚R‚ðÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚R‚Ì”‚Ì‰ºŒÀ
@@ -52,7 +52,7 @@ int CSceneGame::mEnemy2CountStopper = ENEMY2COUNT;
 int CSceneGame::mEnemy3Count = 0;
 int CSceneGame::mEnemy3CountStopper = ENEMY3COUNT;
 
-bool CSceneGame::mVoiceSwitch =true;//falseF‰¹º‚È‚µ trueF‰¹º‚ ‚è
+bool CSceneGame::mVoiceSwitch =false;//falseF‰¹º‚È‚µ trueF‰¹º‚ ‚è
 
 CSound PlayerFirstAttack;
 CSound PlayerSecondAttack;
@@ -190,12 +190,11 @@ mpRock = new CRock(CVector(0.0f, 0.0f, -100.0f),
 
 mpTree = new CTree(CVector(0.0f, 0.0f, 0.0f),
 	CVector(), CVector(10.5f, 10.5f, 10.5f));
-	
+
 float shadowColor[] = { 0.4f, 0.4f, 0.4f, 0.2f };  //‰e‚ÌF
 float lightPos[] = { 50.0f, 160.0f, 50.0f };  //ŒõŒ¹‚ÌˆÊ’u
 mShadowMap.Init(TEXWIDTH, TEXHEIGHT, ShadowRender, shadowColor, lightPos);//‰e‚Ì‰Šú‰»
-
-
+CEffect::TexPreLoad();
 }
 
 void CSceneGame::BgmStart() {
@@ -333,7 +332,7 @@ void CSceneGame::Update() {
 		exit(0);
 	}
 
-	if (mpEnemy3->mColSearch2.mEnabled == false || mpEnemy2->mHp==0) {
+	if (mpEnemy3->mColSearch2.mEnabled == false || mpEnemy2->mHp==1) {
 		mBgmCountCheck = false;
 		  mBgmCount = 2;
 	}

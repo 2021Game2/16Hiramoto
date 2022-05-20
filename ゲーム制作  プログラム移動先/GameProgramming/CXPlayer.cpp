@@ -10,11 +10,6 @@
 #include"CSound.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
-#define ATTACK1 "Resource\\png,tga\\Attack1.png"
-#define ATTACK2 "Resource\\png,tga\\Attack2.png"
-#define ATTACK3 "Resource\\png,tga\\Attack3.png"
-#define ATTACKSP "Resource\\png,tga\\AttackSp.png"
-#define DAMAGE "Resource\\png,tga\\Damage.png"
 #define ATTACKCOUNT1 20
 #define ATTACKCOUNT2 20
 #define ATTACKCOUNT3 40
@@ -181,7 +176,7 @@ void CXPlayer::Update()
 
 			//エフェクト生成
 			
-			mEffect1=new CEffect(CVector(mPosition.mX,mPosition.mY+1.0f,mPosition.mZ-5.0f), 3.0f, 3.0f, ATTACK1, 2, 5, 3);
+			mEffect1=new CEffect(CVector(mPosition.mX,mPosition.mY+1.0f,mPosition.mZ-5.0f), 3.0f, 3.0f, CEffect::EFF_ATTACK, 2, 5, 3);
 			mAttackHit = true;
 		}
 		if (mAnimationFrame >= mAnimationFrameSize)
@@ -199,7 +194,7 @@ void CXPlayer::Update()
 	case(5):
 		if (mAnimationFrame == 15) {
 
-			mEffect2 = new CEffect(CVector(mPosition.mX, mPosition.mY + 1.0f, mPosition.mZ - 5.0f), 3.0f, 3.0f, ATTACK2, 3, 5, 3);
+			mEffect2 = new CEffect(CVector(mPosition.mX, mPosition.mY + 1.0f, mPosition.mZ - 5.0f), 3.0f, 3.0f, CEffect::EFF_ATTACK2, 3, 5, 3);
 			mAttackHit = true;
 			
 		}
@@ -220,8 +215,10 @@ void CXPlayer::Update()
 			mJump -= G;
 		}
 		if (mAnimationFrame == 15) {
+			if (mState == EATTACK3) {
 
-			mEffect3 = new CEffect(CVector(mPosition.mX, mPosition.mY + 1.0f, mPosition.mZ - 5.0f), 3.0f, 3.0f, ATTACK3, 3, 5, 3);
+		    	mEffect3 = new CEffect(CVector(mPosition.mX, mPosition.mY + 1.0f, mPosition.mZ + 1.0f), 3.0f, 3.0f, CEffect::EFF_ATTACK3, 3, 5, 3);
+			}
 			mAttackHit = true;
 		}
 		if (mAnimationFrame >= mAnimationFrameSize)
@@ -233,7 +230,7 @@ void CXPlayer::Update()
 		if (mState == EATTACKSP) {
 			if (mJump >= -3.0f) {
 
-				mEffectSp = new CEffect(CVector(mPosition.mX, mPosition.mY + 1.0f, mPosition.mZ - 5.0f), 3.0f, 3.0f, ATTACKSP, 4, 5, 3);
+				mEffectSp = new CEffect(CVector(mPosition.mX, mPosition.mY + 1.0f, mPosition.mZ - 5.0f), 3.0f, 3.0f, CEffect::EFF_ATTACKSP, 4, 5, 3);
 				mJump -= G2;
 
 			  mCollider2.mRenderEnabled = true;

@@ -14,6 +14,8 @@ public:
 	//デフォルトコンストラクタ
 	CTask()
 		: mpNext(0), mpPrev(0), mPriority(0), mEnabled(true), mRenderEnabled(true) {}
+	CTask(int Priority)
+		: mpNext(0), mpPrev(0), mPriority(Priority), mEnabled(true) {}
 	//デストラクタ virtualにしないと子クラスのデストラクタが呼ばれない
 	virtual ~CTask() {}
 	//更新

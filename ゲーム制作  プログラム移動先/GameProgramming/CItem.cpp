@@ -27,7 +27,7 @@ CItem::CItem(const CVector& position, const CVector& rotation, const CVector& sc
 	CTaskManager::Get()->Add(this);//追加する
 }
 CItem::CItem() 
-	: mCollider(this, &mMatrix, CVector(0.0f, 2.0f, 0.0f), 4.0f,3.0f)
+	: mCollider(this, &mMatrix, CVector(0.0f, 3.0f, 0.0f), 6.0f)
 	
 {
 	//モデルのポインタ設定
@@ -54,10 +54,10 @@ void CItem::Update() {
 	  mPosition.mZ = tPlayer->mPosition.mZ;
 
 	}
-	if (mItemAttackHit == true&&mItemCount == 0) {
+	if (mItemAttackHit == true&&mItemCount < 0) {
 		mEnabled = false;
 	}
-	if (mItemAttackHit = false) {
+	if (mItemAttackHit == false) {
 
        mRotation.mY++;
 	}

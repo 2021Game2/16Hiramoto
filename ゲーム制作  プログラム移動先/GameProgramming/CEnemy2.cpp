@@ -146,7 +146,7 @@ void CEnemy2::Damaged() {
 	//爆発エフェクト付与
 	if (mEffectCount % 15 == 0) {
 		//エフェクト生成
-		new CEffect(mPosition, 1.0f, 1.0f, "exp.tga", 4, 4, 2);
+		new CEffect(mPosition, 1.0f, 1.0f, CEffect::EFF_EXP, 4, 4, 2);
 	}
 	//ヒットバック（X,Z軸)
 	if (mColliderCount > 0) {
@@ -174,7 +174,7 @@ void CEnemy2::Death() {
 		//15フレームごとにエフェクト
 		if (mEffectCount % 15 == 0) {
 			//エフェクト生成
-			new CEffect(mPosition, 1.0f, 1.0f, DAMAGEEFFECT, 4, 4, 2);
+			//new CEffect(mPosition, 1.0f, 1.0f, DAMAGEEFFECT, 4, 4, 2);
 		}
 		CTransform::Update();
 	}
@@ -299,7 +299,6 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 						//親をCXPlayerを元にポインタ化し、変数を参照
 						if (((CItem*)(o->mpParent))->mItemAttackHit == true)
 						{//ヒットバック＆ダメージを受ける
-							//if (mDamageCount <= 0) {
 								//プレイヤーのジャンプ攻撃必要ポイント増加
 								((CXPlayer*)(o->mpParent))->mSpAttack++;
 								mEffectCount = 0;
@@ -319,7 +318,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 									mJump = JUMP;
 									mState = EDEATH;
 								}
-							//}
+							
 						}
 					}
 				}

@@ -4,10 +4,10 @@
 //描画処理
 void CCharacter::Render()
 {
-	if (mpModel) {
+	
 
 	mpModel->Render(mMatrix);
-	}
+	
 }
 
 CCharacter::~CCharacter() {
@@ -17,6 +17,12 @@ CCharacter::~CCharacter() {
 
 CCharacter::CCharacter()
 :mTag(EZERO)
+{
+	//タスクリストに追加
+	CTaskManager::Get()->Add(this);
+}
+CCharacter::CCharacter(int Priority)
+	: CTask(Priority), mTag(EZERO)
 {
 	//タスクリストに追加
 	CTaskManager::Get()->Add(this);

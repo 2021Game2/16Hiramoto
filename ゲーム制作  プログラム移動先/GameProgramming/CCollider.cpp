@@ -148,7 +148,7 @@ bool CCollider::CollisionTriangleSphere(CCollider *t, CCollider *s, CVector *a)
 	if (t->mIsStatic) {
 		CVector pos = s -> mPosition * *s->mpMatrix;
 		//三角形の中心とコライダ（半径*４）の距離を計測
-		if ((t->mPos - pos).Length() > s->mRadius * 4.0f) {
+		if ((t->mPos - pos).Length() > s->mRadius * 7.0f) {
 			//距離が離れていれば実行しない
 			return false;
 		}
