@@ -43,6 +43,8 @@ CBoss::CBoss()
 	, mBossDamageCount(0)
 	, mBossAttackHit(false)
 	,mColSearchCount(false)
+	, mBossBgm(true)
+	, mBossBgmDeath(true)
 {
 
 	mGravity = 0.20f;
@@ -203,6 +205,11 @@ void CBoss::Damaged() {
 }
 //死亡処理
 void CBoss::Death() {
+	if (mBossBgmDeath == true) {
+		CSceneGame::mBgmCountCheck = false;
+		CSceneGame::mBgmCount = 4;
+		mBossBgmDeath = false;
+	}
 	ChangeAnimation(9, false, 250);
 	//体力がなくなったら
 	if (mHp <= 0) {
@@ -309,7 +316,11 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 							//ポインタをプレイヤーに設定
 							mColSearchCount = true;
 							if (mColSearch.mRenderEnabled == true) {
-								
+								if (mBossBgm == true) {
+									CSceneGame::mBgmCountCheck = false;
+									CSceneGame::mBgmCount = 3;
+									mBossBgm = false;
+								}
 								mColSearch.mRenderEnabled = false;
 							}
 						}

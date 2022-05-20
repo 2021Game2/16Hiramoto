@@ -59,6 +59,7 @@ CXPlayer::CXPlayer()
 	,mColliderCount(1.0f)
 	,mTime(0.0f)
 	,mSpeed(0.0f)
+	,mPlayerBgm(true)
 {
 	//タグにプレイヤーを設定します
 	mTag = EPLAYER;
@@ -166,6 +167,12 @@ void CXPlayer::Update()
 		ChangeAnimation(4, false, 10);
 		break;
 	case EDEATH://死亡
+		if (mPlayerBgm == true) {
+			CSceneGame::mBgmCountCheck = false;
+			CSceneGame::mBgmCount = 5;
+
+			mPlayerBgm = false;
+		}
 		ChangeAnimation(11, false, 60);
 		break;
 	}

@@ -51,8 +51,9 @@ int CSceneGame::mEnemy2Count = 0;
 int CSceneGame::mEnemy2CountStopper = ENEMY2COUNT;
 int CSceneGame::mEnemy3Count = 0;
 int CSceneGame::mEnemy3CountStopper = ENEMY3COUNT;
-
-bool CSceneGame::mVoiceSwitch =false;//false：音声なし true：音声あり
+int CSceneGame::mBgmCount = 1;//BGMの切り替え番号
+bool CSceneGame::mBgmCountCheck = true;//BGMを流すか止めるか分けるフラグ
+bool CSceneGame::mVoiceSwitch =true;//false：音声なし true：音声あり
 
 CSound PlayerFirstAttack;
 CSound PlayerSecondAttack;
@@ -69,8 +70,7 @@ CSceneGame::CSceneGame()
 	,mTimeMinute(0)
 	,mSpawn(0)
     , mSpawn2(0)
-	,mBgmCount(1)
-	,mBgmCountCheck(true)
+	
 	,mBgmCountCheck2(true)
 	,mBgmStartStopper(true)
 	,mBgmBattleStopper(true)
@@ -108,7 +108,8 @@ void CSceneGame::Init()
 	mBgmBossBattle.Load(BGMBOSSBATTLE);
 	mBgmGameClear.Load(BGMGAMECLEAR);
 	mBgmGameOver.Load(BGMGAMEOVER);
-	
+
+	mBgmStart.Repeat();
 	//テキストフォントの読み込みと設定
 	mFont.LoadTexture(FONT, 1, 4096 / 64);
 
@@ -197,18 +198,6 @@ mShadowMap.Init(TEXWIDTH, TEXHEIGHT, ShadowRender, shadowColor, lightPos);//影の
 CEffect::TexPreLoad();
 }
 
-void CSceneGame::BgmStart() {
-
-	if (mVoiceSwitch == true) {
-		if (mBgmCountCheck == true) {
-			if (mBgmStartStopper == true) {
-
-			 mBgmStart.Repeat();
-			 mBgmStartStopper = false;
-			}
-		}
-	}
-}
 void CSceneGame::BgmBattle() {
 
 	if (mVoiceSwitch == true) {
@@ -227,7 +216,6 @@ void CSceneGame::BgmBoss() {
 	if (mVoiceSwitch == true) {
 		if (mBgmCountCheck == true) {
 			if (mBgmBossStopper==true) {
-
 				mBgmBossBattle.Repeat();
 				mBgmBossStopper = false;
 			}
@@ -236,7 +224,6 @@ void CSceneGame::BgmBoss() {
 	}
 }
 void CSceneGame::BgmGameOver() {
-
 	if (mVoiceSwitch == true) {
 		if (mBgmCountCheck == true) {
 			if (mBgmOverStopper == true) {
@@ -263,9 +250,7 @@ void CSceneGame::Update() {
 	
 		switch (mBgmCount) {
 			
-		case 1:
-			 BgmStart();
-			 break;
+		
 		case 2:
 			 BgmBattle();
 			   break;
@@ -331,29 +316,10 @@ void CSceneGame::Update() {
 	if (CKey::Push(VK_ESCAPE)) {
 		exit(0);
 	}
-
-	if (mpEnemy3->mColSearch2.mEnabled == false || mpEnemy2->mHp==1) {
-		mBgmCountCheck = false;
-		  mBgmCount = 2;
-	}
-	if (mpBoss->mColSearchCount == true||mpBoss->mHp<HP) {
-		mBgmCountCheck = false;
-			mBgmCount = 3;
+	if (mpBoss->mHp <= 0) {
 			mpEnemy2->mHp = 0;
 			mpEnemy3->mHp = 0;
-		
 	}
-	if (mpBoss->mHp <= 0) {
-		mBgmCountCheck = false;
-			mBgmCount = 4;
-		
-	}
-	if (mPlayer.mHp <= 0) {
-		mBgmCountCheck = false;
-		mBgmCount = 5;
-
-	}
-
 		if (mBgmCountCheck ==false) {
 			mBgmStart.Stop();
 			mBgmBattle.Stop();

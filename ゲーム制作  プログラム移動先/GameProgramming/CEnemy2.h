@@ -33,6 +33,7 @@ private:
 	int mEnemyVoice;
 	float CurveCount;
 	CCharacter* mpPlayer;//プレイヤーのポインタ
+	bool mEnemy2Bgm;
 public:
 	unsigned int mEnemyLevel;
 	float mEnemyHpPercent;

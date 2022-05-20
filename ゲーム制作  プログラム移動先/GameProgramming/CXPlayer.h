@@ -17,6 +17,7 @@ class CXPlayer : public CXCharacter
 private:
 
 	CTexture mImageGauge; //ƒQ[ƒW‰æ‘œ
+	bool mPlayerBgm;
 public:
 	CEffect* mEffect1;
 

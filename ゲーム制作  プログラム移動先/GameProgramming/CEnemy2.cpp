@@ -34,6 +34,7 @@ CEnemy2::CEnemy2()
 	,mEnemy2AttackHit(false)
 	,mEnemyLevel(0)
 	,mEnemyHpPercent(1.0f)
+	, mEnemy2Bgm(true)
 {
 	mTag = EENEMY2;
 	mColSphereRight.mTag= CCollider::EENEMY2COLLIDERATTACK;
@@ -138,7 +139,14 @@ void CEnemy2::Attack() {
 }	
 //ダメージ処理
 void CEnemy2::Damaged() {
-	
+	if (CSceneGame::mBgmCount <= 2) {
+
+		if (mEnemy2Bgm == true) {
+			CSceneGame::mBgmCountCheck = false;
+			CSceneGame::mBgmCount = 2;
+			mEnemy2Bgm = false;
+		}
+	}
 	//無敵時間付与
 	if (mDamageCount < 60) {
 		mDamageCount++;
@@ -162,7 +170,6 @@ void CEnemy2::Damaged() {
 }		
 //死亡処理
 void CEnemy2::Death() {
-	
 	//体力がなくなったら
 	if (mHp <= 0) {
 		//mTimeとmJumpに整数が代入され、吹っ飛ぶようになる

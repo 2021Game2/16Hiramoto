@@ -33,7 +33,8 @@ private:
 	CVector mCollisionEnemy;
 	int mEnemyDamage;
 
-
+	bool mBossBgm;
+	bool mBossBgmDeath;
 	CCharacter* mpPlayer;//プレイヤーのポインタ
 public:
 	
