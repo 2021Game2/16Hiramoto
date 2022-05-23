@@ -4,10 +4,10 @@
 //•`‰æˆ—
 void CCharacter::Render()
 {
-	
+	if (mpModel) {
 
 	mpModel->Render(mMatrix);
-	
+	}
 }
 
 CCharacter::~CCharacter() {

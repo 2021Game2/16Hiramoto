@@ -6,7 +6,6 @@
 #include"CUtil.h"
 #include"CText.h"
 #include"CItem.h"
-#define DAMAGEEFFECT "Resource\\png,tga\\exp.tga"
 #define HP 30
 #define VELOCITY 0.2f //É}ÉNÉç
 #define ROTATION 180.0f

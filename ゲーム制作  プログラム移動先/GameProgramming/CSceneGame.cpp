@@ -42,10 +42,6 @@
 #define TEXWIDTH  8192  //テクスチャ幅
 #define TEXHEIGHT  6144  //テクスチャ高さ
 
-#define INIT_POSE CVector(0.0f, 0.0f, 1.0f) //初期の姿勢
-#define VELOCITY CVector(0.0f, 0.0f, 2.0f) //移動速度
-#define ROTATE_V CVector(0.0f, 2.0f, 0.0f) //回転速度
-#define COLLIDER_POS CVector(0.0f, 7.0f, 0.0f) //コライダの位置
 //CMatrix Matrix;
 int CSceneGame::mEnemy2Count = 0;
 int CSceneGame::mEnemy2CountStopper = ENEMY2COUNT;
@@ -108,8 +104,10 @@ void CSceneGame::Init()
 	mBgmBossBattle.Load(BGMBOSSBATTLE);
 	mBgmGameClear.Load(BGMGAMECLEAR);
 	mBgmGameOver.Load(BGMGAMEOVER);
+	if (mVoiceSwitch == true) {
 
-	mBgmStart.Repeat();
+	 mBgmStart.Repeat();
+	}
 	//テキストフォントの読み込みと設定
 	mFont.LoadTexture(FONT, 1, 4096 / 64);
 
@@ -118,7 +116,7 @@ CRes::sModelX.Load(MODEL_FILE);
 mPlayer.Init(&CRes::sModelX);
 mPlayer.mPosition = CVector(-63.0f, 5.0f, -150.0f);
 
-mPlayer.mPosition = CVector(-56.0f, 5.0f, -49.0f);
+//mPlayer.mPosition = CVector(-56.0f, 5.0f, -49.0f);
 /*
 CRes::sKnight.Load(KNIGHT);
 CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//1:移動
@@ -180,7 +178,7 @@ mpBoss->mPosition = CVector(3.0f, 10.0f, 100.0f);
 
 new CItem(CVector(-20.0f, 2.0f, -10.0f),
 	CVector(), CVector(1.5f, 1.5f, 1.5f));
-mpEnemySummon = new CEnemySummon(CVector(-36.0f, 1.0f, -59.0f),
+mpEnemySummon = new CEnemySummon(CVector(-36.0f, -2.0f, -59.0f),
 	CVector(), CVector(0.5f, 0.5f, 0.5f));
 
 mpEnemySummon2 = new CEnemySummon(CVector(6.0f, 8.0f, 14.0f),

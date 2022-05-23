@@ -12,6 +12,9 @@ private:
 	//コライダ
 	CCollider mCollider;
 	int mHp;
+	int mDamageCount;
+
+	CTexture mImageGauge; //ゲージ画像
 public:
 	//モデルデータ
 	static CModel mModel;
@@ -25,6 +28,7 @@ public:
 	void Collision(CCollider* m, CCollider* o);
 	void TaskCollision();
 	void Render();
+	void Render2D();
 };
 
 
