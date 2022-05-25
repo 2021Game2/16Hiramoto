@@ -17,10 +17,16 @@
 #include"CSound.h"
 
 #define HP 30
-#define ENEMY2COUNT 1 //ˆê“x‚Éo‚¹‚é“G‚Q‚Ì”
+#define ENEMY2COUNT 20 //ˆê“x‚Éo‚¹‚é“G‚Q‚Ì”
 #define ENEMY2MINCOUNT 4 //“G‚Q‚ğÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚Q‚Ì”‚Ì‰ºŒÀ
 #define ENEMY3COUNT 1//ˆê“x‚Éo‚¹‚é“G‚R‚Ì”
 #define ENEMY3MINCOUNT 4 //“G‚R‚ğÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚R‚Ì”‚Ì‰ºŒÀ
+
+#define TEX_BUTTON "Resource\\png,tga\\MoveKey.png"
+#define TEX_BUTTON2 "Resource\\png,tga\\CKey.png"
+#define TEX_BUTTON3 "Resource\\png,tga\\Mouse.png"
+#define TEX_DUSH "Resource\\png,tga\\Dush.png"
+#define TEX_WORK "Resource\\png,tga\\Work.png"
 #define BGMSTART "BGM\\BGMSTART.wav" //BGM
 #define BGMBATTLE "BGM\\BGMBATTLE.wav" //ƒoƒgƒ‹’†‚ÌBGM
 #define BGMBOSSBATTLE "BGM\\BGMBOSSBATTLE.wav" // ƒ{ƒX‚Æí‚Á‚Ä‚¢‚é‚Æ‚«‚ÌBGM
@@ -104,6 +110,11 @@ void CSceneGame::Init()
 	mBgmBossBattle.Load(BGMBOSSBATTLE);
 	mBgmGameClear.Load(BGMGAMECLEAR);
 	mBgmGameOver.Load(BGMGAMEOVER);
+	mImageMouse.Load(TEX_BUTTON3);
+	mImageCkey.Load(TEX_BUTTON2);
+	mImageWork.Load(TEX_WORK);
+	mImageDush.Load(TEX_DUSH);
+	mImageMoveKey.Load(TEX_BUTTON);
 	if (mVoiceSwitch == true) {
 
 	 mBgmStart.Repeat();
@@ -114,7 +125,7 @@ void CSceneGame::Init()
 CRes::sModelX.Load(MODEL_FILE);
 //ƒLƒƒƒ‰ƒNƒ^[‚Éƒ‚ƒfƒ‹‚ğİ’è
 mPlayer.Init(&CRes::sModelX);
-mPlayer.mPosition = CVector(-63.0f, 5.0f, -150.0f);
+mPlayer.mPosition = CVector(-63.0f, 1.0f, -150.0f);
 
 //mPlayer.mPosition = CVector(-56.0f, 5.0f, -49.0f);
 /*
@@ -279,15 +290,19 @@ void CSceneGame::Update() {
 	if (mSpawn2 >= 0) {
 		mSpawn2--;
 	}
-	//mEnemy2CountStopper‚Éİ’è‚µ‚½”‚¾‚¯“G‚ğ¶¬
-	if (mEnemy2Count < mEnemy2CountStopper) {
-		//‚Q•b‚²‚Æ‚É¶¬
-		if (mSpawn <= 0) {
-			mpEnemy2 = new CEnemy2(mpEnemySummon->mPosition,
-				CVector(), CVector(0.75f, 0.75f, 0.75f));
-			mpEnemy2->Init(&CRes::sScorp);
-			mEnemy2Count++;
-			mSpawn = 0;
+	if (mpEnemySummon->mHp > 0) {
+
+
+		//mEnemy2CountStopper‚Éİ’è‚µ‚½”‚¾‚¯“G‚ğ¶¬
+		if (mEnemy2Count < mEnemy2CountStopper) {
+			//‚Q•b‚²‚Æ‚É¶¬
+			if (mSpawn <= 0) {
+				mpEnemy2 = new CEnemy2(mpEnemySummon->mPosition,
+					CVector(), CVector(0.75f, 0.75f, 0.75f));
+				mpEnemy2->Init(&CRes::sScorp);
+				mEnemy2Count++;
+				mSpawn = 0;
+			}
 		}
 	}
 
@@ -295,14 +310,17 @@ void CSceneGame::Update() {
 	else if( mEnemy2CountStopper<= ENEMY2MINCOUNT) {
 		mEnemy2CountStopper = ENEMY2COUNT;
 	}
-	//mEnemy3CountStopper‚Éİ’è‚µ‚½”‚¾‚¯“G‚ğ¶¬
-	if (mEnemy3Count < mEnemy3CountStopper) {
-		//‚Q•b‚²‚Æ‚É¶¬
-		if (mSpawn2 <= 0) {
-			mpEnemy3 = new CEnemy3(mpEnemySummon2->mPosition, CVector(0.0f, 0.0f, 0.0f),
-				CVector(1000.5f, 1000.5f, 1000.5f));
-			mEnemy3Count++;
-			mSpawn2 = 120;
+
+	if (mpEnemySummon2->mHp > 0) {
+		//mEnemy3CountStopper‚Éİ’è‚µ‚½”‚¾‚¯“G‚ğ¶¬
+		if (mEnemy3Count < mEnemy3CountStopper) {
+			//‚Q•b‚²‚Æ‚É¶¬
+			if (mSpawn2 <= 0) {
+				mpEnemy3 = new CEnemy3(mpEnemySummon2->mPosition, CVector(0.0f, 0.0f, 0.0f),
+					CVector(1000.5f, 1000.5f, 1000.5f));
+				mEnemy3Count++;
+				mSpawn2 = 120;
+			}
 		}
 	}
 
@@ -350,24 +368,60 @@ void CSceneGame::Render() {
 	//2D•`‰æŠJn
 	CUtil::Start2D(0, 800, 0, 600);
 	char buf[64];
-	if (CBoss::mHp>0) {
+	if (CBoss::mHp>0||mPlayer.mHp<0) {
+
 		sprintf(buf, "%d:", mTimeMinute);
 		mFont.DrawString(buf, 200, 500, 8, 16);
-		sprintf(buf, "%d", mTimeSecond);
-		mFont.DrawString(buf, 250, 500, 8, 16);
+		if (mTimeSecond < 10) {
+		  sprintf(buf, "0%d", mTimeSecond);
+		  mFont.DrawString(buf, 230, 500, 8, 16);
+		}
+		else {
+			sprintf(buf, "%d", mTimeSecond);
+			mFont.DrawString(buf, 230, 500, 8, 16);
+	    }
 		sprintf(buf, "SPECIAL:%10d", CXPlayer::mSpAttack);
 		mFont.DrawString(buf, 20, 100, 8, 16);
-		sprintf(buf, "POSITIONX:%f", mPlayer.mPosition.mX);
-		mFont.DrawString(buf, 20, 200, 8, 16);
-		sprintf(buf, "POSITIONY:%f", mPlayer.mPosition.mY);
-		mFont.DrawString(buf, 20, 250, 8, 16);
-		sprintf(buf, "POSITIONZ:%f", mPlayer.mPosition.mZ);
-		mFont.DrawString(buf, 20, 300, 8, 16);
+		if (mPlayer.mPosition.mX > 0) {
+		 sprintf(buf, ":%f", mPlayer.mPosition.mX);
+		 mFont.DrawString(buf, 20, 200, 8, 16);
+		}
+		else {
+			sprintf(buf, "X:%f", mPlayer.mPosition.mX);
+			mFont.DrawString(buf, 20, 200, 8, 16);
+		}
+		if (mPlayer.mPosition.mY > 0) {
+		
+		 sprintf(buf, "Y:%f", mPlayer.mPosition.mY);
+		 mFont.DrawString(buf, 20, 250, 8, 16);
+		}
+		else {
+			sprintf(buf, "Y:-%f", mPlayer.mPosition.mY);
+			mFont.DrawString(buf, 20, 250, 8, 16);
+		}
+		if (mPlayer.mPosition.mZ > 0) {
+			sprintf(buf, "Z:%f", mPlayer.mPosition.mZ);
+			mFont.DrawString(buf, 20, 300, 8, 16);
+		}
+		else {
+			sprintf(buf, "Z:-%f", mPlayer.mPosition.mZ);
+			mFont.DrawString(buf, 20, 300, 8, 16);
+
+		}
 	}
 	else if (CBoss::mHp <= 0) {
 	sprintf(buf, "GAMECLEAR" );
 	mFont.DrawString(buf, 20, 300, 16, 32);
 	}
+	if (mPlayer.mHp < 0) {
+		sprintf(buf, "GAMEOVER");
+		mFont.DrawString(buf, 20, 300, 16, 32);
+	}
+	mImageMouse.Draw(600, 800, 0, 200, 0, 500, 500, 0);
+	mImageMoveKey.Draw(0, 150, 150, 300, 0, 500, 500, 0);
+	mImageCkey.Draw(150, 300, 200, 300, 0, 500, 500, 0);
+	mImageWork.Draw(0, 200, 0, 200, 0, 250, 250, 0);
+	mImageDush.Draw(200, 300, 50, 190, 0, 200, 200, 0);
 	//2D‚Ì•`‰æI—¹
 	CUtil::End2D();
 	//CXPlayer‚Ìƒpƒ‰ƒ[ƒ^“™‚Ì‚QD•`‰æ‚Íˆê”ÔÅŒã

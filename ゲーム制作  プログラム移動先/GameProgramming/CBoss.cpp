@@ -6,8 +6,7 @@
 #include"CXCharacter.h"
 #include"CUtil.h"
 #include"CText.h"
-#define DAMAGEEFFECT "Resource\\png,tga\\exp.tga"
-#define HP 30
+#define HP 10
 
 #define VELOCITY 0.5f //ƒ}ƒNƒ
 
@@ -345,7 +344,7 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 								{
 									if (mHp > 0) {
 										//30“Œ¸‚é‚²‚Æ‚É‚Ì‚¯‚¼‚é
-										if (mHp / 30 == 0) {
+										if (mHp / 30 == 0.00) {
 											mColliderCount = 10;
 											mCollisionEnemy = mPosition - o->mpParent->mPosition;
 											mCollisionEnemy.mY = 0;

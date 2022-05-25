@@ -35,7 +35,7 @@ public:
 		const CVector &up);
 
 	void SetTarget(const CVector& target);
-	
+	void Render();
 	//カメラ初期化
 	void Init();
 	//カメラ更新処理

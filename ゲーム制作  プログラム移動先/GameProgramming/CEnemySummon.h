@@ -11,11 +11,12 @@ private:
 
 	//コライダ
 	CCollider mCollider;
-	int mHp;
+	
 	int mDamageCount;
 
 	CTexture mImageGauge; //ゲージ画像
 public:
+	int mHp;
 	//モデルデータ
 	static CModel mModel;
 	CEnemySummon();

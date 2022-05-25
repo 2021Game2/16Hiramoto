@@ -24,6 +24,7 @@
 #define GAUGE_WID_MAX 400.0f	//ゲージの幅の最大値
 #define GAUGE_LEFT 20			//ゲージ描画時の左端
 #define IMAGE_GAUGE "Resource\\png,tga\\Gauge.png"		//ゲージ画像
+
 #define G 0.1f
 #define G2 2.0f
 
@@ -60,6 +61,7 @@ CXPlayer::CXPlayer()
 	,mTime(0.0f)
 	,mSpeed(0.0f)
 	,mPlayerBgm(true)
+	, mMoveCheck(false)
 {
 	//タグにプレイヤーを設定します
 	mTag = EPLAYER;
@@ -126,11 +128,11 @@ void CXPlayer::Update()
 	case EESCAPE:
 
 		mAttackHit = false;
-		ChangeAnimation(1, true, 10);
+		ChangeAnimation(1, true, 5);
 		if (mRotation.mX!=360.0f) {
 			mRotation.mX += 36.0f;
 		}
-		if(mAnimationFrame >= mAnimationFrameSize){
+		else if(mAnimationFrame >= mAnimationFrameSize){
          mState = EMOVE;
 		 mRotation.mX = 0.0f;
 		}
@@ -284,13 +286,15 @@ void CXPlayer::Update()
 		{
 				Move -= SideVec;
 				mAnimationCount = 5;//0になるまでアニメーションを変更できない
+				mMoveCheck = false;
 				if (CKey::Push('C')) {
 					if (mStamina > -1) {
-						speed = 0.30f;//スピード倍
+						speed = 0.5f;//スピード倍
 						mStamina -= 2;//スタミナ減少
+						mMoveCheck = true;
 					}
 					else {
-						speed = 0.05f;//スピード1/2
+						speed = 0.2f;//スピード1/2
 					}
 				}
 				
@@ -303,14 +307,16 @@ void CXPlayer::Update()
 		{
 			Move += SideVec;
 			mAnimationCount = 5;//0になるまでアニメーションを変更できない
+			mMoveCheck = false;
             if (CKey::Push('C')) {
 		    	if (mStamina > -1) {
-					speed = 0.30f;//スピード倍
+					speed = 0.5f;//スピード倍
 					  mStamina-=2;//スタミナ減少	
+					  mMoveCheck = true;
 				}
 
 				else {
-					speed = 0.05f;//スピード1/2
+					speed = 0.2f;//スピード1/2
 				}
 			}
 			if (CKey::Push(' ')) {
@@ -326,13 +332,13 @@ void CXPlayer::Update()
 
 				if (CKey::Push('C')) {
 					if(mStamina > -1) {
-					speed = 0.30f;//スピード倍
+					speed = 0.5f;//スピード倍
 					mStamina-=2;//スタミナ減少
 				
 					}
 
 					else {
-						speed = 0.05f;//スピード1/2
+						speed = 0.2f;//スピード1/2
 					}
 				}
             if (CKey::Push(' ')) {
@@ -350,11 +356,11 @@ void CXPlayer::Update()
 				if (CKey::Push('C')) {
 			      if (mStamina > -1) {
 
-					speed = 0.30f;//スピード倍
+					speed = 0.5f;//スピード倍
 					mStamina-=2;//スタミナ減少
 				  }
 				  else {
-					speed = 0.05f;//スピード1/2
+					speed = 0.2f;//スピード1/2
 			      }
 			    }
 			
@@ -362,16 +368,17 @@ void CXPlayer::Update()
 				speed = mStep;//攻撃時進行方向にステップを踏む
 			}
 		}
-		 //一回目の攻撃
-			 //一回目の攻撃のフレーム＜＝０かつ３回目の攻撃の総フレーム＞＝０
+   
+	 //一回目の攻撃のフレーム＜＝０かつ３回目の攻撃の総フレーム＞＝０
 			 //１→２→３→１   攻撃の順番がループ
 		 //無敵時間中じゃないとき
 		 //if (mDamageCount <= 0) {
 			 //攻撃１が使えるとき
+		 if (mState != EESCAPE) {
 			 if (mSpaceCount1 == true) {
 
 				 if (mAttackCount <= 0) {
-					 if (CKey::Once(' '))
+					 if (CKey::Once(VK_LBUTTON))
 					 {
 
 						 if (CSceneGame::mVoiceSwitch == true) {
@@ -379,64 +386,66 @@ void CXPlayer::Update()
 						 }
 						 mState = EATTACK1;
 						 mSpaceCount1 = false;//１回目の攻撃のフラグ
-						 mSpaceCount2 =true;
-						mAttackCount = ATTACKCOUNT1;//当たり判定が適用される時間
+						 mSpaceCount2 = true;
+						 mAttackCount = ATTACKCOUNT1;//当たり判定が適用される時間
 						 mAnimationCount = 50;//0になるまでアニメーションが変わらない
 						 mStep = STEP;
 					 }
+
 				 }
 			 }
+				 //2回目の攻撃
+				 else if (mSpaceCount2 == true) {
+					 if (mAttackCount <= 0) {
+						 if (CKey::Once(VK_LBUTTON)) {
 
-			 //2回目の攻撃
-			 else if (mSpaceCount2 == true) {
-				 if (mAttackCount <= 0) {
-					 if (CKey::Once(' ')) {
-
-						 if (CSceneGame::mVoiceSwitch == true) {
-							 PlayerSecondAttack.Play();
+							 if (CSceneGame::mVoiceSwitch == true) {
+								 PlayerSecondAttack.Play();
+							 }
+							 mState = EATTACK2;
+							 mSpaceCount2 = false;//２回目の攻撃のフラグ
+							 mSpaceCount3 = true;
+							 mAttackCount = ATTACKCOUNT2;//当たり判定が適用される時間
+							 mAnimationCount = 50;//0になるまでアニメーションが変わらない
+							 mStep = STEP;
 						 }
-						 mState = EATTACK2;
-						 mSpaceCount2 = false;//２回目の攻撃のフラグ
-						 mSpaceCount3 = true;
-						 mAttackCount = ATTACKCOUNT2;//当たり判定が適用される時間
-						 mAnimationCount = 50;//0になるまでアニメーションが変わらない
-						 mStep = STEP;
 					 }
 				 }
-			 }
-			 //３回目の攻撃
-			 else if (mSpaceCount3 == true) {
-				 if (mAttackCount <= 0) {
-					 if (CKey::Once(' ')) {
+				 //３回目の攻撃
+				 else if (mSpaceCount3 == true) {
+					 if (mAttackCount <= 0) {
+						 if (CKey::Once(VK_LBUTTON)) {
 
-						 if (CSceneGame::mVoiceSwitch == true) {
-							 PlayerThirdAttack.Play();
+							 if (CSceneGame::mVoiceSwitch == true) {
+								 PlayerThirdAttack.Play();
+							 }
+							 mState = EATTACK3;
+							 mAnimationCount = 50;//0になるまでアニメーションが変わらない
+							 mSpaceCount3 = false;//３回目の攻撃のフラグ
+							 mSpaceCount1 = true;
+							 mAttackCount = ATTACKCOUNT3;//当たり判定が適用される時間
+							 mStep = STEP;//ジャンプ力を代入
 						 }
-						 mState = EATTACK3;
-						 mAnimationCount = 50;//0になるまでアニメーションが変わらない
-						 mSpaceCount3 = false;//３回目の攻撃のフラグ
-						 mSpaceCount1 = true;
-						 mAttackCount = ATTACKCOUNT3;//当たり判定が適用される時間
-						 mStep = STEP;//ジャンプ力を代入
 					 }
 				 }
-			 }
-		
-		 //ジャンプ攻撃
-		 if (mSpAttack >= 30) {
-			 if (CKey::Once('F')) {
-			     if (mAttackCount <= 0) {
 
-					 if (CSceneGame::mVoiceSwitch == true) {
-						 PlayerJumpAttack.Play();
+				 //ジャンプ攻撃
+				 if (mSpAttack >= 30) {
+					 if (CKey::Once(VK_RBUTTON)) {
+						 if (mAttackCount <= 0) {
+
+							 if (CSceneGame::mVoiceSwitch == true) {
+								 PlayerJumpAttack.Play();
+							 }
+							 mState = EATTACKSP;
+							 mJump = JUMP;//ジャンプ力を代入
+							 mSpAttack -= 30;//特殊攻撃のゲージ減少
+							 mAnimationCount = 200;//0になるまでアニメーションが変わらない
+							 mAttackCount = 100;
+						 }
 					 }
-					 mState = EATTACKSP;
-					 mJump = JUMP;//ジャンプ力を代入
-					  mSpAttack -= 30;//特殊攻撃のゲージ減少
-					 mAnimationCount = 200;//0になるまでアニメーションが変わらない
-					 mAttackCount = 100;
 				 }
-			 }
+			 
 		 }
 		 //死亡
 		 if (mHp <= 0) {
@@ -624,7 +633,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 							CVector adjust;//調整用ベクトル
 							if (CCollider::Collision(m, o)) {
 								//ダメージが入ったあとの無敵時間が０のとき
-								if (mDamageCount == 0) {
+								if (mDamageCount == 0&&mState!=EESCAPE) {
 									//敵の攻撃判定が適用されている間
 									if (((CEnemy2*)(o->mpParent))->mEnemy2AttackHit == true)
 									{
@@ -663,7 +672,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 						else if (o->mTag == CCollider::EBOSSCOLLIDERATTACK) {
 							if (CCollider::Collision(m, o)) {
 								//ダメージが入ったあとの無敵時間
-								if (mDamageCount == 0) {
+								if (mDamageCount == 0&&mState != EESCAPE) {
 									//敵の攻撃判定が適用されている間
 									if (((CBoss*)(o->mpParent))->mBossAttackHit == true)
 									{

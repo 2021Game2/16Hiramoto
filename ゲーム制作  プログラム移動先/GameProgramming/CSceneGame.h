@@ -45,6 +45,11 @@ private:
 	CEnemySummon* mpEnemySummon2;//“G‚R‚Ì¶¬êŠ
 	CBoss* mpBoss;//ƒ{ƒX
 public:
+	CTexture mImageMouse;
+	CTexture mImageMoveKey;
+	CTexture mImageCkey;
+	CTexture mImageWork;
+	CTexture mImageDush;
 
     CSound mBgmStart;
 	CSound mBgmBattle;

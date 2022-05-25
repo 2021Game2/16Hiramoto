@@ -10,7 +10,7 @@ class CEffect2 : public CBillBoard2 {
 
 public:
 	enum EffType {
-		EFF_ATTACK = 0,
+		EFF_ATTACK ,
 		EFF_ATTACK2,
 		EFF_ATTACK3,
 		EFF_ATTACKSP,

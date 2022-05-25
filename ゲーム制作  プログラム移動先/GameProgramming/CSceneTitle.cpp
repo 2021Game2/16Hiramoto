@@ -34,11 +34,6 @@ void CSceneTitle::Update()
 		(mouseY >= 220 - 20 && mouseY <= 220 + 20)) {
 		mSelect = EGAMESTART;
 	}
-	/*
-	if ((mouseX >= 300 - 20 && mouseX <= (300 - 20) + (40 * 6)) &&
-		(mouseY >= 120 - 20 && mouseY <= 120 + 20)) {
-		mSelect = CSceneTitle::ERECORD;
-	}*/
 	if (CKey::Once(VK_RETURN)) {
 		mScene = EGAME;
 	}

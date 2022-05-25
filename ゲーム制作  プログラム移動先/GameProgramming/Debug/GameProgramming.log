@@ -1,4 +1,4 @@
-﻿  CSceneGame.cpp
+﻿  CBoss.cpp
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(103,50): warning C4101: 'cnt': ローカル変数は 1 度も使われていません。
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(102,24): warning C4101: 'state': ローカル変数は 1 度も使われていません。
 C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\GameProgramming\CSound.h(103,87): warning C4101: 'dw': ローカル変数は 1 度も使われていません。

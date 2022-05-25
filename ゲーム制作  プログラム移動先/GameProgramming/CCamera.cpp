@@ -175,6 +175,9 @@ void CCamera::Collision(CCollider* m, CCollider* o) {
 		}
 	}
 }
+void CCamera::Render() {
+
+}
 void CCamera::TaskCollision() {
 	mColliderLine.ChangePriority();
 	CCollisionManager::Get()->Collision(&mColliderLine, COLLISIONRANGE);

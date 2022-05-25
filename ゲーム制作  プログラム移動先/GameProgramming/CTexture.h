@@ -21,7 +21,9 @@ class CTexture {
 //	static std::map<std::string, CTexture>mTexFile;
 	//ファイル名
 	char* mpName;
+	
 public:
+	
 	//TGAファイルのヘッダ情報
 	STgamHeader mHeader;
 	//テクスチャID

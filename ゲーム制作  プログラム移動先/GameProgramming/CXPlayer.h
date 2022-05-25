@@ -19,13 +19,11 @@ private:
 	CTexture mImageGauge; //ゲージ画像
 	bool mPlayerBgm;
 public:
+	bool mMoveCheck;//ダッシュかダッシュじゃないか
 	CEffect* mEffect1;
-
 	CEffect* mEffect2;
 	CEffect* mEffect3;
-
 	CEffect* mEffectSp;
-
 	CVector mPositionZ;
 	 bool mAttackHit;
 	//コライダの宣言
