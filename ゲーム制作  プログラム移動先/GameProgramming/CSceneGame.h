@@ -16,6 +16,7 @@
 #include"CSound.h"
 #include"CBoss.h"
 #include"CShadowMap.h"
+#include"CTarget.h"
 /*
 ゲームのシーン
 */
@@ -37,6 +38,7 @@ private:
 	CTree* mpTree;//木
 	//キャラクタのインスタンス
 	CXPlayer mPlayer;//プレイヤー
+
 	//敵のインスタンス
 	//CXEnemy mEnemy;//敵１
 	CEnemy2* mpEnemy2;//敵２

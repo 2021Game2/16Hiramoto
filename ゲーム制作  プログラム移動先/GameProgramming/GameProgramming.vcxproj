@@ -129,6 +129,7 @@
     <ClCompile Include="CShader.cpp" />
     <ClCompile Include="CShadowMap.cpp" />
     <ClCompile Include="CSound.cpp" />
+    <ClCompile Include="CTarget.cpp" />
     <ClCompile Include="CTaskManager.cpp" />
     <ClCompile Include="CText.cpp" />
     <ClCompile Include="CTexture.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="CShader.h" />
     <ClInclude Include="CShadowMap.h" />
     <ClInclude Include="CSound.h" />
+    <ClInclude Include="CTarget.h" />
     <ClInclude Include="CTask.h" />
     <ClInclude Include="CTaskManager.h" />
     <ClInclude Include="CText.h" />

@@ -17,7 +17,12 @@ int CBoss::mHp = HP;
 
  extern CSound BossVoice;
  extern CSound BossMove;
-
+ CBoss* CBoss::mpBossInstance;
+ //ボスのポインタを返すことで、座標などが参照できるようになる
+ CBoss* CBoss::GetInstance()
+ {
+	 return mpBossInstance;
+ }
 CModel CBoss::mModel;//モデルデータ作成
 //デフォルトコンストラクタ
 CBoss::CBoss()
@@ -28,10 +33,7 @@ CBoss::CBoss()
 	, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
 	//, mColSphereRightBack(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
 	//, mColSphereLeftBack(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
-
-
 	, mpPlayer(0)
-	
 	, mJump2(0)
 	, mEnemyDamage(60)
 	, mMove(0)

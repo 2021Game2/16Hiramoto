@@ -43,6 +43,18 @@
     <Filter Include="ソース ファイル\Base\プレイヤー関係">
       <UniqueIdentifier>{23d7c65d-2a57-477d-be8a-e14474da9430}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Base\シーン">
+      <UniqueIdentifier>{787b718c-ca61-48e0-a18d-51b380b47155}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\プレイヤー関係">
+      <UniqueIdentifier>{3fc4cd7f-6781-4dd8-bdea-b60f0d27e732}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\マップ">
+      <UniqueIdentifier>{5f27bc5f-ba3d-4791-b9b1-015e371da237}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\敵関係">
+      <UniqueIdentifier>{1df5a2cf-335a-446c-9d88-fe01baa4bc59}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -186,6 +198,9 @@
     <ClCompile Include="CEffect2.cpp">
       <Filter>ソース ファイル\Lib</Filter>
     </ClCompile>
+    <ClCompile Include="CTarget.cpp">
+      <Filter>ソース ファイル\Base\プレイヤー関係</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -266,9 +281,6 @@
     <ClInclude Include="CVector.h">
       <Filter>ヘッダー ファイル\Lib</Filter>
     </ClInclude>
-    <ClInclude Include="CMap.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
     <ClInclude Include="CModelX.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
@@ -276,9 +288,6 @@
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="CRes.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="CSceneGame.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="CShader.h">
@@ -290,59 +299,68 @@
     <ClInclude Include="CXCharacter.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
-    <ClInclude Include="CXEnemy.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="CXPlayer.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
     <ClInclude Include="CInput.h">
       <Filter>ヘッダー ファイル\Lib</Filter>
     </ClInclude>
     <ClInclude Include="CParticle.h">
       <Filter>ヘッダー ファイル\Lib</Filter>
     </ClInclude>
-    <ClInclude Include="CEnemySummon.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="CItem.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="CRock.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="CEnemyManager.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="CTree.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="CEnemy3.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="CEnemy2.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="CBoss.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="CCamera.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
     <ClInclude Include="CShadowMap.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="CSceneTitle.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="CScene.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="CSceneManager.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="CEffect2.h">
       <Filter>ヘッダー ファイル\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="CBoss.h">
+      <Filter>ヘッダー ファイル\Base\敵関係</Filter>
+    </ClInclude>
+    <ClInclude Include="CCamera.h">
+      <Filter>ヘッダー ファイル\Base\プレイヤー関係</Filter>
+    </ClInclude>
+    <ClInclude Include="CEnemy2.h">
+      <Filter>ヘッダー ファイル\Base\敵関係</Filter>
+    </ClInclude>
+    <ClInclude Include="CEnemy3.h">
+      <Filter>ヘッダー ファイル\Base\敵関係</Filter>
+    </ClInclude>
+    <ClInclude Include="CEnemyManager.h">
+      <Filter>ヘッダー ファイル\Base\敵関係</Filter>
+    </ClInclude>
+    <ClInclude Include="CEnemySummon.h">
+      <Filter>ヘッダー ファイル\Base\敵関係</Filter>
+    </ClInclude>
+    <ClInclude Include="CItem.h">
+      <Filter>ヘッダー ファイル\Base\プレイヤー関係</Filter>
+    </ClInclude>
+    <ClInclude Include="CMap.h">
+      <Filter>ヘッダー ファイル\Base\マップ</Filter>
+    </ClInclude>
+    <ClInclude Include="CRock.h">
+      <Filter>ヘッダー ファイル\Base\マップ</Filter>
+    </ClInclude>
+    <ClInclude Include="CScene.h">
+      <Filter>ヘッダー ファイル\Base\シーン</Filter>
+    </ClInclude>
+    <ClInclude Include="CSceneGame.h">
+      <Filter>ヘッダー ファイル\Base\シーン</Filter>
+    </ClInclude>
+    <ClInclude Include="CSceneManager.h">
+      <Filter>ヘッダー ファイル\Base\シーン</Filter>
+    </ClInclude>
+    <ClInclude Include="CSceneTitle.h">
+      <Filter>ヘッダー ファイル\Base\シーン</Filter>
+    </ClInclude>
+    <ClInclude Include="CTree.h">
+      <Filter>ヘッダー ファイル\Base\マップ</Filter>
+    </ClInclude>
+    <ClInclude Include="CXPlayer.h">
+      <Filter>ヘッダー ファイル\Base\プレイヤー関係</Filter>
+    </ClInclude>
+    <ClInclude Include="CXEnemy.h">
+      <Filter>ヘッダー ファイル\Base\敵関係</Filter>
+    </ClInclude>
+    <ClInclude Include="CTarget.h">
+      <Filter>ヘッダー ファイル\Base\プレイヤー関係</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

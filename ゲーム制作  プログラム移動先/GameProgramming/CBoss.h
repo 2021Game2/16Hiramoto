@@ -50,7 +50,8 @@ public:
 	static int mHp;//体力
 
 	void Init(CModelX* model);
-
+	static CBoss* GetInstance();
+	static CBoss* mpBossInstance;
 	//CEnemy2(位置、回転、拡縮）
 	CBoss(const CVector& position, const CVector& rotation, const CVector& scale);
 	//更新処理
