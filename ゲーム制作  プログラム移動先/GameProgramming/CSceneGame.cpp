@@ -12,7 +12,7 @@
 #include"CSound.h"
 #include"CTarget.h"
 #define HP 30
-#define ENEMY2COUNT 20 //ˆê“x‚Éo‚¹‚é“G‚Q‚Ì”
+#define ENEMY2COUNT 10 //ˆê“x‚Éo‚¹‚é“G‚Q‚Ì”
 #define ENEMY2MINCOUNT 4 //“G‚Q‚ğÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚Q‚Ì”‚Ì‰ºŒÀ
 #define ENEMY3COUNT 1//ˆê“x‚Éo‚¹‚é“G‚R‚Ì”
 #define ENEMY3MINCOUNT 4 //“G‚R‚ğÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚R‚Ì”‚Ì‰ºŒÀ
@@ -201,7 +201,7 @@ void CSceneGame::Init()
 	float shadowColor[] = { 0.4f, 0.4f, 0.4f, 0.2f };  //‰e‚ÌF
 	float lightPos[] = { 50.0f, 160.0f, 50.0f };  //ŒõŒ¹‚ÌˆÊ’u
 	mShadowMap.Init(TEXWIDTH, TEXHEIGHT, ShadowRender, shadowColor, lightPos);//‰e‚Ì‰Šú‰»
-	CEffect::TexPreLoad();
+	CEffect2::TexPreLoad();
 }
 
 void CSceneGame::BgmBattle() {
@@ -298,13 +298,13 @@ void CSceneGame::Update() {
 					CVector(), CVector(0.75f, 0.75f, 0.75f));
 				mpEnemy2->Init(&CRes::sScorp);
 				mEnemy2Count++;
-				mSpawn = 0;
+				mSpawn = 60;
 			}
 		}
 	}
 
 	//“G‚ªˆê’è‚Ì”Œ¸‚é‚Ü‚ÅÄ¶¬‚µ‚È‚¢
-	else if( mEnemy2CountStopper<= ENEMY2MINCOUNT) {
+	 if( mEnemy2CountStopper<= ENEMY2MINCOUNT) {
 		mEnemy2CountStopper = ENEMY2COUNT;
 	}
 
@@ -322,7 +322,7 @@ void CSceneGame::Update() {
 	}
 
 	//“G‚ªˆê’è‚Ì”Œ¸‚é‚Ü‚ÅÄ¶¬‚µ‚È‚¢
-	else if (mEnemy3CountStopper <= ENEMY3MINCOUNT) {
+	 if (mEnemy3CountStopper <= ENEMY3MINCOUNT) {
 		mEnemy3CountStopper = ENEMY3COUNT;
 	}
 	//ƒGƒXƒP[ƒvƒL[‚ÅI—¹
@@ -341,16 +341,11 @@ void CSceneGame::Update() {
 			mBgmGameOver.Stop();
 			mBgmCountCheck = true;
 		}
-	
-		
-	
 	//XV
 	CTaskManager::Get()->Update();
-
 	//Õ“Ëˆ—(‘“–‚èj
 	//CCollisionManager::Get()->Collision();
 	CTaskManager::Get()->TaskCollision();
-	
 	return;
 }
 

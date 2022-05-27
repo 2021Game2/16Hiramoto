@@ -7,51 +7,46 @@
 //コライダクラスのインクルード
 #include"CCollider.h"
 #include"CText.h"
-
+#include"CEffect2.h"
 #include"CSound.h"
 /*エネミークラス
 キャラクタクラスを継承	*/
 class CBoss :public CXCharacter {
 private:
-
+    CText mText;
 	CVector mPoint;//目標地点
-	int mJump2;
-	CText mText;
-	int mMove;
-	int mMove2;
-	float mColliderCount;
-	int mBossDamageCount;
-	float mGravity;//重力
-	float mTime;//ジャンプする時の時間を計測
-	int mEnemy2StopCount;//プレイヤーのESTOPPERに当たっている間増加
 	CCollider mColSphereHead;
 	CCollider mColSphereRightFront;
 	CCollider mColSphereLeftFront;
-	//CCollider mColSphereRightBack;
-	//CCollider mColSphereLeftBack;
-	int mAttackPercent;
+	CEffect2* mBossEffect;
 	CVector mCollisionEnemy;
+	CCharacter* mpPlayer;//プレイヤーのポインタ
+	int mJump2;
+	int mMove;
+	int mMove2;
+	int mBossDamageCount;
+	int mEnemy2StopCount;//プレイヤーのESTOPPERに当たっている間増加
+    int mAttackPercent;
 	int mEnemyDamage;
-
+	float mColliderCount;
+	float mGravity;//重力
+	float mTime;//ジャンプする時の時間を計測
 	bool mBossBgm;
 	bool mBossBgmDeath;
-	CCharacter* mpPlayer;//プレイヤーのポインタ
 public:
-	
 	CCollider mColSearch;//サーチ用コライダ
 	bool mColSearchCount;
-	 bool mBossAttackHit;
-	static int mBossAttackCount;
+	bool mBossAttackHit;
 	//モデルデータ
 	static CModel mModel;
-	//コライダ
-	//コンストラクタ	
-	CBoss();
-	static int mHp;//体力
-
-	void Init(CModelX* model);
 	static CBoss* GetInstance();
 	static CBoss* mpBossInstance;
+	static int mBossAttackCount;
+	static int mHp;//体力
+	int mEffectCount;
+	//コンストラクタ	
+	CBoss();
+	void Init(CModelX* model);
 	//CEnemy2(位置、回転、拡縮）
 	CBoss(const CVector& position, const CVector& rotation, const CVector& scale);
 	//更新処理

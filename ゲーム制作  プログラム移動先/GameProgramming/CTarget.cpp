@@ -39,7 +39,7 @@ void CTarget::Update() {
 		mPosition.mX = tPlayer->mPosition.mX;
 		mPosition.mY = tPlayer->mPosition.mY + 4.0f;
 		mPosition.mZ = tPlayer->mPosition.mZ;
-		mRotation.mZ += 10.0f;
+		//mRotation.mZ += 10.0f;
 		
 	}
 	else {
@@ -48,11 +48,10 @@ void CTarget::Update() {
 	mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
 	//左向き（X軸）のベクトルを求める
 	CVector vx = CVector(1.0f, 0.0f, 0.0f) * mMatrixRotate;
-	/*
 	//上向き（Y軸）のベクトルを求める
 	CVector vy = CVector(0.0f, 1.0f, 0.0f) * mMatrixRotate;
 	//前方向（Z軸）のベクトルを求める
-	CVector vz = CVector(0.0f, 0.0f, 5.0f) * mMatrixRotate;*/
+	CVector vz = CVector(0.0f, 0.0f, 1.0f) * mMatrixRotate;
 	//目標地点までのベクトルを求める
 	CVector vp = mPoint - mPosition;
 	//左ベクトルとの内積を求める
@@ -65,7 +64,9 @@ void CTarget::Update() {
 	else if (dx < -margin) {
 		mRotation.mY -= 3.0f;//右へ回転
 	}
-	mPoint = tBoss->mPosition;
+
+		mPoint = tBoss->mPosition;
+	
 	//CCharacterの更新
 	CTransform::Update();
 

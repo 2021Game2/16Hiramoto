@@ -153,7 +153,7 @@ void CEnemy2::Damaged() {
 	//爆発エフェクト付与
 	if (mEffectCount % 15 == 0) {
 		//エフェクト生成
-		new CEffect(mPosition, 1.0f, 1.0f, CEffect::EFF_EXP, 4, 4, 2);
+		new CEffect2(mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2);
 	}
 	//ヒットバック（X,Z軸)
 	if (mColliderCount > 0) {
@@ -180,7 +180,7 @@ void CEnemy2::Death() {
 		//15フレームごとにエフェクト
 		if (mEffectCount % 15 == 0) {
 			//エフェクト生成
-			//new CEffect(mPosition, 1.0f, 1.0f, DAMAGEEFFECT, 4, 4, 2);
+			new CEffect2(mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2);
 		}
 		CTransform::Update();
 	}

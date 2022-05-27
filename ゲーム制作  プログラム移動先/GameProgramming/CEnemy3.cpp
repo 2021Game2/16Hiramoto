@@ -205,7 +205,7 @@ void CEnemy3::Update() {
 		//15フレームごとにエフェクト
 		if (mHp % 15 == 0) {
 			//エフェクト生成
-			new CEffect(mPosition, 1.0f, 1.0f,CEffect::EFF_EXP, 4, 4, 2);
+			new CEffect2(mPosition, 1.0f, 1.0f,CEffect2::EFF_EXP, 4, 4, 2);
 		}
 		CTransform::Update();
 	}
@@ -329,7 +329,7 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 				if (CCollider::CollisionTriangleSphere(o, m, &adjust))
 				{
 						//衝突しない位置まで戻す
-						mPosition = mPosition + adjust;
+						//mPosition = mPosition + adjust;
 					
 				}
 			}

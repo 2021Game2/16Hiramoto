@@ -1,14 +1,17 @@
 #ifndef CEFFECT_H
 #define CEFFECT_H
+
 //ビルボードクラスのインクルード
 #include "CBillBoard.h"
 /*
 エフェクトクラス
 テクスチャのアニメーション
 */
+/*
 class CEffect : public CBillBoard {
 
 public:
+	/*
 enum EffType {
 		EFF_ATTACK,
 		EFF_ATTACK2,
@@ -18,9 +21,12 @@ enum EffType {
 		EFF_EXP,
 		EFF_MAX,
 	};
-	
+	*/
+/*
 private:
-	EffType mEffType;
+	/*
+	EffType mEffType;*/
+/*
 	//行数
 	int mRows;
 	//列数
@@ -50,7 +56,7 @@ public:
 	float	mRotate;
 	float	mStretch;
 	float	mAngle;
-};
+};*/
 
 #endif
 

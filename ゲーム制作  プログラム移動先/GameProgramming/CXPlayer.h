@@ -1,7 +1,7 @@
 #ifndef CXPLAYER_H
 #define CXPLAYER_H
 
-#include"CEffect.h"
+#include"CEffect2.h"
 #include "CXCharacter.h"
 #include "CCollider.h"
 #include"CColliderLine.h"
@@ -19,11 +19,12 @@ private:
 	CTexture mImageGauge; //ゲージ画像
 	bool mPlayerBgm;
 public:
+	bool mAnimationFrameLock;
 	bool mMoveCheck;//ダッシュかダッシュじゃないか
-	CEffect* mEffect1;
-	CEffect* mEffect2;
-	CEffect* mEffect3;
-	CEffect* mEffectSp;
+	CEffect2* mEffect1;
+	CEffect2* mEffect2;
+	CEffect2* mEffect3;
+	CEffect2* mEffectSp;
 	CVector mPositionZ;
 	 bool mAttackHit;
 	//コライダの宣言

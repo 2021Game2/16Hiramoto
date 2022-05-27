@@ -1,6 +1,6 @@
 #include "CEffect.h"
 #include <cassert>
-
+/*
 CMaterial CEffect::sMaterial[CEffect::EFF_MAX]; //マテリアル.テクスチャ
 
 void CEffect::TexPreLoad()
@@ -67,4 +67,4 @@ void CEffect::Render()
 	glDisable(GL_DEPTH_TEST); //深度テスト無効
 	CBillBoard::Render(&sMaterial[mEffType]);
 	glEnable(GL_DEPTH_TEST); //深度テスト有効
-}
+}*/

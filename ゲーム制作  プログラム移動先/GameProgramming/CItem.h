@@ -7,10 +7,9 @@
 
 class CItem : public CCharacter {
 private:
-
 	//コライダ
 	CCollider mCollider;
-
+	CCollider mCollider2;
 public:
 	static bool mItemAttackHit;
 	//モデルデータ

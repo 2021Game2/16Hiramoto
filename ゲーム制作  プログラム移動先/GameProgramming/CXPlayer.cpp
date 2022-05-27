@@ -62,6 +62,7 @@ CXPlayer::CXPlayer()
 	,mSpeed(0.0f)
 	,mPlayerBgm(true)
 	, mMoveCheck(false)
+	, mAnimationFrameLock(false)
 {
 	//タグにプレイヤーを設定します
 	mTag = EPLAYER;
@@ -95,6 +96,8 @@ void CXPlayer::Init(CModelX* model)
 
 void CXPlayer::Update()
 {
+		//エフェクト生成
+		CVector tpos = mColSphereSword.mpMatrix->GetPos();
 	//処理を行動ごとに分割
 	switch (mState) {
 	case EIDLE:	//待機
@@ -181,12 +184,18 @@ void CXPlayer::Update()
 	//アニメーションの種類
 	switch (mAnimationIndex) {
 	case(3): 
-		if (mAnimationFrame == 15) {
-
-			//エフェクト生成
-			
-			mEffect1=new CEffect(CVector(mPosition.mX,mPosition.mY+1.0f,mPosition.mZ-5.0f), 3.0f, 3.0f, CEffect::EFF_ATTACK, 2, 5, 3);
-			mAttackHit = true;
+		if (mAnimationFrameLock == false) {
+			if (mAttackHit != true) {
+				if (mAnimationFrame >= 15) {
+					//エフェクト生成
+					//mEffect1=new CEffect2(CVector(mPosition.mX,mPosition.mY+1.0f,mPosition.mZ-5.0f), 3.0f, 3.0f, CEffect2::EFF_ATTACK, 2, 5, 3);
+					CVector tpos = mColSphereSword.mpMatrix->GetPos();
+					mEffect1 = new CEffect2(CVector(tpos.mX, tpos.mY, tpos.mZ), 3.0f, 3.0f,
+						CEffect2::EFF_ATTACK, 2, 5, 3, true, &mRotation);
+					mAttackHit = true;
+					mAnimationFrameLock = true;
+				}
+			}
 		}
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
@@ -201,11 +210,14 @@ void CXPlayer::Update()
 		}
 		break;
 	case(5):
-		if (mAnimationFrame == 15) {
-
-			mEffect2 = new CEffect(CVector(mPosition.mX, mPosition.mY + 1.0f, mPosition.mZ - 5.0f), 3.0f, 3.0f, CEffect::EFF_ATTACK2, 3, 5, 3);
-			mAttackHit = true;
-			
+		if (mAnimationFrameLock == false) {
+			if (mAttackHit != true) {
+				if (mAnimationFrame >= 15) {
+					CVector tpos = mColSphereSword.mpMatrix->GetPos();
+					mEffect2 = new CEffect2(CVector(tpos.mX, tpos.mY, tpos.mZ), 3.0f, 3.0f, CEffect2::EFF_ATTACK2, 3, 5, 3);
+					mAttackHit = true;
+				}
+			}
 		}
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
@@ -223,12 +235,16 @@ void CXPlayer::Update()
 		if (mJump >= -0.1f) {
 			mJump -= G;
 		}
-		if (mAnimationFrame == 15) {
-			if (mState == EATTACK3) {
-
-		    	mEffect3 = new CEffect(CVector(mPosition.mX, mPosition.mY + 1.0f, mPosition.mZ + 1.0f), 3.0f, 3.0f, CEffect::EFF_ATTACK3, 3, 5, 3);
+		if (mAnimationFrameLock == false) {
+			if (mAttackHit != true) {
+				if (mAnimationFrame >= 15) {
+					if (mState == EATTACK3) {
+						CVector tpos = mColSphereSword.mpMatrix->GetPos();
+						mEffect3 = new CEffect2(CVector(tpos.mX, tpos.mY, tpos.mZ), 3.0f, 3.0f, CEffect2::EFF_ATTACK3, 3, 5, 3);
+					}
+					mAttackHit = true;
+				}
 			}
-			mAttackHit = true;
 		}
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
@@ -238,12 +254,10 @@ void CXPlayer::Update()
 	case(8):
 		if (mState == EATTACKSP) {
 			if (mJump >= -3.0f) {
-
-				mEffectSp = new CEffect(CVector(mPosition.mX, mPosition.mY + 1.0f, mPosition.mZ - 5.0f), 3.0f, 3.0f, CEffect::EFF_ATTACKSP, 4, 5, 3);
+				CVector tpos = mColSphereSword.mpMatrix->GetPos();
+				mEffectSp = new CEffect2(CVector(tpos.mX, tpos.mY, tpos.mZ), 3.0f, 3.0f, CEffect2::EFF_ATTACKSP, 4, 5, 3);
 				mJump -= G2;
-
 			  mCollider2.mRenderEnabled = true;
-		
 		    }
 	    }
 		if (mAnimationFrame >= mAnimationFrameSize)
@@ -266,8 +280,18 @@ void CXPlayer::Update()
 		}
 		break;
 	}
-
-	if (mHp > HP_MAX)mHp = HP_MAX;
+	if (mAttackHit == true) {
+		if (mAnimationIndex == 3||mAnimationIndex==5||mAnimationIndex==7||mAnimationIndex==8) {
+			//CVector tpos = mColSphereSword.mpMatrix->GetPos();
+			//mEffect1 = new CEffect2(CVector(tpos.mX, tpos.mY, tpos.mZ), 3.0f, 3.0f,
+				//CEffect2::EFF_ATTACK, 2, 5, 3, true, &mRotation);
+			mAnimationFrameLock = false;
+		}
+	}
+	if (mAnimationFrameLock == true) {
+		mAnimationFrame--;
+	}
+	//if (mHp > HP_MAX)mHp = HP_MAX;
 
 		//カメラ視点移動　通称無双移動
 		//カメラの左右と前後のベクトルを取得

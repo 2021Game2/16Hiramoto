@@ -1,5 +1,5 @@
 #include "CEffect2.h"
-
+#include"CBillBoard.h"
 #include <cassert>
 CMaterial CEffect2::sMaterial[CEffect2::EFF_MAX]; //マテリアル.テクスチャ
 
@@ -25,10 +25,12 @@ void CEffect2::TexPreLoad()
 		}
 	}
 }
-CEffect2::CEffect2(const CVector &pos, float Scale, float Rotate, CEffect2::EffType efftype, int row, int col, int fps)
-: CBillBoard2(pos, Scale, Rotate), mRows(row), mCols(col), mFps(fps), mFrame(0)
+CEffect2::CEffect2(const CVector& pos, float w, float h, CEffect2::EffType efftype, int row, int col, int fps, bool nobillboard, CVector* vec)
+	: CBillBoard2(pos, w, h), mRows(row), mCols(col), mFps(fps), mFrame(0), mEffType(efftype), mNoBillBoard(nobillboard)
 {
-
+	if (vec) {
+		mVec = *vec;
+	}
 	//テクスチャを読んでない場合は読む
 	assert(sMaterial[efftype].mTexture.mId != 0);
 }
@@ -39,6 +41,7 @@ void CEffect2::MoveUpdate() {
 	
 }
 void CEffect2::Update() {
+	
 	//コマ数の計算
 	int frame = mFrame++ / mFps;
 	if (frame >= mRows*mCols)
@@ -67,15 +70,38 @@ void CEffect2::Update() {
 	mUv[1] = CVector(left, bot, 0.0f);
 	mUv[2] = CVector(righ, top, 0.0f);
 	mUv[3] = CVector(righ, bot, 0.0f);
-
+	if (!mNoBillBoard) {
+		//ビルボード更新
+		CBillBoard2::Update();
+	}
+	else {
+		//カメラへの方向ベクトルの取得
+		CVector dir = mVec;
+		dir.mY -= 90.0f;
+		mRotation = dir;
+		//行列の更新
+		CTransform::Update();
+	}
 
 	//ビルボード更新
 	CBillBoard2::Update();
 }
-
+void CEffect2::Render()
+{
+	if (mNoBillBoard) {
+		glDisable(GL_CULL_FACE);
+	}
+	glDisable(GL_DEPTH_TEST); //深度テスト無効
+	CBillBoard2::Render(&sMaterial[mEffType]);
+	glEnable(GL_DEPTH_TEST); //深度テスト有効
+	if (mNoBillBoard) {
+		glEnable(GL_CULL_FACE);
+	}
+}
+/*
 void CEffect2::Render()
 {
 	glDisable(GL_DEPTH_TEST); //深度テスト無効
 	CBillBoard2::Render(&sMaterial[mEffType]);
 	glEnable(GL_DEPTH_TEST); //深度テスト有効
-}
+}*/

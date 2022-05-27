@@ -25,8 +25,12 @@ private:
 	float	mRotate;
 	float	mStretch;
 	float	mAngle;
+	bool mNoBillBoard;
+	CVector mVec;
+
 
 public:
+
 	//行数
 	int mRows;
 	//列数
@@ -42,8 +46,10 @@ public:
 	static void TexPreLoad();
 	//コンストラクタ
 	//CEffect(位置, 幅, 高さ, テクスチャ名, 行数, 列数, 1コマあたりのフレーム数)　行数、列数、フレーム数はデフォルト引数で呼出し時省略可能
-	CEffect2(const CVector& pos, float w, float h, EffType efftype, int row = 1, int col = 1, int fps = 1);
+	/*
+	CEffect2(const CVector& pos, float w, float h, EffType efftype, int row = 1, int col = 1, int fps = 1);*/
 	~CEffect2();
+	CEffect2(const CVector& pos, float w, float h, EffType efftype, int row = 1, int col = 1, int fps = 1, bool nobillboard = false, CVector* vec = nullptr);
 	//移動更新
 	void MoveUpdate();
 	//更新

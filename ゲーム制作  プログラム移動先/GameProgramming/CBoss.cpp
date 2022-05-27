@@ -6,10 +6,12 @@
 #include"CXCharacter.h"
 #include"CUtil.h"
 #include"CText.h"
-#define HP 10
+#define HP 100
 
 #define VELOCITY 0.5f //マクロ
-
+#define HPCOUNT1 90 //ダメージを受けたときにのけぞりを行う体力の数値
+#define HPCOUNT2 60 //ダメージを受けたときにのけぞりを行う体力の数値
+#define HPCOUNT3 30 //ダメージを受けたときにのけぞりを行う体力の数値
 #define JUMP 5.0f
 #define G 0.1f
 int CBoss::mBossAttackCount = 0;
@@ -31,8 +33,6 @@ CBoss::CBoss()
 	, mColSphereHead(this, &mMatrix, CVector(0.0f, 1.0f, 5.0f), 7.0f)
 	, mColSphereRightFront(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 2.0f)
 	, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
-	//, mColSphereRightBack(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
-	//, mColSphereLeftBack(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
 	, mpPlayer(0)
 	, mJump2(0)
 	, mEnemyDamage(60)
@@ -42,6 +42,7 @@ CBoss::CBoss()
 	, mGravity(0.0f)
 	, mTime(0.0f)
 	, mBossDamageCount(0)
+	
 	, mBossAttackHit(false)
 	,mColSearchCount(false)
 	, mBossBgm(true)
@@ -54,10 +55,8 @@ CBoss::CBoss()
 	mColSphereHead.mTag = CCollider::EBOSSCOLLIDERHEAD;
 	mColSphereRightFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
 	mColSphereLeftFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
-	//mColSphereRightBack.mTag = CCollider::EBOSSCOLLIDER;
-	//mColSphereLeftBack.mTag = CCollider::EBOSSCOLLIDER;
-
-
+	mpBossInstance = this;
+	mRotation.mY += 180.0f;
 	mGravity = 0.20f;
 	mState = EIDLE;
 }
@@ -181,17 +180,12 @@ void CBoss::Attack2() {
 	ChangeAnimation(6, false, 80);
 	//攻撃のあとは移動処理に移行
 	if (mAnimationFrame>=mAnimationFrameSize) {
-			mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
+		mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
 	}
-
 }
 //ダメージ処理
 void CBoss::Damaged() {
 	//体力減少
-	if (mBossDamageCount <= 0) {
-	mHp--;
-	mBossDamageCount = 10;
-	}
 	if (mHp <= 0) {
 		mState = EDEATH;
 	}
@@ -218,7 +212,7 @@ void CBoss::Death() {
 		//15フレームごとにエフェクト
 		if (mHp % 15 == 0) {
 			//エフェクト生成
-			new CEffect(mPosition, 1.0f, 1.0f, CEffect::EFF_EXP, 4, 4, 2);
+			new CEffect2(mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2);
 		}
 		CTransform::Update();
 	}
@@ -272,7 +266,7 @@ void CBoss::Update() {
 			mBossAttackHit = true;
 			if (CSceneGame::mVoiceSwitch == true) {
 			  BossVoice.Play();
-			 }
+			}
 		}
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
@@ -291,10 +285,17 @@ void CBoss::Update() {
 	if (mBossDamageCount > 0) {
 		mBossDamageCount--;
 	}
-
+	if (mBossDamageCount > 0) {
+		if (mEffectCount % 15 == 0) {
+			//エフェクト生成
+			mBossEffect=new CEffect2(mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2);
+		}
+	}
 	if (mHp <= 0 && mState != EDEATH) {
 		mState = EDEATH;
 	}
+
+	mEffectCount--;
 	mGravity  -= G;
 	mPosition.mY += mGravity;
 	CXCharacter::Update();
@@ -304,7 +305,6 @@ void CBoss::Update() {
 void CBoss::Collision(CCollider* m, CCollider* o) {
 	//コライダのとき
 	m->mType = CCollider::ESPHERE;
-	
 		//自分がサーチ用のとき
 		if (m->mTag == CCollider::ESEARCH) {
 			//相手が弾コライダのとき
@@ -330,23 +330,26 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 			}
 			return;
 		}
-		
-	
-		//EENEMY2COLLIDERの時
-		if (m->mTag== CCollider::EBOSSCOLLIDERATTACK) {
+		//ボスのコライダー
+		if (m->mTag== CCollider::EBOSSCOLLIDERATTACK|| CCollider::EBOSSCOLLIDERHEAD) {
 			if (o->mType == CCollider::ESPHERE) {
+				//プレイヤー
 				if (o->mpParent->mTag == EPLAYER) {
 					//相手が武器のとき
+					//剣とハンマー（アイテム）
 					if (o->mTag == CCollider::EPLAYERSWORD || o->mpParent->mTag == EITEM) {
 						//衝突しているとき
-					    
 							if (CCollider::Collision(m, o)) {
+								
 								//親をCXPlayerを元にポインタ化し、変数を参照
 								if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
 								{
+									//爆発エフェクト秒数付与
+									mEffectCount = 60;
+								mBossEffect->mPosition = ((CBoss*)(o->mTag))->mPosition;
 									if (mHp > 0) {
 										//30％減るごとにのけぞる
-										if (mHp / 30 == 0.00) {
+										if (mHp ==HPCOUNT1|| mHp == HPCOUNT2|| mHp == HPCOUNT3) {
 											mColliderCount = 10;
 											mCollisionEnemy = mPosition - o->mpParent->mPosition;
 											mCollisionEnemy.mY = 0;
