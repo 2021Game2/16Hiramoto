@@ -33,6 +33,7 @@ private:
 	float mTime;//ジャンプする時の時間を計測
 	bool mBossBgm;
 	bool mBossBgmDeath;
+	int  mBossColliderCheck;
 public:
 	CCollider mColSearch;//サーチ用コライダ
 	bool mColSearchCount;

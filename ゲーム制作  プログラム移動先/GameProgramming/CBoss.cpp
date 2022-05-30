@@ -288,7 +288,14 @@ void CBoss::Update() {
 	if (mBossDamageCount > 0) {
 		if (mEffectCount % 15 == 0) {
 			//エフェクト生成
-			mBossEffect=new CEffect2(mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2);
+			if (mBossColliderCheck == 1) {
+				//mBossEffect = new CEffect2(mColSphere.mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2);
+				mBossEffect = new CEffect2(mColSphereHead.mPosition, 10.0f, 10.0f, CEffect2::EFF_EXP, 4, 4, 2);
+			}
+			else if (mBossColliderCheck == 2) {
+
+			  mBossEffect=new CEffect2(mColSphereHead.mPosition, 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2);
+			}
 		}
 	}
 	if (mHp <= 0 && mState != EDEATH) {
@@ -344,9 +351,10 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 								//親をCXPlayerを元にポインタ化し、変数を参照
 								if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
 								{
+									if (m->mTag == CCollider::EBOSSCOLLIDERATTACK) mBossColliderCheck = 1;
+									else if (m->mTag == CCollider::EBOSSCOLLIDERHEAD) mBossColliderCheck = 2;
 									//爆発エフェクト秒数付与
 									mEffectCount = 60;
-								mBossEffect->mPosition = ((CBoss*)(o->mTag))->mPosition;
 									if (mHp > 0) {
 										//30％減るごとにのけぞる
 										if (mHp ==HPCOUNT1|| mHp == HPCOUNT2|| mHp == HPCOUNT3) {
