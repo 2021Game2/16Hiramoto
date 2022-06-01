@@ -12,7 +12,7 @@
 #include"CSound.h"
 #include"CTarget.h"
 #define HP 30
-#define ENEMY2COUNT 10 //ˆê“x‚Éo‚¹‚é“G‚Q‚Ì”
+#define ENEMY2COUNT 1 //ˆê“x‚Éo‚¹‚é“G‚Q‚Ì”
 #define ENEMY2MINCOUNT 4 //“G‚Q‚ðÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚Q‚Ì”‚Ì‰ºŒÀ
 #define ENEMY3COUNT 1//ˆê“x‚Éo‚¹‚é“G‚R‚Ì”
 #define ENEMY3MINCOUNT 4 //“G‚R‚ðÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚R‚Ì”‚Ì‰ºŒÀ
@@ -194,10 +194,10 @@ void CSceneGame::Init()
 
 	mpRock = new CRock(CVector(0.0f, 0.0f, -100.0f),
 		CVector(0.0f, 180.0f, 0.0f), CVector(0.5f, 0.5f, 0.5f));
-
+	/*
 	mpTree = new CTree(CVector(0.0f, 0.0f, 0.0f),
 		CVector(), CVector(10.5f, 10.5f, 10.5f));
-
+		*/
 	float shadowColor[] = { 0.4f, 0.4f, 0.4f, 0.2f };  //‰e‚ÌF
 	float lightPos[] = { 50.0f, 160.0f, 50.0f };  //ŒõŒ¹‚ÌˆÊ’u
 	mShadowMap.Init(TEXWIDTH, TEXHEIGHT, ShadowRender, shadowColor, lightPos);//‰e‚Ì‰Šú‰»
@@ -369,6 +369,9 @@ void CSceneGame::Render() {
 			sprintf(buf, "%d:", mTimeMinute);
 			mFont.DrawString(buf, 170, 500, 8, 16);
 	}
+
+		sprintf(buf, "BOSS:%d", mpBoss->mHp);
+		mFont.DrawString(buf, 20, 200, 8, 16);
 		if (mTimeSecond < 10) {
 		  sprintf(buf, "0%d", mTimeSecond);
 		 mFont.DrawString(buf, 230, 500, 8, 16);
@@ -384,12 +387,14 @@ void CSceneGame::Render() {
 		//mFont.DrawString(buf, 20, 200, 8, 16);
 		}
 		else {
-			sprintf(buf, "X:%f", mPlayer.mPosition.mX);
+			//sprintf(buf, "X:%f", mPlayer.mPosition.mX);
+
 			//mFont.DrawString(buf, 20, 200, 8, 16);
 		}
 		if (mPlayer.mPosition.mY > 0) {
 		
 		 sprintf(buf, "Y:%f", mPlayer.mPosition.mY);
+
 		 //mFont.DrawString(buf, 20, 250, 8, 16);
 		}
 		else {

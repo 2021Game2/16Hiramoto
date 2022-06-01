@@ -14,6 +14,7 @@
 #define HPCOUNT3 30 //ダメージを受けたときにのけぞりを行う体力の数値
 #define JUMP 5.0f
 #define G 0.1f
+#define PLAYERSPPOINT_MAX 30
 int CBoss::mBossAttackCount = 0;
 int CBoss::mHp = HP;
 
@@ -288,13 +289,16 @@ void CBoss::Update() {
 	if (mBossDamageCount > 0) {
 		if (mEffectCount % 15 == 0) {
 			//エフェクト生成
+			//足に攻撃されたとき
 			if (mBossColliderCheck == 1) {
-				//mBossEffect = new CEffect2(mColSphere.mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2);
-				mBossEffect = new CEffect2(mColSphereHead.mPosition, 10.0f, 10.0f, CEffect2::EFF_EXP, 4, 4, 2);
-			}
-			else if (mBossColliderCheck == 2) {
+				CXPlayer* tPlayer = CXPlayer::GetInstance();
 
-			  mBossEffect=new CEffect2(mColSphereHead.mPosition, 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2);
+				mBossEffect = new CEffect2(tPlayer->mPosition, 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2);
+			}
+			//頭に攻撃されたとき
+			else if (mBossColliderCheck == 2) {
+				CXPlayer* tPlayer = CXPlayer::GetInstance();
+			    mBossEffect=new CEffect2(CVector(tPlayer->mPosition.mX, tPlayer->mPosition.mY+1.0f, tPlayer->mPosition.mZ), 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2);
 			}
 		}
 	}
@@ -356,6 +360,10 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 									//爆発エフェクト秒数付与
 									mEffectCount = 60;
 									if (mHp > 0) {
+										if (((CXPlayer*)(o->mpParent))->mSpAttack < PLAYERSPPOINT_MAX) {
+
+											((CXPlayer*)(o->mpParent))->mSpAttack++;
+										}
 										//30％減るごとにのけぞる
 										if (mHp ==HPCOUNT1|| mHp == HPCOUNT2|| mHp == HPCOUNT3) {
 											mColliderCount = 10;

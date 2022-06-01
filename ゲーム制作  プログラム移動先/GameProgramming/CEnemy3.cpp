@@ -17,10 +17,10 @@
 #define VELOCITY1  -0.1f//行動１
 #define COLLIDERCOUNT 5.0
 #define VELOCITY2 0.1f
-
 #define VELOCITY3 0.2f
 #define JUMP 4.0f
 #define G 0.1f
+#define PLAYERSPPOINT_MAX 30
 int CEnemy3::mMoveCount = 0;
  extern CSound Enemy3Fry;
 
@@ -272,6 +272,11 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 						//親をCXPlayerを元にポインタ化し、変数を参照
 						if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
 						{
+
+							if (((CXPlayer*)(o->mpParent))->mSpAttack < PLAYERSPPOINT_MAX) {
+
+								((CXPlayer*)(o->mpParent))->mSpAttack++;
+							}
 							mColliderCount = COLLIDERCOUNT;
 							mCollisionEnemy = mPosition - o->mpParent->mPosition;
 							mCollisionEnemy.mY = 0;
@@ -288,6 +293,7 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 					if (CCollider::Collision(m, o)) {
 						if (((CItem*)(o->mpParent))->mItemAttackHit == true)
 						{
+
 							mColliderCount = COLLIDERCOUNT;
 							mCollisionEnemy = mPosition - o->mpParent->mPosition;
 							mCollisionEnemy.mY = 0;

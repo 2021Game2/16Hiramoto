@@ -38,7 +38,7 @@ void CTarget::Update() {
 	if (tPlayer->mHp > 0) {
 		mPosition.mX = tPlayer->mPosition.mX;
 		mPosition.mY = tPlayer->mPosition.mY + 4.0f;
-		mPosition.mZ = tPlayer->mPosition.mZ;
+		mPosition.mZ = tPlayer->mPosition.mZ-1.0f;
 		//mRotation.mZ += 10.0f;
 		
 	}

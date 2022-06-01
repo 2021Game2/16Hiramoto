@@ -30,7 +30,8 @@ public:
 	//コライダの宣言
 	CCollider mColSphereSword;	//剣
 	CCollider  mColSphereFoot;//ダメージが通る当たり判定
-	CCollider mCollider2;//アイテムを拾った時の武器の当たり判定
+	CCollider mColliderSwordSp;//ジャンプ攻撃時の武器の当たり判定
+	CCollider mColEscapeStopper;
     CVector mCollisionEnemy;//プレイヤーと敵のコライダーの位置の差
 
 	CTexture mTexture;
@@ -41,7 +42,7 @@ public:
 	int mDamageCount;//ダメージを受けた直後の無敵時間
 	float mJump;//ジャンプする時の初速度
 	float mStep;//攻撃時、少し前進
-	float mGravity;//重力
+	bool mJumpStopper;
 	//別のクラスで変数を呼び出す場合
 	//staticでポインタを作る
 	static CXPlayer* mpPlayerInstance;

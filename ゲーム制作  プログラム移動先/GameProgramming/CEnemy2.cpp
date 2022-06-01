@@ -11,15 +11,17 @@
 #define ROTATION 180.0f
 #define JUMP 2.0f
 #define G 0.1f
+
+#define PLAYERSPPOINT_MAX 30
  extern CSound Enemy2Voice;
 CModel CEnemy2::mModel;//モデルデータ作成
 //デフォルトコンストラクタ
-//敵（サソリ）
+//敵（サソリ）v
 CEnemy2::CEnemy2()
 //コライダの設定
 	: mColSphereRight(this,&mMatrix, CVector(1.5f, 3.0f, 0.5f), 2.0f)
 	, mColSphereLeft(this,&mMatrix,  CVector(-1.0f, 0.5f, 0.0f), 2.0f)
-	, mColSphereBody(this,&mMatrix,  CVector(0.0f,1.0f,0.0f),2.0f)
+	, mColSphereBody(this,&mMatrix,  CVector(0.0f,1.0f,0.0f),4.0f)
 	,mHp(HP)
 	,mJump(0.0f)
 	, mEnemyDamage(60)
@@ -283,10 +285,11 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 								//HPが０のとき以外は前後左右に吹っ飛ぶ
 								mCollisionEnemy.mY = 0;
 								mCollisionEnemy = mCollisionEnemy.Normalize();
+								
 							    //ダメージ処理に移行
 								if (mHp > 0) {
 
-								 mState = EDAMAGED;
+								  mState = EDAMAGED;
 
 								}
 								else if (mHp <= 0) {
@@ -306,7 +309,11 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 						if (((CItem*)(o->mpParent))->mItemAttackHit == true)
 						{//ヒットバック＆ダメージを受ける
 								//プレイヤーのジャンプ攻撃必要ポイント増加
+							if (((CXPlayer*)(o->mpParent))->mSpAttack < PLAYERSPPOINT_MAX) {
+
 								((CXPlayer*)(o->mpParent))->mSpAttack++;
+							}
+
 								mEffectCount = 0;
 								//体力減少 
 								mHp--;
