@@ -16,7 +16,7 @@
 #define JUMP 5.0f
 #define JUMP2 10.0f
 #define STEP  20.0f //攻撃時少し前進
-#define STEP2 200.0f 
+#define STEP2 40.0f 
 #define STAMINA 400 //スタミナ
 #define HP_MAX 10	//体力最大値
 #define STAMINA_MAX 1000 //スタミナ最大値
@@ -509,7 +509,7 @@ void CXPlayer::Update()
 					  mState = EESCAPE;
 					  mAnimationCount = 20;
 					  mDamageCount = 40;//無敵時間
-					  mStep = STEP;//ジャンプ力を代入
+					  mStep = STEP2;//ジャンプ力を代入
 					  mStamina -= 20;//スタミナ使用
 				  }
 				  //待機中のときにCを押しているとダッシュ
