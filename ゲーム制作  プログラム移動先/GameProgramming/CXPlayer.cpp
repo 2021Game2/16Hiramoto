@@ -13,21 +13,20 @@
 #define ATTACKCOUNT1 20
 #define ATTACKCOUNT2 20
 #define ATTACKCOUNT3 40
-#define JUMP 5.0f
-#define JUMP2 10.0f
+#define JUMP 5.0f//スペシャル攻撃時のジャンプ力
 #define STEP  20.0f //攻撃時少し前進
-#define STEP2 40.0f 
+#define STEP2 40.0f //回避行動時少し前進
 #define STAMINA 400 //スタミナ
 #define HP_MAX 10	//体力最大値
 #define STAMINA_MAX 1000 //スタミナ最大値
-#define SPPOINT_MAX 30
-#define GAUGE_WID_MAXHP 400.0f	//ゲージの幅の最大値
-#define GAUGE_WID_MAXST 400.0f
-#define GAUGE_WID_MAXSP 300.0f
+#define SPPOINT_MAX 30 //SPポイント最大値
+#define GAUGE_WID_MAXHP 400.0f	//HPゲージの幅の最大値
+#define GAUGE_WID_MAXST 400.0f //スタミナゲージの幅の最大値
+#define GAUGE_WID_MAXSP 300.0f//SPポイントゲージの幅の最大値
 #define GAUGE_LEFT 20			//ゲージ描画時の左端
 #define IMAGE_GAUGE "Resource\\png,tga\\Gauge.png"		//ゲージ画像
-#define G 0.1f
-#define G2 1.5f
+#define G 0.1f//重力
+#define G2 1.5f//スペシャル攻撃時の重力
 
 
 int CXPlayer::mSpAttack = SPPOINT_MAX;
@@ -153,6 +152,7 @@ void CXPlayer::Update()
 		}
 		else if(mAnimationFrame >= mAnimationFrameSize){
          mState = EMOVE;
+		 //回転値を元に戻す
 		 mRotation.mX = 0.0f;
 		}
 		break;
@@ -200,11 +200,13 @@ void CXPlayer::Update()
 	//アニメーションの種類
 	switch (mAnimationIndex) {
 	case(3): 
+		//アニメーションのロックが外れているとき
 		if (mAnimationFrameLock == false) {
+			//攻撃判定がまだ有効になっていないなら
 			if (mAttackHit != true) {
+				//武器を振り下ろすと同時に攻撃判定有効
 				if (mAnimationFrame >= 15) {
 					//エフェクト生成
-					//mEffect1=new CEffect2(CVector(mPosition.mX,mPosition.mY+1.0f,mPosition.mZ-5.0f), 3.0f, 3.0f, CEffect2::EFF_ATTACK, 2, 5, 3);
 					CVector tpos = mColSphereSword.mpMatrix->GetPos();
 					mEffect1 = new CEffect2(CVector(tpos.mX, tpos.mY, tpos.mZ), 3.0f, 3.0f,
 						CEffect2::EFF_ATTACK, 2, 5, 3, true, &mRotation);
