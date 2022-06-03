@@ -65,6 +65,7 @@ CXPlayer::CXPlayer()
 	, mMoveCheck(false)
 	, mAnimationFrameLock(false)
 	, mJumpStopper(true)
+	,mEffectStopper(false)
 {
 	//タグにプレイヤーを設定します
 	mTag = EPLAYER;
@@ -202,22 +203,29 @@ void CXPlayer::Update()
 	case(3): 
 		//アニメーションのロックが外れているとき
 		if (mAnimationFrameLock == false) {
-			//攻撃判定がまだ有効になっていないなら
-			if (mAttackHit != true) {
-				//武器を振り下ろすと同時に攻撃判定有効
+			//エフェクトのストッパーが外れているとき
+			if (mEffectStopper==false) {
+				//エフェクトが表示されるまでアニメーションを進めない
 				if (mAnimationFrame >= 15) {
-					//エフェクト生成
-					CVector tpos = mColSphereSword.mpMatrix->GetPos();
-					mEffect1 = new CEffect2(CVector(tpos.mX, tpos.mY, tpos.mZ), 3.0f, 3.0f,
-						CEffect2::EFF_ATTACK, 2, 5, 3, true, &mRotation);
-					mAttackHit = true;
 					mAnimationFrameLock = true;
+					mEffectStopper = true;
 				}
 			}
+		}
+		//mEffectStopperをつかって一度だけエフェクトが出るように
+		if (mAnimationFrameLock == true) {
+			//エフェクト生成
+			//剣コライダの座標を参照
+			CVector tpos = mColSphereSword.mpMatrix->GetPos();
+			mEffect1 = new CEffect2(CVector(tpos.mX, tpos.mY, tpos.mZ), 3.0f, 3.0f,
+				CEffect2::EFF_ATTACK, 2, 5, 3, true, &mRotation);
+			mAttackHit = true;
+			mAnimationFrameLock = false;
 		}
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
 			mAttackHit = false;
+			mEffectStopper = false;
 			ChangeAnimation(4, false, 30);
 		}
 		break;
@@ -236,18 +244,29 @@ void CXPlayer::Update()
 		}
 		break;
 	case(5):
+		//アニメーションのロックが外れているとき
 		if (mAnimationFrameLock == false) {
-			if (mAttackHit != true) {
+			//エフェクトのストッパーが外れているとき
+			if (mEffectStopper == false) {
+				//エフェクトが表示されるまでアニメーションを進めない
 				if (mAnimationFrame >= 15) {
-					CVector tpos = mColSphereSword.mpMatrix->GetPos();
-					mEffect2 = new CEffect2(CVector(tpos.mX, tpos.mY, tpos.mZ), 3.0f, 3.0f, CEffect2::EFF_ATTACK2, 3, 5, 3);
-					mAttackHit = true;
+					mAnimationFrameLock = true;
+					mEffectStopper = true;
 				}
 			}
+		}
+		//mEffectStopperをつかって一度だけエフェクトが出るように
+		if (mAnimationFrameLock == true) {
+			//剣コライダの座標を参照
+			CVector tpos = mColSphereSword.mpMatrix->GetPos();
+     		mEffect2 = new CEffect2(CVector(tpos.mX, tpos.mY, tpos.mZ), 3.0f, 3.0f, CEffect2::EFF_ATTACK2, 3, 5, 3);
+			mAttackHit = true;
+			mAnimationFrameLock = false;
 		}
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
 			mAttackHit = false;
+			mEffectStopper = false;
 			ChangeAnimation(6, false, 30);
 		}
 		break;
@@ -269,27 +288,40 @@ void CXPlayer::Update()
 		if (mJump >= -0.1f) {
 			mJump -= G;
 		}
+
+		//アニメーションのロックが外れているとき
 		if (mAnimationFrameLock == false) {
-			if (mAttackHit != true) {
+			//エフェクトのストッパーが外れているとき
+			if (mEffectStopper == false) {
+				//エフェクトが表示されるまでアニメーションを進めない
 				if (mAnimationFrame >= 15) {
-					if (mState == EATTACK3) {
-						CVector tpos = mColSphereSword.mpMatrix->GetPos();
-						mEffect3 = new CEffect2(CVector(tpos.mX, tpos.mY, tpos.mZ), 3.0f, 3.0f, CEffect2::EFF_ATTACK3, 3, 5, 3);
-					}
-					mAttackHit = true;
+					mAnimationFrameLock = true;
+					mEffectStopper = true;
 				}
 			}
 		}
+		if (mAnimationFrameLock == true) {
+					if (mState == EATTACK3) {
+						//剣コライダの座標を参照
+						CVector tpos = mColSphereSword.mpMatrix->GetPos();
+						mEffect3 = new CEffect2(CVector(tpos.mX, tpos.mY, tpos.mZ), 3.0f, 3.0f, CEffect2::EFF_ATTACK3, 3, 5, 3);
+						//mAttackHit = true;
+					}
+						mAnimationFrameLock = false;
+		}
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
+			mAttackHit = true;
+			mEffectStopper = false;
 			ChangeAnimation(8, false, 100);
 		}
 		break;
 	case(8):
 		if (mState == EATTACKSP) {
 			if (mJump >= -3.0f) {
+				//剣コライダの座標を参照
 				CVector tpos = mColSphereSword.mpMatrix->GetPos();
-				mEffectSp = new CEffect2(CVector(tpos.mX, tpos.mY, tpos.mZ), 3.0f, 3.0f, CEffect2::EFF_ATTACKSP, 4, 5, 3);
+				mEffectSp = new CEffect2(CVector(tpos.mX, tpos.mY+1.0f, tpos.mZ), 3.0f, 3.0f, CEffect2::EFF_ATTACKSP, 4, 5, 3);
 				if (mJumpStopper == false) {
 				  mJump -= G2;
 				}
@@ -326,14 +358,19 @@ void CXPlayer::Update()
 		}
 		break;
 	}
-	if (mAttackHit == true) {
-		if (mAnimationIndex == 3||mAnimationIndex==5||mAnimationIndex==7||mAnimationIndex==8) {
-			//CVector tpos = mColSphereSword.mpMatrix->GetPos();
-			//mEffect1 = new CEffect2(CVector(tpos.mX, tpos.mY, tpos.mZ), 3.0f, 3.0f,
-				//CEffect2::EFF_ATTACK, 2, 5, 3, true, &mRotation);
+	//攻撃判定が有効のとき
+	//if (mEffectStopper == false ) {
+		//if (mAnimationIndex == 3||mAnimationIndex==5||mAnimationIndex==7||mAnimationIndex==8) {
+			//有効になってからロックを外す
+			//mAnimationFrameLock = false;
+		//}
+		/*
+		if (CKey::Once(VK_LBUTTON)) {
+			mAttackHit = false;
 			mAnimationFrameLock = false;
-		}
-	}
+		}*/
+	//}
+	//ロックがかかっている間はアニメーションが進まないようにする
 	if (mAnimationFrameLock == true) {
 		mAnimationFrame--;
 	}

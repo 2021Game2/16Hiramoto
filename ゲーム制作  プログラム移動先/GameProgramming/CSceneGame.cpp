@@ -428,6 +428,8 @@ void CSceneGame::Render() {
 	CUtil::End2D();
 	//CXPlayer‚Ìƒpƒ‰ƒ[ƒ^“™‚Ì‚QD•`‰æ‚Íˆê”ÔÅŒã
 	CXPlayer::GetInstance()->Render2D();
+	//CXPlayer‚Ìƒpƒ‰ƒ[ƒ^“™‚Ì‚QD•`‰æ‚Íˆê”ÔÅŒã
+	CBoss::GetInstance()->Render2D();
 }
 
 CScene::EScene CSceneGame::GetNextScene()

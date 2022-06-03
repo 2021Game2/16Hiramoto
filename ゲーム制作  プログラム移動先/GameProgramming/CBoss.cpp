@@ -15,6 +15,10 @@
 #define JUMP 5.0f
 #define G 0.1f
 #define PLAYERSPPOINT_MAX 30
+#define GAUGE_WID_MAXHP 400.0f	//HPゲージの幅の最大値
+#define GAUGE_LEFT 20			//ゲージ描画時の左端
+
+#define IMAGE_GAUGE "Resource\\png,tga\\Gauge.png"		//ゲージ画像
 int CBoss::mBossAttackCount = 0;
 int CBoss::mHp = HP;
 
@@ -50,6 +54,7 @@ CBoss::CBoss()
 	, mBossBgmDeath(true)
 {
 
+	mImageGauge.Load(IMAGE_GAUGE);
 	mGravity = 0.20f;
 	mTag = EBOSS;
 	mColSearch.mTag = CCollider::ESEARCH;//タグ設定
@@ -431,4 +436,20 @@ void CBoss::TaskCollision() {
 	CCollisionManager::Get()->Collision(&mColSphereLeftFront, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSphereHead, COLLISIONRANGEFIELD);
 	CCollisionManager::Get()->Collision(&mColSearch, COLLISIONRANGE);
+}
+
+void CBoss::Render2D()
+{
+	//2D描画開始
+	CUtil::Start2D(0, 800, 0, 600);
+	//体力の割合
+	float hpRate = (float)mHp / (float)HP;
+	//体力ゲージの幅
+	float hpGaugeWid = GAUGE_WID_MAXHP * hpRate;
+
+	mImageGauge.Draw(20, GAUGE_WID_MAXHP, 540, 550, 201, 300, 63, 0);//ゲージ背景
+	mImageGauge.Draw(20, hpGaugeWid, 540, 550, 401, 486, 63, 0);//体力ゲージ
+
+
+	CUtil::End2D();
 }

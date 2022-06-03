@@ -9,6 +9,7 @@
 #include"CText.h"
 #include"CEffect2.h"
 #include"CSound.h"
+#include"CTexture.h"
 /*エネミークラス
 キャラクタクラスを継承	*/
 class CBoss :public CXCharacter {
@@ -34,6 +35,8 @@ private:
 	bool mBossBgm;
 	bool mBossBgmDeath;
 	int  mBossColliderCheck;
+
+	CTexture mImageGauge; //ゲージ画像
 public:
 	CCollider mColSearch;//サーチ用コライダ
 	bool mColSearchCount;
@@ -52,6 +55,7 @@ public:
 	CBoss(const CVector& position, const CVector& rotation, const CVector& scale);
 	//更新処理
 	void Update();
+	void Render2D();
 	//衝突処理
 	//Collision(コライダ１、コライダ２）
 	void Collision(CCollider* m, CCollider* o);
