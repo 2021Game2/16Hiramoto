@@ -21,6 +21,7 @@ private:
 public:
 	bool mAnimationFrameLock;
 	bool mMoveCheck;//ダッシュかダッシュじゃないか
+	//bool mDushCheck;
 	CEffect2* mEffect1;
 	CEffect2* mEffect2;
 	CEffect2* mEffect3;
@@ -32,7 +33,7 @@ public:
 	CCollider  mColSphereFoot;//ダメージが通る当たり判定
 	CCollider mColliderSwordSp;//ジャンプ攻撃時の武器の当たり判定
 	
-	CColliderLine mColEscapeStopper;
+	CColliderLine mColEscapeStopperLine;
     CVector mCollisionEnemy;//プレイヤーと敵のコライダーの位置の差
 
 	CTexture mTexture;
@@ -52,7 +53,7 @@ public:
 	static CXPlayer* GetInstance();
 	
     static int mSpAttack;//ジャンプ攻撃をするためのゲージ
-	static int mAttackCount;//武器の当たり判定が適用される時間
+	static int mAttackCount;//攻撃のアニメーションが何度も再生されないように
 	float mColliderCount;//吹き飛ばされた時の初速度
 	int mAnimationCount;//アニメーションが途中で変わらないようにする
 	static int mHp;//体力

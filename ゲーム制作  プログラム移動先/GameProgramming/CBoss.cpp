@@ -239,10 +239,10 @@ void CBoss::Update() {
 	case EAUTOMOVE://ˆÚ“®
 		AutoMove();
 		break;
-	case EATTACK://UŒ‚
+	case EATTACK://UŒ‚1
 		Attack();
 		break;
-	case EATTACK2:
+	case EATTACK2://UŒ‚‚Q
 		Attack2();
 		break;
 	case EDAMAGED://ƒ_ƒ[ƒW
