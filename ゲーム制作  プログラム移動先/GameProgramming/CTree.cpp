@@ -5,8 +5,8 @@
 #include"CColliderTriangle.h"
 #include"CTree.h"
 #include"CCollider.h"
-#define OBJ "3DModel\\Tree\\Tree.obj"
-#define MTL "3DModel\\Tree\\Tree.mtl"
+#define OBJ "Resource\\3DModel\\Tree\\Tree.obj"
+#define MTL "Resource\\3DModel\\Tree\\Tree.mtl"
 
 CModel CTree::mModel;//モデルデータ作成
 

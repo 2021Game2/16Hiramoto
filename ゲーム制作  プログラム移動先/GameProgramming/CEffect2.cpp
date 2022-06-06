@@ -26,8 +26,9 @@ void CEffect2::TexPreLoad()
 	}
 }
 CEffect2::CEffect2(const CVector& pos, float w, float h, CEffect2::EffType efftype, int row, int col, int fps, bool nobillboard, CVector* vec)
-	: CBillBoard2(pos, w, h), mRows(row), mCols(col), mFps(fps), mFrame(0), mEffType(efftype), mNoBillBoard(nobillboard)
+	: CBillBoard(pos, w, h), mRows(row), mCols(col), mFps(fps), mFrame(0), mEffType(efftype), mNoBillBoard(nobillboard)
 {
+	mIsEffectTask = true;
 	if (vec) {
 		mVec = *vec;
 	}
@@ -72,7 +73,7 @@ void CEffect2::Update() {
 	mUv[3] = CVector(righ, bot, 0.0f);
 	if (!mNoBillBoard) {
 		//ビルボード更新
-		CBillBoard2::Update();
+		CBillBoard::Update();
 	}
 	else {
 		//カメラへの方向ベクトルの取得
@@ -84,7 +85,7 @@ void CEffect2::Update() {
 	}
 
 	//ビルボード更新
-	CBillBoard2::Update();
+	//CBillBoard2::Update();
 }
 void CEffect2::Render()
 {
@@ -92,7 +93,7 @@ void CEffect2::Render()
 		glDisable(GL_CULL_FACE);
 	}
 	glDisable(GL_DEPTH_TEST); //深度テスト無効
-	CBillBoard2::Render(&sMaterial[mEffType]);
+	CBillBoard::Render(&sMaterial[mEffType]);
 	glEnable(GL_DEPTH_TEST); //深度テスト有効
 	if (mNoBillBoard) {
 		glEnable(GL_CULL_FACE);

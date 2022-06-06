@@ -13,7 +13,7 @@
 #define MTL "3DModel\\Bee\\BEE1.mtl"//モデルのマテリアルファイル
 #define DAMAGEEFFECT "Resource\\png,tga\\exp.tga"
 #define HP 1
-#define VELOCITY 0.05f //行動１
+#define VELOCITY 0.25f //行動１
 #define VELOCITY1  -0.1f//行動１
 #define COLLIDERCOUNT 5.0
 #define VELOCITY2 0.1f
@@ -100,7 +100,6 @@ void CEnemy3::Update() {
 	//左右方向へ回転
 	if (dx > margin) {
 		mRotation.mY += 3.0f;//左へ回転
-
 	}
 	else if (dx < -margin) {
 		mRotation.mY -= 3.0f;//右へ回転
@@ -138,9 +137,16 @@ void CEnemy3::Update() {
 	case(1):
 		if (mCount < 180) {
 			mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
-			if (mPosition.mY > 3.0f) {
+
+			//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
+			CXPlayer* tPlayer = CXPlayer::GetInstance();
+
+			if (mPosition.mY >= tPlayer->mPosition.mY+5.0f) {
 				mPosition = mPosition + CVector(0.0f, -0.1f, VELOCITY) * mMatrixRotate;
 				
+			}
+			else {
+				mPosition.mY++;
 			}
 		}
 		if (mCount >= 180) {
@@ -249,7 +255,7 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 
 							if (mColSearch2.mRenderEnabled == true) {
 								mCount = 0;
-								if (mMoveCount == 0) {
+								if (mMoveCount == 0|| mMoveCount == 1) {
 									mMoveCount = 1;
 								}
 								mColSearch2.mRenderEnabled = false;

@@ -11,20 +11,25 @@ private:
 	float mTextureHeight;// デプステクスチャの高さ
 	GLuint mDepthTextureID; //デプステクスチャID
 	GLuint mFb; //フレームバッファ識別子
-	void (*mpRender)(); //Render関数のポインタ
+	//void (*mpRender)(); //Render関数のポインタ
 public:
 	//初期化処理
 	void Init();
-	
+
 	//wight// デプステクスチャの幅
 	//height// デプステクスチャの高さ
     //funcRender;// 描画関数のポインタ
 	//shadowCol;// 影の色
 	//lightPos;// 光源の位置
-	
+	/*
 	void Init(int width, int height, void (*funcRender)(),
 		float shadouCol[], float lightPos[]);
+	*/
+	void Init(int width, int height, void (*funcRender)(), void (*funcEffectRender)(),
+		float shadouCol[], float lightPos[]);
 	void Render();
+	void (*mpRender)(); //Render関数のポインタ
+	void (*mpEffectRender)();//EffectRender関数ポインタ
 
 };
 #endif

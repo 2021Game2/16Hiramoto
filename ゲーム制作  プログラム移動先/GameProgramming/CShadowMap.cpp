@@ -5,7 +5,7 @@
 #include"CTaskManager.h"
 #include "CShadowMap.h"
 #include "CMatrix.h"
-
+#include"CXPlayer.h"
 
 
 void CShadowMap::Init()
@@ -84,23 +84,39 @@ void CShadowMap::Init()
 
 
 
-void CShadowMap::Init(int width, int height, void (*funcRender)(),
+void CShadowMap::Init(int width, int height, void (*funcRender)(),void(*funcEffectRender)(),
 	float shadouCol[], float lightPos[]) {
 	mDepthTextureID = 0;
 	mFb = 0;
 	mTextureHeight = height;
 	mTextureWidth = width;
 	mpRender = funcRender;
+	mpEffectRender = funcEffectRender;
 	mShadowCol[0] = shadouCol[0];
 	mShadowCol[1] = shadouCol[1];
 	mShadowCol[2] = shadouCol[2];
 	mShadowCol[3] = shadouCol[3];
+
 	mLightPos[0] = lightPos[0];
 	mLightPos[1] = lightPos[1];
 	mLightPos[2] = lightPos[2];
+
+	
 	Init();
 
-}
+}/*
+void CShadowMap::Init(int width, int height, void (*funcRender)(), void(*funcEffectRender)(),
+	float shadouCol[], float lightPos[]) 
+{
+	mDepthTextureID = 0;
+	mFb = 0;
+	mTextureHeight = height;
+	mTextureWidth = width;
+	mpRender = funcRender;
+	mpEffectRender = funcEffectRender;
+	
+}*/
+
 void CShadowMap::Render()
 {
 
@@ -139,8 +155,16 @@ void CShadowMap::Render()
 	glLoadIdentity(); //行列の初期化
 	//光源位置から見るように行列を設定する
 	//角度を変えられる
-	gluLookAt(mLightPos[0], mLightPos[1], mLightPos[2], mLightPos[0] - 1, 0, mLightPos[2] - 1, -6.0, 1.0, -10.0);
-	//gluLookAt(mLightPos[0], mLightPos[1], mLightPos[2], mLightPos[0] - 1, 0, mLightPos[2] - 1, 0.0, 1.0, 0.0);
+
+	//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
+	//CXPlayer* tPlayer = CXPlayer::GetInstance();
+	//if (tPlayer) {
+	mLightPos[0] = 0.0f;
+	mLightPos[1] = 150.0f;
+	mLightPos[2] =  -16.0f;
+		
+	//}
+	gluLookAt(mLightPos[0], mLightPos[1], mLightPos[2], mLightPos[0] - 1, 0, mLightPos[2] - 1, -63.0, 1.0, -150.0);
 	// 設定したモデルビュー変換行列を保存しておく //
 	glGetFloatv(GL_MODELVIEW_MATRIX, modelview.mM[0]);
 
@@ -269,7 +293,10 @@ void CShadowMap::Render()
 	{
 		(*mpRender)();
 	}
-
+	if (mpEffectRender)
+	{
+		(*mpEffectRender)();
+	}
 	// 光源の明るさを元の明るさに設定 //
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightcol);
 

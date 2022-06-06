@@ -15,7 +15,7 @@
 #define JUMP 5.0f
 #define G 0.1f
 #define PLAYERSPPOINT_MAX 30
-#define GAUGE_WID_MAXHP 400.0f	//HPゲージの幅の最大値
+#define GAUGE_WID_MAXHP 700.0f	//HPゲージの幅の最大値
 #define GAUGE_LEFT 20			//ゲージ描画時の左端
 
 #define IMAGE_GAUGE "Resource\\png,tga\\Gauge.png"		//ゲージ画像
@@ -447,8 +447,8 @@ void CBoss::Render2D()
 	//体力ゲージの幅
 	float hpGaugeWid = GAUGE_WID_MAXHP * hpRate;
 
-	mImageGauge.Draw(20, GAUGE_WID_MAXHP, 540, 550, 201, 300, 63, 0);//ゲージ背景
-	mImageGauge.Draw(20, hpGaugeWid, 540, 550, 401, 486, 63, 0);//体力ゲージ
+	mImageGauge.Draw(50, GAUGE_WID_MAXHP, 510, 550, 201, 300, 63, 0);//ゲージ背景
+	mImageGauge.Draw(50, hpGaugeWid, 510, 550, 487, 572, 63, 0);//体力ゲージ
 
 
 	CUtil::End2D();

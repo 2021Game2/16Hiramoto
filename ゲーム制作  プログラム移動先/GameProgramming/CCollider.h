@@ -32,7 +32,7 @@ public:
 		ESTOPPER,
 		EMAP,
 		EMAPCOLLIDER,
-
+		EPLAYERESCAPESTOPPER,
 	};
 	ETag mTag;
 	//コライダタイプ

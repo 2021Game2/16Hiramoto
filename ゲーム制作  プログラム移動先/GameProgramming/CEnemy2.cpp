@@ -21,7 +21,7 @@ CEnemy2::CEnemy2()
 //コライダの設定
 	: mColSphereRight(this,&mMatrix, CVector(1.5f, 3.0f, 0.5f), 2.0f)
 	, mColSphereLeft(this,&mMatrix,  CVector(-1.0f, 0.5f, 0.0f), 2.0f)
-	, mColSphereBody(this,&mMatrix,  CVector(0.0f,1.0f,0.0f),4.0f)
+	, mColSphereBody(this,&mMatrix,  CVector(0.0f,1.0f,0.0f),2.0f)
 	,mHp(HP)
 	,mJump(0.0f)
 	, mEnemyDamage(60)
@@ -35,7 +35,7 @@ CEnemy2::CEnemy2()
 	,mEnemy2AttackHit(false)
 	,mEnemyLevel(0)
 	,mEnemyHpPercent(1.0f)
-	, mEnemy2Bgm(true)
+	
 {
 	mTag = EENEMY2;
 	mColSphereRight.mTag= CCollider::EENEMY2COLLIDERATTACK;
@@ -140,13 +140,15 @@ void CEnemy2::Attack() {
 }	
 //ダメージ処理
 void CEnemy2::Damaged() {
+
 	if (CSceneGame::mBgmCount <= 2) {
 
-		if (mEnemy2Bgm == true) {
-			CSceneGame::mBgmCountCheck = false;
-			CSceneGame::mBgmCount = 2;
-			mEnemy2Bgm = false;
-		}
+			if (CSceneGame::mEnemy2Bgm == true) {
+				CSceneGame::mBgmCountCheck = false;
+				CSceneGame::mBgmCount = 2;
+				CSceneGame::mEnemy2Bgm = false;
+			}
+		
 	}
 	//無敵時間付与
 	if (mDamageCount < 60) {

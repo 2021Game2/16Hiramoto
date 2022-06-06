@@ -12,7 +12,7 @@
 #include"CSound.h"
 #include"CTarget.h"
 #define HP 30
-#define ENEMY2COUNT 1 //一度に出せる敵２の数
+#define ENEMY2COUNT 2 //一度に出せる敵２の数
 #define ENEMY2MINCOUNT 4 //敵２を再生成させるときの敵２の数の下限
 #define ENEMY3COUNT 1//一度に出せる敵３の数
 #define ENEMY3MINCOUNT 4 //敵３を再生成させるときの敵３の数の下限
@@ -22,24 +22,24 @@
 #define TEX_BUTTON3 "Resource\\png,tga\\Mouse.png"
 #define TEX_DUSH "Resource\\png,tga\\Dush.png"
 #define TEX_WORK "Resource\\png,tga\\Work.png"
-#define BGMSTART "BGM\\BGMSTART.wav" //BGM
-#define BGMBATTLE "BGM\\BGMBATTLE.wav" //バトル中のBGM
-#define BGMBOSSBATTLE "BGM\\BGMBOSSBATTLE.wav" // ボスと戦っているときのBGM
-#define BGMGAMECLEAR "BGM\\BGMGAMECLEAR.wav" //ゲームクリア時のBGM
-#define BGMGAMEOVER "BGM\\BGMGAMEOVER.wav" //ゲームオーバー時のBGM
-#define ATTACK1 "SE\\PlayerAttack1.wav" //プレイヤーの攻撃SE１
-#define ATTACK2 "SE\\PlayerAttack2.wav" //プレイヤーの攻撃SE２
-#define ATTACK3 "SE\\PlayerAttack3.wav" //プレイヤーの攻撃SE３
-#define ATTACKSP "SE\\PlayerAttacksp.wav" //プレイヤーのジャンプ攻撃SE
-#define DAMAGE "SE\\Damage.wav"  //プレイヤーダメージ時のSE
-#define FRY "SE\\Beefly.wav"  //敵３の移動中SE
-#define BOSSVOICE "SE\\BossVoice.wav"//ボスの鳴き声
-#define BOSSWORK "SE\\BossWork.wav" //ボスの足音
-#define ENEMYVOICE "SE\\ScopionVoice.wav" //敵２の鳴き声
+#define BGMSTART "Resource\\BGM\\BGMSTART.wav" //BGM
+#define BGMBATTLE "Resource\\BGM\\BGMBATTLE.wav" //バトル中のBGM
+#define BGMBOSSBATTLE "Resource\\BGM\\BGMBOSSBATTLE.wav" // ボスと戦っているときのBGM
+#define BGMGAMECLEAR "Resource\\BGM\\BGMGAMECLEAR.wav" //ゲームクリア時のBGM
+#define BGMGAMEOVER "Resource\\BGM\\BGMGAMEOVER.wav" //ゲームオーバー時のBGM
+#define ATTACK1 "Resource\\SE\\PlayerAttack1.wav" //プレイヤーの攻撃SE１
+#define ATTACK2 "Resource\\SE\\PlayerAttack2.wav" //プレイヤーの攻撃SE２
+#define ATTACK3 "Resource\\SE\\PlayerAttack3.wav" //プレイヤーの攻撃SE３
+#define ATTACKSP "Resource\\SE\\PlayerAttacksp.wav" //プレイヤーのジャンプ攻撃SE
+#define DAMAGE "Resource\\SE\\Damage.wav"  //プレイヤーダメージ時のSE
+#define FRY "Resource\\SE\\Beefly.wav"  //敵３の移動中SE
+#define BOSSVOICE "Resource\\SE\\BossVoice.wav"//ボスの鳴き声
+#define BOSSWORK "Resource\\SE\\BossWork.wav" //ボスの足音
+#define ENEMYVOICE "Resource\\SE\\ScopionVoice.wav" //敵２の鳴き声
 #define FONT "Resource\\png,tga\\FontG.png"  //ゲームに使われている文字のデータ
-#define SCOPION "3DModel\\scorpid\\scorpid-monster-X-animated.X" //敵２のXファイル
-#define BOSS "3DModel\\Boss\\monster-animated-character-X.X" // ボスのXファイル
-#define KNIGHT "3DModel\\knight\\knight_low.x"
+#define SCOPION "Resource\\3DModel\\scorpid\\scorpid-monster-X-animated.X" //敵２のXファイル
+#define BOSS "Resource\\3DModel\\Boss\\monster-animated-character-X.X" // ボスのXファイル
+
 #define TEXWIDTH  8192  //テクスチャ幅
 #define TEXHEIGHT  6144  //テクスチャ高さ
 
@@ -50,8 +50,8 @@ int CSceneGame::mEnemy3Count = 0;
 int CSceneGame::mEnemy3CountStopper = ENEMY3COUNT;
 int CSceneGame::mBgmCount = 1;//BGMの切り替え番号
 bool CSceneGame::mBgmCountCheck = true;//BGMを流すか止めるか分けるフラグ
-bool CSceneGame::mVoiceSwitch =false;//false：音声なし true：音声あり
-
+bool CSceneGame::mVoiceSwitch =true;//false：音声なし true：音声あり
+bool CSceneGame::mEnemy2Bgm = true;
 CSound PlayerFirstAttack;
 CSound PlayerSecondAttack;
 CSound PlayerThirdAttack;
@@ -84,6 +84,9 @@ CSceneGame::~CSceneGame() {
 void ShadowRender() {
 	//影の影響を受ける用になる
 	CTaskManager::Get()->Render();
+}
+void ShadowEffectRender() {
+	CTaskManager::Get()->EffectRender();
 }
 void CSceneGame::Init()
 
@@ -120,30 +123,9 @@ void CSceneGame::Init()
 	CRes::sModelX.Load(MODEL_FILE);
 	//キャラクターにモデルを設定
 	mPlayer.Init(&CRes::sModelX);
-	mPlayer.mPosition = CVector(-63.0f, 1.0f, -150.0f);
-
-	//mPlayer.mPosition = CVector(-56.0f, 5.0f, -49.0f);
-	/*
-	CRes::sKnight.Load(KNIGHT);
-	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//1:移動
-	CRes::sKnight.SeparateAnimationSet(0, 1530, 1830, "idle1");//2:待機
-	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//3:ダミー
-	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//4:ダミー
-	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//5:ダミー
-	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//6:ダミー
-	CRes::sKnight.SeparateAnimationSet(0, 440, 520, "attack1");//7:Attack1
-	CRes::sKnight.SeparateAnimationSet(0, 520, 615, "attack2");//8:Attack2
-	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//9:ダミー
-	CRes::sKnight.SeparateAnimationSet(0, 10, 80, "walk");//10:ダミー
-	CRes::sKnight.SeparateAnimationSet(0, 1160, 1260, "death1");//11:ダウン
+	mPlayer.mPosition = CVector(-45.0f, 1.0f, -120.0f);
 
 
-	//敵の初期設定
-	mEnemy.Init(&CRes::sKnight);
-	mEnemy.mAnimationFrameSize = 1024;
-	//敵の配置
-	mEnemy.mPosition = CVector(700.0f, 0.0f, 0.0f);
-	*/
 	//カメラ初期化
 	Camera.Init();
 
@@ -200,7 +182,9 @@ void CSceneGame::Init()
 		*/
 	float shadowColor[] = { 0.4f, 0.4f, 0.4f, 0.2f };  //影の色
 	float lightPos[] = { 50.0f, 160.0f, 50.0f };  //光源の位置
-	mShadowMap.Init(TEXWIDTH, TEXHEIGHT, ShadowRender, shadowColor, lightPos);//影の初期化
+
+	mShadowMap.Init(TEXWIDTH, TEXHEIGHT, ShadowRender,ShadowEffectRender, shadowColor, lightPos);//影の初期化
+	
 	CEffect2::TexPreLoad();
 }
 
@@ -360,18 +344,18 @@ void CSceneGame::Render() {
 	//2D描画開始
 	CUtil::Start2D(0, 800, 0, 600);
 	char buf[64];
-	if (CBoss::mHp>0||mPlayer.mHp<0) {
+	if (CBoss::mHp>0&&mPlayer.mHp>0) {
+		//時間（分）
 		if (mTimeMinute<10) {
 			sprintf(buf, "0%d:", mTimeMinute);
 			mFont.DrawString(buf, 170, 500, 8, 16);
 		}
-	else {
-			sprintf(buf, "%d:", mTimeMinute);
-			mFont.DrawString(buf, 170, 500, 8, 16);
-	}
+		else {
+				sprintf(buf, "%d:", mTimeMinute);
+				mFont.DrawString(buf, 170, 500, 8, 16);
+		}
 
-		sprintf(buf, "BOSS:%d", mpBoss->mHp);
-		mFont.DrawString(buf, 20, 200, 8, 16);
+		//時間（秒）
 		if (mTimeSecond < 10) {
 		  sprintf(buf, "0%d", mTimeSecond);
 		 mFont.DrawString(buf, 230, 500, 8, 16);
@@ -380,50 +364,52 @@ void CSceneGame::Render() {
 			sprintf(buf, "%d", mTimeSecond);
 			mFont.DrawString(buf, 230, 500, 8, 16);
 	    }
-		sprintf(buf, "SPECIAL:%10d", CXPlayer::mSpAttack);
-		//mFont.DrawString(buf, 20, 100, 8, 16);
-		if (mPlayer.mPosition.mX > 0) {
-		 sprintf(buf, ":%f", mPlayer.mPosition.mX);
-		//mFont.DrawString(buf, 20, 200, 8, 16);
+		if (mPlayer.mPosition.mX > 0.0f) {
+		 sprintf(buf, "X:%f", mPlayer.mPosition.mX);
+		mFont.DrawString(buf, 20, 200, 8, 16);
 		}
 		else {
-			//sprintf(buf, "X:%f", mPlayer.mPosition.mX);
+			sprintf(buf, "X:M%f", mPlayer.mPosition.mX);
 
-			//mFont.DrawString(buf, 20, 200, 8, 16);
+			mFont.DrawString(buf, 20, 200, 8, 16);
 		}
-		if (mPlayer.mPosition.mY > 0) {
+		if (mPlayer.mPosition.mY > 0.0f) {
 		
 		 sprintf(buf, "Y:%f", mPlayer.mPosition.mY);
 
-		 //mFont.DrawString(buf, 20, 250, 8, 16);
+		 mFont.DrawString(buf, 20, 250, 8, 16);
 		}
 		else {
-			sprintf(buf, "Y:-%f", mPlayer.mPosition.mY);
-			//mFont.DrawString(buf, 20, 250, 8, 16);
+			sprintf(buf, "Y:M%f", mPlayer.mPosition.mY);
+			mFont.DrawString(buf, 20, 250, 8, 16);
 		}
-		if (mPlayer.mPosition.mZ > 0) {
+		if (mPlayer.mPosition.mZ > 0.0f) {
 			sprintf(buf, "Z:%f", mPlayer.mPosition.mZ);
-			//mFont.DrawString(buf, 20, 300, 8, 16);
+			mFont.DrawString(buf, 20, 300, 8, 16);
 		}
 		else {
-			sprintf(buf, "Z:-%f", mPlayer.mPosition.mZ);
-			//mFont.DrawString(buf, 20, 300, 8, 16);
+			sprintf(buf, "Z:M%f", mPlayer.mPosition.mZ);
+			mFont.DrawString(buf, 20, 300, 8, 16);
 
 		}
+
+		mImageMouse.Draw(570, 770, 0, 170, 0, 500, 500, 0);
+		mImageMoveKey.Draw(0, 100, 50, 200, 0, 500, 500, 0);
+		mImageCkey.Draw(120, 200, 60, 210, 0, 500, 500, 0);
+		mImageWork.Draw(0, 100, 0, 100, 0, 250, 250, 0);
+		mImageDush.Draw(120, 190, 20, 100, 0, 200, 210, 0);
 	}
 	else if (CBoss::mHp <= 0) {
 	sprintf(buf, "GAMECLEAR" );
-	mFont.DrawString(buf, 20, 300, 16, 32);
+		
+		  mFont.DrawString(buf, 300, 300, 16, 32);
+		
 	}
-	if (mPlayer.mHp < 0) {
-		sprintf(buf, "GAMEOVER");
-		mFont.DrawString(buf, 20, 300, 16, 32);
+	else if (mPlayer.mHp <= 0) {
+			sprintf(buf, "GAMEOVER");
+			mFont.DrawString(buf, 300, 300, 16, 32);
+			
 	}
-	mImageMouse.Draw(600, 800, 0, 200, 0, 500, 500, 0);
-	mImageMoveKey.Draw(0, 150, 150, 300, 0, 500, 500, 0);
-	mImageCkey.Draw(150, 300, 200, 300, 0, 500, 500, 0);
-	mImageWork.Draw(0, 200, 0, 200, 0, 250, 250, 0);
-	mImageDush.Draw(200, 300, 50, 190, 0, 200, 200, 0);
 	//2Dの描画終了
 	CUtil::End2D();
 	//CXPlayerのパラメータ等の２D描画は一番最後

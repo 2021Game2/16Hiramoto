@@ -1,7 +1,7 @@
 #ifndef CMODELX_H
 #define CMODELX_H
 
-#define MODEL_FILE "3DModel\\Player\\ラグナ.x"
+#define MODEL_FILE "Resource\\3DModel\\Player\\ラグナ.x"
 
 #define SAFE_DELETE_ARRAY(a) { if(a) delete[] a; a = 0;}
 //配列のサイズ取得をマクロ化

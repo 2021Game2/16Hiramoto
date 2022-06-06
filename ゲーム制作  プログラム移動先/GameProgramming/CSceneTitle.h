@@ -12,6 +12,7 @@ private:
 	CTexture mImageButtonBack; //ƒ{ƒ^ƒ“”wŒi‰æ‘œ
 
 public:
+
 	CSceneTitle();
 	void Init();
 	void Update();

@@ -34,6 +34,7 @@ private:
 	float CurveCount;
 	CCharacter* mpPlayer;//プレイヤーのポインタ
 	bool mEnemy2Bgm;
+	bool mEnemy2BgmStopper;
 public:
 	unsigned int mEnemyLevel;
 	float mEnemyHpPercent;

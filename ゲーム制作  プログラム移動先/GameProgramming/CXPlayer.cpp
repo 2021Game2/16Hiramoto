@@ -17,7 +17,7 @@
 #define STEP  20.0f //攻撃時少し前進
 #define STEP2 40.0f //回避行動時少し前進
 #define STAMINA 400 //スタミナ
-#define HP_MAX 10	//体力最大値
+#define HP_MAX 1	//体力最大値
 #define STAMINA_MAX 1000 //スタミナ最大値
 #define SPPOINT_MAX 30 //SPポイント最大値
 #define GAUGE_WID_MAXHP 400.0f	//HPゲージの幅の最大値
@@ -48,9 +48,10 @@ CXPlayer* CXPlayer::GetInstance()
 }
 CXPlayer::CXPlayer()
 	: mColSphereSword(this, &mMatrix, CVector(-10.0f, 10.0f, 50.0f), 2.5f)//剣のコライダ１
-	, mColSphereFoot(this, &mMatrix, CVector(0.0f, 0.0f, -3.0f), 3.0f)//足付近のコライダ
+	, mColSphereFoot(this, &mMatrix, CVector(0.0f, 0.0f, -3.0f), 2.0f)//足付近のコライダ
 	, mColliderSwordSp(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 10.0f)//剣のコライダ２
-	, mColEscapeStopper(this, &mMatrix, CVector(0.0f, 3.0f, 0.0f), 5.0f)
+	, mColEscapeStopper(this, &mMatrix, CVector(0.0f, 0.0f, -3.0f),CVector(0.0f,0.0f,3.0f))//回避時にすり抜けない
+
 	, mJump(0.0f)
 	
 	,mSpaceCount1(true)
@@ -73,6 +74,7 @@ CXPlayer::CXPlayer()
 	mColSphereSword.mTag = CCollider::EPLAYERSWORD;
 	mColliderSwordSp.mTag = CCollider::EPLAYERSWORD;
 	mColSphereFoot.mTag = CCollider::EPLAYERBODY;
+	mColEscapeStopper.mTag = CCollider::EPLAYERESCAPESTOPPER;
 	//this＝プレイヤーそのもの
 	mpPlayerInstance = this;
 	mImageGauge.Load(IMAGE_GAUGE);
@@ -144,14 +146,14 @@ void CXPlayer::Update()
 		break;
 		//回避
 	case EESCAPE:
-
 		mAttackHit = false;
-		ChangeAnimation(1, true, 5);
+		ChangeAnimation(1, true, 10);
 		//回転（回避してるように見える）
 		if (mRotation.mX!=360.0f) {
 			mRotation.mX += 36.0f;
 		}
 		else if(mAnimationFrame >= mAnimationFrameSize){
+
          mState = EMOVE;
 		 //回転値を元に戻す
 		 mRotation.mX = 0.0f;
@@ -388,184 +390,184 @@ void CXPlayer::Update()
 		FrontVec.Normalize();
 		float speed = 0.15f;
 		CVector Move(0, 0, 0);
-		//左
-		if (CKey::Push('A'))
-		{
+		if (mHp > 0) {
+
+
+			//左
+			if (CKey::Push('A'))
+			{
 				Move -= SideVec;
 				mAnimationCount = 5;//0になるまでアニメーションを変更できない
 				mMoveCheck = false;
 				if (CKey::Push('C')) {
 					if (mStamina > -1) {
 						speed = 0.5f;//スピード倍
-						
+
 						mMoveCheck = true;
 					}
 					else {
 						speed = 0.2f;//スピード1/2
 					}
 				}
-				
-		}
-		//右
-		else if (CKey::Push('D'))
-		{
-			Move += SideVec;
-			mAnimationCount = 5;//0になるまでアニメーションを変更できない
-			mMoveCheck = false;
-            if (CKey::Push('C')) {
-		    	if (mStamina > -1) {
-					speed = 0.5f;//スピード倍
-					
-					  mMoveCheck = true;
-				}
 
-				else {
-					speed = 0.2f;//スピード1/2
-				}
 			}
-		}
-		//前
-		 if (CKey::Push('W'))
-		{
-			Move += FrontVec;
-			//mPosition += CVector(0.0f, 0.0f, 0.1f) * mMatrixRotate;
-			mAnimationCount = 5;//0になるまでアニメーションを変更できない
-
+			//右
+			else if (CKey::Push('D'))
+			{
+				Move += SideVec;
+				mAnimationCount = 5;//0になるまでアニメーションを変更できない
+				mMoveCheck = false;
 				if (CKey::Push('C')) {
-					if(mStamina > -1) {
-					speed = 0.5f;//スピード倍
-					
-				
+					if (mStamina > -1) {
+						speed = 0.5f;//スピード倍
+
+						mMoveCheck = true;
 					}
 
 					else {
 						speed = 0.2f;//スピード1/2
 					}
 				}
-			
-		}
-		 //後ろ
-		else if (CKey::Push('S'))
-		{
-			Move -= FrontVec;
-			mAnimationCount = 5;//0になるまでアニメーションを変更できない
+			}
+			//前
+			if (CKey::Push('W'))
+			{
+				Move += FrontVec;
+				//mPosition += CVector(0.0f, 0.0f, 0.1f) * mMatrixRotate;
+				mAnimationCount = 5;//0になるまでアニメーションを変更できない
+
 				if (CKey::Push('C')) {
-					  if (mStamina > -1) {
+					if (mStamina > -1) {
 						speed = 0.5f;//スピード倍
-					  }
-					  else {
+
+
+					}
+
+					else {
 						speed = 0.2f;//スピード1/2
-					  }
-			    }
+					}
+				}
+
+			}
+			//後ろ
+			else if (CKey::Push('S'))
+			{
+				Move -= FrontVec;
+				mAnimationCount = 5;//0になるまでアニメーションを変更できない
+				if (CKey::Push('C')) {
+					if (mStamina > -1) {
+						speed = 0.5f;//スピード倍
+					}
+					else {
+						speed = 0.2f;//スピード1/2
+					}
+				}
+			}
+
+			//１→２→３→１   攻撃の順番がループ
+
+		   //回避行動中じゃないとき
+			if (mState != EESCAPE) {
+				//攻撃１が使えるとき
+				if (mSpaceCount1 == true) {
+
+					if (mAttackCount <= 0) {
+						if (CKey::Once(VK_LBUTTON))
+						{
+
+							if (CSceneGame::mVoiceSwitch == true) {
+								PlayerFirstAttack.Play();
+							}
+							mState = EATTACK1;
+							mSpaceCount1 = false;//１回目の攻撃のフラグ
+							mSpaceCount2 = true;
+							mAttackCount = ATTACKCOUNT1;//攻撃のアニメーションがループしないように
+							mAnimationCount = 50;//0になるまでアニメーションが変わらない
+							mStep = STEP;
+						}
+
+					}
+				}
+				//2回目の攻撃
+				else if (mSpaceCount2 == true) {
+					if (mAttackCount <= 0) {
+						if (CKey::Once(VK_LBUTTON)) {
+
+							if (CSceneGame::mVoiceSwitch == true) {
+								PlayerSecondAttack.Play();
+							}
+							mState = EATTACK2;
+							mSpaceCount2 = false;//２回目の攻撃のフラグ
+							mSpaceCount3 = true;//３回目の攻撃のフラグ
+							mAttackCount = ATTACKCOUNT2;//攻撃のアニメーションがループしないように
+							mAnimationCount = 50;//0になるまでアニメーションが変わらない
+							mStep = STEP;
+						}
+					}
+				}
+				//３回目の攻撃
+				else if (mSpaceCount3 == true) {
+					if (mAttackCount <= 0) {
+						if (CKey::Once(VK_LBUTTON)) {
+
+							if (CSceneGame::mVoiceSwitch == true) {
+								PlayerThirdAttack.Play();
+							}
+							mState = EATTACK3;
+							mAnimationCount = 50;//0になるまでアニメーションが変わらない
+							mSpaceCount3 = false;//３回目の攻撃のフラグ
+							mSpaceCount1 = true;//１回目の攻撃のフラグ
+							mAttackCount = ATTACKCOUNT3;//攻撃のアニメーションがループしないように
+							mStep = STEP;//ジャンプ力を代入
+						}
+					}
+				}
+
+				//ジャンプ攻撃
+				if (mSpAttack >= 30) {
+					if (CKey::Once(VK_RBUTTON)) {
+						if (mAttackCount <= 0) {
+
+							if (CSceneGame::mVoiceSwitch == true) {
+								PlayerJumpAttack.Play();
+							}
+							mState = EATTACKSP;
+							mJump = JUMP;//ジャンプ力を代入
+							mSpAttack -= 30;//特殊攻撃のゲージ減少
+							mAnimationCount = 200;//0になるまでアニメーションが変わらない
+							mAttackCount = 100;
+						}
+					}
+				}
+
+			}
+			//移動中
+			if (Move.Length() != 0.0f) {
+				//Cキーを押すと回避行動
+				if (CKey::Once('C')) {
+					if (mState != EATTACKSP) {
+						mState = EESCAPE;
+						mAnimationCount = 20;
+						mDamageCount = 40;//無敵時間
+						mStep = STEP2;//ジャンプ力を代入
+						mStamina -= 20;//スタミナ使用
+					}
+					//待機中のときにCを押しているとダッシュ
+					if (mState == EIDLE) {
+
+						mAnimationCount = 1;
+						mState = EDUSH;
+					}
+				}
+				//動いていないかつCキーを押していなければ待機
+				else {
+					if (mState == EIDLE) {
+						mAnimationCount = 1;
+						mState = EMOVE;
+					}
+				}
+			}
 		}
-   
-		 //１→２→３→１   攻撃の順番がループ
-		 
-		//回避行動中じゃないとき
-		 if (mState != EESCAPE) {
-              //攻撃１が使えるとき
-			 if (mSpaceCount1 == true) {
-
-				 if (mAttackCount <= 0) {
-					 if (CKey::Once(VK_LBUTTON))
-					 {
-
-						 if (CSceneGame::mVoiceSwitch == true) {
-							 PlayerFirstAttack.Play();
-						 }
-						 mState = EATTACK1;
-						 mSpaceCount1 = false;//１回目の攻撃のフラグ
-						 mSpaceCount2 = true;
-						 mAttackCount = ATTACKCOUNT1;//攻撃のアニメーションがループしないように
-						 mAnimationCount = 50;//0になるまでアニメーションが変わらない
-						 mStep = STEP;
-					 }
-
-				 }
-			 }
-				 //2回目の攻撃
-				 else if (mSpaceCount2 == true) {
-					 if (mAttackCount <= 0) {
-						 if (CKey::Once(VK_LBUTTON)) {
-
-							 if (CSceneGame::mVoiceSwitch == true) {
-								 PlayerSecondAttack.Play();
-							 }
-							 mState = EATTACK2;
-							 mSpaceCount2 = false;//２回目の攻撃のフラグ
-							 mSpaceCount3 = true;//３回目の攻撃のフラグ
-							 mAttackCount = ATTACKCOUNT2;//攻撃のアニメーションがループしないように
-							 mAnimationCount = 50;//0になるまでアニメーションが変わらない
-							 mStep = STEP;
-						 }
-					 }
-				 }
-				 //３回目の攻撃
-				 else if (mSpaceCount3 == true) {
-					 if (mAttackCount <= 0) {
-						 if (CKey::Once(VK_LBUTTON)) {
-
-							 if (CSceneGame::mVoiceSwitch == true) {
-								 PlayerThirdAttack.Play();
-							 }
-							 mState = EATTACK3;
-							 mAnimationCount = 50;//0になるまでアニメーションが変わらない
-							 mSpaceCount3 = false;//３回目の攻撃のフラグ
-							 mSpaceCount1 = true;//１回目の攻撃のフラグ
-							 mAttackCount = ATTACKCOUNT3;//攻撃のアニメーションがループしないように
-							 mStep = STEP;//ジャンプ力を代入
-						 }
-					 }
-				 }
-
-				 //ジャンプ攻撃
-				 if (mSpAttack >= 30) {
-					 if (CKey::Once(VK_RBUTTON)) {
-						 if (mAttackCount <= 0) {
-
-							 if (CSceneGame::mVoiceSwitch == true) {
-								 PlayerJumpAttack.Play();
-							 }
-							 mState = EATTACKSP;
-							 mJump = JUMP;//ジャンプ力を代入
-							 mSpAttack -= 30;//特殊攻撃のゲージ減少
-							 mAnimationCount = 200;//0になるまでアニメーションが変わらない
-							 mAttackCount = 100;
-						 }
-					 }
-				 }
-			 
-		 }
-		 //死亡
-		 if (mHp <= 0) {
-			 mState = EDEATH;
-		  }
-		 //移動中
-		  if (Move.Length() != 0.0f) {
-			  //Cキーを押すと回避行動
-			  if (CKey::Once('C')){
-				  if (mState !=EATTACKSP) {
-					  mState = EESCAPE;
-					  mAnimationCount = 20;
-					  mDamageCount = 40;//無敵時間
-					  mStep = STEP2;//ジャンプ力を代入
-					  mStamina -= 20;//スタミナ使用
-				  }
-				  //待機中のときにCを押しているとダッシュ
-				  if (mState == EIDLE) {
-
-					  mAnimationCount = 1;
-					  mState = EDUSH;
-				  }
-			  }
-			  //動いていないかつCキーを押していなければ待機
-                  else {
-					  if (mState == EIDLE) {
-						  mAnimationCount = 1;
-						  mState = EMOVE;
-					  }
-				  } 
-		  }
 		//移動量正規化　斜め移動が早くなってしまう
 		//ジャンプ時などはY軸を正規化しない
 		Move.Normalize();
@@ -628,6 +630,10 @@ void CXPlayer::Update()
 			 mDamageCount--;
 		 }
 
+		 //死亡
+		 if (mHp <= 0) {
+			 mState = EDEATH;
+		 }
 		 //マップに接触してる間ずっと重力がかかる
 		 if (mState != EATTACKSP) {
 			 if (mJump >= -0.1) {
@@ -650,6 +656,7 @@ void CXPlayer::Update()
 			mPosition = mPosition + mCollisionEnemy * mColliderCount;
 			
 		 }
+		 mColEscapeStopper.Set(this, &mMatrix, CVector(0.0f, 0.0f, -3.0f), CVector(0.0f, 0.0f, 3.0f));
 	    //注視点設定
 	    Camera.SetTarget(mPosition);
 	    CXCharacter::Update();
@@ -661,7 +668,47 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 	switch (m->mType) {
 
 
+	case CCollider::ELINE:
+		//親がプレイヤー
+		if (m->mpParent->mTag == EPLAYER) {
+			//プレイヤーの体部分
+			if (m->mTag == CCollider::EPLAYERESCAPESTOPPER) {//相手のコライダが三角コライダの場合
+				//親が三角コライダ
+				if (o->mType == CCollider::ETRIANGLE) {
+					//親が三角コライダ
+					//左向き（X軸）のベクトルを求める
+					CVector vx = CVector(1.0f, 0.0f, 0.0f) * mMatrixRotate;
+					//上向き（Y軸）のベクトルを求める
+					CVector vy = CVector(0.0f, 1.0f, 0.0f) * mMatrixRotate;
+					//前方向（Z軸）のベクトルを求める
+					CVector vz = CVector(0.0f, 0.0f, 1.0f) * mMatrixRotate;
+					vz.Normalize();
+					CVector adjust;//調整用ベクトル
+					if (CCollider::CollisionTriangleLine(o, m, &adjust)) {
+						if (mState == EESCAPE) {
 
+							mJumpStopper = true;
+							mJump = 0;
+							//位置の更新（mPosition+adjust)
+							mPosition = mPosition + adjust;
+							//行列の更新
+							CTransform::Update();
+						}
+						if (mState == EATTACKSP) {
+							if (mAnimationIndex == 8) {
+								mAnimationFrame += 2;
+							}
+						}
+					}
+					else {
+
+						mJumpStopper = false;
+					}
+
+				}
+			}
+		}
+		break;
 	case CCollider::ESPHERE:
 
 		//親がプレイヤー
@@ -683,12 +730,18 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 						CVector adjust;//調整用ベクトル
 						if (CCollider::CollisionTriangleSphere(o, m, &adjust)) {
 								if (mState != EESCAPE) {
+
 									mJumpStopper = true;
 									mJump = 0;
 									//位置の更新（mPosition+adjust)
 									mPosition = mPosition + adjust;
 									//行列の更新
 									CTransform::Update();
+								}
+								if (mState == EATTACKSP) {
+									if (mAnimationIndex == 8) {
+										mAnimationFrame+=2;
+									}
 								}
 						}
 						else {

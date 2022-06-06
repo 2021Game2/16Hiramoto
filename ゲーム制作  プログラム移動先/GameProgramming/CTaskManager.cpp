@@ -78,12 +78,26 @@ void CTaskManager::Render() {
 	//æ“ª‚©‚çÅŒã‚Ü‚ÅŒJ‚è•Ô‚µ
 	CTask *task = mHead.mpNext;
 	while (task->mpNext) {
-		if (task->mRenderEnabled) {
+		if (task->mRenderEnabled && task->mIsEffectTask == false) {
+
 			//•`‰æˆ—‚ðŒÄ‚Ô
 			task->Render();
 		}
 		//•`‰æˆ—‚ðŒÄ‚Ô
 		//task->Render();
+		//ŽŸ‚Ö
+		task = task->mpNext;
+	}
+}
+
+void CTaskManager::EffectRender() {
+	//æ“ª‚©‚çÅŒã‚Ü‚ÅŒJ‚è•Ô‚µ
+	CTask* task = mHead.mpNext;
+	while (task->mpNext) {
+		if (task->mRenderEnabled && task->mIsEffectTask) {
+			//•`‰æˆ—‚ðŒÄ‚Ô
+			task->Render();
+		}
 		//ŽŸ‚Ö
 		task = task->mpNext;
 	}

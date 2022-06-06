@@ -55,36 +55,24 @@
     <Filter Include="ヘッダー ファイル\Base\敵関係">
       <UniqueIdentifier>{1df5a2cf-335a-446c-9d88-fe01baa4bc59}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Base\当たり判定">
+      <UniqueIdentifier>{1c45e36e-f9cb-4b05-b98f-68984c2f4417}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\当たり判定">
+      <UniqueIdentifier>{b2ad3e72-4c53-44b2-908c-e549648b1eee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\サウンド,エフェクト,テクスチャ">
+      <UniqueIdentifier>{da296329-f496-43dd-a513-56b030b1f919}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\サウンド,エフェクト,テクスチャ">
+      <UniqueIdentifier>{573e633e-ad33-4783-a05e-cce8c7f67da0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="CBillBoard.cpp">
-      <Filter>ソース ファイル\Lib</Filter>
-    </ClCompile>
     <ClCompile Include="CCharacter.cpp">
-      <Filter>ソース ファイル\Lib</Filter>
-    </ClCompile>
-    <ClCompile Include="CCollider.cpp">
-      <Filter>ソース ファイル\Lib</Filter>
-    </ClCompile>
-    <ClCompile Include="CColliderLine.cpp">
-      <Filter>ソース ファイル\Lib</Filter>
-    </ClCompile>
-    <ClCompile Include="CColliderMesh.cpp">
-      <Filter>ソース ファイル\Lib</Filter>
-    </ClCompile>
-    <ClCompile Include="CColliderTriangle.cpp">
-      <Filter>ソース ファイル\Lib</Filter>
-    </ClCompile>
-    <ClCompile Include="CCollisionManager.cpp">
-      <Filter>ソース ファイル\Lib</Filter>
-    </ClCompile>
-    <ClCompile Include="CEffect.cpp">
-      <Filter>ソース ファイル\Lib</Filter>
-    </ClCompile>
-    <ClCompile Include="CEnemy.cpp">
       <Filter>ソース ファイル\Lib</Filter>
     </ClCompile>
     <ClCompile Include="CKey.cpp">
@@ -96,19 +84,7 @@
     <ClCompile Include="CMatrix.cpp">
       <Filter>ソース ファイル\Lib</Filter>
     </ClCompile>
-    <ClCompile Include="CPlayer.cpp">
-      <Filter>ソース ファイル\Lib</Filter>
-    </ClCompile>
-    <ClCompile Include="CSound.cpp">
-      <Filter>ソース ファイル\Lib</Filter>
-    </ClCompile>
     <ClCompile Include="CTaskManager.cpp">
-      <Filter>ソース ファイル\Lib</Filter>
-    </ClCompile>
-    <ClCompile Include="CText.cpp">
-      <Filter>ソース ファイル\Lib</Filter>
-    </ClCompile>
-    <ClCompile Include="CTexture.cpp">
       <Filter>ソース ファイル\Lib</Filter>
     </ClCompile>
     <ClCompile Include="CTransform.cpp">
@@ -121,9 +97,6 @@
       <Filter>ソース ファイル\Lib</Filter>
     </ClCompile>
     <ClCompile Include="CVector.cpp">
-      <Filter>ソース ファイル\Lib</Filter>
-    </ClCompile>
-    <ClCompile Include="CBillboard2.cpp">
       <Filter>ソース ファイル\Lib</Filter>
     </ClCompile>
     <ClCompile Include="CInput.cpp">
@@ -146,9 +119,6 @@
     </ClCompile>
     <ClCompile Include="CXPlayer.cpp">
       <Filter>ソース ファイル\Base\プレイヤー関係</Filter>
-    </ClCompile>
-    <ClCompile Include="CXEnemy.cpp">
-      <Filter>ソース ファイル\Base\敵関係</Filter>
     </ClCompile>
     <ClCompile Include="CItem.cpp">
       <Filter>ソース ファイル\Base\プレイヤー関係</Filter>
@@ -195,48 +165,57 @@
     <ClCompile Include="CModel.cpp">
       <Filter>ソース ファイル\Lib</Filter>
     </ClCompile>
-    <ClCompile Include="CEffect2.cpp">
-      <Filter>ソース ファイル\Lib</Filter>
-    </ClCompile>
     <ClCompile Include="CTarget.cpp">
       <Filter>ソース ファイル\Base\プレイヤー関係</Filter>
+    </ClCompile>
+    <ClCompile Include="CEffect.cpp">
+      <Filter>ソース ファイル\Base\サウンド,エフェクト,テクスチャ</Filter>
+    </ClCompile>
+    <ClCompile Include="CEffect2.cpp">
+      <Filter>ソース ファイル\Base\サウンド,エフェクト,テクスチャ</Filter>
+    </ClCompile>
+    <ClCompile Include="CText.cpp">
+      <Filter>ソース ファイル\Base\サウンド,エフェクト,テクスチャ</Filter>
+    </ClCompile>
+    <ClCompile Include="CTexture.cpp">
+      <Filter>ソース ファイル\Base\サウンド,エフェクト,テクスチャ</Filter>
+    </ClCompile>
+    <ClCompile Include="CSound.cpp">
+      <Filter>ソース ファイル\Base\サウンド,エフェクト,テクスチャ</Filter>
+    </ClCompile>
+    <ClCompile Include="CBillboard2.cpp">
+      <Filter>ソース ファイル\Base\サウンド,エフェクト,テクスチャ</Filter>
+    </ClCompile>
+    <ClCompile Include="CBillBoard.cpp">
+      <Filter>ソース ファイル\Base\サウンド,エフェクト,テクスチャ</Filter>
+    </ClCompile>
+    <ClCompile Include="CCollider.cpp">
+      <Filter>ソース ファイル\Base\当たり判定</Filter>
+    </ClCompile>
+    <ClCompile Include="CColliderLine.cpp">
+      <Filter>ソース ファイル\Base\当たり判定</Filter>
+    </ClCompile>
+    <ClCompile Include="CColliderMesh.cpp">
+      <Filter>ソース ファイル\Base\当たり判定</Filter>
+    </ClCompile>
+    <ClCompile Include="CColliderTriangle.cpp">
+      <Filter>ソース ファイル\Base\当たり判定</Filter>
+    </ClCompile>
+    <ClCompile Include="CCollisionManager.cpp">
+      <Filter>ソース ファイル\Base\当たり判定</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlayer.cpp">
+      <Filter>ソース ファイル\Base\プレイヤー関係</Filter>
+    </ClCompile>
+    <ClCompile Include="CEnemy.cpp">
+      <Filter>ソース ファイル\Base\敵関係</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CBillBoard.h">
-      <Filter>ヘッダー ファイル\Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="CBillboard2.h">
-      <Filter>ヘッダー ファイル\Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="CBullet.h">
-      <Filter>ヘッダー ファイル\Lib</Filter>
-    </ClInclude>
     <ClInclude Include="CCharacter.h">
-      <Filter>ヘッダー ファイル\Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="CCollider.h">
-      <Filter>ヘッダー ファイル\Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="CColliderLine.h">
-      <Filter>ヘッダー ファイル\Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="CColliderMesh.h">
-      <Filter>ヘッダー ファイル\Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="CColliderTriangle.h">
-      <Filter>ヘッダー ファイル\Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="CCollisionManager.h">
-      <Filter>ヘッダー ファイル\Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="CEffect.h">
-      <Filter>ヘッダー ファイル\Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="CEnemy.h">
       <Filter>ヘッダー ファイル\Lib</Filter>
     </ClInclude>
     <ClInclude Include="CKey.h">
@@ -251,12 +230,6 @@
     <ClInclude Include="CModel.h">
       <Filter>ヘッダー ファイル\Lib</Filter>
     </ClInclude>
-    <ClInclude Include="CPlayer.h">
-      <Filter>ヘッダー ファイル\Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="CSound.h">
-      <Filter>ヘッダー ファイル\Lib</Filter>
-    </ClInclude>
     <ClInclude Include="CTask.h">
       <Filter>ヘッダー ファイル\Lib</Filter>
     </ClInclude>
@@ -264,9 +237,6 @@
       <Filter>ヘッダー ファイル\Lib</Filter>
     </ClInclude>
     <ClInclude Include="CText.h">
-      <Filter>ヘッダー ファイル\Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="CTexture.h">
       <Filter>ヘッダー ファイル\Lib</Filter>
     </ClInclude>
     <ClInclude Include="CTransform.h">
@@ -302,14 +272,8 @@
     <ClInclude Include="CInput.h">
       <Filter>ヘッダー ファイル\Lib</Filter>
     </ClInclude>
-    <ClInclude Include="CParticle.h">
-      <Filter>ヘッダー ファイル\Lib</Filter>
-    </ClInclude>
     <ClInclude Include="CShadowMap.h">
       <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="CEffect2.h">
-      <Filter>ヘッダー ファイル\Lib</Filter>
     </ClInclude>
     <ClInclude Include="CBoss.h">
       <Filter>ヘッダー ファイル\Base\敵関係</Filter>
@@ -356,11 +320,50 @@
     <ClInclude Include="CXPlayer.h">
       <Filter>ヘッダー ファイル\Base\プレイヤー関係</Filter>
     </ClInclude>
-    <ClInclude Include="CXEnemy.h">
-      <Filter>ヘッダー ファイル\Base\敵関係</Filter>
-    </ClInclude>
     <ClInclude Include="CTarget.h">
       <Filter>ヘッダー ファイル\Base\プレイヤー関係</Filter>
+    </ClInclude>
+    <ClInclude Include="CBillBoard.h">
+      <Filter>ヘッダー ファイル\Base\サウンド,エフェクト,テクスチャ</Filter>
+    </ClInclude>
+    <ClInclude Include="CBillboard2.h">
+      <Filter>ヘッダー ファイル\Base\サウンド,エフェクト,テクスチャ</Filter>
+    </ClInclude>
+    <ClInclude Include="CCollider.h">
+      <Filter>ヘッダー ファイル\Base\当たり判定</Filter>
+    </ClInclude>
+    <ClInclude Include="CColliderLine.h">
+      <Filter>ヘッダー ファイル\Base\当たり判定</Filter>
+    </ClInclude>
+    <ClInclude Include="CColliderMesh.h">
+      <Filter>ヘッダー ファイル\Base\当たり判定</Filter>
+    </ClInclude>
+    <ClInclude Include="CColliderTriangle.h">
+      <Filter>ヘッダー ファイル\Base\当たり判定</Filter>
+    </ClInclude>
+    <ClInclude Include="CCollisionManager.h">
+      <Filter>ヘッダー ファイル\Base\当たり判定</Filter>
+    </ClInclude>
+    <ClInclude Include="CEffect.h">
+      <Filter>ヘッダー ファイル\Base\サウンド,エフェクト,テクスチャ</Filter>
+    </ClInclude>
+    <ClInclude Include="CEffect2.h">
+      <Filter>ヘッダー ファイル\Base\サウンド,エフェクト,テクスチャ</Filter>
+    </ClInclude>
+    <ClInclude Include="CBullet.h">
+      <Filter>ヘッダー ファイル\Base\敵関係</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlayer.h">
+      <Filter>ヘッダー ファイル\Base\プレイヤー関係</Filter>
+    </ClInclude>
+    <ClInclude Include="CSound.h">
+      <Filter>ヘッダー ファイル\Base\サウンド,エフェクト,テクスチャ</Filter>
+    </ClInclude>
+    <ClInclude Include="CTexture.h">
+      <Filter>ヘッダー ファイル\Base\サウンド,エフェクト,テクスチャ</Filter>
+    </ClInclude>
+    <ClInclude Include="CEnemy.h">
+      <Filter>ヘッダー ファイル\Base\敵関係</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

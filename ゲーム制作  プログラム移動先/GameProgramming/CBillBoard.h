@@ -9,6 +9,8 @@ class CBillBoard : public CCharacter {
 public:
 	//三角形2つ
 	CTriangle mT[2];
+	//UV
+	CVector mUv[4];
 	//マテリアル
 	CMaterial mMaterial;
 	//コンストラクタ

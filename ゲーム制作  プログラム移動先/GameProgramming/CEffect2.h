@@ -1,12 +1,12 @@
 #ifndef CEFFECT2_H
 #define CEFFECT2_H
 //ビルボードクラスのインクルード
-#include "CBillBoard2.h"
+#include "CBillBoard.h"
 /*
 エフェクトクラス
 テクスチャのアニメーション
 */
-class CEffect2 : public CBillBoard2 {
+class CEffect2 : public CBillBoard {
 
 public:
 	enum EffType {

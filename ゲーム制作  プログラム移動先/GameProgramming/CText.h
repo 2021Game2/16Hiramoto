@@ -10,6 +10,7 @@ class CText {
 	//テクスチャのインスタンス
 	CTexture mFont;
 public:
+	
 	//テクスチャのロード
 	//LoadTexture(テクスチャファイル名, 行数, 列数)
 	void LoadTexture(const char *tga, int row, int col);

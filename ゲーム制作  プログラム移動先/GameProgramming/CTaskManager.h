@@ -28,6 +28,8 @@ public:
 	void Update();
 	//描画
 	void Render();
+	//エフェクト用のRender()
+	void EffectRender();
 	//リストから削除
 	//Remove(タスクのポインタ)
 	void Remove(CTask *task);

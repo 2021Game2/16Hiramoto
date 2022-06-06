@@ -31,7 +31,8 @@ public:
 	CCollider mColSphereSword;	//剣
 	CCollider  mColSphereFoot;//ダメージが通る当たり判定
 	CCollider mColliderSwordSp;//ジャンプ攻撃時の武器の当たり判定
-	CCollider mColEscapeStopper;
+	
+	CColliderLine mColEscapeStopper;
     CVector mCollisionEnemy;//プレイヤーと敵のコライダーの位置の差
 
 	CTexture mTexture;

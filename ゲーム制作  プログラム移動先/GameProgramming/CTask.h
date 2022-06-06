@@ -11,11 +11,20 @@ public:
 	int mPriority;	//優先度
 	bool mEnabled;	//有効フラグ
 	bool mRenderEnabled;//表示フラグ
+
+	bool mIsEffectTask; //エフェクト管理フラグ
 	//デフォルトコンストラクタ
+
+	/*
 	CTask()
 		: mpNext(0), mpPrev(0), mPriority(0), mEnabled(true), mRenderEnabled(true) {}
 	CTask(int Priority)
-		: mpNext(0), mpPrev(0), mPriority(Priority), mEnabled(true) {}
+		: mpNext(0), mpPrev(0), mPriority(Priority), mEnabled(true) {}*/
+	CTask()
+		: mpNext(0), mpPrev(0), mPriority(0), mEnabled(true), mRenderEnabled(true), mIsEffectTask(false) {}
+	CTask(int Priority)
+		: mpNext(0), mpPrev(0), mPriority(Priority), mEnabled(true), mIsEffectTask(false) {}
+
 	//デストラクタ virtualにしないと子クラスのデストラクタが呼ばれない
 	virtual ~CTask() {}
 	//更新

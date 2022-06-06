@@ -1,8 +1,8 @@
 
 #include"CPlayer.h"
 #include"CTarget.h"
-#define OBJ "3DModel\\Target\\Target.obj"
-#define MTL "3DModel\\Target\\Target.mtl"
+#define OBJ "Resource\\3DModel\\Target\\Target.obj"
+#define MTL "Resource\\3DModel\\Target\\Target.mtl"
 #include "CBoss.h"
 #define VELOCITY 0.5f
 CModel CTarget::mModel;//モデルデータ作成

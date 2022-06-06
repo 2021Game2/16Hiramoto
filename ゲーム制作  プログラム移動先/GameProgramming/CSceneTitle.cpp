@@ -29,7 +29,7 @@ void CSceneTitle::Update()
 	mouseY = 600 - mouseY;
 
 	mSelect = EBACKGROUND;
-	//指定した範囲をまとめる
+	//指定した範囲をまとめる(左端、右端、下、上）
 	if ((mouseX >= 240 - 20 && mouseX <= (240 - 20) + (40 * 9)) &&
 		(mouseY >= 220 - 20 && mouseY <= 220 + 20)) {
 		mSelect = EGAMESTART;
@@ -37,21 +37,17 @@ void CSceneTitle::Update()
 	if (CKey::Once(VK_RETURN)) {
 		mScene = EGAME;
 	}
-	/*
+	
 	if (CKey::Once(VK_LBUTTON)) {
 		switch (mSelect) {
 		case EGAMESTART:
 			mScene = EGAME;
 			break;
 
-		case CSceneTitle::ERECORD:
-			mScene = CScene::ERECORD;
-			break;
-
 		default:
 			break;
 		}
-	}*/
+	}
 
 	CUtil::Start2D(0, 800, 0, 600);
 
@@ -61,10 +57,7 @@ void CSceneTitle::Update()
 		//ボタンの後ろに影を描画
 		mImageButtonBack.Draw(220, 580, 200, 240, 338, 338, 20, 20);
 		break;
-		/*
-	case CSceneTitle::ERECORD:
-		mImageButtonBack.Draw(280, 520, 100, 140, 338, 338, 20, 20);
-		break;*/
+		
 
 	default:
 		break;
@@ -73,10 +66,8 @@ void CSceneTitle::Update()
 	//タイトル
 	mFont.DrawString("CREATURE", 120, 500, 40, 40);
 	mFont.DrawString("HUNTER", 200, 400, 40, 40);
-
 	mFont.DrawString("GAMESTART", 240, 220, 20, 20);
-
-	//mFont.DrawString("RECORD", 300, 120, 20, 20);
+	mFont.DrawString("RECORD TIME", 240, 120, 10, 10);
 
 	CUtil::End2D();
 }

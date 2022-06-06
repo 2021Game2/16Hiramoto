@@ -3,7 +3,6 @@
 
 #include "CScene.h"
 #include "CXPlayer.h"
-#include "CXEnemy.h"
 #include "CBillBoard2.h"
 #include "CSound.h"
 #include "CMap.h"
@@ -40,7 +39,7 @@ private:
 	CXPlayer mPlayer;//ƒvƒŒƒCƒ„[
 
 	//“G‚ÌƒCƒ“ƒXƒ^ƒ“ƒX
-	//CXEnemy mEnemy;//“G‚P
+	
 	CEnemy2* mpEnemy2;//“G‚Q
 	CEnemy3* mpEnemy3;//“G‚R
 	CEnemySummon* mpEnemySummon;//“G‚Q‚Ì¶¬êŠ
@@ -72,6 +71,7 @@ public:
 	static int mEnemy3Count;//¡¶¬‚³‚ê‚Ä‚¢‚é“G3‚Ì”
 	static int mEnemy2CountStopper;//¶¬‚Å‚«‚é“G2‚ÌŒÀ“x
 	static int mEnemy3CountStopper;//¶¬‚Å‚«‚é“G3‚ÌŒÀ“x
+	static bool mEnemy2Bgm;
 	CSceneGame();
 	~CSceneGame();
 	//‰Šú‰»ˆ—‚ÌƒI[ƒo[ƒ‰ƒCƒh
