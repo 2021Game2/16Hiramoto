@@ -27,7 +27,7 @@ CFlag::CFlag(const CVector& position, const CVector& rotation, const CVector& sc
 	mpFlagInstance = this;
 	//優先度を2に変更する
 	mPriority = 2;
-	mColliderFlag.mTag == CCollider::EFLAGCOLLIDER;
+	mColliderFlag.mTag = CCollider::EFLAGCOLLIDER;
 	mTag = EFLAG;
 	CTransform::Update();//行列の更新
 	CTaskManager::Get()->Remove(this);//削除して
@@ -70,10 +70,6 @@ void CFlag::Collision(CCollider* m, CCollider* o) {
 
 	}
 
-}
-void CFlag::Render() {
-	//親の描画処理
-	CCharacter::Render();
 }
 void CFlag::TaskCollision() {
 	//コライダの優先度変更

@@ -41,6 +41,7 @@ public:
 	bool mSpaceCount2;//２回目の攻撃のフラグ
 	bool mSpaceCount3;//３回目の攻撃のフラグ
 	bool mEffectStopper;
+	//int mSpAttackCount;
 	static int mStamina;//スタミナの数値
 	int mDamageCount;//ダメージを受けた直後の無敵時間
 	float mJump;//ジャンプする時の初速度

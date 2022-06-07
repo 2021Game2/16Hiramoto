@@ -204,6 +204,7 @@ void CEnemy2::Death() {
 
 //更新処理
 void CEnemy2::Update() {
+
 	mEnemyLevel = rand() % 10 + 1;
 	mEnemyHpPercent += mEnemyLevel / 10;
 	
@@ -253,6 +254,10 @@ void CEnemy2::Update() {
 
 	if (mState != EDAMAGED) {
 		mDamageCount = 0;
+	}
+	if (CSceneGame::mBossGaugeSwitch == true) {
+		mHp = 0;
+		mState = EDEATH;
 	}
 	CXCharacter::Update();
 }
@@ -318,6 +323,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 
 								mEffectCount = 0;
 								//体力減少 
+								
 								mHp--;
 								//ヒットバック付与 
 								mColliderCount = 1.5f;

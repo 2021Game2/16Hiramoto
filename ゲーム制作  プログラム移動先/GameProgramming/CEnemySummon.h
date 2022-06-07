@@ -13,7 +13,7 @@ private:
 	CCollider mCollider;
 	
 	int mDamageCount;
-
+	int mEffectCount;
 	CTexture mImageGauge; //ƒQ[ƒW‰æ‘œ
 public:
 	int mHp;

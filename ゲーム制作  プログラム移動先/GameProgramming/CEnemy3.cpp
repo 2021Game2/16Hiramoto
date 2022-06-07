@@ -146,7 +146,10 @@ void CEnemy3::Update() {
 				
 			}
 			else {
-				mPosition.mY++;
+				if (mPosition.mY <= 30.0f) {
+
+				  mPosition.mY++;
+				}
 			}
 		}
 		if (mCount >= 180) {
@@ -234,7 +237,9 @@ void CEnemy3::Update() {
 		}
 		mEnemy3Fry = 0;
 	}
-
+	if (CSceneGame::mBossGaugeSwitch == true) {
+		mHp = 0;
+	}
 	
 
 }

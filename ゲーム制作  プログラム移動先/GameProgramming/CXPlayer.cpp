@@ -53,6 +53,7 @@ CXPlayer::CXPlayer()
 	, mColliderSwordSp(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 10.0f)//剣のコライダ２
 	, mColEscapeStopperLine(this, &mMatrix, CVector(0.0f, 5.0f, -3.0f),CVector(0.0f,5.0f,3.0f))//回避時にすり抜けないようにする線分コライダ
 	, mJump(0.0f)
+	, mStep(0.0f)
 	,mSpaceCount1(true)
 	,mSpaceCount2(false)
 	,mSpaceCount3(false)
@@ -526,12 +527,15 @@ void CXPlayer::Update()
 				if (CKey::Once('C')) {
 					
 					if (mState != EATTACKSP) {
-
-						mState = EESCAPE;
-						mAnimationCount = 20;
-						mDamageCount = 40;//無敵時間
-						mStep = STEP2;//ジャンプ力を代入
-						mStamina -= 20;//スタミナ使用
+						if (mAttackCount <= 0) {
+							if (mDamageCount <= 0) {
+								mState = EESCAPE;
+								mAnimationCount = 20;
+								mDamageCount = 40;//無敵時間
+								mStep = STEP2;//ジャンプ力を代入
+								mStamina -= 20;//スタミナ使用
+							}
+						}
 					}
 					//待機中のときにCを押しているとダッシュ
 				
@@ -706,7 +710,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 								if (mState != EESCAPE) {
 
 									mJumpStopper = true;
-									mJump = 0;
+									mJump =0;
 									if (mAnimationIndex == 8) {
 										mAnimationFrame += 2;
 									}

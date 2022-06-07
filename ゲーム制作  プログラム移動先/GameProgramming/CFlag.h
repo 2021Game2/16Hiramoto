@@ -22,6 +22,5 @@ public:
 	//Õ“Ëˆ—
 	void Collision(CCollider* m, CCollider* o);
 	void TaskCollision();
-	void Render();
 };
 #endif

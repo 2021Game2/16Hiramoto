@@ -13,7 +13,7 @@
 #include"CTarget.h"
 #include"CFlag.h"
 #define HP 30
-#define ENEMY2COUNT 2 //ˆê“x‚Éo‚¹‚é“G‚Q‚Ì”
+#define ENEMY2COUNT 10 //ˆê“x‚Éo‚¹‚é“G‚Q‚Ì”
 #define ENEMY2MINCOUNT 4 //“G‚Q‚ðÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚Q‚Ì”‚Ì‰ºŒÀ
 #define ENEMY3COUNT 1//ˆê“x‚Éo‚¹‚é“G‚R‚Ì”
 #define ENEMY3MINCOUNT 4 //“G‚R‚ðÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚R‚Ì”‚Ì‰ºŒÀ
@@ -94,8 +94,8 @@ void ShadowEffectRender() {
 void CSceneGame::Init()
 
 {
-	//ƒTƒEƒ“ƒh(wav)ƒtƒ@ƒCƒ‹‚Ì“Ç‚Ýž‚Ý
 	mScene = EGAME;
+	//ƒTƒEƒ“ƒh(wav)ƒtƒ@ƒCƒ‹‚Ì“Ç‚Ýž‚Ý
 	//BGM,SE‚Ì“Ç‚Ýž‚Ý
 	PlayerFirstAttack.Load(ATTACK1);
 	PlayerSecondAttack.Load(ATTACK2);
@@ -324,10 +324,6 @@ void CSceneGame::Update() {
 	if (CKey::Push(VK_ESCAPE)) {
 		exit(0);
 	}
-	if (mpBoss->mHp <= 0) {
-			mpEnemy2->mHp = 0;
-			mpEnemy3->mHp = 0;
-	}
 		if (mBgmCountCheck ==false) {
 			mBgmStart.Stop();
 			mBgmBattle.Stop();
@@ -351,7 +347,7 @@ void CSceneGame::Render() {
 	mShadowMap.Render();//‰eÝ’è
 	//ƒRƒ‰ƒCƒ_‚Ì•`‰æ
 	//‚±‚±‚ðƒRƒƒ“ƒg‚É‚·‚é‚Æ‚·‚×‚Ä‚ÌƒRƒ‰ƒCƒ_”ñ•\Ž¦
-	CCollisionManager::Get()->Render();
+	//CCollisionManager::Get()->Render();
 	//2D•`‰æŠJŽn
 	CUtil::Start2D(0, 800, 0, 600);
 	char buf[64];
@@ -411,15 +407,22 @@ void CSceneGame::Render() {
 		mImageDush.Draw(120, 190, 20, 100, 0, 200, 210, 0);
 	}
 	else if (CBoss::mHp <= 0) {
-	sprintf(buf, "GAMECLEAR" );
-		
-		  mFont.DrawString(buf, 300, 300, 16, 32);
-		
+	    sprintf(buf, "GAMECLEAR" );
+	    mFont.DrawString(buf, 300, 300, 16, 32);
+		sprintf(buf, "PUSH ENTER");
+		mFont.DrawString(buf, 300, 200, 16, 32);
+		if(CKey::Once(VK_RETURN)) {
+			mScene = ETITLE;
+		}
 	}
 	else if (mPlayer.mHp <= 0) {
 			sprintf(buf, "GAMEOVER");
 			mFont.DrawString(buf, 300, 300, 16, 32);
-			
+			sprintf(buf, "PUSH ENTER");
+			mFont.DrawString(buf, 300, 200, 16, 32);
+			if (CKey::Once(VK_RETURN)) {
+				mScene = ETITLE;
+			}
 	}
 	//2D‚Ì•`‰æI—¹
 	CUtil::End2D();

@@ -22,6 +22,8 @@ private:
 	CEffect2* mBossEffect;
 	CVector mCollisionEnemy;
 	CCharacter* mpPlayer;//プレイヤーのポインタ
+	CText mFont;
+	
 	int mJump2;
 	int mMove;
 	int mMove2;

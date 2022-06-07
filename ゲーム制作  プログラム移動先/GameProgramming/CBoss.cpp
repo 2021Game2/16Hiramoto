@@ -6,7 +6,7 @@
 #include"CXCharacter.h"
 #include"CUtil.h"
 #include"CText.h"
-#define HP 100
+#define HP 20
 
 #define VELOCITY 0.5f //マクロ
 #define HPCOUNT1 90 //ダメージを受けたときにのけぞりを行う体力の数値
@@ -206,6 +206,7 @@ void CBoss::Damaged() {
 }
 //死亡処理
 void CBoss::Death() {
+	mColSphereHead.mRenderEnabled = false;
 	if (mBossBgmDeath == true) {
 		CSceneGame::mBgmCountCheck = false;
 		CSceneGame::mBgmCount = 4;
@@ -447,6 +448,9 @@ void CBoss::Render2D()
 	//体力ゲージの幅
 	float hpGaugeWid = GAUGE_WID_MAXHP * hpRate;
 	if (CSceneGame::mBossGaugeSwitch == true) {
+		
+		//mFont.DrawChar(Boss, 400, 560, 8, 16);
+
 		mImageGauge.Draw(50, GAUGE_WID_MAXHP, 510, 550, 201, 300, 63, 0);//ゲージ背景
 		mImageGauge.Draw(50, hpGaugeWid, 510, 550, 487, 572, 63, 0);//体力ゲージ
 	}

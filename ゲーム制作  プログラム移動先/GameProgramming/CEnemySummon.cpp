@@ -8,6 +8,7 @@
 #include"CCollisionManager.h"
 #include"CUtil.h"
 #include"CCamera.h"
+#include"CSceneGame.h"
 #define OBJ "Resource\\3DModel\\EnemySummon\\egg.obj"
 #define MTL "Resource\\3DModel\\EnemySummon\\egg.mtl"
 #define HP 10
@@ -17,9 +18,10 @@
 #define IMAGE_GAUGE "Resource\\Gauge.png"		//ゲージ画像
 CModel CEnemySummon::mModel;
 CEnemySummon::CEnemySummon()
-    :mHp(0)
-	, mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
 
+	: mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f) 
+	,mHp(0)
+	, mEffectCount(0)
 {
    
 
@@ -52,25 +54,36 @@ void CEnemySummon::Update() {
 	if (mDamageCount > 0) {
 		mDamageCount--;
 	}
-		if(mHp<=0){
-		mEnabled=false;
+
+	mEffectCount--;
+		if(mHp<=0|| CSceneGame::mBossGaugeSwitch == true){
+			mHp = 0;
+		 mEnabled=false;
 		}
 }
 //Collision(コライダ１、コライダ２）
 void CEnemySummon::Collision(CCollider* m, CCollider* o) {
 	if (m->mType == CCollider::ESPHERE) {
-		if (o->mType == CCollider::ESPHERE) {
-			if (o->mpParent->mTag ==EPLAYER) {
-				if(o->mTag==CCollider::EPLAYERSWORD){
-				//衝突しているとき
-					if (CCollider::Collision(m, o)) {
+		if (m->mTag == CCollider::EENEMYSUMMON) {
 
-						//プレイヤーの当たり判定が有効なとき
-						if (((CXPlayer*)(o->mpParent))->mAttackHit == true) {
-							if (mDamageCount <= 0) {
 
-								 mHp--;
-								 mDamageCount = 20;
+			if (o->mType == CCollider::ESPHERE) {
+				if (o->mpParent->mTag == EPLAYER) {
+					if (o->mTag == CCollider::EPLAYERSWORD) {
+						//衝突しているとき
+						if (CCollider::Collision(m, o)) {
+
+							//プレイヤーの当たり判定が有効なとき
+							if (((CXPlayer*)(o->mpParent))->mAttackHit == true) {
+								if (mDamageCount <= 0) {
+									//爆発エフェクト付与
+									if (mEffectCount % 15 == 0) {
+										//エフェクト生成
+										new CEffect2(mPosition, 5.0f, 5.0f, CEffect2::EFF_EXP, 4, 4, 2);
+									}
+									mHp--;
+									mDamageCount = 20;
+								}
 							}
 						}
 					}
