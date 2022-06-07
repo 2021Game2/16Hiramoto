@@ -9,8 +9,8 @@
 #include"CSound.h"
 #include"CSceneGame.h"
 #include"CItem.h"
-#define OBJ "3DModel\\Bee\\BEE1.obj"//モデルのファイル
-#define MTL "3DModel\\Bee\\BEE1.mtl"//モデルのマテリアルファイル
+#define OBJ "Resource\\3DModel\\Bee\\BEE1.obj"//モデルのファイル
+#define MTL "Resource\\3DModel\\Bee\\BEE1.mtl"//モデルのマテリアルファイル
 #define DAMAGEEFFECT "Resource\\png,tga\\exp.tga"
 #define HP 1
 #define VELOCITY 0.25f //行動１

@@ -4,6 +4,8 @@
 #define OBJ "Resource\\3DModel\\Target\\Target.obj"
 #define MTL "Resource\\3DModel\\Target\\Target.mtl"
 #include "CBoss.h"
+#include"CFlag.h"
+#include"CSceneGame.h"
 #define VELOCITY 0.5f
 CModel CTarget::mModel;//モデルデータ作成
 CTarget::CTarget(const CVector& position, const CVector& rotation, const CVector& scale)
@@ -34,7 +36,7 @@ void CTarget::Update() {
 
 	CXPlayer* tPlayer = CXPlayer::GetInstance();
 	CBoss* tBoss = CBoss::GetInstance();
-
+	CFlag* tFlag = CFlag::GetInstance();
 	if (tPlayer->mHp > 0) {
 		mPosition.mX = tPlayer->mPosition.mX;
 		mPosition.mY = tPlayer->mPosition.mY + 4.0f;
@@ -64,9 +66,13 @@ void CTarget::Update() {
 	else if (dx < -margin) {
 		mRotation.mY -= 3.0f;//右へ回転
 	}
+	if (CSceneGame::mBossGaugeSwitch == true) {
 
 		mPoint = tBoss->mPosition;
-	
+	}
+	else {
+		mPoint = tFlag->mPosition;
+	}
 	//CCharacterの更新
 	CTransform::Update();
 

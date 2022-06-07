@@ -8,8 +8,8 @@
 #include"CCollisionManager.h"
 #include"CUtil.h"
 #include"CCamera.h"
-#define OBJ "3DModel\\EnemySummon\\egg.obj"
-#define MTL "3DModel\\EnemySummon\\egg.mtl"
+#define OBJ "Resource\\3DModel\\EnemySummon\\egg.obj"
+#define MTL "Resource\\3DModel\\EnemySummon\\egg.mtl"
 #define HP 10
 #define HP_MAX 100				//体力最大値
 #define GAUGE_WID_MAX 400.0f	//ゲージの幅の最大値
@@ -89,32 +89,3 @@ void CEnemySummon::TaskCollision() {
 	//衝突処理を実行
 	CCollisionManager::Get()->Collision(&mCollider, COLLISIONRANGE);
 }
-
-void CEnemySummon::Render2D()
-{
-	//2D描画開始
-	CUtil::Start2D(0, 800, 0, 600);
-
-	CVector ret;
-	CVector tpos = mPosition;
-		//mpCombinedMatrix[6].GetPos();
-	Camera.WorldToScreen(&ret, tpos);
-
-	float HpRate = (float)mHp / (float)HP_MAX; //体力最大値に対する、現在の体力の割合
-	float HpGaugeWid = GAUGE_WID_MAX * HpRate; //体力ゲージの幅
-
-	//画面外の時に表示しない
-	if (ret.mX > 0 && ret.mX < 800) {
-		//ゲージ背景
-		mImageGauge.Draw(ret.mX - GAUGE_WID_MAX, ret.mX + GAUGE_WID_MAX, ret.mY + 30.0f, ret.mY + 45.0f, 210, 290, 63, 0);
-		//体力ゲージ
-		mImageGauge.Draw(ret.mX - GAUGE_WID_MAX, (ret.mX - GAUGE_WID_MAX) + HpGaugeWid * 2.0f, ret.mY + 30.0f, ret.mY + 45.0f, 0, 0, 0, 0);
-		//プレイヤーの攻撃対象になっているとき
-		//if (mIsTarget) {
-			//ターゲット画像表示
-			//mImageTarget.Draw(ret.mX - 30.0f, ret.mX + 30.0f, ret.mY - 30.0f, ret.mY + 30.0f, 0, 255, 255, 0);
-		//}
-	}
-	CUtil::End2D();
-}
-

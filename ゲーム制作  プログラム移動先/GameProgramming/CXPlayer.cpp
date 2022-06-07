@@ -72,7 +72,7 @@ CXPlayer::CXPlayer()
 	mColSphereSword.mTag = CCollider::EPLAYERSWORD;
 	mColliderSwordSp.mTag = CCollider::EPLAYERSWORD;
 	mColSphereFoot.mTag = CCollider::EPLAYERBODY;
-	mColEscapeStopperLine.mTag = CCollider::EPLAYERESCAPESTOPPER;
+	mColEscapeStopperLine.mTag = CColliderLine::EPLAYERESCAPESTOPPER;
 	//this＝プレイヤーそのもの
 	mpPlayerInstance = this;
 	mImageGauge.Load(IMAGE_GAUGE);
@@ -358,17 +358,7 @@ void CXPlayer::Update()
 		break;
 	}
 	//攻撃判定が有効のとき
-	//if (mEffectStopper == false ) {
-		//if (mAnimationIndex == 3||mAnimationIndex==5||mAnimationIndex==7||mAnimationIndex==8) {
-			//有効になってからロックを外す
-			//mAnimationFrameLock = false;
-		//}
-		/*
-		if (CKey::Once(VK_LBUTTON)) {
-			mAttackHit = false;
-			mAnimationFrameLock = false;
-		}*/
-	//}
+	
 	//ロックがかかっている間はアニメーションが進まないようにする
 	if (mAnimationFrameLock == true) {
 		mAnimationFrame--;
@@ -630,18 +620,14 @@ void CXPlayer::Update()
 		 //マップに接触していない間ずっと重力がかかる
 		 if (mState != EATTACKSP) {
 			 if (mJumpStopper == false) {
-
 				 if (mJump >= -0.1) {
-
 				   mJump -= G;
 				 }
 			 }
 		 }
-
 		 if (mState != EESCAPE) {
 			  mPosition.mY += mJump;
 		 }
-		
 		//アイテム取得時に武器の当たり判定拡大
 		 if (CItem::mItemCount > 0) {
 			mColSphereSword.mRadius = 7.5f;
@@ -668,7 +654,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 		//親がプレイヤー
 		if (m->mpParent->mTag == EPLAYER) {
 			//プレイヤーの体部分
-			if (m->mTag == CCollider::EPLAYERESCAPESTOPPER) {//相手のコライダが三角コライダの場合
+			if (m->mTag == CColliderLine::EPLAYERESCAPESTOPPER) {//相手のコライダが三角コライダの場合
 				//親が三角コライダ
 				if (o->mType == CCollider::ETRIANGLE) {
 					//親が三角コライダ
@@ -680,26 +666,18 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 					CVector vz = CVector(0.0f, 0.0f, 1.0f) * mMatrixRotate;
 					vz.Normalize();
 					CVector adjust;//調整用ベクトル
-					if (CCollider::CollisionTriangleLine(o, m, &adjust)) {
+					if (CCollider::CollisionTriangleSphere(o, m, &adjust)) {
+					//	mColEscapeStopperLine.line(NULL, NULL, sv, ev);
 						if (mState == EESCAPE) {
-
-							mJumpStopper = true;
-							mJump = 0;
+							
 							//位置の更新（mPosition+adjust)
 							mPosition = mPosition + adjust;
 							//行列の更新
 							CTransform::Update();
 						}
-						if (mState == EATTACKSP) {
-							if (mAnimationIndex == 8) {
-								mAnimationFrame += 2;
-							}
-						}
+						
 					}
-					else {
-
-						mJumpStopper = false;
-					}
+					
 
 				}
 			}
@@ -729,17 +707,15 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 
 									mJumpStopper = true;
 									mJump = 0;
-									
+									if (mAnimationIndex == 8) {
+										mAnimationFrame += 2;
+									}
 									//位置の更新（mPosition+adjust)
 									mPosition = mPosition + adjust;
 									//行列の更新
 									CTransform::Update();
 								}
-								if (mState == EATTACKSP) {
-									if (mAnimationIndex == 8) {
-										mAnimationFrame+=2;
-									}
-								}
+								
 						}
 						else {
 

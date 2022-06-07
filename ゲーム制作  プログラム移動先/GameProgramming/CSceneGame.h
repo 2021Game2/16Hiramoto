@@ -10,7 +10,7 @@
 #include"CEnemy2.h"
 #include"CBillBoard2.h"
 #include"CRock.h"
-#include"CTree.h"
+#include"CFlag.h"
 #include"CEnemy3.h"
 #include"CSound.h"
 #include"CBoss.h"
@@ -34,7 +34,7 @@ private:
 	CShadowMap mShadowMap;
 	CMap mMap;//フィールド	
 	CRock*mpRock;//周りの岩
-	CTree* mpTree;//木
+	CFlag* mpFlag;//木
 	//キャラクタのインスタンス
 	CXPlayer mPlayer;//プレイヤー
 
@@ -64,6 +64,8 @@ public:
 	 bool mBgmOverStopper;
 	 bool mBgmClearStopper;
 	static bool mBgmCountCheck;
+	static bool mBossSwitch;
+	static bool mBossGaugeSwitch;
 //BGMを流すか止めるか分けるフラグ
 	bool mBgmCountCheck2;//BGMが連続で再生しないようにするフラグ
 	static bool mVoiceSwitch;//BGM SEのオンオフ切り替え

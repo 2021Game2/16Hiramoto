@@ -132,7 +132,7 @@
     <ClCompile Include="CRock.cpp">
       <Filter>ソース ファイル\Base\マップ</Filter>
     </ClCompile>
-    <ClCompile Include="CTree.cpp">
+    <ClCompile Include="CFlag.cpp">
       <Filter>ソース ファイル\Base\マップ</Filter>
     </ClCompile>
     <ClCompile Include="CSceneGame.cpp">
@@ -314,7 +314,7 @@
     <ClInclude Include="CSceneTitle.h">
       <Filter>ヘッダー ファイル\Base\シーン</Filter>
     </ClInclude>
-    <ClInclude Include="CTree.h">
+    <ClInclude Include="CFlag.h">
       <Filter>ヘッダー ファイル\Base\マップ</Filter>
     </ClInclude>
     <ClInclude Include="CXPlayer.h">

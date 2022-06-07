@@ -446,10 +446,10 @@ void CBoss::Render2D()
 	float hpRate = (float)mHp / (float)HP;
 	//‘Ì—ÍƒQ[ƒW‚Ì•
 	float hpGaugeWid = GAUGE_WID_MAXHP * hpRate;
-
-	mImageGauge.Draw(50, GAUGE_WID_MAXHP, 510, 550, 201, 300, 63, 0);//ƒQ[ƒW”wŒi
-	mImageGauge.Draw(50, hpGaugeWid, 510, 550, 487, 572, 63, 0);//‘Ì—ÍƒQ[ƒW
-
+	if (CSceneGame::mBossGaugeSwitch == true) {
+		mImageGauge.Draw(50, GAUGE_WID_MAXHP, 510, 550, 201, 300, 63, 0);//ƒQ[ƒW”wŒi
+		mImageGauge.Draw(50, hpGaugeWid, 510, 550, 487, 572, 63, 0);//‘Ì—ÍƒQ[ƒW
+	}
 
 	CUtil::End2D();
 }

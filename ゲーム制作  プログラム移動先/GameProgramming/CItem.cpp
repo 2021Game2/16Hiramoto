@@ -1,10 +1,10 @@
 
-#include"CPlayer.h"
+#include"CXPlayer.h"
 #include"CEffect.h"
 #include"CCollisionManager.h"
 #include"CItem.h"
-#define OBJ "3DModel\\Weapon\\Weapon.obj"
-#define MTL "3DModel\\Weapon\\Weapon.mtl"
+#define OBJ "Resource\\3DModel\\Weapon\\Weapon.obj"
+#define MTL "Resource\\3DModel\\Weapon\\Weapon.mtl"
 int CItem::mItemCount = 0;
 bool CItem::mItemAttackHit = false;
 CModel CItem::mModel;//モデルデータ作成

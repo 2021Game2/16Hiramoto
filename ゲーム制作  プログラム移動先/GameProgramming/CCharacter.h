@@ -26,7 +26,7 @@ public:
 		EENEMY2,
 		EITEM,
 		EROCK,
-		ETREE,
+		EFLAG,
 		EENEMY3,
 		EBOSS,
 		EMAP,

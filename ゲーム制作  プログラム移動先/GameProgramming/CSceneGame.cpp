@@ -11,6 +11,7 @@
 #include"CRock.h"
 #include"CSound.h"
 #include"CTarget.h"
+#include"CFlag.h"
 #define HP 30
 #define ENEMY2COUNT 2 //一度に出せる敵２の数
 #define ENEMY2MINCOUNT 4 //敵２を再生成させるときの敵２の数の下限
@@ -52,6 +53,8 @@ int CSceneGame::mBgmCount = 1;//BGMの切り替え番号
 bool CSceneGame::mBgmCountCheck = true;//BGMを流すか止めるか分けるフラグ
 bool CSceneGame::mVoiceSwitch =true;//false：音声なし true：音声あり
 bool CSceneGame::mEnemy2Bgm = true;
+bool CSceneGame::mBossSwitch = false;
+bool CSceneGame::mBossGaugeSwitch = false;
 CSound PlayerFirstAttack;
 CSound PlayerSecondAttack;
 CSound PlayerThirdAttack;
@@ -119,16 +122,12 @@ void CSceneGame::Init()
 	}
 	//テキストフォントの読み込みと設定
 	mFont.LoadTexture(FONT, 1, 4096 / 64);
-
 	CRes::sModelX.Load(MODEL_FILE);
 	//キャラクターにモデルを設定
 	mPlayer.Init(&CRes::sModelX);
 	mPlayer.mPosition = CVector(-45.0f, 1.0f, -120.0f);
-
-
 	//カメラ初期化
 	Camera.Init();
-
 	CRes::sScorp.Load(SCOPION);
 	CRes::sScorp.SeparateAnimationSet(0, 0, 72, "walk");
 	CRes::sScorp.SeparateAnimationSet(0, 72, 120, "strafe left");
@@ -156,14 +155,14 @@ void CSceneGame::Init()
 	CRes::sBoss.SeparateAnimationSet(0, 478, 500, "growl");
 	CRes::sBoss.SeparateAnimationSet(0, 500, 550, "death - 02");
 	CRes::sBoss.SeparateAnimationSet(0, 565, 650, "death - 03");
-	//新しく作る
+	/*//新しく作る
 	mpBoss = new CBoss(CVector(0.0f, 10.0f, 0.0f),
 		CVector(0.0f, 0.0f, 0.0f), CVector(0.5f, 0.5f, 0.5f));
 	//読み込ませる
 	mpBoss->Init(&CRes::sBoss);
 	//ボスの配置
 	mpBoss->mPosition = CVector(3.0f, 10.0f, 100.0f);
-
+	*/
 	new CItem(CVector(-20.0f, 2.0f, -10.0f),
 		CVector(), CVector(1.5f, 1.5f, 1.5f));
 	new CTarget(mPlayer.mPosition,
@@ -176,10 +175,10 @@ void CSceneGame::Init()
 
 	mpRock = new CRock(CVector(0.0f, 0.0f, -100.0f),
 		CVector(0.0f, 180.0f, 0.0f), CVector(0.5f, 0.5f, 0.5f));
-	/*
-	mpTree = new CTree(CVector(0.0f, 0.0f, 0.0f),
+	
+	mpFlag = new CFlag(CVector(56.0f, 11.0f, 26.0f),
 		CVector(), CVector(10.5f, 10.5f, 10.5f));
-		*/
+		
 	float shadowColor[] = { 0.4f, 0.4f, 0.4f, 0.2f };  //影の色
 	float lightPos[] = { 50.0f, 160.0f, 50.0f };  //光源の位置
 
@@ -237,6 +236,18 @@ void CSceneGame::BgmGameClear() {
 	}
 }
 void CSceneGame::Update() {
+	
+	if (mBossSwitch == true) {
+		//新しく作る
+		mpBoss = new CBoss(CVector(0.0f, 10.0f, 0.0f),
+			CVector(0.0f, 0.0f, 0.0f), CVector(0.5f, 0.5f, 0.5f));
+		//読み込ませる
+		mpBoss->Init(&CRes::sBoss);
+		//ボスの配置
+		mpBoss->mPosition = CVector(3.0f, 10.0f, 100.0f);
+		mBossSwitch = false;
+		mBossGaugeSwitch = true;
+	}
 	
 		switch (mBgmCount) {
 			
