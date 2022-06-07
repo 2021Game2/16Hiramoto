@@ -4,7 +4,7 @@
 #include "CUtil.h"
 #include "CKey.h"
 #include <stdio.h>
-
+#include"CSceneGame.h"
 #include "CInput.h"
 
 #define FONT "Resource\\png,tga\\FontG.png" //フォント
@@ -66,9 +66,9 @@ void CSceneTitle::Update()
 	//タイトル
 	mFont.DrawString("CREATURE", 120, 500, 40, 40);
 	mFont.DrawString("HUNTER", 200, 400, 40, 40);
-	mFont.DrawString("GAMESTART", 240, 220, 20, 20);
-	mFont.DrawString("RECORD TIME", 240, 120, 10, 10);
 
+	mFont.DrawString("GAMESTART", 240, 220, 20, 20);
+	
 	CUtil::End2D();
 }
 

@@ -239,6 +239,7 @@ void CEnemy3::Update() {
 	}
 	if (CSceneGame::mBossGaugeSwitch == true) {
 		mHp = 0;
+		mEnabled = false;
 	}
 	
 

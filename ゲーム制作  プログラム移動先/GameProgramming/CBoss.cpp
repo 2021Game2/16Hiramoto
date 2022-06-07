@@ -9,9 +9,9 @@
 #define HP 20
 
 #define VELOCITY 0.5f //マクロ
-#define HPCOUNT1 90 //ダメージを受けたときにのけぞりを行う体力の数値
-#define HPCOUNT2 60 //ダメージを受けたときにのけぞりを行う体力の数値
-#define HPCOUNT3 30 //ダメージを受けたときにのけぞりを行う体力の数値
+#define HPCOUNT1 15 //ダメージを受けたときにのけぞりを行う体力の数値
+#define HPCOUNT2 10 //ダメージを受けたときにのけぞりを行う体力の数値
+#define HPCOUNT3 5 //ダメージを受けたときにのけぞりを行う体力の数値
 #define JUMP 5.0f
 #define G 0.1f
 #define PLAYERSPPOINT_MAX 30
@@ -447,10 +447,7 @@ void CBoss::Render2D()
 	float hpRate = (float)mHp / (float)HP;
 	//体力ゲージの幅
 	float hpGaugeWid = GAUGE_WID_MAXHP * hpRate;
-	if (CSceneGame::mBossGaugeSwitch == true) {
-		
-		//mFont.DrawChar(Boss, 400, 560, 8, 16);
-
+	if (CSceneGame::mBossGaugeSwitch == true&&mHp>0) {
 		mImageGauge.Draw(50, GAUGE_WID_MAXHP, 510, 550, 201, 300, 63, 0);//ゲージ背景
 		mImageGauge.Draw(50, hpGaugeWid, 510, 550, 487, 572, 63, 0);//体力ゲージ
 	}

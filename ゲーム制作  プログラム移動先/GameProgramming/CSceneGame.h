@@ -28,8 +28,9 @@ private:
 	CModel mModelC5;
 	int mSpawn;//敵が生成されるまでの時間
 	int mSpawn2;
-	int mTimeMinute;
-	int mTimeSecond;
+	static bool mSceneCount;
+	static int mTimeMinute;
+	static int mTimeSecond;
 	int mTimeCount;
 	CShadowMap mShadowMap;
 	CMap mMap;//フィールド	

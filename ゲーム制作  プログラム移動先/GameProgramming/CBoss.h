@@ -23,7 +23,7 @@ private:
 	CVector mCollisionEnemy;
 	CCharacter* mpPlayer;//プレイヤーのポインタ
 	CText mFont;
-	
+	char buf[64];
 	int mJump2;
 	int mMove;
 	int mMove2;

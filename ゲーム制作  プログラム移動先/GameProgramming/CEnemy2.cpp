@@ -257,7 +257,7 @@ void CEnemy2::Update() {
 	}
 	if (CSceneGame::mBossGaugeSwitch == true) {
 		mHp = 0;
-		mState = EDEATH;
+		mEnabled = false;
 	}
 	CXCharacter::Update();
 }

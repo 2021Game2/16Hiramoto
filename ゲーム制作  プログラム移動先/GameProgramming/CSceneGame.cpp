@@ -50,11 +50,14 @@ int CSceneGame::mEnemy2CountStopper = ENEMY2COUNT;
 int CSceneGame::mEnemy3Count = 0;
 int CSceneGame::mEnemy3CountStopper = ENEMY3COUNT;
 int CSceneGame::mBgmCount = 1;//BGMの切り替え番号
+int CSceneGame::mTimeMinute = 0;
+int CSceneGame::mTimeSecond = 0;
 bool CSceneGame::mBgmCountCheck = true;//BGMを流すか止めるか分けるフラグ
 bool CSceneGame::mVoiceSwitch =true;//false：音声なし true：音声あり
 bool CSceneGame::mEnemy2Bgm = true;
 bool CSceneGame::mBossSwitch = false;
 bool CSceneGame::mBossGaugeSwitch = false;
+bool CSceneGame::mSceneCount = false;
 CSound PlayerFirstAttack;
 CSound PlayerSecondAttack;
 CSound PlayerThirdAttack;
@@ -66,8 +69,7 @@ CSound BossMove;
 CSound Enemy2Voice;
 CSceneGame::CSceneGame() 
 	:mTimeCount(0)
-	,mTimeSecond(0)
-	,mTimeMinute(0)
+	
 	,mSpawn(0)
     , mSpawn2(0)
 	
@@ -236,7 +238,7 @@ void CSceneGame::BgmGameClear() {
 	}
 }
 void CSceneGame::Update() {
-	
+
 	if (mBossSwitch == true) {
 		//新しく作る
 		mpBoss = new CBoss(CVector(0.0f, 10.0f, 0.0f),
@@ -248,32 +250,34 @@ void CSceneGame::Update() {
 		mBossSwitch = false;
 		mBossGaugeSwitch = true;
 	}
-	
-		switch (mBgmCount) {
-			
-		
-		case 2:
-			 BgmBattle();
-			   break;
-		case 3:
-			 BgmBoss();
-			break;
-		case 4:
-			 BgmGameClear();
-			   break;
-		case 5:
-			 BgmGameOver();
-            break;
+
+	switch (mBgmCount) {
+
+
+	case 2:
+		BgmBattle();
+		break;
+	case 3:
+		BgmBoss();
+		break;
+	case 4:
+		BgmGameClear();
+		break;
+	case 5:
+		BgmGameOver();
+		break;
+	}
+	if (CBoss::mHp > 0) {
+		mTimeCount++;
+		if (mTimeCount % 60 == 0) {
+			mTimeSecond++;
 		}
-	
-	mTimeCount++;
-	if (mTimeCount % 60 == 0) {
-		mTimeSecond++;
+		if (mTimeSecond == 60) {
+			mTimeMinute++;
+			mTimeSecond = 0;
+		}
 	}
-	if (mTimeSecond==60) {
-		mTimeMinute++;
-		mTimeSecond = 0;
-	}
+
 	//敵の生成間隔
 	if (mSpawn >= 0) {
 		mSpawn--;
@@ -351,55 +355,27 @@ void CSceneGame::Render() {
 	//2D描画開始
 	CUtil::Start2D(0, 800, 0, 600);
 	char buf[64];
-	if (CBoss::mHp>0&&mPlayer.mHp>0) {
+	if (CBoss::mHp > 0 && mPlayer.mHp > 0) {
 		//時間（分）
-		if (mTimeMinute<10) {
+		if (mTimeMinute < 10) {
 			sprintf(buf, "0%d:", mTimeMinute);
-			mFont.DrawString(buf, 170, 500, 8, 16);
+			mFont.DrawString(buf, 700, 500, 8, 16);
 		}
 		else {
-				sprintf(buf, "%d:", mTimeMinute);
-				mFont.DrawString(buf, 170, 500, 8, 16);
+			sprintf(buf, "%d:", mTimeMinute);
+			mFont.DrawString(buf, 700, 500, 8, 16);
 		}
 
 		//時間（秒）
 		if (mTimeSecond < 10) {
-		  sprintf(buf, "0%d", mTimeSecond);
-		 mFont.DrawString(buf, 230, 500, 8, 16);
+			sprintf(buf, "0%d", mTimeSecond);
+			mFont.DrawString(buf, 740, 500, 8, 16);
 		}
 		else {
 			sprintf(buf, "%d", mTimeSecond);
-			mFont.DrawString(buf, 230, 500, 8, 16);
-	    }
-		if (mPlayer.mPosition.mX > 0.0f) {
-		 sprintf(buf, "X:%f", mPlayer.mPosition.mX);
-		mFont.DrawString(buf, 20, 200, 8, 16);
+			mFont.DrawString(buf, 740, 500, 8, 16);
 		}
-		else {
-			sprintf(buf, "X:M%f", mPlayer.mPosition.mX);
-
-			mFont.DrawString(buf, 20, 200, 8, 16);
-		}
-		if (mPlayer.mPosition.mY > 0.0f) {
 		
-		 sprintf(buf, "Y:%f", mPlayer.mPosition.mY);
-
-		 mFont.DrawString(buf, 20, 250, 8, 16);
-		}
-		else {
-			sprintf(buf, "Y:M%f", mPlayer.mPosition.mY);
-			mFont.DrawString(buf, 20, 250, 8, 16);
-		}
-		if (mPlayer.mPosition.mZ > 0.0f) {
-			sprintf(buf, "Z:%f", mPlayer.mPosition.mZ);
-			mFont.DrawString(buf, 20, 300, 8, 16);
-		}
-		else {
-			sprintf(buf, "Z:M%f", mPlayer.mPosition.mZ);
-			mFont.DrawString(buf, 20, 300, 8, 16);
-
-		}
-
 		mImageMouse.Draw(570, 770, 0, 170, 0, 500, 500, 0);
 		mImageMoveKey.Draw(0, 100, 50, 200, 0, 500, 500, 0);
 		mImageCkey.Draw(120, 200, 60, 210, 0, 500, 500, 0);
@@ -407,23 +383,31 @@ void CSceneGame::Render() {
 		mImageDush.Draw(120, 190, 20, 100, 0, 200, 210, 0);
 	}
 	else if (CBoss::mHp <= 0) {
-	    sprintf(buf, "GAMECLEAR" );
-	    mFont.DrawString(buf, 300, 300, 16, 32);
+		sprintf(buf, "GAMECLEAR");
+		mFont.DrawString(buf, 300, 300, 16, 32);
+		/*
 		sprintf(buf, "PUSH ENTER");
 		mFont.DrawString(buf, 300, 200, 16, 32);
-		if(CKey::Once(VK_RETURN)) {
+		if (CKey::Once(VK_RETURN)) {
+			
 			mScene = ETITLE;
-		}
+		}*/
 	}
 	else if (mPlayer.mHp <= 0) {
-			sprintf(buf, "GAMEOVER");
-			mFont.DrawString(buf, 300, 300, 16, 32);
-			sprintf(buf, "PUSH ENTER");
-			mFont.DrawString(buf, 300, 200, 16, 32);
-			if (CKey::Once(VK_RETURN)) {
-				mScene = ETITLE;
-			}
-	}
+		sprintf(buf, "GAMEOVER");
+		mFont.DrawString(buf, 300, 300, 16, 32);
+		/*
+		sprintf(buf, "PUSH ENTER");
+		mFont.DrawString(buf, 300, 200, 16, 32);
+		if (CKey::Once(VK_RETURN)) {
+		
+			mScene = ETITLE;
+			
+		}*/
+	}if(mBossGaugeSwitch == true&&CBoss::mHp>0){
+		sprintf(buf, "BOSS");
+		mFont.DrawString(buf, 300, 570, 32, 16);
+     }
 	//2Dの描画終了
 	CUtil::End2D();
 	//CXPlayerのパラメータ等の２D描画は一番最後

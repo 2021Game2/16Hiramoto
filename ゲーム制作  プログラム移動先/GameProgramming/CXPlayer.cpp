@@ -99,6 +99,7 @@ void CXPlayer::Init(CModelX* model)
 
 void CXPlayer::Update()
 {
+
 	//èàóùÇçsìÆÇ≤Ç∆Ç…ï™äÑ
 	switch (mState) {
 	case EIDLE:	//ë“ã@
@@ -832,16 +833,18 @@ void CXPlayer::Render2D()
 	float spRate = (float)mSpAttack / (float)SPPOINT_MAX;
 	float spGaugeWid = GAUGE_WID_MAXSP * spRate;
 
+	if (mHp > 0 && CBoss::mHp > 0) {
 
-	mImageGauge.Draw(20, GAUGE_WID_MAXHP, 500, 510, 201, 300, 63, 0);//ÉQÅ[ÉWîwåi
-	mImageGauge.Draw(20, hpGaugeWid, 500, 510, 0, 99, 63, 0);//ëÃóÕÉQÅ[ÉW
 
-	mImageGauge.Draw(20, GAUGE_WID_MAXST, 490, 500, 201, 300, 63, 0);//ÉQÅ[ÉWîwåi
-	mImageGauge.Draw(20, staminaGaugeWid, 490, 500, 100, 200, 63, 0);//ÉXÉ^É~ÉiÉQÅ[ÉW
+		mImageGauge.Draw(20, GAUGE_WID_MAXHP, 500, 510, 201, 300, 63, 0);//ÉQÅ[ÉWîwåi
+		mImageGauge.Draw(20, hpGaugeWid, 500, 510, 0, 99, 63, 0);//ëÃóÕÉQÅ[ÉW
 
-	mImageGauge.Draw(20, GAUGE_WID_MAXSP, 480,490, 201, 300, 63, 0);//ÉQÅ[ÉWîwåi
-	mImageGauge.Draw(20, spGaugeWid, 480, 490, 401, 486, 63, 0);//SPÉQÅ[ÉW
-	
+		mImageGauge.Draw(20, GAUGE_WID_MAXST, 490, 500, 201, 300, 63, 0);//ÉQÅ[ÉWîwåi
+		mImageGauge.Draw(20, staminaGaugeWid, 490, 500, 100, 200, 63, 0);//ÉXÉ^É~ÉiÉQÅ[ÉW
+
+		mImageGauge.Draw(20, GAUGE_WID_MAXSP, 480, 490, 201, 300, 63, 0);//ÉQÅ[ÉWîwåi
+		mImageGauge.Draw(20, spGaugeWid, 480, 490, 401, 486, 63, 0);//SPÉQÅ[ÉW
+	}
 
 	CUtil::End2D();
 
