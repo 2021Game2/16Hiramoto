@@ -111,6 +111,7 @@
     <ClCompile Include="CEnemy2.cpp" />
     <ClCompile Include="CEnemy3.cpp" />
     <ClCompile Include="CEnemySummon.cpp" />
+    <ClCompile Include="CFade.cpp" />
     <ClCompile Include="CInput.cpp" />
     <ClCompile Include="CItem.cpp" />
     <ClCompile Include="CKey.cpp" />
@@ -161,6 +162,7 @@
     <ClInclude Include="CEnemy3.h" />
     <ClInclude Include="CEnemyManager.h" />
     <ClInclude Include="CEnemySummon.h" />
+    <ClInclude Include="CFade.h" />
     <ClInclude Include="CInput.h" />
     <ClInclude Include="CItem.h" />
     <ClInclude Include="CKey.h" />

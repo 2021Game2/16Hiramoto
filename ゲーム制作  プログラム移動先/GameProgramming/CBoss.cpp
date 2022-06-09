@@ -12,7 +12,7 @@
 #define HPCOUNT1 15 //ダメージを受けたときにのけぞりを行う体力の数値
 #define HPCOUNT2 10 //ダメージを受けたときにのけぞりを行う体力の数値
 #define HPCOUNT3 5 //ダメージを受けたときにのけぞりを行う体力の数値
-#define JUMP 5.0f
+#define JUMP 10.0f
 #define G 0.1f
 #define PLAYERSPPOINT_MAX 30
 #define GAUGE_WID_MAXHP 700.0f	//HPゲージの幅の最大値
@@ -35,11 +35,11 @@ CModel CBoss::mModel;//モデルデータ作成
 CBoss::CBoss()
 //コライダの設定
 	: mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 20.0f)
-	, mColSphereHead(this, &mMatrix, CVector(0.0f, 1.0f, 5.0f), 7.0f)
+	, mColSphereHead(this, &mMatrix, CVector(0.0f, 1.0f, 5.0f), 5.0f)
 	, mColSphereRightFront(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 2.0f)
 	, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
 	, mpPlayer(0)
-	, mJump2(0)
+	, mJump(0.0f)
 	, mEnemyDamage(60)
 	, mMove(0)
 	, mMove2(0)
@@ -47,7 +47,7 @@ CBoss::CBoss()
 	, mGravity(0.0f)
 	, mTime(0.0f)
 	, mBossDamageCount(0)
-	
+	, mJumpStopper(true)
 	, mBossAttackHit(false)
 	,mColSearchCount(false)
 	, mBossBgm(true)
@@ -105,11 +105,16 @@ void CBoss::Idle() {
 		//30溜まった状態でアニメーションが終わると攻撃処理に移行
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
-			if (mAttackPercent <= 5) {
-			mState = EATTACK;
-		    }
-			else if(mAttackPercent > 5) {
-				mState = EATTACK2;
+			//if (mAttackPercent < 3) {
+			//mState = EATTACK;
+		    //}
+			//else if(mAttackPercent < 6) {
+			//	mState = EATTACK2;
+			//}
+			if (mAttackPercent < 9) {
+				mJump = JUMP;
+				//mJumpStopper = false;
+				mState = EATTACK3;
 			}
 		}
 	}
@@ -189,6 +194,19 @@ void CBoss::Attack2() {
 		mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
 	}
 }
+void CBoss::Attack3() {
+	//if (mJumpStopper == false) {
+		ChangeAnimation(8, true, 60);
+		if (mJump > -3.0f) {
+			mJump -= 1.0f;
+		}
+		mPosition.mY += mJump;
+	//}
+	//else {
+		mJump = 0.0f;
+		//mState = EAUTOMOVE;
+	//}
+}
 //ダメージ処理
 void CBoss::Damaged() {
 	//体力減少
@@ -206,7 +224,7 @@ void CBoss::Damaged() {
 }
 //死亡処理
 void CBoss::Death() {
-	mColSphereHead.mRenderEnabled = false;
+	mColSphereHead.mRadius = 2.0f;                                       .0f;
 	if (mBossBgmDeath == true) {
 		CSceneGame::mBgmCountCheck = false;
 		CSceneGame::mBgmCount = 4;
@@ -246,12 +264,16 @@ void CBoss::Update() {
 	case EATTACK2://攻撃２
 		Attack2();
 		break;
+	case EATTACK3:
+		Attack3();
+		break;
 	case EDAMAGED://ダメージ
 		Damaged();
 		break;
 	case EDEATH://死亡
 		Death();
 		break;
+		
 	}
 	//アニメーションの種類
 	switch (mAnimationIndex) {
@@ -419,7 +441,8 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 				if (CCollider::CollisionTriangleSphere(o, m, &adjust))
 				{
 					mPosition = mPosition + adjust;
-					mGravity = 0;
+					//mGravity = 0;
+					//mJumpStopper=true;
 				}
 			}
 		}

@@ -12,6 +12,7 @@
 #include"CSound.h"
 #include"CTarget.h"
 #include"CFlag.h"
+#include"CFade.h"
 #define HP 30
 #define ENEMY2COUNT 10 //一度に出せる敵２の数
 #define ENEMY2MINCOUNT 4 //敵２を再生成させるときの敵２の数の下限
@@ -69,10 +70,8 @@ CSound BossMove;
 CSound Enemy2Voice;
 CSceneGame::CSceneGame() 
 	:mTimeCount(0)
-	
 	,mSpawn(0)
-    , mSpawn2(0)
-	
+    ,mSpawn2(0)
 	,mBgmCountCheck2(true)
 	,mBgmStartStopper(true)
 	,mBgmBattleStopper(true)
@@ -96,7 +95,9 @@ void ShadowEffectRender() {
 void CSceneGame::Init()
 
 {
+
 	mScene = EGAME;
+	CFade::SetFade(CFade::FADE_IN);
 	//サウンド(wav)ファイルの読み込み
 	//BGM,SEの読み込み
 	PlayerFirstAttack.Load(ATTACK1);
@@ -157,14 +158,7 @@ void CSceneGame::Init()
 	CRes::sBoss.SeparateAnimationSet(0, 478, 500, "growl");
 	CRes::sBoss.SeparateAnimationSet(0, 500, 550, "death - 02");
 	CRes::sBoss.SeparateAnimationSet(0, 565, 650, "death - 03");
-	/*//新しく作る
-	mpBoss = new CBoss(CVector(0.0f, 10.0f, 0.0f),
-		CVector(0.0f, 0.0f, 0.0f), CVector(0.5f, 0.5f, 0.5f));
-	//読み込ませる
-	mpBoss->Init(&CRes::sBoss);
-	//ボスの配置
-	mpBoss->mPosition = CVector(3.0f, 10.0f, 100.0f);
-	*/
+	
 	new CItem(CVector(-20.0f, 2.0f, -10.0f),
 		CVector(), CVector(1.5f, 1.5f, 1.5f));
 	new CTarget(mPlayer.mPosition,
@@ -351,7 +345,7 @@ void CSceneGame::Render() {
 	mShadowMap.Render();//影設定
 	//コライダの描画
 	//ここをコメントにするとすべてのコライダ非表示
-	//CCollisionManager::Get()->Render();
+	CCollisionManager::Get()->Render();
 	//2D描画開始
 	CUtil::Start2D(0, 800, 0, 600);
 	char buf[64];

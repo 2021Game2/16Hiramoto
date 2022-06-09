@@ -1,13 +1,14 @@
 #ifndef CSCENEMANAGER_H
 #define CSCENEMANAGER_H
 #include "CScene.h"
-
+#include"CFade.h"
 /*
 シーンマネージャクラス
 */
 class CSceneManager {
 public:
 	CScene *mpScene; //シーンへのポインタ
+	CFade* mpFade;
 	//コンストラクタ
 	CSceneManager();
 	//デストラクタ（削除されるときに実行されます）

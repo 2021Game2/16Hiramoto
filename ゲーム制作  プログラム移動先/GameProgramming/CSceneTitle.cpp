@@ -6,7 +6,9 @@
 #include <stdio.h>
 #include"CSceneGame.h"
 #include "CInput.h"
-
+#include"CFade.h"
+#include"CScene.h"
+#include"CSceneManager.h"
 #define FONT "Resource\\png,tga\\FontG.png" //フォント
 #define IMAGE_BUTTONBACK "Resource\\png,tga\\Gauge.png" //ボタン背景画像
 
@@ -34,21 +36,25 @@ void CSceneTitle::Update()
 		(mouseY >= 220 - 20 && mouseY <= 220 + 20)) {
 		mSelect = EGAMESTART;
 	}
-	if (CKey::Once(VK_RETURN)) {
-		mScene = EGAME;
-	}
 	
 	if (CKey::Once(VK_LBUTTON)) {
 		switch (mSelect) {
 		case EGAMESTART:
-			mScene = EGAME;
-			break;
-
+			mNextScene = CScene::EGAME;
+			mSceneChange = true;
+			CFade::SetFade(CFade::FADE_OUT);
+			/*
+			ゲームスタート時の効果音を追加する
+			*/
 		default:
 			break;
 		}
 	}
-
+	if (mSceneChange) {
+		if (CFade::IsFadeEnd()) {
+			mScene = mNextScene;
+		}
+	}
 	CUtil::Start2D(0, 800, 0, 600);
 
 	//カーソルをあわせたとき

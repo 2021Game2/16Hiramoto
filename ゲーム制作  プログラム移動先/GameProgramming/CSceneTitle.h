@@ -10,7 +10,9 @@ private:
 	int mSelect;
 
 	CTexture mImageButtonBack; //ƒ{ƒ^ƒ“”wŒi‰æ‘œ
-
+	bool mSceneChange;
+	
+	EScene mNextScene;
 public:
 
 	CSceneTitle();

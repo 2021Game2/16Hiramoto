@@ -210,6 +210,9 @@
     <ClCompile Include="CEnemy.cpp">
       <Filter>ソース ファイル\Base\敵関係</Filter>
     </ClCompile>
+    <ClCompile Include="CFade.cpp">
+      <Filter>ソース ファイル\Base\シーン</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -364,6 +367,9 @@
     </ClInclude>
     <ClInclude Include="CEnemy.h">
       <Filter>ヘッダー ファイル\Base\敵関係</Filter>
+    </ClInclude>
+    <ClInclude Include="CFade.h">
+      <Filter>ヘッダー ファイル\Base\サウンド,エフェクト,テクスチャ</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

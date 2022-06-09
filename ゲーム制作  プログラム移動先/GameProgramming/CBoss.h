@@ -24,7 +24,7 @@ private:
 	CCharacter* mpPlayer;//プレイヤーのポインタ
 	CText mFont;
 	char buf[64];
-	int mJump2;
+	float mJump;
 	int mMove;
 	int mMove2;
 	int mBossDamageCount;
@@ -43,6 +43,7 @@ public:
 	CCollider mColSearch;//サーチ用コライダ
 	bool mColSearchCount;
 	bool mBossAttackHit;
+	bool mJumpStopper;
 	//モデルデータ
 	static CModel mModel;
 	static CBoss* GetInstance();
@@ -65,18 +66,22 @@ public:
 	void Idle();		//待機処理
 	void AutoMove();	//移動処理
 	void Attack();	//攻撃処理
+    void Attack2();
+	void Attack3();
 	void Damaged();		//被弾処理
 	void Death();		//死亡処理
-	void Attack2();
+	
 	//敵の状態
 	enum EBossState
 	{
 		EIDLE,		//待機
 		EAUTOMOVE,	//移動
 		EATTACK,	//攻撃
+        EATTACK2,
+		EATTACK3,
 		EDAMAGED,	//被弾
 		EDEATH,		//死亡
-		EATTACK2,
+		
 	};
 	EBossState mState;
 };
