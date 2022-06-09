@@ -197,7 +197,7 @@ void CBoss::Attack2() {
 void CBoss::Attack3() {
 	//if (mJumpStopper == false) {
 		ChangeAnimation(8, true, 60);
-		if (mJump > -3.0f) {
+		if (mJump > -2.0f) {
 			mJump -= 1.0f;
 		}
 		mPosition.mY += mJump;

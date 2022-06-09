@@ -57,6 +57,9 @@ void CSceneManager::Update() {
 	}
 }
 void CSceneManager::Render() {
+	if (mpScene) {
+		mpScene->Render();
+	}
 	CUtil::Start2D(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 	mpFade->Render();
 	CUtil::End2D();

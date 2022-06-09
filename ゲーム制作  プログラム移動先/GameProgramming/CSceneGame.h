@@ -22,8 +22,12 @@
 
 class CSceneGame : public CScene {
 private:
-
-
+	enum ESceneSelect
+	{
+		EGAME,
+		ETITLE,
+	};
+	ESceneSelect mSceneSelect;
 	//マップのインスタンス
 	CModel mModelC5;
 	int mSpawn;//敵が生成されるまでの時間
@@ -46,6 +50,8 @@ private:
 	CEnemySummon* mpEnemySummon;//敵２の生成場所
 	CEnemySummon* mpEnemySummon2;//敵３の生成場所
 	CBoss* mpBoss;//ボス
+	bool mSceneChange;
+	EScene mNextScene;
 public:
 	CTexture mImageMouse;
 	CTexture mImageMoveKey;

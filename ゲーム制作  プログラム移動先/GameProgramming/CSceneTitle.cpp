@@ -22,6 +22,7 @@ CSceneTitle::CSceneTitle()
 void CSceneTitle::Init()
 {
 	mScene = ETITLE;
+	CFade::SetFade(CFade::FADE_IN);
 }
 
 void CSceneTitle::Update()

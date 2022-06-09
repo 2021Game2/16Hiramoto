@@ -54,7 +54,7 @@ int CSceneGame::mBgmCount = 1;//BGMの切り替え番号
 int CSceneGame::mTimeMinute = 0;
 int CSceneGame::mTimeSecond = 0;
 bool CSceneGame::mBgmCountCheck = true;//BGMを流すか止めるか分けるフラグ
-bool CSceneGame::mVoiceSwitch =true;//false：音声なし true：音声あり
+bool CSceneGame::mVoiceSwitch =false;//false：音声なし true：音声あり
 bool CSceneGame::mEnemy2Bgm = true;
 bool CSceneGame::mBossSwitch = false;
 bool CSceneGame::mBossGaugeSwitch = false;
@@ -96,7 +96,7 @@ void CSceneGame::Init()
 
 {
 
-	mScene = EGAME;
+	mScene = CScene::EGAME;
 	CFade::SetFade(CFade::FADE_IN);
 	//サウンド(wav)ファイルの読み込み
 	//BGM,SEの読み込み
@@ -330,6 +330,11 @@ void CSceneGame::Update() {
 			mBgmGameOver.Stop();
 			mBgmCountCheck = true;
 		}
+		if (mSceneChange) {
+			if (CFade::IsFadeEnd()) {
+				mScene = mNextScene;
+			}
+		}
 	//更新
 	CTaskManager::Get()->Update();
 	//衝突処理(総当り）
@@ -379,25 +384,29 @@ void CSceneGame::Render() {
 	else if (CBoss::mHp <= 0) {
 		sprintf(buf, "GAMECLEAR");
 		mFont.DrawString(buf, 300, 300, 16, 32);
-		/*
-		sprintf(buf, "PUSH ENTER");
+		
+		sprintf(buf, "PUSH CLICK");
 		mFont.DrawString(buf, 300, 200, 16, 32);
-		if (CKey::Once(VK_RETURN)) {
+		if (CKey::Once(VK_LBUTTON)){
 			
-			mScene = ETITLE;
-		}*/
+			mNextScene = CScene::ETITLE;
+			mSceneChange = true;
+			CFade::SetFade(CFade::FADE_OUT);
+		}
 	}
 	else if (mPlayer.mHp <= 0) {
 		sprintf(buf, "GAMEOVER");
 		mFont.DrawString(buf, 300, 300, 16, 32);
-		/*
-		sprintf(buf, "PUSH ENTER");
-		mFont.DrawString(buf, 300, 200, 16, 32);
-		if (CKey::Once(VK_RETURN)) {
 		
-			mScene = ETITLE;
+		sprintf(buf, "PUSH CLICK");
+		mFont.DrawString(buf, 300, 200, 16, 32);
+		if (CKey::Once(VK_LBUTTON)) {
+		
+			mNextScene = CScene::ETITLE;
+			mSceneChange = true;
+			CFade::SetFade(CFade::FADE_OUT);
 			
-		}*/
+		}
 	}if(mBossGaugeSwitch == true&&CBoss::mHp>0){
 		sprintf(buf, "BOSS");
 		mFont.DrawString(buf, 300, 570, 32, 16);

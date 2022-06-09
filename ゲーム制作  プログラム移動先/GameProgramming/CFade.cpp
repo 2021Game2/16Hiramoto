@@ -44,7 +44,7 @@ void CFade::Update() {
     }
 }
 void CFade::Render() {
-    /*
+    
     if (mFade > 0.0f) {//“§–¾‚Íˆ—‚ğ’Ê‚³‚È‚¢
         // •`‰æ
         glEnable(GL_BLEND);
@@ -57,6 +57,6 @@ void CFade::Render() {
         glEnd();
         glDisable(GL_BLEND);
 
-    }*/
+    }
 }
 

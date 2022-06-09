@@ -56,8 +56,10 @@ void CTarget::Update() {
 	CVector vz = CVector(0.0f, 0.0f, 1.0f) * mMatrixRotate;
 	//目標地点までのベクトルを求める
 	CVector vp = mPoint - mPosition;
+
 	//左ベクトルとの内積を求める
 	float dx = vp.Dot(vx);
+	float dy = vp.Dot(vy);
 	float margin = 0.1f;
 	//左右方向へ回転
 	if (dx > margin) {
@@ -66,6 +68,13 @@ void CTarget::Update() {
 	else if (dx < -margin) {
 		mRotation.mY -= 3.0f;//右へ回転
 	}
+	if (dy > margin) {
+		mRotation.mX -= 3.0f;
+	}
+	else if(dy<-margin) {
+		mRotation.mX += 3.0f;
+	}
+	
 	if (CSceneGame::mBossGaugeSwitch == true) {
 
 		mPoint = tBoss->mPosition;
