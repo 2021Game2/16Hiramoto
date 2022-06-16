@@ -15,6 +15,7 @@
 CSceneTitle::CSceneTitle()
 	:mSelect(EBACKGROUND)
 {
+	
 	mFont.LoadTexture(FONT, 1, 4096 / 64);
 	mImageButtonBack.Load(IMAGE_BUTTONBACK);
 }
@@ -23,6 +24,7 @@ void CSceneTitle::Init()
 {
 	mScene = ETITLE;
 	CFade::SetFade(CFade::FADE_IN);
+	mSceneChange = false;
 }
 
 void CSceneTitle::Update()

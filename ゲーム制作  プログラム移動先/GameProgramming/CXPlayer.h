@@ -11,7 +11,8 @@
 
 #include"CTexture.h"
 #include"CSound.h"
-class CItem;
+#include"CBoss.h"
+
 class CXPlayer : public CXCharacter
 {
 private:
@@ -22,6 +23,7 @@ public:
 	bool mAnimationFrameLock;
 	bool mMoveCheck;//ダッシュかダッシュじゃないか
 	//bool mDushCheck;
+	CBoss* mpBoss;
 	CEffect2* mEffect1;
 	CEffect2* mEffect2;
 	CEffect2* mEffect3;

@@ -12,15 +12,21 @@
 #define HPCOUNT1 15 //ダメージを受けたときにのけぞりを行う体力の数値
 #define HPCOUNT2 10 //ダメージを受けたときにのけぞりを行う体力の数値
 #define HPCOUNT3 5 //ダメージを受けたときにのけぞりを行う体力の数値
-#define JUMP 10.0f
+#define JUMP 5.0f
 #define G 0.1f
+#define G2 1.0f
 #define PLAYERSPPOINT_MAX 30
 #define GAUGE_WID_MAXHP 700.0f	//HPゲージの幅の最大値
 #define GAUGE_LEFT 20			//ゲージ描画時の左端
-
+#define ATTACKSELECT 4  //攻撃の種類
+#define ROTATIONBASE 14400.0f//回転攻撃の総フレーム
+#define ROTATIONCOUNT 36.0f//回転攻撃の際、アニメーションの終了と回転の終了をあわせる
+#define ROTATIONCOUNTM -36.0f
+#define ROTATION 3.6f//攻撃時に回転する量
+#define ROTATIONMIN -0.36f
 #define IMAGE_GAUGE "Resource\\png,tga\\Gauge.png"		//ゲージ画像
 int CBoss::mBossAttackCount = 0;
-int CBoss::mHp = HP;
+
 
  extern CSound BossVoice;
  extern CSound BossMove;
@@ -35,9 +41,10 @@ CModel CBoss::mModel;//モデルデータ作成
 CBoss::CBoss()
 //コライダの設定
 	: mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 20.0f)
-	, mColSphereHead(this, &mMatrix, CVector(0.0f, 1.0f, 5.0f), 5.0f)
+	, mColSphereHead(this, &mMatrix, CVector(0.0f, 1.0f, 5.0f), 3.0f)
 	, mColSphereRightFront(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 2.0f)
 	, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
+	, mColSphereAttack(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 20.0f)
 	, mpPlayer(0)
 	, mJump(0.0f)
 	, mEnemyDamage(60)
@@ -47,11 +54,14 @@ CBoss::CBoss()
 	, mGravity(0.0f)
 	, mTime(0.0f)
 	, mBossDamageCount(0)
+	, mHp(HP)
 	, mJumpStopper(true)
 	, mBossAttackHit(false)
-	,mColSearchCount(false)
+	, mColSearchCount(false)
 	, mBossBgm(true)
 	, mBossBgmDeath(true)
+	, mBossJumpCount(0)
+	
 {
 
 	mImageGauge.Load(IMAGE_GAUGE);
@@ -61,10 +71,12 @@ CBoss::CBoss()
 	mColSphereHead.mTag = CCollider::EBOSSCOLLIDERHEAD;
 	mColSphereRightFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
 	mColSphereLeftFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
+	mColSphereAttack.mTag = CCollider::EBOSSCOLLIDERATTACK;
 	mpBossInstance = this;
 	mRotation.mY += 180.0f;
 	mGravity = 0.20f;
 	mState = EIDLE;
+	mColSphereAttack.mRenderEnabled = false;
 }
 
 //CEnemy(位置、回転、拡縮）
@@ -90,6 +102,7 @@ void CBoss::Init(CModelX* model)
 	//合成行列の設定
 	//頭
 	mColSphereHead.mpMatrix = &mpCombinedMatrix[6];
+	mColSphereAttack.mpMatrix = &mpCombinedMatrix[6];
     mColSphereRightFront.mpMatrix = &mpCombinedMatrix[12];//右前足
 	mColSphereLeftFront.mpMatrix = &mpCombinedMatrix[19];//左前足
 	mState = EATTACK2;
@@ -99,23 +112,39 @@ void CBoss::Init(CModelX* model)
 //待機処理
 void CBoss::Idle() {
 	//30溜まるまで待機のアニメーション
-	ChangeAnimation(8, false, 60);
+	ChangeAnimation(8, true, 120);
 	mMove++;
 	if (mMove >= 120) {
 		//30溜まった状態でアニメーションが終わると攻撃処理に移行
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
-			//if (mAttackPercent < 3) {
-			//mState = EATTACK;
-		    //}
-			//else if(mAttackPercent < 6) {
-			//	mState = EATTACK2;
-			//}
-			if (mAttackPercent < 9) {
-				mJump = JUMP;
-				//mJumpStopper = false;
-				mState = EATTACK3;
-			}
+			int num = rand() % ATTACKSELECT + 1;
+			 
+				mAttackPercent = num;
+				switch (mAttackPercent) {
+				case(0):
+					mState = EIDLE;
+					break;
+				case(1):
+                     mState = EATTACK;
+					break;
+				case(2):
+					mState = EATTACK2;
+					break;
+				case(3):
+					mJumpStopper = false;
+					mJump = JUMP;
+					mState = EATTACK3;
+					break;
+				case(4):
+					mRotationCount = ROTATIONBASE;
+					mAttack4Count = 1;
+					mAttack4RotationCount = 0.0f;
+					mState = EATTACK4;
+					break;
+				}
+
+			
 		}
 	}
 	//30溜まる前にアニメーションが終わったら移動処理に移行
@@ -195,17 +224,89 @@ void CBoss::Attack2() {
 	}
 }
 void CBoss::Attack3() {
-	//if (mJumpStopper == false) {
-		ChangeAnimation(8, true, 60);
-		if (mJump > -2.0f) {
-			mJump -= 1.0f;
+	mPosition.mY += mJump;
+	if (mJump > -0.5f) {
+				mJump -= G;
+	}
+    else if (mJump >= -2.5f) {
+		mColSphereAttack.mRenderEnabled = true;
+		mBossAttackHit = true;
+			mJump -= G2;
+	}
+	ChangeAnimation(8, false, 120);
+	if (mJumpStopper == true) {
+		if (mAnimationFrame >= mAnimationFrameSize) {	
+			mColSphereAttack.mRenderEnabled = false;
+			mBossAttackHit = false;
+				mState = EIDLE;
 		}
-		mPosition.mY += mJump;
-	//}
-	//else {
-		mJump = 0.0f;
-		//mState = EAUTOMOVE;
-	//}
+	}
+	
+}
+void CBoss::Attack4() {
+	ChangeAnimation(6, false, 2000);
+	switch (mAttack4Count) {
+	case(1):
+		if (mAttack4RotationCount > -90.0f) {
+			mAttackRotation = ROTATIONMIN;
+			mRotation.mY += mAttackRotation;
+			mAttack4RotationCount += mAttackRotation;
+		}
+		else if (mAttack4RotationCount <= -90.0f) {
+            mAttackRotation = 0.0f;
+			mAttack4Move = 0.5f;
+			mAttack4Count = 2;
+		}
+		break;
+	case(2):
+		mAttack4MoveCount++;
+		mPosition.mX+=mAttack4Move;
+		if (mAttack4MoveCount >= 120){
+			mAttack4MoveCount = 0;
+			mAttack4Move *= -1;
+		}
+		mRotation.mY += mAttackRotation;
+		mAttack4RotationCount += mAttackRotation;
+		if (mAttackRotation < ROTATIONCOUNT) {
+			mAttackRotation += ROTATION;
+		}
+		else if (mAttack4RotationCount >= ROTATIONBASE) {
+			mAttack4Count = 3;
+		}
+		break;
+	case(3):
+		if (mAttack4RotationCount > 0.0f) {
+			if (mAttackRotation > ROTATIONCOUNTM) {
+				mAttackRotation += ROTATIONMIN;
+			}
+			mRotation.mY += mAttackRotation;
+			mAttack4RotationCount += mAttackRotation;
+		}
+	else if (mAttack4RotationCount <= 0.0f) {
+			mAnimationFrame = mAnimationFrameSize;
+			mAttack4RotationCount = 0.0f;
+			mAttackRotation = 0.0f;
+			mAttack4Count = 0;
+			mBossAttackHit = false;
+			mState = EIDLE;
+			
+		}
+
+		break;
+	}
+	/*
+	if (mRotationCount >= 0.0f) {
+         //だんだん回線量を増やす
+		if (mAttackRotation < ROTATIONCOUNT) {
+		mAttackRotation += ROTATION;
+		}
+		mRotation.mY += mAttackRotation;
+		//アニメーションの終了と回転の終了をあわせる
+		//次の行動をスムーズに
+		mRotationCount -= ROTATIONCOUNT;
+		mBossAttackHit = true;
+	}*/
+	
 }
 //ダメージ処理
 void CBoss::Damaged() {
@@ -224,7 +325,7 @@ void CBoss::Damaged() {
 }
 //死亡処理
 void CBoss::Death() {
-	mColSphereHead.mRadius = 2.0f;                                       .0f;
+	mColSphereHead.mRadius = 2.0f;                                    
 	if (mBossBgmDeath == true) {
 		CSceneGame::mBgmCountCheck = false;
 		CSceneGame::mBgmCount = 4;
@@ -267,6 +368,9 @@ void CBoss::Update() {
 	case EATTACK3:
 		Attack3();
 		break;
+	case EATTACK4:
+		Attack4();
+		break;
 	case EDAMAGED://ダメージ
 		Damaged();
 		break;
@@ -287,7 +391,9 @@ void CBoss::Update() {
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
 			mBossAttackHit = false;
-			mState = EIDLE;
+			if (mState != EATTACK3) {
+			  mState = EIDLE;
+			}
 		}
 		break;
 	case(6):
@@ -305,9 +411,6 @@ void CBoss::Update() {
 		break;
 	}
 		
-	if (mAttackPercent < 10) {
-		mAttackPercent++;
-	}
 	if (mAttackPercent >= 10) {
 		mAttackPercent = 0;
 	}
@@ -335,8 +438,8 @@ void CBoss::Update() {
 	}
 
 	mEffectCount--;
-	mGravity  -= G;
-	mPosition.mY += mGravity;
+	
+	
 	CXCharacter::Update();
 }
 
@@ -379,33 +482,35 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 					if (o->mTag == CCollider::EPLAYERSWORD || o->mpParent->mTag == EITEM) {
 						//衝突しているとき
 							if (CCollider::Collision(m, o)) {
-								
-								//親をCXPlayerを元にポインタ化し、変数を参照
-								if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
-								{
-									if (m->mTag == CCollider::EBOSSCOLLIDERATTACK) mBossColliderCheck = 1;
-									else if (m->mTag == CCollider::EBOSSCOLLIDERHEAD) mBossColliderCheck = 2;
-									//爆発エフェクト秒数付与
-									mEffectCount = 60;
-									if (mHp > 0) {
-										if (((CXPlayer*)(o->mpParent))->mSpAttack < PLAYERSPPOINT_MAX) {
+								if (mBossDamageCount <= 0) {
+									//親をCXPlayerを元にポインタ化し、変数を参照
+									if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
+									{
+										if (m->mTag == CCollider::EBOSSCOLLIDERATTACK) mBossColliderCheck = 1;
+										else if (m->mTag == CCollider::EBOSSCOLLIDERHEAD) mBossColliderCheck = 2;
+										//爆発エフェクト秒数付与
+										mEffectCount = 60;
+										if (mHp > 0) {
+											if (((CXPlayer*)(o->mpParent))->mSpAttack < PLAYERSPPOINT_MAX) {
+												((CXPlayer*)(o->mpParent))->mSpAttack++;
+											}
+											//30％減るごとにのけぞる
+											if (mHp == HPCOUNT1 || mHp == HPCOUNT2 || mHp == HPCOUNT3) {
+												mColliderCount = 10;
+												mCollisionEnemy = mPosition - o->mpParent->mPosition;
+												mCollisionEnemy.mY = 0;
+												mCollisionEnemy = mCollisionEnemy.Normalize();
+												mState = EDAMAGED;
 
-											((CXPlayer*)(o->mpParent))->mSpAttack++;
-										}
-										//30％減るごとにのけぞる
-										if (mHp ==HPCOUNT1|| mHp == HPCOUNT2|| mHp == HPCOUNT3) {
-											mColliderCount = 10;
-											mCollisionEnemy = mPosition - o->mpParent->mPosition;
-											mCollisionEnemy.mY = 0;
-											mCollisionEnemy = mCollisionEnemy.Normalize();
-											mState = EDAMAGED;
-										}
-										if (mBossDamageCount <= 0) {
+											}
+
 											mHp--;
-											mBossDamageCount = 10;
+											mColSearch.mRenderEnabled = false;
+											mBossDamageCount = 30;
+
 										}
-								    }
-										
+
+									}
 								}
 							}
 						
@@ -441,9 +546,16 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 				if (CCollider::CollisionTriangleSphere(o, m, &adjust))
 				{
 					mPosition = mPosition + adjust;
-					//mGravity = 0;
-					//mJumpStopper=true;
+					if (mState == EATTACK3) {
+
+						if (mAnimationFrame >= mAnimationFrameSize) {
+							mJumpStopper = true;
+						}
+					 }
+
+					
 				}
+				
 			}
 		}
 		return;
@@ -466,6 +578,7 @@ void CBoss::Render2D()
 {
 	//2D描画開始
 	CUtil::Start2D(0, 800, 0, 600);
+
 	//体力の割合
 	float hpRate = (float)mHp / (float)HP;
 	//体力ゲージの幅

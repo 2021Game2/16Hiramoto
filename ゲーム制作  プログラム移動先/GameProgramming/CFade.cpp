@@ -22,6 +22,7 @@ bool CFade::IsFadeEnd()
     if (gInst) {
         return !gInst->mbFade;
     }
+    return true;
 }
 void CFade::Update() {
     if (mbFade) {

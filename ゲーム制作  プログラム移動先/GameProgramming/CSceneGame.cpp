@@ -14,7 +14,7 @@
 #include"CFlag.h"
 #include"CFade.h"
 #define HP 30
-#define ENEMY2COUNT 10 //一度に出せる敵２の数
+#define ENEMY2COUNT 1 //一度に出せる敵２の数
 #define ENEMY2MINCOUNT 4 //敵２を再生成させるときの敵２の数の下限
 #define ENEMY3COUNT 1//一度に出せる敵３の数
 #define ENEMY3MINCOUNT 4 //敵３を再生成させるときの敵３の数の下限
@@ -59,6 +59,8 @@ bool CSceneGame::mEnemy2Bgm = true;
 bool CSceneGame::mBossSwitch = false;
 bool CSceneGame::mBossGaugeSwitch = false;
 bool CSceneGame::mSceneCount = false;
+bool CSceneGame::mGameClear = false;
+bool CSceneGame::mGameOver = false;
 CSound PlayerFirstAttack;
 CSound PlayerSecondAttack;
 CSound PlayerThirdAttack;
@@ -78,12 +80,35 @@ CSceneGame::CSceneGame()
 	,mBgmBossStopper(true)
     ,mBgmOverStopper(true)
     ,mBgmClearStopper(true)
+	,mpBoss(NULL)
+	
+	,mpItem(NULL)
+	,mpTarget(NULL)
+	,mpFlag(NULL)
+	,mpRock(NULL)
+	,mpEnemySummon(NULL)
+	,mpEnemySummon2(NULL)
+	,mpEnemy2(NULL)
+	,mpEnemy3(NULL)
 {
 
 }
 CSceneGame::~CSceneGame() {
 	Sleep(2000);
-
+	
+	if (mpBoss) delete mpBoss;
+	if (mpEnemySummon) delete mpEnemySummon;
+	if (mpEnemySummon2) delete mpEnemySummon2;
+	if (mpFlag) delete mpFlag;
+	if (mpItem) delete mpItem;
+	if (mpRock) delete mpRock;
+	if (mpTarget) delete mpTarget;
+	for (size_t i; i < mEnemy2List.size(); i++) {
+		delete mEnemy2List[i];
+	}
+	for (size_t i; i < mEnemy3List.size(); i++) {
+		delete mEnemy3List[i];
+	}
 }
 void ShadowRender() {
 	//影の影響を受ける用になる
@@ -98,6 +123,7 @@ void CSceneGame::Init()
 
 	mScene = CScene::EGAME;
 	CFade::SetFade(CFade::FADE_IN);
+	mSceneChange = false;
 	//サウンド(wav)ファイルの読み込み
 	//BGM,SEの読み込み
 	PlayerFirstAttack.Load(ATTACK1);
@@ -120,7 +146,6 @@ void CSceneGame::Init()
 	mImageDush.Load(TEX_DUSH);
 	mImageMoveKey.Load(TEX_BUTTON);
 	if (mVoiceSwitch == true) {
-
 	 mBgmStart.Repeat();
 	}
 	//テキストフォントの読み込みと設定
@@ -159,9 +184,9 @@ void CSceneGame::Init()
 	CRes::sBoss.SeparateAnimationSet(0, 500, 550, "death - 02");
 	CRes::sBoss.SeparateAnimationSet(0, 565, 650, "death - 03");
 	
-	new CItem(CVector(-20.0f, 2.0f, -10.0f),
+	mpItem=new CItem(CVector(-20.0f, 2.0f, -10.0f),
 		CVector(), CVector(1.5f, 1.5f, 1.5f));
-	new CTarget(mPlayer.mPosition,
+	mpTarget=new CTarget(mPlayer.mPosition,
 		CVector(), CVector(0.5f, 0.5f, 0.5f));
 	mpEnemySummon = new CEnemySummon(CVector(-36.0f, -2.0f, -59.0f),
 		CVector(), CVector(0.5f, 0.5f, 0.5f));
@@ -232,7 +257,10 @@ void CSceneGame::BgmGameClear() {
 	}
 }
 void CSceneGame::Update() {
+	/*
+	for (size_t i; i < mEnemy2List.size(); i++) {
 
+	}*/
 	if (mBossSwitch == true) {
 		//新しく作る
 		mpBoss = new CBoss(CVector(0.0f, 10.0f, 0.0f),
@@ -261,17 +289,20 @@ void CSceneGame::Update() {
 		BgmGameOver();
 		break;
 	}
-	if (CBoss::mHp > 0) {
-		mTimeCount++;
-		if (mTimeCount % 60 == 0) {
-			mTimeSecond++;
-		}
-		if (mTimeSecond == 60) {
-			mTimeMinute++;
-			mTimeSecond = 0;
+	if (mpBoss) {
+
+
+		if (mpBoss->mHp > 0) {
+			mTimeCount++;
+			if (mTimeCount % 60 == 0) {
+				mTimeSecond++;
+			}
+			if (mTimeSecond == 60) {
+				mTimeMinute++;
+				mTimeSecond = 0;
+			}
 		}
 	}
-
 	//敵の生成間隔
 	if (mSpawn >= 0) {
 		mSpawn--;
@@ -289,6 +320,8 @@ void CSceneGame::Update() {
 			if (mSpawn <= 0) {
 				mpEnemy2 = new CEnemy2(mpEnemySummon->mPosition,
 					CVector(), CVector(0.75f, 0.75f, 0.75f));
+				//push_back  元は同じクラスからだが別々のポインタ生成
+				mEnemy2List.push_back(mpEnemy2);//管理リストに入れる
 				mpEnemy2->Init(&CRes::sScorp);
 				mEnemy2Count++;
 				mSpawn = 60;
@@ -308,6 +341,9 @@ void CSceneGame::Update() {
 			if (mSpawn2 <= 0) {
 				mpEnemy3 = new CEnemy3(mpEnemySummon2->mPosition, CVector(0.0f, 0.0f, 0.0f),
 					CVector(1000.5f, 1000.5f, 1000.5f));
+
+				//push_back  元は同じクラスからだが別々のポインタ生成
+				mEnemy3List.push_back(mpEnemy3);//管理リストに入れる
 				mEnemy3Count++;
 				mSpawn2 = 120;
 			}
@@ -354,69 +390,83 @@ void CSceneGame::Render() {
 	//2D描画開始
 	CUtil::Start2D(0, 800, 0, 600);
 	char buf[64];
-	if (CBoss::mHp > 0 && mPlayer.mHp > 0) {
-		//時間（分）
-		if (mTimeMinute < 10) {
-			sprintf(buf, "0%d:", mTimeMinute);
-			mFont.DrawString(buf, 700, 500, 8, 16);
-		}
-		else {
-			sprintf(buf, "%d:", mTimeMinute);
-			mFont.DrawString(buf, 700, 500, 8, 16);
+	if (mpBoss) {
+
+
+		if (mpBoss->mHp > 0 && mPlayer.mHp > 0) {
+			//時間（分）
+			if (mTimeMinute < 10) {
+				sprintf(buf, "0%d:", mTimeMinute);
+				mFont.DrawString(buf, 700, 500, 8, 16);
+			}
+			else {
+				sprintf(buf, "%d:", mTimeMinute);
+				mFont.DrawString(buf, 700, 500, 8, 16);
+			}
+
+			//時間（秒）
+			if (mTimeSecond < 10) {
+				sprintf(buf, "0%d", mTimeSecond);
+				mFont.DrawString(buf, 740, 500, 8, 16);
+			}
+			else {
+				sprintf(buf, "%d", mTimeSecond);
+				mFont.DrawString(buf, 740, 500, 8, 16);
+			}
+
 		}
 
-		//時間（秒）
-		if (mTimeSecond < 10) {
-			sprintf(buf, "0%d", mTimeSecond);
-			mFont.DrawString(buf, 740, 500, 8, 16);
+		else if (mpBoss->mHp <= 0) {
+			mGameClear = true;
+			sprintf(buf, "GAMECLEAR");
+			mFont.DrawString(buf, 300, 300, 16, 32);
+
+			sprintf(buf, "PUSH CLICK");
+			mFont.DrawString(buf, 300, 200, 16, 32);
+			if (CKey::Once(VK_LBUTTON)) {
+
+				mNextScene = CScene::ETITLE;
+				mSceneChange = true;
+				CFade::SetFade(CFade::FADE_OUT);
+			}
 		}
-		else {
-			sprintf(buf, "%d", mTimeSecond);
-			mFont.DrawString(buf, 740, 500, 8, 16);
+		if (mBossGaugeSwitch == true && mpBoss->mHp > 0) {
+			sprintf(buf, "BOSS");
+			mFont.DrawString(buf, 300, 570, 32, 16);
 		}
-		
+	}
+	if (mPlayer.mHp <= 0) {
+		mGameOver = true;
+		sprintf(buf, "GAMEOVER");
+		mFont.DrawString(buf, 300, 300, 16, 32);
+
+		sprintf(buf, "PUSH CLICK");
+		mFont.DrawString(buf, 300, 200, 16, 32);
+		if (CKey::Once(VK_LBUTTON)) {
+
+			mNextScene = CScene::ETITLE;
+			mSceneChange = true;
+			CFade::SetFade(CFade::FADE_OUT);
+
+		}
+	}
+	else {
+
 		mImageMouse.Draw(570, 770, 0, 170, 0, 500, 500, 0);
 		mImageMoveKey.Draw(0, 100, 50, 200, 0, 500, 500, 0);
 		mImageCkey.Draw(120, 200, 60, 210, 0, 500, 500, 0);
 		mImageWork.Draw(0, 100, 0, 100, 0, 250, 250, 0);
 		mImageDush.Draw(120, 190, 20, 100, 0, 200, 210, 0);
 	}
-	else if (CBoss::mHp <= 0) {
-		sprintf(buf, "GAMECLEAR");
-		mFont.DrawString(buf, 300, 300, 16, 32);
-		
-		sprintf(buf, "PUSH CLICK");
-		mFont.DrawString(buf, 300, 200, 16, 32);
-		if (CKey::Once(VK_LBUTTON)){
-			
-			mNextScene = CScene::ETITLE;
-			mSceneChange = true;
-			CFade::SetFade(CFade::FADE_OUT);
-		}
-	}
-	else if (mPlayer.mHp <= 0) {
-		sprintf(buf, "GAMEOVER");
-		mFont.DrawString(buf, 300, 300, 16, 32);
-		
-		sprintf(buf, "PUSH CLICK");
-		mFont.DrawString(buf, 300, 200, 16, 32);
-		if (CKey::Once(VK_LBUTTON)) {
-		
-			mNextScene = CScene::ETITLE;
-			mSceneChange = true;
-			CFade::SetFade(CFade::FADE_OUT);
-			
-		}
-	}if(mBossGaugeSwitch == true&&CBoss::mHp>0){
-		sprintf(buf, "BOSS");
-		mFont.DrawString(buf, 300, 570, 32, 16);
-     }
 	//2Dの描画終了
 	CUtil::End2D();
 	//CXPlayerのパラメータ等の２D描画は一番最後
 	CXPlayer::GetInstance()->Render2D();
-	//CXPlayerのパラメータ等の２D描画は一番最後
-	CBoss::GetInstance()->Render2D();
+	if (mpBoss) {
+
+		//CXPlayerのパラメータ等の２D描画は一番最後
+		CBoss::GetInstance()->Render2D();
+	}
 }
 
 CScene::EScene CSceneGame::GetNextScene()

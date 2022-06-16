@@ -147,9 +147,6 @@
     <ClCompile Include="CXCharacter.cpp">
       <Filter>ソース ファイル\Lib</Filter>
     </ClCompile>
-    <ClCompile Include="CShadowMap.cpp">
-      <Filter>ソース ファイル\Lib</Filter>
-    </ClCompile>
     <ClCompile Include="CShader.cpp">
       <Filter>ソース ファイル\Lib</Filter>
     </ClCompile>
@@ -213,6 +210,9 @@
     <ClCompile Include="CFade.cpp">
       <Filter>ソース ファイル\Base\シーン</Filter>
     </ClCompile>
+    <ClCompile Include="CShadowMap.cpp">
+      <Filter>ソース ファイル\Lib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -274,9 +274,6 @@
     </ClInclude>
     <ClInclude Include="CInput.h">
       <Filter>ヘッダー ファイル\Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="CShadowMap.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="CBoss.h">
       <Filter>ヘッダー ファイル\Base\敵関係</Filter>
@@ -370,6 +367,9 @@
     </ClInclude>
     <ClInclude Include="CFade.h">
       <Filter>ヘッダー ファイル\Base\サウンド,エフェクト,テクスチャ</Filter>
+    </ClInclude>
+    <ClInclude Include="CShadowMap.h">
+      <Filter>ヘッダー ファイル\Lib</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -94,7 +94,7 @@ void CEnemy3::Update() {
 	float dy = vp.Dot(vy);
 	//前ベクトルとの内積を求める
 	float dz = vp.Dot(vz);
-
+	
 	float margin = 0.1f;
 
 	//左右方向へ回転
@@ -103,6 +103,12 @@ void CEnemy3::Update() {
 	}
 	else if (dx < -margin) {
 		mRotation.mY -= 3.0f;//右へ回転
+	}
+	if (dy > margin) {
+		mRotation.mX -= 3.0f;
+	}
+	else if (dy < -margin) {
+		mRotation.mX += 3.0f;
 	}
 	CTransform::Update();//行列更新
 	int r = rand() % 60; //rand()は整数の乱数を返す

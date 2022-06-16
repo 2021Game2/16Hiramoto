@@ -19,6 +19,7 @@ private:
 	CCollider mColSphereHead;
 	CCollider mColSphereRightFront;
 	CCollider mColSphereLeftFront;
+	CCollider mColSphereAttack;
 	CEffect2* mBossEffect;
 	CVector mCollisionEnemy;
 	CCharacter* mpPlayer;//プレイヤーのポインタ
@@ -34,12 +35,18 @@ private:
 	float mColliderCount;
 	float mGravity;//重力
 	float mTime;//ジャンプする時の時間を計測
+	int mBossJumpCount;
 	bool mBossBgm;
 	bool mBossBgmDeath;
 	int  mBossColliderCheck;
-
+	float mAttack4Move;
+	int mAttack4MoveCount;
+	int mAttack4Count;
+	float mAttack4RotationCount;
 	CTexture mImageGauge; //ゲージ画像
 public:
+	float mAttackRotation;
+	float mRotationCount;
 	CCollider mColSearch;//サーチ用コライダ
 	bool mColSearchCount;
 	bool mBossAttackHit;
@@ -49,7 +56,7 @@ public:
 	static CBoss* GetInstance();
 	static CBoss* mpBossInstance;
 	static int mBossAttackCount;
-	static int mHp;//体力
+	 int mHp;//体力
 	int mEffectCount;
 	//コンストラクタ	
 	CBoss();
@@ -68,6 +75,7 @@ public:
 	void Attack();	//攻撃処理
     void Attack2();
 	void Attack3();
+	void Attack4();
 	void Damaged();		//被弾処理
 	void Death();		//死亡処理
 	
@@ -79,6 +87,7 @@ public:
 		EATTACK,	//攻撃
         EATTACK2,
 		EATTACK3,
+		EATTACK4,
 		EDAMAGED,	//被弾
 		EDEATH,		//死亡
 		

@@ -781,7 +781,6 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 									//ìGÇÃçUåÇîªíËÇ™ìKópÇ≥ÇÍÇƒÇ¢ÇÈä‘
 									if (((CBoss*)(o->mpParent))->mBossAttackHit == true)
 									{
-
 										if (mHp > 0) {
 											//å„ÇÎÇ…â∫Ç™ÇÈ
 											mColliderCount = 5.0f;
@@ -833,7 +832,7 @@ void CXPlayer::Render2D()
 	float spRate = (float)mSpAttack / (float)SPPOINT_MAX;
 	float spGaugeWid = GAUGE_WID_MAXSP * spRate;
 
-	if (mHp > 0 && CBoss::mHp > 0) {
+	if (CSceneGame::mGameClear==false && CSceneGame::mGameOver == false) {
 
 
 		mImageGauge.Draw(20, GAUGE_WID_MAXHP, 500, 510, 201, 300, 63, 0);//ÉQÅ[ÉWîwåi

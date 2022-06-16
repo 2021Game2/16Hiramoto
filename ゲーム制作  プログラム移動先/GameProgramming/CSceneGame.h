@@ -16,6 +16,7 @@
 #include"CBoss.h"
 #include"CShadowMap.h"
 #include"CTarget.h"
+#include"CItem.h"
 /*
 ゲームのシーン
 */
@@ -38,21 +39,25 @@ private:
 	int mTimeCount;
 	CShadowMap mShadowMap;
 	CMap mMap;//フィールド	
-	CRock*mpRock;//周りの岩
-	CFlag* mpFlag;//木
 	//キャラクタのインスタンス
 	CXPlayer mPlayer;//プレイヤー
 
-	//敵のインスタンス
 	
+	CRock*mpRock;//周りの岩
+	CFlag* mpFlag;//旗
+	//敵のインスタンス
 	CEnemy2* mpEnemy2;//敵２
 	CEnemy3* mpEnemy3;//敵３
 	CEnemySummon* mpEnemySummon;//敵２の生成場所
 	CEnemySummon* mpEnemySummon2;//敵３の生成場所
+	CTarget* mpTarget;
+	CItem* mpItem;
 	CBoss* mpBoss;//ボス
 	bool mSceneChange;
 	EScene mNextScene;
 public:
+	std::vector<CEnemy2*> mEnemy2List;//Enemy2専用の部屋を作る
+	std::vector<CEnemy3*> mEnemy3List;
 	CTexture mImageMouse;
 	CTexture mImageMoveKey;
 	CTexture mImageCkey;
@@ -70,6 +75,8 @@ public:
 	 bool mBgmBossStopper;
 	 bool mBgmOverStopper;
 	 bool mBgmClearStopper;
+	 static bool mGameClear;
+	 static bool mGameOver;
 	static bool mBgmCountCheck;
 	static bool mBossSwitch;
 	static bool mBossGaugeSwitch;
