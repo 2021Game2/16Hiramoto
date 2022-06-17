@@ -39,10 +39,12 @@ private:
 	bool mBossBgm;
 	bool mBossBgmDeath;
 	int  mBossColliderCheck;
-	float mAttack4Move;
+	float mAttack4MoveX;
+	float mAttack4MoveZ;
 	int mAttack4MoveCount;
 	int mAttack4Count;
 	float mAttack4RotationCount;
+	int mAttack4directionCount;
 	CTexture mImageGauge; //ÉQÅ[ÉWâÊëú
 public:
 	float mAttackRotation;

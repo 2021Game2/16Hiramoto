@@ -111,6 +111,7 @@ void CBoss::Init(CModelX* model)
 }
 //待機処理
 void CBoss::Idle() {
+	mPosition.mY -= G;
 	//30溜まるまで待機のアニメーション
 	ChangeAnimation(8, true, 120);
 	mMove++;
@@ -244,6 +245,9 @@ void CBoss::Attack3() {
 	
 }
 void CBoss::Attack4() {
+	
+		mPosition.mY -= G;
+	
 	ChangeAnimation(6, false, 2000);
 	switch (mAttack4Count) {
 	case(1):
@@ -254,23 +258,61 @@ void CBoss::Attack4() {
 		}
 		else if (mAttack4RotationCount <= -90.0f) {
             mAttackRotation = 0.0f;
-			mAttack4Move = 0.5f;
+			mAttack4directionCount = 1;
+			mAttack4MoveX = 0.5f;
+			mAttack4MoveZ = 0.5f;
 			mAttack4Count = 2;
 		}
 		break;
 	case(2):
 		mAttack4MoveCount++;
-		mPosition.mX+=mAttack4Move;
-		if (mAttack4MoveCount >= 120){
-			mAttack4MoveCount = 0;
-			mAttack4Move *= -1;
-		}
+		mPosition.mX+=mAttack4MoveX;
+		mPosition.mZ += mAttack4MoveZ;
+		
+			switch (mAttack4directionCount) {
+			case(1)://X+Z+
+				
+				if (mAttack4MoveCount >= 180) {
+					mAttack4MoveCount = 0;
+					mAttack4MoveZ *= -1;
+					mAttack4directionCount = 2;
+				}
+				break;
+			case(2)://X-Z+
+				
+				if (mAttack4MoveCount >= 180) {
+					mAttack4MoveCount = 0;
+					mAttack4MoveX *= -1;
+					mAttack4directionCount = 3;
+				}
+
+				break;
+			case(3)://X-Z-
+				
+				if (mAttack4MoveCount >= 180) {
+					mAttack4MoveCount = 0;
+					mAttack4MoveZ *= -1;
+					mAttack4directionCount = 4;
+				}
+				break;
+			case(4)://X+Z-
+				
+				if (mAttack4MoveCount >= 180) {
+					mAttack4MoveCount = 0;
+					
+					mAttack4MoveZ *= -1;
+					mAttack4directionCount = 1;
+				}
+				break;
+			}
+		
 		mRotation.mY += mAttackRotation;
 		mAttack4RotationCount += mAttackRotation;
 		if (mAttackRotation < ROTATIONCOUNT) {
 			mAttackRotation += ROTATION;
 		}
 		else if (mAttack4RotationCount >= ROTATIONBASE) {
+			mAttack4directionCount = 0;
 			mAttack4Count = 3;
 		}
 		break;
@@ -294,18 +336,7 @@ void CBoss::Attack4() {
 
 		break;
 	}
-	/*
-	if (mRotationCount >= 0.0f) {
-         //だんだん回線量を増やす
-		if (mAttackRotation < ROTATIONCOUNT) {
-		mAttackRotation += ROTATION;
-		}
-		mRotation.mY += mAttackRotation;
-		//アニメーションの終了と回転の終了をあわせる
-		//次の行動をスムーズに
-		mRotationCount -= ROTATIONCOUNT;
-		mBossAttackHit = true;
-	}*/
+	
 	
 }
 //ダメージ処理
@@ -436,7 +467,7 @@ void CBoss::Update() {
 	if (mHp <= 0 && mState != EDEATH) {
 		mState = EDEATH;
 	}
-
+	
 	mEffectCount--;
 	
 	
