@@ -10,12 +10,16 @@ class CMap : public CCharacter
 {
 private:
 	CMatrix mBackGroundMatrix;
-	CModel mModel;
+	
+	//モデルデータ
+	static CModel mModel;
 
-
+	CModel* mpModel; //モデルのポインタ
 public:
+	CMap(const CVector& position, const CVector& rotation, const CVector& scale);
 	CMap();
-
+	void Update();
+	
 	void TaskCollision();
 };
 

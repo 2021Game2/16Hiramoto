@@ -1,10 +1,10 @@
+
+#ifndef CITEM_H
+#define CITEM_H
 #include"CCollider.h"
 #include"CModel.h"
 #include"CCharacter.h"
 #include"CXPlayer.h"
-#ifndef CITEM_H
-#define CITEM_H
-
 class CItem : public CCharacter {
 private:
 	//ƒRƒ‰ƒCƒ_

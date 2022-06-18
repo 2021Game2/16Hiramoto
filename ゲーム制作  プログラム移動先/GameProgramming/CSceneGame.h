@@ -40,10 +40,11 @@ private:
 	CShadowMap mShadowMap;
 	CMap mMap;//フィールド	
 	//キャラクタのインスタンス
-	CXPlayer mPlayer;//プレイヤー
+	CXPlayer* mpPlayer;//プレイヤー
 
 	
 	CRock*mpRock;//周りの岩
+	CMap* mpMap;
 	CFlag* mpFlag;//旗
 	//敵のインスタンス
 	CEnemy2* mpEnemy2;//敵２

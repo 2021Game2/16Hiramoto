@@ -44,7 +44,7 @@ CBoss::CBoss()
 	, mColSphereHead(this, &mMatrix, CVector(0.0f, 1.0f, 5.0f), 3.0f)
 	, mColSphereRightFront(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 2.0f)
 	, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
-	, mColSphereAttack(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 20.0f)
+	, mColSphereAttack(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 40.0f)
 	, mpPlayer(0)
 	, mJump(0.0f)
 	, mEnemyDamage(60)
@@ -225,6 +225,7 @@ void CBoss::Attack2() {
 	}
 }
 void CBoss::Attack3() {
+	ChangeAnimation(8, false, 120);
 	mPosition.mY += mJump;
 	if (mJump > -0.5f) {
 				mJump -= G;
@@ -234,7 +235,6 @@ void CBoss::Attack3() {
 		mBossAttackHit = true;
 			mJump -= G2;
 	}
-	ChangeAnimation(8, false, 120);
 	if (mJumpStopper == true) {
 		if (mAnimationFrame >= mAnimationFrameSize) {	
 			mColSphereAttack.mRenderEnabled = false;
@@ -272,7 +272,7 @@ void CBoss::Attack4() {
 			switch (mAttack4directionCount) {
 			case(1)://X+Z+
 				
-				if (mAttack4MoveCount >= 180) {
+				if (mAttack4MoveCount >= 60) {
 					mAttack4MoveCount = 0;
 					mAttack4MoveZ *= -1;
 					mAttack4directionCount = 2;
@@ -280,7 +280,7 @@ void CBoss::Attack4() {
 				break;
 			case(2)://X-Z+
 				
-				if (mAttack4MoveCount >= 180) {
+				if (mAttack4MoveCount >= 60) {
 					mAttack4MoveCount = 0;
 					mAttack4MoveX *= -1;
 					mAttack4directionCount = 3;
@@ -289,7 +289,7 @@ void CBoss::Attack4() {
 				break;
 			case(3)://X-Z-
 				
-				if (mAttack4MoveCount >= 180) {
+				if (mAttack4MoveCount >= 60) {
 					mAttack4MoveCount = 0;
 					mAttack4MoveZ *= -1;
 					mAttack4directionCount = 4;
@@ -297,7 +297,7 @@ void CBoss::Attack4() {
 				break;
 			case(4)://X+Z-
 				
-				if (mAttack4MoveCount >= 180) {
+				if (mAttack4MoveCount >= 60) {
 					mAttack4MoveCount = 0;
 					
 					mAttack4MoveZ *= -1;
@@ -317,14 +317,21 @@ void CBoss::Attack4() {
 		}
 		break;
 	case(3):
-		if (mAttack4RotationCount > 0.0f) {
+		if (mAttack4RotationCount > 720.0f) {
 			if (mAttackRotation > ROTATIONCOUNTM) {
-				mAttackRotation += ROTATIONMIN;
+				mAttackRotation -= ROTATION;
 			}
 			mRotation.mY += mAttackRotation;
 			mAttack4RotationCount += mAttackRotation;
 		}
-	else if (mAttack4RotationCount <= 0.0f) {
+		else if (mAttack4RotationCount > 0.0f) {
+			if (mAttackRotation > ROTATIONMIN) {
+				mAttackRotation += ROTATIONMIN;
+			}
+				mRotation.mY += mAttackRotation;
+				mAttack4RotationCount += mAttackRotation;
+		}
+	    else if (mAttack4RotationCount <= 0.0f) {
 			mAnimationFrame = mAnimationFrameSize;
 			mAttack4RotationCount = 0.0f;
 			mAttackRotation = 0.0f;
@@ -551,16 +558,11 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 
 						if (CCollider::Collision(m, o)) {
 							
-							if (mState != EATTACK) {
-								if (mState != EATTACK2) {
-									if (mState != EIDLE) {
+									if (mState ==EAUTOMOVE) {
 										if (mHp > 0) {
 											mState = EIDLE;
 										}
 									}
-								}
-
-							}
 							mColliderCount = 1.5f;
 							mCollisionEnemy = mPosition - o->mpParent->mPosition;
 							mCollisionEnemy = mCollisionEnemy.Normalize();

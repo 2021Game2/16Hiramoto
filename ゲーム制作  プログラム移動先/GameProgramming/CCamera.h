@@ -11,6 +11,9 @@
 #define DEF_CAMERA_HEAD_ADJUST 3.0f
 class CCamera :public CCharacter{
 public:
+
+	
+
 	CCamera();
 	//視点
 	CVector mEye;
@@ -60,5 +63,5 @@ public:
 };
 
 //カメラの外部参照
-extern CCamera Camera;
+extern CCamera* Camera;
 #endif

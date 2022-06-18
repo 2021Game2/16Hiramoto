@@ -185,6 +185,7 @@ void CXPlayer::Update()
 		if (CSceneGame::mVoiceSwitch == true) {
 			PlayerDamage.Play();
 		}
+
 		ChangeAnimation(4, false, 10);
 		break;
 	case EDEATH://死亡
@@ -367,8 +368,8 @@ void CXPlayer::Update()
 	}
 		//カメラ視点移動　通称無双移動
 		//カメラの左右と前後のベクトルを取得
-		CVector SideVec = Camera.GetMat().GetXVec();
-		CVector FrontVec = Camera.GetMat().GetZVec();
+		CVector SideVec = Camera->GetMat().GetXVec();
+		CVector FrontVec = Camera->GetMat().GetZVec();
 		//高さ移動はカットする
 		SideVec.mY = 0.0f;
 		FrontVec.mY = 0.0f;
@@ -538,12 +539,7 @@ void CXPlayer::Update()
 							}
 						}
 					}
-					//待機中のときにCを押しているとダッシュ
-				
-					if (mState==EIDLE) {
-						mAnimationCount = 1;
-						mState = EDUSH;
-					}
+					
 				}
 				//動いていないかつCキーを押していなければ待機
 				else {
@@ -554,6 +550,12 @@ void CXPlayer::Update()
 
 					}
 				}
+			}
+			if (CKey::Once('C')) {
+				if (Move.Length() != 0.0f) {
+					mState = EDUSH;
+				}
+				
 			}
 		}
 		//移動量正規化　斜め移動が早くなってしまう
@@ -645,7 +647,7 @@ void CXPlayer::Update()
 		 }
 		 mColEscapeStopperLine.Set(this, &mMatrix, CVector(0.0f, 3.0f, -3.0f), CVector(0.0f, 3.0f, 3.0f));
 	    //注視点設定
-	    Camera.SetTarget(mPosition);
+	    Camera->SetTarget(mPosition);
 	    CXCharacter::Update();
 }
 

@@ -4,19 +4,42 @@
 #include"CCollisionManager.h"
 #define OBJ "Resource\\3DModel\\Map\\sky.obj"
 #define MTL "Resource\\3DModel\\Map\\sky.mtl"
-CColliderMesh mColliderMesh;
-CMap::CMap()
+//CColliderMesh mColliderMesh;
+CModel CMap::mModel;//モデルデータ作成
+
+
+CMap::CMap(const CVector& position, const CVector& rotation, const CVector& scale)
+:CMap()
 {
 	mTag = EMAP;
-	mPosition = CVector(0.0f, -3.325f, 0.0f);
-	mScale = CVector(1.0f, 1.0f, 1.0f);
-	CTransform::Update();
+	mPosition = position;
+	mRotation = rotation;
+	mScale = scale;
+	//優先度を１に変更する
+	mPriority = 1;
+	CTaskManager::Get()->Remove(this);//削除して
+	CTaskManager::Get()->Add(this);//追加する
+	CTransform::Update();//行列の更新
 
-	mModel.Load(OBJ, MTL);//モデルを読み込む
-	mpModel = &mModel;//モデルのポインタ化(描画するときに必要)
-		
+  
+	//mColliderMesh.Set(this, &mMatrix, &mModel);//モデルをコライダにする
+	
+	
 	
 }
+ CMap::CMap() {
+	 //モデルのポインタ設定
+	 mpModel = &mModel;
+	 //モデルが無いときは読み込む
+	 if (mModel.mTriangles.size() == 0) {
+		 mModel.Load(OBJ, MTL);
+	 }
+}
+ void CMap::Update() {
+	 //CCharacterの更新
+	 CTransform::Update();
+ }
+
 void CMap::TaskCollision() {
 	
 }

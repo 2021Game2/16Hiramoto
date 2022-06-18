@@ -12,28 +12,7 @@
 #define OBJ "Resource\\3DModel\\EnemySummon\\egg.obj"
 #define MTL "Resource\\3DModel\\EnemySummon\\egg.mtl"
 #define HP 10
-#define HP_MAX 100				//体力最大値
-#define GAUGE_WID_MAX 400.0f	//ゲージの幅の最大値
-#define GAUGE_LEFT 20			//ゲージ描画時の左端
-#define IMAGE_GAUGE "Resource\\Gauge.png"		//ゲージ画像
 CModel CEnemySummon::mModel;
-CEnemySummon::CEnemySummon()
-
-	: mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f) 
-	,mHp(0)
-	, mEffectCount(0)
-{
-   
-
-	//モデルのポインタ設定
-	mpModel = &mModel;
-	//モデルが無いときは読み込む
-	if (mModel.mTriangles.size() == 0) {
-		mModel.Load(OBJ, MTL);
-	}
-
-	mImageGauge.Load(IMAGE_GAUGE);
-}
 CEnemySummon::CEnemySummon(const CVector& position, const CVector& rotation, const CVector& scale)
 	:CEnemySummon()
 	
@@ -50,6 +29,22 @@ CEnemySummon::CEnemySummon(const CVector& position, const CVector& rotation, con
 	CTaskManager::Get()->Remove(this);//削除して
 	CTaskManager::Get()->Add(this);//追加する
 }
+
+CEnemySummon::CEnemySummon()
+	: mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
+	, mHp(0)
+	, mEffectCount(0)
+{
+
+
+	//モデルのポインタ設定
+	mpModel = &mModel;
+	//モデルが無いときは読み込む
+	if (mModel.mTriangles.size() == 0) {
+		mModel.Load(OBJ, MTL);
+	}
+
+}
 void CEnemySummon::Update() {
 	if (mDamageCount > 0) {
 		mDamageCount--;
@@ -60,6 +55,8 @@ void CEnemySummon::Update() {
 			mHp = 0;
 		 mEnabled=false;
 		}
+		//CCharacterの更新
+		CTransform::Update();
 }
 //Collision(コライダ１、コライダ２）
 void CEnemySummon::Collision(CCollider* m, CCollider* o) {
@@ -91,10 +88,6 @@ void CEnemySummon::Collision(CCollider* m, CCollider* o) {
 			}
 		}
 	}
-}
-void CEnemySummon::Render() {
-	//親の描画処理
-	CCharacter::Render();
 }
 void CEnemySummon::TaskCollision() {
 	//コライダの優先度変更

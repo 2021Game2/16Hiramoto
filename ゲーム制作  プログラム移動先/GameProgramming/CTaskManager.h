@@ -15,6 +15,7 @@ protected:
 	//デフォルトコンストラクタ
 	CTaskManager();
 public:
+	static void Destroy();
 	//インスタンスの取得
 	static CTaskManager* Get();
 	CTask mHead;//先頭タスク

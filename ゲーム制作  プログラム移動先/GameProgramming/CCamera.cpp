@@ -11,7 +11,7 @@
 #include "CUtil.h"
 #include "CTaskManager.h"
 //カメラの外部変数
-CCamera Camera;
+CCamera* Camera;
 
 #define WIN_CENTRAL_X WINDOW_WIDTH/2 //画面の中央（X軸）
 #define WIN_CENTRAL_Y WINDOW_HEIGHT/2 //画面の中央 （Y軸）

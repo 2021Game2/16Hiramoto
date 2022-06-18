@@ -51,7 +51,7 @@ void CBillBoard2::Render()
 void CBillBoard2::Render(CMaterial *mpMaterial) {
 
 	CMatrix mat;
-	mat = Camera.GetMat();
+	mat = Camera->GetMat();
 
 	float	x1, x2, y1, y2, s, c;
 	CVector		v[4];

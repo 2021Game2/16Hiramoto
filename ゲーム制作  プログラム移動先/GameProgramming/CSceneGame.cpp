@@ -81,7 +81,7 @@ CSceneGame::CSceneGame()
     ,mBgmOverStopper(true)
     ,mBgmClearStopper(true)
 	,mpBoss(NULL)
-	
+	,mpMap(NULL)
 	,mpItem(NULL)
 	,mpTarget(NULL)
 	,mpFlag(NULL)
@@ -94,21 +94,25 @@ CSceneGame::CSceneGame()
 
 }
 CSceneGame::~CSceneGame() {
-	Sleep(2000);
+	
+
 	
 	if (mpBoss) delete mpBoss;
 	if (mpEnemySummon) delete mpEnemySummon;
 	if (mpEnemySummon2) delete mpEnemySummon2;
+	if (mpMap) delete mpMap;
 	if (mpFlag) delete mpFlag;
 	if (mpItem) delete mpItem;
 	if (mpRock) delete mpRock;
 	if (mpTarget) delete mpTarget;
+	/*
 	for (size_t i; i < mEnemy2List.size(); i++) {
 		delete mEnemy2List[i];
 	}
 	for (size_t i; i < mEnemy3List.size(); i++) {
 		delete mEnemy3List[i];
-	}
+	}*/
+	CTaskManager::Destroy();
 }
 void ShadowRender() {
 	//影の影響を受ける用になる
@@ -120,7 +124,7 @@ void ShadowEffectRender() {
 void CSceneGame::Init()
 
 {
-
+	Camera = new CCamera();
 	mScene = CScene::EGAME;
 	CFade::SetFade(CFade::FADE_IN);
 	mSceneChange = false;
@@ -152,10 +156,11 @@ void CSceneGame::Init()
 	mFont.LoadTexture(FONT, 1, 4096 / 64);
 	CRes::sModelX.Load(MODEL_FILE);
 	//キャラクターにモデルを設定
-	mPlayer.Init(&CRes::sModelX);
-	mPlayer.mPosition = CVector(-45.0f, 1.0f, -120.0f);
+	mpPlayer = new CXPlayer();
+	mpPlayer->Init(&CRes::sModelX);
+	mpPlayer->mPosition = CVector(-45.0f, 1.0f, -120.0f);
 	//カメラ初期化
-	Camera.Init();
+	Camera->Init();
 	CRes::sScorp.Load(SCOPION);
 	CRes::sScorp.SeparateAnimationSet(0, 0, 72, "walk");
 	CRes::sScorp.SeparateAnimationSet(0, 72, 120, "strafe left");
@@ -186,11 +191,11 @@ void CSceneGame::Init()
 	
 	mpItem=new CItem(CVector(-20.0f, 2.0f, -10.0f),
 		CVector(), CVector(1.5f, 1.5f, 1.5f));
-	mpTarget=new CTarget(mPlayer.mPosition,
+	mpTarget=new CTarget(mpPlayer->mPosition,
 		CVector(), CVector(0.5f, 0.5f, 0.5f));
 	mpEnemySummon = new CEnemySummon(CVector(-36.0f, -2.0f, -59.0f),
 		CVector(), CVector(0.5f, 0.5f, 0.5f));
-
+	mpMap = new CMap(CVector(0.0f, -3.325f, 0.0f), CVector(), CVector(1.0f, 1.0f, 1.0f));
 	mpEnemySummon2 = new CEnemySummon(CVector(6.0f, 8.0f, 14.0f),
 		CVector(), CVector(0.5f, 0.5f, 0.5f));
 
@@ -382,7 +387,7 @@ void CSceneGame::Update() {
 void CSceneGame::Render() {
 	//タスクの描画
 	//CTaskManager::Get()->Render();
-	Camera.CameraRender();//カメラ設定
+	Camera->CameraRender();//カメラ設定
 	mShadowMap.Render();//影設定
 	//コライダの描画
 	//ここをコメントにするとすべてのコライダ非表示
@@ -393,7 +398,7 @@ void CSceneGame::Render() {
 	if (mpBoss) {
 
 
-		if (mpBoss->mHp > 0 && mPlayer.mHp > 0) {
+		if (mpBoss->mHp > 0 && mpPlayer->mHp > 0) {
 			//時間（分）
 			if (mTimeMinute < 10) {
 				sprintf(buf, "0%d:", mTimeMinute);
@@ -435,7 +440,7 @@ void CSceneGame::Render() {
 			mFont.DrawString(buf, 300, 570, 32, 16);
 		}
 	}
-	if (mPlayer.mHp <= 0) {
+	if (mpPlayer->mHp <= 0) {
 		mGameOver = true;
 		sprintf(buf, "GAMEOVER");
 		mFont.DrawString(buf, 300, 300, 16, 32);

@@ -92,5 +92,4 @@ public:
 	void Collision(CCollider* m, CCollider* o);
 	void Render2D();
 };
-
 #endif

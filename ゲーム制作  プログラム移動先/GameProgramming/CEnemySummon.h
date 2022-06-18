@@ -14,7 +14,6 @@ private:
 	
 	int mDamageCount;
 	int mEffectCount;
-	CTexture mImageGauge; //ゲージ画像
 public:
 	int mHp;
 	//モデルデータ
@@ -28,8 +27,7 @@ public:
 	//Collision(コライダ１、コライダ２）
 	void Collision(CCollider* m, CCollider* o);
 	void TaskCollision();
-	void Render();
-	void Render2D();
+	
 };
 
 
