@@ -96,8 +96,6 @@ CSceneGame::CSceneGame()
 
 }
 CSceneGame::~CSceneGame() {
-	
-
 	/*
 	if (mpBoss) delete mpBoss;
 	if (mpEnemySummon) delete mpEnemySummon;
@@ -107,7 +105,6 @@ CSceneGame::~CSceneGame() {
 	if (mpItem) delete mpItem;
 	if (mpRock) delete mpRock;
 	if (mpTarget) delete mpTarget;
-	
 	for (size_t i; i < mEnemy2List.size(); i++) {
 		delete mEnemy2List[i];
 	}
@@ -392,7 +389,7 @@ void CSceneGame::Render() {
 	mShadowMap.Render();//影設定
 	//コライダの描画
 	//ここをコメントにするとすべてのコライダ非表示
-	CCollisionManager::Get()->Render();
+	//CCollisionManager::Get()->Render();
 	//2D描画開始
 	CUtil::Start2D(0, 800, 0, 600);
 	char buf[64];

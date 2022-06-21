@@ -1,7 +1,56 @@
-﻿  CEnemy2.cpp
+﻿  CBillBoard.cpp
+  CBillboard2.cpp
+  CBoss.cpp
+  CBullet.cpp
+  CCamera.cpp
+  CCharacter.cpp
+  CCollider.cpp
+  CColliderLine.cpp
+  CColliderMesh.cpp
+  CColliderTriangle.cpp
+  CCollisionManager.cpp
+  CEffect.cpp
+  CEffect2.cpp
+  CEnemy.cpp
+  CEnemy2.cpp
+  CEnemy3.cpp
+  CEnemySummon.cpp
+  CFade.cpp
+  CInput.cpp
+  CItem.cpp
+  コンパイル中...
+  CKey.cpp
+  CMap.cpp
+  CMaterial.cpp
+  CMatrix.cpp
+  CModel.cpp
+  CModelX.cpp
+  CMyShader.cpp
+  CPlayer.cpp
+  CRes.cpp
+  CRock.cpp
+  CSceneGame.cpp
+  CSceneManager.cpp
+  CSceneTitle.cpp
+  CShader.cpp
+  CShadowMap.cpp
+  CSound.cpp
+  CTarget.cpp
+  CTaskManager.cpp
+  CText.cpp
+  CTexture.cpp
+  コンパイル中...
+  CTransform.cpp
+  CFlag.cpp
+  CTriangle.cpp
+  CUtil.cpp
+  CVector.cpp
+  CXCharacter.cpp
+  CXPlayer.cpp
+  main.cpp
   コード生成しています。
-  1 of 921 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    12 functions had inline decision re-evaluated but remain unchanged
+  907 of 921 functions (98.5%) were compiled, the rest were copied from previous compilation.
+    48 functions were new in current compilation
+    1 functions had inline decision re-evaluated but remain unchanged
   コード生成が終了しました。
-  GameProgramming.vcxproj -> C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３\16Hiramoto\ゲーム制作  プログラム移動先\ソースプロジェクト\Release\GameProgramming.exe
+  GameProgramming.vcxproj -> C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３．１\16Hiramoto\開発用\Release\GameProgramming.exe

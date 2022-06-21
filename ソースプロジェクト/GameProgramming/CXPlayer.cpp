@@ -23,7 +23,7 @@
 #define GAUGE_WID_MAXHP 400.0f	//HPゲージの幅の最大値
 #define GAUGE_WID_MAXST 400.0f //スタミナゲージの幅の最大値
 #define GAUGE_WID_MAXSP 300.0f//SPポイントゲージの幅の最大値
-#define GAUGE_LEFT 20			//ゲージ描画時の左端
+#define GAUGE_LEFT 20	//ゲージ描画時の左端
 #define IMAGE_GAUGE "Resource\\png,tga\\Gauge.png"		//ゲージ画像
 #define G 0.1f//重力
 #define G2 1.5f//スペシャル攻撃時の重力
@@ -60,13 +60,14 @@ CXPlayer::CXPlayer()
 	, mDamageCount(0)
 	,mAnimationCount(0)
 	,mColliderCount(1.0f)
-	,mTime(0.0f)
+
 	,mSpeed(0.0f)
 	,mPlayerBgm(true)
 	, mMoveCheck(false)
 	, mAnimationFrameLock(false)
 	, mJumpStopper(true)
 	,mEffectStopper(false)
+	, mGaugeEnabled(true)
 {
 	//タグにプレイヤーを設定します
 	mTag = EPLAYER;
@@ -551,12 +552,7 @@ void CXPlayer::Update()
 					}
 				}
 			}
-			if (CKey::Once('C')) {
-				if (Move.Length() != 0.0f) {
-					mState = EDUSH;
-				}
-				
-			}
+			
 		}
 		//移動量正規化　斜め移動が早くなってしまう
 		//ジャンプ時などはY軸を正規化しない
@@ -834,9 +830,8 @@ void CXPlayer::Render2D()
 	float spRate = (float)mSpAttack / (float)SPPOINT_MAX;
 	float spGaugeWid = GAUGE_WID_MAXSP * spRate;
 
-	if (CSceneGame::mGameClear==false && CSceneGame::mGameOver == false) {
-
-
+	if (mGaugeEnabled==true) {
+		
 		mImageGauge.Draw(20, GAUGE_WID_MAXHP, 500, 510, 201, 300, 63, 0);//ゲージ背景
 		mImageGauge.Draw(20, hpGaugeWid, 500, 510, 0, 99, 63, 0);//体力ゲージ
 
