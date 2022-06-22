@@ -63,16 +63,21 @@ void CTarget::Update() {
 	float margin = 0.1f;
 	//ç∂âEï˚å¸Ç÷âÒì]
 	if (dx > margin) {
-		mRotation.mY += 3.0f;//ç∂Ç÷âÒì]
+		
+			//mRotation.mY += 3.0f;//ç∂Ç÷âÒì]
+		
+		  mRotation.mY += 0.1f;//ç∂Ç÷âÒì]
+		
 	}
 	else if (dx < -margin) {
-		mRotation.mY -= 3.0f;//âEÇ÷âÒì]
+		if()
+		mRotation.mY -= 0.1f;//âEÇ÷âÒì]
 	}
 	if (dy > margin) {
-		mRotation.mX -= 3.0f;
+		mRotation.mX -= 0.1f;
 	}
 	else if(dy<-margin) {
-		mRotation.mX += 3.0f;
+		mRotation.mX += 0.1f;
 	}
 	
 	if (CSceneGame::mBossGaugeSwitch == true) {

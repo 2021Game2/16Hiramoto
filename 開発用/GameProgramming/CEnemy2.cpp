@@ -24,7 +24,7 @@ CEnemy2::CEnemy2()
 	, mColSphereBody(this,&mMatrix,  CVector(0.0f,1.0f,0.0f),2.0f)
 	,mHp(HP)
 	,mJump(0.0f)
-	, mEnemyDamage(60)
+	,mEnemyDamage(60)
 	,mMove(0)
 	,mMoveCount(false)
 	,mColliderCount(0.0f)
@@ -58,7 +58,7 @@ CEnemy2::CEnemy2(const CVector& position, const CVector& rotation, const CVector
 	mPriority = 1;
 	CTaskManager::Get()->Remove(this);//削除して
 	CTaskManager::Get()->Add(this);//追加する
-	mHp = mHp * mEnemyHpPercent;
+	
 	mEnabled = true;
 }
 
@@ -206,10 +206,7 @@ void CEnemy2::Death() {
 //更新処理
 void CEnemy2::Update() {
 
-	mEnemyLevel = rand() % 10 + 1;
-	mEnemyHpPercent += mEnemyLevel / 10;
 	
-	mEffectCount--;
 	//mpPlayer = mpPointPlayer;
 	//アニメーションの管理
 	switch (mAnimationIndex) {
@@ -260,6 +257,8 @@ void CEnemy2::Update() {
 		
 		mEnabled = false;
 	}
+
+	mEffectCount--;
 	CXCharacter::Update();
 }
 

@@ -211,7 +211,7 @@
       <Filter>ソース ファイル\Base\シーン</Filter>
     </ClCompile>
     <ClCompile Include="CShadowMap.cpp">
-      <Filter>ソース ファイル\Lib</Filter>
+      <Filter>ソース ファイル\Base\サウンド,エフェクト,テクスチャ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

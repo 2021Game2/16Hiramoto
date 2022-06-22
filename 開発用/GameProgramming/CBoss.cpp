@@ -227,6 +227,7 @@ void CBoss::Attack2() {
 void CBoss::Attack3() {
 	ChangeAnimation(8, false, 120);
 	mPosition.mY += mJump;
+	mRotation.mX+=36.0f;
 	if (mJump > -0.5f) {
 				mJump -= G;
 	}
@@ -239,6 +240,7 @@ void CBoss::Attack3() {
 		if (mAnimationFrame >= mAnimationFrameSize) {	
 			mColSphereAttack.mRenderEnabled = false;
 			mBossAttackHit = false;
+			mRotation.mX = 0.0f;
 				mState = EIDLE;
 		}
 	}

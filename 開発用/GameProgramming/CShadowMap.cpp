@@ -123,18 +123,7 @@ void CShadowMap::Init(int width, int height, void (*funcRender)(),void(*funcEffe
 	
 	Init();
 
-}/*
-void CShadowMap::Init(int width, int height, void (*funcRender)(), void(*funcEffectRender)(),
-	float shadouCol[], float lightPos[]) 
-{
-	mDepthTextureID = 0;
-	mFb = 0;
-	mTextureHeight = height;
-	mTextureWidth = width;
-	mpRender = funcRender;
-	mpEffectRender = funcEffectRender;
-	
-}*/
+}
 
 void CShadowMap::Render()
 {
@@ -180,7 +169,7 @@ void CShadowMap::Render()
 	//if (tPlayer) {
 	mLightPos[0] = 0.0f;
 	mLightPos[1] = 150.0f;
-	mLightPos[2] =  -16.0f;
+	mLightPos[2] =  50.0f;
 		
 	//}
 	gluLookAt(mLightPos[0], mLightPos[1], mLightPos[2], mLightPos[0] - 1, 0, mLightPos[2] - 1, -63.0, 1.0, -150.0);
