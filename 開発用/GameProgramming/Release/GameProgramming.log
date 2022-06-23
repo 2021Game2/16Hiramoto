@@ -1,7 +1,117 @@
-﻿  CTarget.cpp
-  コード生成しています。
-  1 of 921 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    12 functions had inline decision re-evaluated but remain unchanged
-  コード生成が終了しました。
-  GameProgramming.vcxproj -> C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３．１\16Hiramoto\開発用\Release\GameProgramming.exe
+﻿  CBillBoard.cpp
+  CBillboard2.cpp
+  CBoss.cpp
+  CBullet.cpp
+  CCamera.cpp
+  CCharacter.cpp
+  CCollider.cpp
+  CColliderLine.cpp
+  CColliderMesh.cpp
+  CColliderTriangle.cpp
+  CCollisionManager.cpp
+  CEffect.cpp
+  CEffect2.cpp
+  CEnemy.cpp
+  CEnemy2.cpp
+  CEnemy3.cpp
+  CEnemySummon.cpp
+  CFade.cpp
+  CInput.cpp
+  CItem.cpp
+  コンパイル中...
+  CKey.cpp
+  CMap.cpp
+  CMaterial.cpp
+  CMatrix.cpp
+  CModel.cpp
+  CModelX.cpp
+  CMyShader.cpp
+  CPlayer.cpp
+  CRes.cpp
+  CRock.cpp
+  CSceneGame.cpp
+  CSceneManager.cpp
+  CSceneTitle.cpp
+  CShader.cpp
+  CShadowMap.cpp
+  CSound.cpp
+  CTarget.cpp
+  CTaskManager.cpp
+  CText.cpp
+  CTexture.cpp
+  コンパイル中...
+  CTransform.cpp
+  CFlag.cpp
+  CTriangle.cpp
+  CUtil.cpp
+  CVector.cpp
+  CXCharacter.cpp
+  CXPlayer.cpp
+  main.cpp
+CEnemy2.obj : error LNK2005: "private: int __thiscall CXPlayer::GetStamina(void)" (?GetStamina@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CEnemy2.obj : error LNK2005: "private: void __thiscall CXPlayer::SetStamina(int)" (?SetStamina@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CEnemy2.obj : error LNK2005: "private: int __thiscall CXPlayer::GetDamageCount(void)" (?GetDamageCount@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CEnemy2.obj : error LNK2005: "private: void __thiscall CXPlayer::SetDamageCount(int)" (?SetDamageCount@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CEnemy2.obj : error LNK2005: "private: int __thiscall CXPlayer::GetAnimationCount(void)" (?GetAnimationCount@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CEnemy2.obj : error LNK2005: "private: void __thiscall CXPlayer::SetAnimationCount(int)" (?SetAnimationCount@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CEnemy3.obj : error LNK2005: "private: int __thiscall CXPlayer::GetStamina(void)" (?GetStamina@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CEnemy3.obj : error LNK2005: "private: void __thiscall CXPlayer::SetStamina(int)" (?SetStamina@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CEnemy3.obj : error LNK2005: "private: int __thiscall CXPlayer::GetDamageCount(void)" (?GetDamageCount@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CEnemy3.obj : error LNK2005: "private: void __thiscall CXPlayer::SetDamageCount(int)" (?SetDamageCount@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CEnemy3.obj : error LNK2005: "private: int __thiscall CXPlayer::GetAnimationCount(void)" (?GetAnimationCount@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CEnemy3.obj : error LNK2005: "private: void __thiscall CXPlayer::SetAnimationCount(int)" (?SetAnimationCount@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CEnemySummon.obj : error LNK2005: "private: int __thiscall CXPlayer::GetStamina(void)" (?GetStamina@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CEnemySummon.obj : error LNK2005: "private: void __thiscall CXPlayer::SetStamina(int)" (?SetStamina@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CEnemySummon.obj : error LNK2005: "private: int __thiscall CXPlayer::GetDamageCount(void)" (?GetDamageCount@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CEnemySummon.obj : error LNK2005: "private: void __thiscall CXPlayer::SetDamageCount(int)" (?SetDamageCount@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CEnemySummon.obj : error LNK2005: "private: int __thiscall CXPlayer::GetAnimationCount(void)" (?GetAnimationCount@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CEnemySummon.obj : error LNK2005: "private: void __thiscall CXPlayer::SetAnimationCount(int)" (?SetAnimationCount@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CItem.obj : error LNK2005: "private: int __thiscall CXPlayer::GetStamina(void)" (?GetStamina@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CItem.obj : error LNK2005: "private: void __thiscall CXPlayer::SetStamina(int)" (?SetStamina@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CItem.obj : error LNK2005: "private: int __thiscall CXPlayer::GetDamageCount(void)" (?GetDamageCount@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CItem.obj : error LNK2005: "private: void __thiscall CXPlayer::SetDamageCount(int)" (?SetDamageCount@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CItem.obj : error LNK2005: "private: int __thiscall CXPlayer::GetAnimationCount(void)" (?GetAnimationCount@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CItem.obj : error LNK2005: "private: void __thiscall CXPlayer::SetAnimationCount(int)" (?SetAnimationCount@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CSceneGame.obj : error LNK2005: "private: int __thiscall CXPlayer::GetStamina(void)" (?GetStamina@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CSceneGame.obj : error LNK2005: "private: void __thiscall CXPlayer::SetStamina(int)" (?SetStamina@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CSceneGame.obj : error LNK2005: "private: int __thiscall CXPlayer::GetDamageCount(void)" (?GetDamageCount@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CSceneGame.obj : error LNK2005: "private: void __thiscall CXPlayer::SetDamageCount(int)" (?SetDamageCount@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CSceneGame.obj : error LNK2005: "private: int __thiscall CXPlayer::GetAnimationCount(void)" (?GetAnimationCount@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CSceneGame.obj : error LNK2005: "private: void __thiscall CXPlayer::SetAnimationCount(int)" (?SetAnimationCount@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CSceneManager.obj : error LNK2005: "private: int __thiscall CXPlayer::GetStamina(void)" (?GetStamina@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CSceneManager.obj : error LNK2005: "private: void __thiscall CXPlayer::SetStamina(int)" (?SetStamina@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CSceneManager.obj : error LNK2005: "private: int __thiscall CXPlayer::GetDamageCount(void)" (?GetDamageCount@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CSceneManager.obj : error LNK2005: "private: void __thiscall CXPlayer::SetDamageCount(int)" (?SetDamageCount@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CSceneManager.obj : error LNK2005: "private: int __thiscall CXPlayer::GetAnimationCount(void)" (?GetAnimationCount@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CSceneManager.obj : error LNK2005: "private: void __thiscall CXPlayer::SetAnimationCount(int)" (?SetAnimationCount@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CSceneTitle.obj : error LNK2005: "private: int __thiscall CXPlayer::GetStamina(void)" (?GetStamina@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CSceneTitle.obj : error LNK2005: "private: void __thiscall CXPlayer::SetStamina(int)" (?SetStamina@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CSceneTitle.obj : error LNK2005: "private: int __thiscall CXPlayer::GetDamageCount(void)" (?GetDamageCount@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CSceneTitle.obj : error LNK2005: "private: void __thiscall CXPlayer::SetDamageCount(int)" (?SetDamageCount@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CSceneTitle.obj : error LNK2005: "private: int __thiscall CXPlayer::GetAnimationCount(void)" (?GetAnimationCount@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CSceneTitle.obj : error LNK2005: "private: void __thiscall CXPlayer::SetAnimationCount(int)" (?SetAnimationCount@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CShadowMap.obj : error LNK2005: "private: int __thiscall CXPlayer::GetStamina(void)" (?GetStamina@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CShadowMap.obj : error LNK2005: "private: void __thiscall CXPlayer::SetStamina(int)" (?SetStamina@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CShadowMap.obj : error LNK2005: "private: int __thiscall CXPlayer::GetDamageCount(void)" (?GetDamageCount@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CShadowMap.obj : error LNK2005: "private: void __thiscall CXPlayer::SetDamageCount(int)" (?SetDamageCount@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CShadowMap.obj : error LNK2005: "private: int __thiscall CXPlayer::GetAnimationCount(void)" (?GetAnimationCount@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CShadowMap.obj : error LNK2005: "private: void __thiscall CXPlayer::SetAnimationCount(int)" (?SetAnimationCount@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CTarget.obj : error LNK2005: "private: int __thiscall CXPlayer::GetStamina(void)" (?GetStamina@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CTarget.obj : error LNK2005: "private: void __thiscall CXPlayer::SetStamina(int)" (?SetStamina@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CTarget.obj : error LNK2005: "private: int __thiscall CXPlayer::GetDamageCount(void)" (?GetDamageCount@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CTarget.obj : error LNK2005: "private: void __thiscall CXPlayer::SetDamageCount(int)" (?SetDamageCount@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CTarget.obj : error LNK2005: "private: int __thiscall CXPlayer::GetAnimationCount(void)" (?GetAnimationCount@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CTarget.obj : error LNK2005: "private: void __thiscall CXPlayer::SetAnimationCount(int)" (?SetAnimationCount@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CFlag.obj : error LNK2005: "private: int __thiscall CXPlayer::GetStamina(void)" (?GetStamina@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CFlag.obj : error LNK2005: "private: void __thiscall CXPlayer::SetStamina(int)" (?SetStamina@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CFlag.obj : error LNK2005: "private: int __thiscall CXPlayer::GetDamageCount(void)" (?GetDamageCount@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CFlag.obj : error LNK2005: "private: void __thiscall CXPlayer::SetDamageCount(int)" (?SetDamageCount@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CFlag.obj : error LNK2005: "private: int __thiscall CXPlayer::GetAnimationCount(void)" (?GetAnimationCount@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CFlag.obj : error LNK2005: "private: void __thiscall CXPlayer::SetAnimationCount(int)" (?SetAnimationCount@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CXPlayer.obj : error LNK2005: "private: int __thiscall CXPlayer::GetStamina(void)" (?GetStamina@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CXPlayer.obj : error LNK2005: "private: void __thiscall CXPlayer::SetStamina(int)" (?SetStamina@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CXPlayer.obj : error LNK2005: "private: int __thiscall CXPlayer::GetDamageCount(void)" (?GetDamageCount@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CXPlayer.obj : error LNK2005: "private: void __thiscall CXPlayer::SetDamageCount(int)" (?SetDamageCount@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+CXPlayer.obj : error LNK2005: "private: int __thiscall CXPlayer::GetAnimationCount(void)" (?GetAnimationCount@CXPlayer@@AAEHXZ) は既に CBoss.obj で定義されています。
+CXPlayer.obj : error LNK2005: "private: void __thiscall CXPlayer::SetAnimationCount(int)" (?SetAnimationCount@CXPlayer@@AAEXH@Z) は既に CBoss.obj で定義されています。
+C:\Users\hiram\OneDrive\デスクトップ\GIT\Git\ゲーム制作３．１\16Hiramoto\開発用\Release\GameProgramming.exe : fatal error LNK1169: 1 つ以上の複数回定義されているシンボルが見つかりました。

@@ -40,9 +40,9 @@ void CTarget::Update() {
 	if (tPlayer->mHp > 0) {
 		mPosition.mX = tPlayer->mPosition.mX;
 		mPosition.mY = tPlayer->mPosition.mY + 4.0f;
-		mPosition.mZ = tPlayer->mPosition.mZ-1.0f;
+		mPosition.mZ = tPlayer->mPosition.mZ - 1.0f;
 		//mRotation.mZ += 10.0f;
-		
+
 	}
 	else {
 		mEnabled = false;
@@ -61,22 +61,32 @@ void CTarget::Update() {
 	float dx = vp.Dot(vx);
 	float dy = vp.Dot(vy);
 	float margin = 0.1f;
+	float margin2 = 1.0f;
+	float marginX = 0.7f;
 	//ç∂âEï˚å¸Ç÷âÒì]
 	if (dx > margin) {
-		
-			//mRotation.mY += 3.0f;//ç∂Ç÷âÒì]
-		
-		  mRotation.mY += 0.1f;//ç∂Ç÷âÒì]
-		
+		if (dx > margin2) {
+			mRotation.mY += 1.0f;//ç∂Ç÷âÒì]
+		}
+		mRotation.mY += 0.1f;//ç∂Ç÷âÒì]
+
 	}
 	else if (dx < -margin) {
-		if()
+		if (dx < -margin2) {
+			mRotation.mY -= 1.0f;
+		}
 		mRotation.mY -= 0.1f;//âEÇ÷âÒì]
 	}
-	if (dy > margin) {
+	if (dy > marginX) {
+		if (dy > margin2) {
+			mRotation.mX -= 1.0f;
+		}
 		mRotation.mX -= 0.1f;
 	}
-	else if(dy<-margin) {
+	else if (dy < -marginX) {
+		if(dy < -margin2){
+			mRotation.mX += 1.0f;
+         }
 		mRotation.mX += 0.1f;
 	}
 	

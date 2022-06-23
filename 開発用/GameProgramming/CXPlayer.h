@@ -18,7 +18,11 @@ class CXPlayer : public CXCharacter
 private:
 	CTexture mImageGauge; //ゲージ画像
 	int mAnimationCount;//アニメーションが途中で変わらないようにする
+	void SetAnimationCount(int v);
+	int GetAnimationCount();
 	int mDamageCount;//ダメージを受けた直後の無敵時間
+	void SetDamageCount(int v);
+	int GetDamageCount();
 	bool mPlayerBgm;
 	bool mAnimationFrameLock;
 	bool mMoveCheck;//ダッシュかダッシュじゃないか
@@ -32,6 +36,9 @@ private:
 	float mJump;//ジャンプする時の初速度
 	float mStep;//攻撃時、少し前進
 	static int mStamina;//スタミナの数値
+	void SetStamina(int v);
+	int GetStamina();
+	
 	static int mAttackCount;//攻撃のアニメーションが何度も再生されないように
 	CBoss* mpBoss;
 	CEffect2* mEffect1;
@@ -80,4 +87,30 @@ public:
 	void Collision(CCollider* m, CCollider* o);
 	void Render2D();
 };
+void CXPlayer::SetAnimationCount(int v)
+{
+	if (v < 0) return;//< ここにブレークポイントを置けば誰が犯人なのかわかる
+	this->mAnimationCount = v;
+}
+int CXPlayer::GetAnimationCount()
+{
+	return this->mAnimationCount;
+}
+void CXPlayer::SetDamageCount(int v) {
+	if (v < 0) return;//< ここにブレークポイントを置けば誰が犯人なのかわかる
+	this->mDamageCount = v;
+}
+
+int CXPlayer::GetDamageCount()
+{
+	return this->mDamageCount;
+}
+void CXPlayer::SetStamina(int v) {
+	if (v < 0) return;//< ここにブレークポイントを置けば誰が犯人なのかわかる
+	this->mStamina = v;
+}
+int CXPlayer::GetStamina()
+{
+	return this->mStamina;
+}
 #endif
