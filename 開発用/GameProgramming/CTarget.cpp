@@ -33,7 +33,7 @@ CTarget::CTarget()
 
 }
 void CTarget::Update() {
-
+	CSceneGame* tSceneGame = CSceneGame::GetInstance();
 	CXPlayer* tPlayer = CXPlayer::GetInstance();
 	CBoss* tBoss = CBoss::GetInstance();
 	CFlag* tFlag = CFlag::GetInstance();
@@ -90,7 +90,7 @@ void CTarget::Update() {
 		mRotation.mX += 0.1f;
 	}
 	
-	if (CSceneGame::mBossGaugeSwitch == true) {
+	if (tSceneGame->mBossGaugeSwitch == true) {
 
 		mPoint = tBoss->mPosition;
 	}

@@ -19,22 +19,21 @@ CModel CEnemy2::mModel;//モデルデータ作成
 //敵（サソリ）v
 CEnemy2::CEnemy2()
 //コライダの設定
-	: mColSphereRight(this,&mMatrix, CVector(1.5f, 3.0f, 0.5f), 2.0f)
-	, mColSphereLeft(this,&mMatrix,  CVector(-1.0f, 0.5f, 0.0f), 2.0f)
-	, mColSphereBody(this,&mMatrix,  CVector(0.0f,1.0f,0.0f),2.0f)
-	,mHp(HP)
-	,mJump(0.0f)
-	,mEnemyDamage(60)
+	:mColSphereRight(this,&mMatrix, CVector(1.5f, 3.0f, 0.5f), 2.0f)
+	,mColSphereLeft(this,&mMatrix,  CVector(-1.0f, 0.5f, 0.0f), 2.0f)
+	,mColSphereBody(this,&mMatrix,  CVector(0.0f,1.0f,0.0f),2.0f)
 	,mMove(0)
-	,mMoveCount(false)
-	,mColliderCount(0.0f)
-	,mTime(0.0f)
-	
 	,mEnemyVoice(0)
 	,mDamageCount(0)
-	,mEnemy2AttackHit(false)
 	,mEnemyLevel(0)
+	,mEnemyDamage(60)
+	,mTime(0.0f)
+	,mJump(0.0f)
+	,mColliderCount(0.0f)
 	,mEnemyHpPercent(1.0f)
+	,mMoveCount(false)
+	,mEnemy2AttackHit(false)
+	,mHp(HP)
 	
 {
 	mTag = EENEMY2;
@@ -141,16 +140,12 @@ void CEnemy2::Attack() {
 }	
 //ダメージ処理
 void CEnemy2::Damaged() {
-
-	//if (CSceneGame::mBgmCount <= 2) {
-
-			if (CSceneGame::mEnemy2Bgm == true) {
-				CSceneGame::mBgmCountCheck = false;
-				CSceneGame::mBgmCount = 2;
-				CSceneGame::mEnemy2Bgm = false;
+	CSceneGame* tSceneGame = CSceneGame::GetInstance();
+			if (tSceneGame->mEnemy2Bgm == true) {
+				tSceneGame->mBgmCountCheck = false;
+				tSceneGame->mBgmCount = 2;
+				tSceneGame->mEnemy2Bgm = false;
 			}
-		
-	//}
 	//無敵時間付与
 	if (mDamageCount < 60) {
 		mDamageCount++;
@@ -158,7 +153,7 @@ void CEnemy2::Damaged() {
 	//爆発エフェクト付与
 	if (mEffectCount % 15 == 0) {
 		//エフェクト生成
-		new CEffect2(mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2);
+		new CEffect2(mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2, true, &mRotation);
 	}
 	//ヒットバック（X,Z軸)
 	if (mColliderCount > 0) {
@@ -174,6 +169,7 @@ void CEnemy2::Damaged() {
 }		
 //死亡処理
 void CEnemy2::Death() {
+	CSceneGame* tSceneGame = CSceneGame::GetInstance();
 	//体力がなくなったら
 	if (mHp <= 0) {
 		//mTimeとmJumpに整数が代入され、吹っ飛ぶようになる
@@ -185,7 +181,7 @@ void CEnemy2::Death() {
 		//15フレームごとにエフェクト
 		if (mEffectCount % 15 == 0) {
 			//エフェクト生成
-			new CEffect2(mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2);
+			new CEffect2(mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2, true, &mRotation);
 		}
 		CTransform::Update();
 	}
@@ -198,14 +194,15 @@ void CEnemy2::Death() {
 	//しばらく経ったら消去
 	if (mHp <= -120) {
 		mEnabled = false;
-		CSceneGame::mEnemy2Count --;
-		CSceneGame::mEnemy2CountStopper--;
+
+		tSceneGame->mEnemy2Count --;
+		tSceneGame->mEnemy2CountStopper--;
 	}
 }		
 
 //更新処理
 void CEnemy2::Update() {
-
+	CSceneGame* tSceneGame = CSceneGame::GetInstance();
 	
 	//mpPlayer = mpPointPlayer;
 	//アニメーションの管理
@@ -244,7 +241,7 @@ void CEnemy2::Update() {
 	mPosition.mY -= 0.1f;
 	mEnemyVoice++;
 	if (mEnemyVoice>=180) {
-		if (CSceneGame::mVoiceSwitch == true) {
+		if (tSceneGame->mVoiceSwitch == true) {
 			Enemy2Voice.Play();
 		}
 		mEnemyVoice = 0;
@@ -253,7 +250,7 @@ void CEnemy2::Update() {
 	if (mState != EDAMAGED) {
 		mDamageCount = 0;
 	}
-	if (CSceneGame::mBossGaugeSwitch == true) {
+	if (tSceneGame->mBossGaugeSwitch == true) {
 		
 		mEnabled = false;
 	}

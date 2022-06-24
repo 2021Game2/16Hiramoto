@@ -46,12 +46,13 @@ CEnemySummon::CEnemySummon()
 
 }
 void CEnemySummon::Update() {
+	CSceneGame* tSceneGame = CSceneGame::GetInstance();
 	if (mDamageCount > 0) {
 		mDamageCount--;
 	}
 
 	mEffectCount--;
-		if(mHp<=0|| CSceneGame::mBossGaugeSwitch == true){
+		if(mHp<=0|| tSceneGame->mBossGaugeSwitch == true){
 			
 		 mEnabled=false;
 		}

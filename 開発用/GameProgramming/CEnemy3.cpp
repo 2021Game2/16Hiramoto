@@ -21,7 +21,7 @@
 #define JUMP 4.0f
 #define G 0.1f
 #define PLAYERSPPOINT_MAX 30
-int CEnemy3::mMoveCount = 0;
+
  extern CSound Enemy3Fry;
 
 CModel CEnemy3::mModel;//モデルデータ作成
@@ -30,17 +30,18 @@ CModel CEnemy3::mModel;//モデルデータ作成
 CEnemy3::CEnemy3()
 //コライダの設定
 	:mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 5.0f)
-	, mColSearch2(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f),70.0f)
-	, mpPlayer(0)
-	, mHp(HP)
-	, mJump(0)
-	, mJump2(0)
-	, mEnemyDamage(60)
-	, mMove2(0)
-	, mColliderCount(0)
+	,mColSearch2(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f),70.0f)
+	,mpPlayer(0)
+	,mMoveCount (0)
+	,mJump(0)
+	,mJump2(0)
+	,mMove2(0)
+	,mColliderCount(0)
 	,mCount(0)
 	,mFireCount(0)
 	,mEnemy3Fry(0)
+	,mEnemyDamage(60)
+	,mHp(HP)
 {
 	mRotation.mY += 90.0f;
 	mTag = EENEMY3;
@@ -77,7 +78,7 @@ CEnemy3::CEnemy3(const CVector& position, const CVector& rotation, const CVector
 void CEnemy3::Update() {
 	//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
 	CXPlayer* tPlayer = CXPlayer::GetInstance();
-	
+	CSceneGame* tSceneGame = CSceneGame::GetInstance();
 	//if(mPosition.mY<=mpPlayer->mPosition.mY)
 	//左向き（X軸）のベクトルを求める
 	CVector vx = CVector(1.0f, 0.0f, 0.0f) * mMatrixRotate;
@@ -220,15 +221,15 @@ void CEnemy3::Update() {
 		//15フレームごとにエフェクト
 		if (mHp % 15 == 0) {
 			//エフェクト生成
-			new CEffect2(mPosition, 1.0f, 1.0f,CEffect2::EFF_EXP, 4, 4, 2);
+			new CEffect2(mPosition, 1.0f, 1.0f,CEffect2::EFF_EXP, 4, 4, 2, true, &mRotation);
 		}
 		CTransform::Update();
 	}
 	mCount++;
 	if (mHp <= -70) {
 		mEnabled = false;
-		CSceneGame::mEnemy3Count--;
-		CSceneGame::mEnemy3CountStopper--;
+		tSceneGame->mEnemy3Count--;
+		tSceneGame->mEnemy3CountStopper--;
 	}
 	if (mJump > 0) {
 		mJump--;
@@ -238,12 +239,12 @@ void CEnemy3::Update() {
 	}
 	mEnemy3Fry++;
 	if (mEnemy3Fry >= 300) {
-		if (CSceneGame::mVoiceSwitch == true) {
+		if (tSceneGame->mVoiceSwitch == true) {
 			Enemy3Fry.Play();
 		}
 		mEnemy3Fry = 0;
 	}
-	if (CSceneGame::mBossGaugeSwitch == true) {
+	if (tSceneGame->mBossGaugeSwitch == true) {
 		
 		mEnabled = false;
 	}

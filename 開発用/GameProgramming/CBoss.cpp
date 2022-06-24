@@ -25,7 +25,6 @@
 #define ROTATION 3.6f//攻撃時に回転する量
 #define ROTATIONMIN -0.36f
 #define IMAGE_GAUGE "Resource\\png,tga\\Gauge.png"		//ゲージ画像
-int CBoss::mBossAttackCount = 0;
 
 
  extern CSound BossVoice;
@@ -46,21 +45,21 @@ CBoss::CBoss()
 	, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
 	, mColSphereAttack(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 40.0f)
 	, mpPlayer(0)
-	, mJump(0.0f)
-	, mEnemyDamage(60)
 	, mMove(0)
 	, mMove2(0)
+	, mBossDamageCount(0)
+	, mBossJumpCount(0)
+	, mEnemyDamage(60)
+	, mJump(0.0f)
 	, mColliderCount(0.0f)
 	, mGravity(0.0f)
 	, mTime(0.0f)
-	, mBossDamageCount(0)
 	, mHp(HP)
 	, mJumpStopper(true)
-	, mBossAttackHit(false)
-	, mColSearchCount(false)
 	, mBossBgm(true)
 	, mBossBgmDeath(true)
-	, mBossJumpCount(0)
+	, mBossAttackHit(false)
+	, mColSearchCount(false)
 	
 {
 
@@ -77,6 +76,7 @@ CBoss::CBoss()
 	mGravity = 0.20f;
 	mState = EIDLE;
 	mColSphereAttack.mRenderEnabled = false;
+	CSceneGame* tSceneGame = CSceneGame::GetInstance();
 }
 
 //CEnemy(位置、回転、拡縮）
@@ -159,9 +159,10 @@ void CBoss::Idle() {
 }
 //移動処理
 void CBoss::AutoMove() {
+	CSceneGame* tSceneGame = CSceneGame::GetInstance();
 	//歩く
 
-	if (CSceneGame::mVoiceSwitch == true) {
+	if (tSceneGame->mVoiceSwitch == true) {
 		BossMove.Play();
 	}
 	//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
@@ -365,10 +366,11 @@ void CBoss::Damaged() {
 }
 //死亡処理
 void CBoss::Death() {
+	CSceneGame* tSceneGame = CSceneGame::GetInstance();
 	mColSphereHead.mRadius = 2.0f;                                    
 	if (mBossBgmDeath == true) {
-		CSceneGame::mBgmCountCheck = false;
-		CSceneGame::mBgmCount = 4;
+		tSceneGame->mBgmCountCheck = false;
+		tSceneGame->mBgmCount = 4;
 		mBossBgmDeath = false;
 	}
 	ChangeAnimation(9, false, 250);
@@ -391,6 +393,7 @@ void CBoss::Death() {
 
 //更新処理
 void CBoss::Update() {
+	CSceneGame* tSceneGame = CSceneGame::GetInstance();
 	//処理を行動ごとに分割
 	switch (mState) {
 	case EIDLE:	//待機
@@ -424,7 +427,7 @@ void CBoss::Update() {
 	case(5):
 		if (mAnimationFrame == 30) {
 			mBossAttackHit = true;
-			if (CSceneGame::mVoiceSwitch == true) {
+			if (tSceneGame->mVoiceSwitch == true) {
 				BossVoice.Play();
 			}
 		}
@@ -439,7 +442,7 @@ void CBoss::Update() {
 	case(6):
 		if (mAnimationFrame == 30) {
 			mBossAttackHit = true;
-			if (CSceneGame::mVoiceSwitch == true) {
+			if (tSceneGame->mVoiceSwitch == true) {
 			  BossVoice.Play();
 			}
 		}
@@ -464,12 +467,12 @@ void CBoss::Update() {
 			if (mBossColliderCheck == 1) {
 				CXPlayer* tPlayer = CXPlayer::GetInstance();
 
-				mBossEffect = new CEffect2(tPlayer->mPosition, 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2);
+				mBossEffect = new CEffect2(tPlayer->mPosition, 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2, true, &mRotation);
 			}
 			//頭に攻撃されたとき
 			else if (mBossColliderCheck == 2) {
 				CXPlayer* tPlayer = CXPlayer::GetInstance();
-			    mBossEffect=new CEffect2(CVector(tPlayer->mPosition.mX, tPlayer->mPosition.mY+1.0f, tPlayer->mPosition.mZ), 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2);
+			    mBossEffect=new CEffect2(CVector(tPlayer->mPosition.mX, tPlayer->mPosition.mY+1.0f, tPlayer->mPosition.mZ), 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2, true, &mRotation);
 			}
 		}
 	}
@@ -485,6 +488,7 @@ void CBoss::Update() {
 
 //Collision(コライダ１，コライダ２，）
 void CBoss::Collision(CCollider* m, CCollider* o) {
+	CSceneGame* tSceneGame = CSceneGame::GetInstance();
 	//コライダのとき
 	m->mType = CCollider::ESPHERE;
 		//自分がサーチ用のとき
@@ -500,8 +504,8 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 							mColSearchCount = true;
 							if (mColSearch.mRenderEnabled == true) {
 								if (mBossBgm == true) {
-									CSceneGame::mBgmCountCheck = false;
-									CSceneGame::mBgmCount = 3;
+									tSceneGame->mBgmCountCheck = false;
+									tSceneGame->mBgmCount = 3;
 									mBossBgm = false;
 								}
 								mColSearch.mRenderEnabled = false;
@@ -611,6 +615,7 @@ void CBoss::TaskCollision() {
 
 void CBoss::Render2D()
 {
+	CSceneGame* tSceneGame = CSceneGame::GetInstance();
 	//2D描画開始
 	CUtil::Start2D(0, 800, 0, 600);
 
@@ -618,7 +623,7 @@ void CBoss::Render2D()
 	float hpRate = (float)mHp / (float)HP;
 	//体力ゲージの幅
 	float hpGaugeWid = GAUGE_WID_MAXHP * hpRate;
-	if (CSceneGame::mBossGaugeSwitch == true&&mHp>0) {
+	if (tSceneGame->mBossGaugeSwitch == true&&mHp>0) {
 		mImageGauge.Draw(50, GAUGE_WID_MAXHP, 510, 550, 201, 300, 63, 0);//ゲージ背景
 		mImageGauge.Draw(50, hpGaugeWid, 510, 550, 487, 572, 63, 0);//体力ゲージ
 	}

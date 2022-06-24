@@ -29,18 +29,9 @@ private:
 		ETITLE,
 	};
 	ESceneSelect mSceneSelect;
-	//マップのインスタンス
-	CModel mModelC5;
-	int mSpawn;//敵が生成されるまでの時間
-	int mSpawn2;
-	
-	int mTimeCount;
-	CShadowMap mShadowMap;
 	
 	//キャラクタのインスタンス
 	CXPlayer* mpPlayer;//プレイヤー
-
-	
 	CRock*mpRock;//周りの岩
 	CMap* mpMap;
 	CFlag* mpFlag;//旗
@@ -52,47 +43,96 @@ private:
 	CTarget* mpTarget;
 	CItem* mpItem;
 	CBoss* mpBoss;//ボス
-	bool mSceneChange;
+	//マップのインスタンス
+	CModel mModelC5;
+	CShadowMap mShadowMap;
 	EScene mNextScene;
-public:
-	std::vector<CEnemy2*> mEnemy2List;//Enemy2専用の部屋を作る
-	std::vector<CEnemy3*> mEnemy3List;
 	CTexture mImageMouse;
 	CTexture mImageMoveKey;
 	CTexture mImageCkey;
 	CTexture mImageWork;
 	CTexture mImageDush;
-
     CSound mBgmStart;
 	CSound mBgmBattle;
 	CSound mBgmBossBattle;
 	CSound mBgmGameClear;
-	CSound mBgmGameOver;
-	
+	CSound mBgmGameOver;	
+	std::vector<CEnemy2*> mEnemy2List;//Enemy2専用の部屋を作る
+	std::vector<CEnemy3*> mEnemy3List;
+	 int mSpawn;//敵が生成されるまでの時間
+	 int mSpawn2;
+	 int mTimeCount;
+	 bool mSceneChange;
 	 bool mBgmStartStopper;
 	 bool mBgmBattleStopper;
 	 bool mBgmBossStopper;
 	 bool mBgmOverStopper;
 	 bool mBgmClearStopper;
 	 bool mBgmCountCheck2;//BGMが連続で再生しないようにするフラグ
+	 bool mGameClear;
+	 bool mGameOver;
 	
 	
-
-	static bool mGameClear;
-	static bool mGameOver; 
-	static bool mSceneCount;
-	static bool mBgmCountCheck;
-	static bool mBossSwitch;
-	static bool mBossGaugeSwitch;//BGMを流すか止めるか分けるフラグ
-	static bool mVoiceSwitch;//BGM SEのオンオフ切り替え 
-	static bool mEnemy2Bgm;
-	static int mTimeMinute;
-    static int mTimeSecond;
-	static int mBgmCount;
-	static int mEnemy2Count;//今生成されている敵2の数
-	static int mEnemy3Count;//今生成されている敵3の数
-	static int mEnemy2CountStopper;//生成できる敵2の限度
-	static int mEnemy3CountStopper;//生成できる敵3の限度
+	 int mTimeMinute; 
+	 //staticでポインタを作る
+	 static CSceneGame* mpSceneGameInstance;
+	
+public: 
+	 bool mEnemy2Bgm;
+	 bool mBgmCountCheck;
+	 bool mVoiceSwitch;//BGM SEのオンオフ切り替え 
+	 bool mBossSwitch;
+     bool mBossGaugeSwitch;//BGMを流すか止めるか分けるフラグ
+	 int mBgmCount;
+	void SetBgmCount(int v) {
+		if (v < 0) return;//< ここにブレークポイントを置けば誰が犯人なのかわかる
+		this->mBgmCount = v;
+	}
+	int GetBgmCount() {
+		return mBgmCount;
+	}
+	int mTimeSecond;
+	void SetTimeSecond(int v) {
+		if (v < 0) return;//< ここにブレークポイントを置けば誰が犯人なのかわかる
+		this->mTimeSecond = v;
+	}
+	int GetTimeSecond() {
+		return mTimeSecond;
+	}
+	int mEnemy2Count;//今生成されている敵2の数
+	void SetEnemy2Count(int v) {
+		if (v < 0) return;//< ここにブレークポイントを置けば誰が犯人なのかわかる
+		this->mEnemy2Count = v;
+	}
+	int GetEnemy2Count() {
+		return mEnemy2Count;
+	}
+	int mEnemy3Count;//今生成されている敵3の数
+	void SetEnemy3Count(int v) {
+		if (v < 0) return;//< ここにブレークポイントを置けば誰が犯人なのかわかる
+		this->mEnemy3Count = v;
+	}
+	int GetEnemy3Count() {
+		return mEnemy3Count;
+	}
+	int mEnemy2CountStopper;//生成できる敵2の限度
+	void SetEnemy2CountStopper(int v) {
+		if (v < 0) return;//< ここにブレークポイントを置けば誰が犯人なのかわかる
+		this->mEnemy2CountStopper = v;
+	}
+	int  GetEnemy2CountStopper() {
+		return mEnemy2CountStopper;
+	}
+	int mEnemy3CountStopper;//生成できる敵3の限度
+	void SetEnemy3CountStopper(int v) {
+		if (v < 0) return;//< ここにブレークポイントを置けば誰が犯人なのかわかる
+		this->mEnemy3CountStopper = v;
+	}
+	int  GetEnemy3CountStopper() {
+		return mEnemy3CountStopper;
+	}
+	//staticで処理を作る
+	static CSceneGame* GetInstance();
 	CSceneGame();
 	~CSceneGame();
 	//初期化処理のオーバーライド

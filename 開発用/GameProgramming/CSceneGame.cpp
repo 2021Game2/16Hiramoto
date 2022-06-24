@@ -47,21 +47,21 @@
 #define TEXHEIGHT  6144  //テクスチャ高さ
 
 //CMatrix Matrix;
-int CSceneGame::mEnemy2Count = 0;
-int CSceneGame::mEnemy2CountStopper = ENEMY2COUNT;
-int CSceneGame::mEnemy3Count = 0;
-int CSceneGame::mEnemy3CountStopper = ENEMY3COUNT;
-int CSceneGame::mBgmCount = 1;//BGMの切り替え番号
-int CSceneGame::mTimeMinute = 0;
-int CSceneGame::mTimeSecond = 0;
-bool CSceneGame::mBgmCountCheck = true;//BGMを流すか止めるか分けるフラグ
-bool CSceneGame::mVoiceSwitch =true;//false：音声なし true：音声あり
-bool CSceneGame::mEnemy2Bgm = true;
-bool CSceneGame::mBossSwitch = false;
-bool CSceneGame::mBossGaugeSwitch = false;
-bool CSceneGame::mSceneCount = false;
-bool CSceneGame::mGameClear = false;
-bool CSceneGame::mGameOver = false;
+//int CSceneGame::mEnemy2Count = 0;
+//int CSceneGame::mEnemy2CountStopper = ENEMY2COUNT;
+//int CSceneGame::mEnemy3Count = 0;
+//int CSceneGame::mEnemy3CountStopper = ENEMY3COUNT;
+//int CSceneGame::mBgmCount = 1;//BGMの切り替え番号
+//int CSceneGame::mTimeMinute = 0;
+//int CSceneGame::mTimeSecond = 0;
+//bool CSceneGame::mBgmCountCheck = true;//BGMを流すか止めるか分けるフラグ
+//bool CSceneGame::mVoiceSwitch =true;
+//bool CSceneGame::mEnemy2Bgm = true;
+//bool CSceneGame::mBossSwitch = false;
+//bool CSceneGame::mBossGaugeSwitch = false;
+//bool CSceneGame::mSceneCount = false;
+//bool CSceneGame::mGameClear = false;
+//bool CSceneGame::mGameOver = false;
 CSound PlayerFirstAttack;
 CSound PlayerSecondAttack;
 CSound PlayerThirdAttack;
@@ -71,17 +71,34 @@ CSound Enemy3Fry;
 CSound BossVoice;
 CSound BossMove;
 CSound Enemy2Voice;
+
+CSceneGame* CSceneGame::mpSceneGameInstance;
+//プレイヤーのポインタを返すことで、座標などが参照できるようになる
+CSceneGame* CSceneGame::GetInstance()
+{
+	return mpSceneGameInstance;
+}
 CSceneGame::CSceneGame() 
 	:mTimeCount(0)
 	,mSpawn(0)
     ,mSpawn2(0)
-	
+	, mTimeMinute (0)
+	, mTimeSecond (0)
+	, mBgmCount  (1)
+	, mEnemy3Count (0)
+	, mEnemy2Count (0)
+	, mEnemy2Bgm(true)
 	,mBgmCountCheck2(true)
 	,mBgmStartStopper(true)
 	,mBgmBattleStopper(true)
 	,mBgmBossStopper(true)
     ,mBgmOverStopper(true)
     ,mBgmClearStopper(true)
+	, mVoiceSwitch(false)//false：音声なし true：音声あり
+	, mBossGaugeSwitch(false)
+	, mGameClear (false)
+	, mGameOver (false)
+	, mBgmCountCheck  (true)
 	,mpBoss(NULL)
 	,mpMap(NULL)
 	,mpItem(NULL)
@@ -92,6 +109,9 @@ CSceneGame::CSceneGame()
 	,mpEnemySummon2(NULL)
 	,mpEnemy2(NULL)
 	,mpEnemy3(NULL)
+	, mEnemy3CountStopper (ENEMY3COUNT)
+	, mEnemy2CountStopper (ENEMY2COUNT)
+	, mBossSwitch(false)
 {
 
 }
@@ -123,6 +143,7 @@ void ShadowEffectRender() {
 void CSceneGame::Init()
 
 {
+	mpSceneGameInstance = this;
 	Camera = new CCamera();
 	mScene = CScene::EGAME;
 	CFade::SetFade(CFade::FADE_IN);
