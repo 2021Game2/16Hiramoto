@@ -87,6 +87,7 @@ CSceneGame::CSceneGame()
 	, mBgmCount  (1)
 	, mEnemy3Count (0)
 	, mEnemy2Count (0)
+	, mClearTime(0.0f)
 	, mEnemy2Bgm(true)
 	,mBgmCountCheck2(true)
 	,mBgmStartStopper(true)
@@ -98,6 +99,7 @@ CSceneGame::CSceneGame()
 	, mBossGaugeSwitch(false)
 	, mGameClear (false)
 	, mGameOver (false)
+	, mCountStart(false)
 	, mBgmCountCheck  (true)
 	,mpBoss(NULL)
 	,mpMap(NULL)
@@ -290,7 +292,10 @@ void CSceneGame::BgmGameClear() {
 	}
 }
 void CSceneGame::Update() {
-	
+	if (mCountStart == false) {
+		mCountStart = true;
+		mStartTime = clock(); //計測開始時刻を入れる
+	}
 	if (mBossSwitch == true) {
 		//新しく作る
 		mpBoss = new CBoss(CVector(0.0f, 10.0f, 0.0f),
@@ -336,8 +341,6 @@ void CSceneGame::Update() {
 		mSpawn2--;
 	}
 	if (mpEnemySummon->mHp > 0) {
-
-
 		//mEnemy2CountStopperに設定した数だけ敵を生成
 		if (mEnemy2Count < mEnemy2CountStopper) {
 			//２秒ごとに生成
@@ -357,7 +360,7 @@ void CSceneGame::Update() {
 	 if( mEnemy2CountStopper<= ENEMY2MINCOUNT) {
 		mEnemy2CountStopper = ENEMY2COUNT;
 	 }
-
+	    
 	if (mpEnemySummon2->mHp > 0) {
 		//mEnemy3CountStopperに設定した数だけ敵を生成
 		if (mEnemy3Count < mEnemy3CountStopper) {
@@ -410,14 +413,14 @@ void CSceneGame::Render() {
 	mShadowMap.Render();//影設定
 	//コライダの描画
 	//ここをコメントにするとすべてのコライダ非表示
-	//CCollisionManager::Get()->Render();
+	CCollisionManager::Get()->Render();
 	//2D描画開始
 	CUtil::Start2D(0, 800, 0, 600);
 	char buf[64];
 	if (mpBoss) {
 
 
-		if (mpBoss->mHp > 0 && mpPlayer->mHp > 0) {
+		if (mpBoss->mHp > 0 || mpPlayer->mHp > 0) {
 			//時間（分）
 			if (mTimeMinute < 10) {
 				sprintf(buf, "0%d:", mTimeMinute);
@@ -441,13 +444,16 @@ void CSceneGame::Render() {
 		}
 
 		else if (mpBoss->mHp <= 0) {
+			
+			//クリア時間を記録
+			mClearTime = (float)(mEndTime - mStartTime) / 1000;
 			mGameClear = true;
 			mpPlayer->mGaugeEnabled = false;
 			mBossGaugeSwitch = false;
 			sprintf(buf, "GAMECLEAR");
 			mFont.DrawString(buf, 300, 300, 16, 32);
 
-			sprintf(buf, "PUSH CLICK");
+			sprintf(buf, "PLEASE CLICK");
 			mFont.DrawString(buf, 300, 200, 16, 32);
 			if (CKey::Once(VK_LBUTTON)) {
 				mBgmCountCheck = false;
@@ -471,7 +477,7 @@ void CSceneGame::Render() {
 		sprintf(buf, "GAMEOVER");
 		mFont.DrawString(buf, 300, 300, 16, 32);
 
-		sprintf(buf, "PUSH CLICK");
+		sprintf(buf, "PLEASE CLICK");
 		mFont.DrawString(buf, 300, 200, 16, 32);
 		if (CKey::Once(VK_LBUTTON)) {
 			mBgmCountCheck = false;

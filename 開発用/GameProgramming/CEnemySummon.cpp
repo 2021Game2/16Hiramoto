@@ -17,7 +17,7 @@ CEnemySummon::CEnemySummon(const CVector& position, const CVector& rotation, con
 	:CEnemySummon()
 	
 {
-	mHp = HP;
+	
     mPosition = position;
 	mRotation = rotation;
 	mScale = scale;
@@ -32,11 +32,9 @@ CEnemySummon::CEnemySummon(const CVector& position, const CVector& rotation, con
 
 CEnemySummon::CEnemySummon()
 	: mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
-	, mHp(0)
+	, mHp(HP)
 	, mEffectCount(0)
 {
-
-
 	//モデルのポインタ設定
 	mpModel = &mModel;
 	//モデルが無いときは読み込む
@@ -59,26 +57,26 @@ void CEnemySummon::Update() {
 		//CCharacterの更新
 		CTransform::Update();
 }
+void CEnemySummon::Damage() {
+	if (mEffectCount % 15 == 0) {
+		//エフェクト生成
+		new CEffect2(mPosition, 5.0f, 5.0f, CEffect2::EFF_EXP, 4, 4, 2);
+	}
+}
 //Collision(コライダ１、コライダ２）
 void CEnemySummon::Collision(CCollider* m, CCollider* o) {
 	if (m->mType == CCollider::ESPHERE) {
 		if (m->mTag == CCollider::EENEMYSUMMON) {
-
-
 			if (o->mType == CCollider::ESPHERE) {
 				if (o->mpParent->mTag == EPLAYER) {
 					if (o->mTag == CCollider::EPLAYERSWORD) {
 						//衝突しているとき
 						if (CCollider::Collision(m, o)) {
-
 							//プレイヤーの当たり判定が有効なとき
 							if (((CXPlayer*)(o->mpParent))->mAttackHit == true) {
 								if (mDamageCount <= 0) {
 									//爆発エフェクト付与
-									if (mEffectCount % 15 == 0) {
-										//エフェクト生成
-										new CEffect2(mPosition, 5.0f, 5.0f, CEffect2::EFF_EXP, 4, 4, 2);
-									}
+									 CEnemySummon::Damage();
 									mHp--;
 									mDamageCount = 20;
 								}

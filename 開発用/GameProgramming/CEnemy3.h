@@ -35,7 +35,7 @@ public:
 	CCollider mColSearch2;//サーチ用コライダ
 	//モデルデータ
 	static CModel mModel;
-	//コンストラクタ	
+	//コンストラクタ
 	CEnemy3();
 	CEnemy3(const CVector& position, const CVector& rotation, const CVector& scale);
 	void AutoMove1();

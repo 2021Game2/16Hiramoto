@@ -35,7 +35,7 @@ void CCollider::Render() {
 
 	glPushMatrix();
 	//コライダの中心座標を計算
-	//自分の座標×親の変換行列を掛ける
+	//自分の座標と親の変換行列を掛ける
 	CVector pos = mPosition * *mpMatrix;
 	//中心座標へ移動
 	glMultMatrixf(CMatrix().Translate(pos.mX, pos.mY, pos.mZ).mM[0]);

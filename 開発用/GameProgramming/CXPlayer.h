@@ -54,7 +54,6 @@ private:
 	CEffect2* mEffectSp;
 	CItem* mpItem;
 	//コライダの宣言
-	CCollider mColSphereSword;	//剣
 	CCollider  mColSphereFoot;//ダメージが通る当たり判定
 	CCollider mColliderSwordSp;//ジャンプ攻撃時の武器の当たり判定
 	CColliderLine mColEscapeStopperLine;
@@ -76,6 +75,7 @@ private:
 	};
 	
 public:
+	CCollider mColSphereSword;	//剣
 	EPLAYERState mState;
 	bool mGaugeEnabled;
     bool mAttackHit;
@@ -100,7 +100,7 @@ public:
 	static CXPlayer* mpPlayerInstance;
 	//staticで処理を作る
 	static CXPlayer* GetInstance();
-	
+	CVector GetSwordColPos();
 	CXPlayer();
 	void TaskCollision();
 	/*

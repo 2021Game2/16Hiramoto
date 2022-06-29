@@ -17,6 +17,7 @@
 #include"CShadowMap.h"
 #include"CTarget.h"
 #include"CItem.h"
+#include <time.h>
 /*
 ゲームのシーン
 */
@@ -47,6 +48,7 @@ private:
 	CModel mModelC5;
 	CShadowMap mShadowMap;
 	EScene mNextScene;
+	clock_t mStartTime, mEndTime; //計測開始時刻、計測終了時刻
 	CTexture mImageMouse;
 	CTexture mImageMoveKey;
 	CTexture mImageCkey;
@@ -71,13 +73,15 @@ private:
 	 bool mBgmCountCheck2;//BGMが連続で再生しないようにするフラグ
 	 bool mGameClear;
 	 bool mGameOver;
-	
+	 bool mCountStart; //クリア時間計測開始用
+
 	
 	 int mTimeMinute; 
 	 //staticでポインタを作る
 	 static CSceneGame* mpSceneGameInstance;
 	
 public: 
+	 float mClearTime;
 	 bool mEnemy2Bgm;
 	 bool mBgmCountCheck;
 	 bool mVoiceSwitch;//BGM SEのオンオフ切り替え 

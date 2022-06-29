@@ -41,6 +41,7 @@ private:
 	int mAttack4Count;
 	int mAttack4directionCount;
 	int mEffectCount;
+	int mBossAttackMove;
 	float mJump;
 	float mColliderCount;
 	float mGravity;//èdóÕ

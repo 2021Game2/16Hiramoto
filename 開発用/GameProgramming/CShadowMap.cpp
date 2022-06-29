@@ -168,11 +168,12 @@ void CShadowMap::Render()
 	//CXPlayer* tPlayer = CXPlayer::GetInstance();
 	//if (tPlayer) {
 	mLightPos[0] = 0.0f;
-	mLightPos[1] = 150.0f;
-	mLightPos[2] =  50.0f;
+	mLightPos[1] = 180.0f;
+	mLightPos[2] =  -50.0f;
 		
 	//}
-	gluLookAt(mLightPos[0], mLightPos[1], mLightPos[2], mLightPos[0] - 1, 0, mLightPos[2] - 1, -63.0, 1.0, -150.0);
+	//gluLookAt(mLightPos[0], mLightPos[1], mLightPos[2], mLightPos[0] - 1, 0, mLightPos[2] - 1, -63.0, 1.0, -150.0);
+	 gluLookAt(mLightPos[0], mLightPos[1], mLightPos[2], mLightPos[0] - 1, 0, mLightPos[2] - 1, mLightPos[0], 0.0f, mLightPos[2]);
 	// 設定したモデルビュー変換行列を保存しておく //
 	glGetFloatv(GL_MODELVIEW_MATRIX, modelview.mM[0]);
 

@@ -8,6 +8,8 @@
 #include "CInput.h"
 #include"CFade.h"
 #include"CScene.h"
+
+#include "CRes.h"
 #include"CSceneManager.h"
 #define FONT "Resource\\png,tga\\FontG.png" //フォント
 #define IMAGE_BUTTONBACK "Resource\\png,tga\\Gauge.png" //ボタン背景画像
@@ -25,6 +27,9 @@ void CSceneTitle::Init()
 	mScene = ETITLE;
 	CFade::SetFade(CFade::FADE_IN);
 	mSceneChange = false;
+	//CSceneGame* tSceneGame = CSceneGame::GetInstance();
+	
+	//mRecord = tSceneGame->mClearTime;
 }
 
 void CSceneTitle::Update()
@@ -67,16 +72,17 @@ void CSceneTitle::Update()
 		mImageButtonBack.Draw(220, 580, 200, 240, 338, 338, 20, 20);
 		break;
 		
-
-	default:
-		break;
 	}
-
+	char buf[64];
 	//タイトル
 	mFont.DrawString("CREATURE", 120, 500, 40, 40);
 	mFont.DrawString("HUNTER", 200, 400, 40, 40);
 
 	mFont.DrawString("GAMESTART", 240, 220, 20, 20);
+
+	//mFont.DrawString("RECORD", 240, 100, 15, 15);
+	//sprintf(buf, "%02d:%05.2f", (int)mRecord / 60, fmod(mRecord, 60));
+	//mFont.DrawString(buf, 460, 100 , 15, 20);
 	
 	CUtil::End2D();
 }

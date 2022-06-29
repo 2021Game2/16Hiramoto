@@ -13,8 +13,9 @@
 #define HPCOUNT2 10 //ダメージを受けたときにのけぞりを行う体力の数値
 #define HPCOUNT3 5 //ダメージを受けたときにのけぞりを行う体力の数値
 #define JUMP 5.0f
+#define JUMP2 2.5f
 #define G 0.1f
-#define G2 1.0f
+#define G2 0.2f
 #define PLAYERSPPOINT_MAX 30
 #define GAUGE_WID_MAXHP 700.0f	//HPゲージの幅の最大値
 #define GAUGE_LEFT 20			//ゲージ描画時の左端
@@ -40,15 +41,16 @@ CModel CBoss::mModel;//モデルデータ作成
 CBoss::CBoss()
 //コライダの設定
 	: mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 20.0f)
-	, mColSphereHead(this, &mMatrix, CVector(0.0f, 1.0f, 5.0f), 3.0f)
-	, mColSphereRightFront(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 2.0f)
-	, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
-	, mColSphereAttack(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 40.0f)
+	, mColSphereHead(this, &mMatrix, CVector(0.0f, 3.0f, 5.0f), 5.0f)
+	//, mColSphereRightFront(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 2.0f)
+	//, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
+	, mColSphereAttack(this, &mMatrix, CVector(0.0f, 0.0f, 10.0f), 10.0f)
 	, mpPlayer(0)
 	, mMove(0)
 	, mMove2(0)
 	, mBossDamageCount(0)
 	, mBossJumpCount(0)
+	, mBossAttackMove(0)
 	, mEnemyDamage(60)
 	, mJump(0.0f)
 	, mColliderCount(0.0f)
@@ -68,8 +70,8 @@ CBoss::CBoss()
 	mTag = EBOSS;
 	mColSearch.mTag = CCollider::ESEARCH;//タグ設定
 	mColSphereHead.mTag = CCollider::EBOSSCOLLIDERHEAD;
-	mColSphereRightFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
-	mColSphereLeftFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
+	//mColSphereRightFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
+	//mColSphereLeftFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
 	mColSphereAttack.mTag = CCollider::EBOSSCOLLIDERATTACK;
 	mpBossInstance = this;
 	mRotation.mY += 180.0f;
@@ -128,9 +130,11 @@ void CBoss::Idle() {
 					break;
 				case(1):
                      mState = EATTACK;
+					 mBossAttackMove = 0;
 					break;
 				case(2):
 					mState = EATTACK2;
+					mBossAttackMove = 0;
 					break;
 				case(3):
 					mJumpStopper = false;
@@ -138,10 +142,15 @@ void CBoss::Idle() {
 					mState = EATTACK3;
 					break;
 				case(4):
-					mRotationCount = ROTATIONBASE;
-					mAttack4Count = 1;
-					mAttack4RotationCount = 0.0f;
-					mState = EATTACK4;
+					if (mColSearch.mRenderEnabled == false) {
+						mRotationCount = ROTATIONBASE;
+						mAttack4Count = 1;
+						mAttack4RotationCount = 0.0f;
+						mState = EATTACK4;
+					}
+					else {
+						mState = EIDLE;
+					}
 					break;
 				}
 
@@ -159,6 +168,7 @@ void CBoss::Idle() {
 }
 //移動処理
 void CBoss::AutoMove() {
+	mPosition.mY -= G;
 	CSceneGame* tSceneGame = CSceneGame::GetInstance();
 	//歩く
 
@@ -210,6 +220,39 @@ void CBoss::AutoMove() {
 void CBoss::Attack() {
 	//攻撃アニメーション
 	ChangeAnimation(5, false, 80);
+	
+	switch (mBossAttackMove) {
+	case(0):
+		if (mAnimationFrame < 30) {
+
+			mPosition.mZ -= 0.1f;
+		}
+		else {
+			mJump = JUMP2;
+			mBossAttackMove = 1;
+		}
+		break;
+	case(1):
+		if (mAnimationFrame < 60) {
+			mBossAttackHit = true;
+			mPosition.mY += mJump;
+			if (mJump > 0) {
+				mPosition.mZ += mJump;
+			}
+			mJump -= G2;
+		}
+		else {
+			mBossAttackHit = false;
+			mJump = 0.0f;
+		mBossAttackMove = 2;
+
+		}
+		break;
+	case(2):
+			mPosition.mZ -= 0.1f;
+		
+		break;
+	}
 	//攻撃のあとは移動処理に移行
 	if (mAnimationFrame >= mAnimationFrameSize) {
 			mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
@@ -220,15 +263,43 @@ void CBoss::Attack() {
 void CBoss::Attack2() {
 	//攻撃アニメーション
 	ChangeAnimation(6, false, 80);
-	//攻撃のあとは移動処理に移行
+
+	switch (mBossAttackMove) {
+	case(0):
+		if (mAnimationFrame < 30) {
+			mRotation.mY += 4.5f;
+		}
+		else {
+			mBossAttackMove = 1;
+		}
+		break;
+	case(1):
+		mBossAttackHit = true;
+		if (mAnimationFrame < 50) {
+			mRotation.mY -= 9.0f;
+	     }
+		else {
+			mBossAttackMove = 2;
+		}
+		break;
+	case(2):
+		if (mAnimationFrame < 80) {
+			mRotation.mY += 2.0f;
+		}
+		
+			
+		break;
+	}
 	if (mAnimationFrame>=mAnimationFrameSize) {
-		mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
+             mBossAttackHit = false;		
+		     mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
 	}
 }
 void CBoss::Attack3() {
 	ChangeAnimation(8, false, 120);
 	mPosition.mY += mJump;
-	mRotation.mX+=36.0f;
+	mRotation.mX+=6.0f;
+	mColSphereHead.mRadius = 6.0f;
 	if (mJump > -0.5f) {
 				mJump -= G;
 	}
@@ -242,6 +313,7 @@ void CBoss::Attack3() {
 			mColSphereAttack.mRenderEnabled = false;
 			mBossAttackHit = false;
 			mRotation.mX = 0.0f;
+			mColSphereHead.mRadius = 3.0f;
 				mState = EIDLE;
 		}
 	}
@@ -426,7 +498,7 @@ void CBoss::Update() {
 	switch (mAnimationIndex) {
 	case(5):
 		if (mAnimationFrame == 30) {
-			mBossAttackHit = true;
+			
 			if (tSceneGame->mVoiceSwitch == true) {
 				BossVoice.Play();
 			}
@@ -441,7 +513,7 @@ void CBoss::Update() {
 		break;
 	case(6):
 		if (mAnimationFrame == 30) {
-			mBossAttackHit = true;
+			
 			if (tSceneGame->mVoiceSwitch == true) {
 			  BossVoice.Play();
 			}
@@ -467,12 +539,12 @@ void CBoss::Update() {
 			if (mBossColliderCheck == 1) {
 				CXPlayer* tPlayer = CXPlayer::GetInstance();
 
-				mBossEffect = new CEffect2(tPlayer->mPosition, 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2, true, &mRotation);
+				mBossEffect = new CEffect2(tPlayer->GetSwordColPos(), 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2, true, &mRotation);
 			}
 			//頭に攻撃されたとき
 			else if (mBossColliderCheck == 2) {
 				CXPlayer* tPlayer = CXPlayer::GetInstance();
-			    mBossEffect=new CEffect2(CVector(tPlayer->mPosition.mX, tPlayer->mPosition.mY+1.0f, tPlayer->mPosition.mZ), 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2, true, &mRotation);
+			    mBossEffect=new CEffect2(tPlayer->GetSwordColPos(), 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2, true, &mRotation);
 			}
 		}
 	}
@@ -590,11 +662,8 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 						if (mAnimationFrame >= mAnimationFrameSize) {
 							mJumpStopper = true;
 						}
-					 }
-
-					
+				    }	
 				}
-				
 			}
 		}
 		return;
@@ -603,14 +672,16 @@ void CBoss::TaskCollision() {
 	//コライダの優先度変更
 	mColSearch.ChangePriority();
 	mColSphereHead.ChangePriority();
-	mColSphereRightFront.ChangePriority();
-	mColSphereLeftFront.ChangePriority();
+	//mColSphereRightFront.ChangePriority();
+	//mColSphereLeftFront.ChangePriority();
+	mColSphereAttack.ChangePriority();
 	//衝突処理を実行
 
-	CCollisionManager::Get()->Collision(&mColSphereRightFront, COLLISIONRANGE);
-	CCollisionManager::Get()->Collision(&mColSphereLeftFront, COLLISIONRANGE);
+	//CCollisionManager::Get()->Collision(&mColSphereRightFront, COLLISIONRANGE);
+	//CCollisionManager::Get()->Collision(&mColSphereLeftFront, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSphereHead, COLLISIONRANGEFIELD);
 	CCollisionManager::Get()->Collision(&mColSearch, COLLISIONRANGE);
+	CCollisionManager::Get()->Collision(&mColSphereAttack, COLLISIONRANGE);
 }
 
 void CBoss::Render2D()

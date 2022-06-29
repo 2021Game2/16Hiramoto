@@ -86,7 +86,11 @@ CXPlayer::CXPlayer()
 	CTaskManager::Get()->Remove(this);//削除して
 	CTaskManager::Get()->Add(this);//追加する
 }
-
+//剣のコライダの座標を取得する
+CVector CXPlayer::GetSwordColPos()
+{
+	return mColSphereSword.mpMatrix->GetPos();	//剣のコライダの座標を返す
+}
 void CXPlayer::Init(CModelX* model)
 {
 	CXCharacter::Init(model);
@@ -191,7 +195,7 @@ void CXPlayer::Update()
 			PlayerDamage.Play();
 		}
 
-		ChangeAnimation(4, false, 10);
+		ChangeAnimation(4, false, 60);
 		break;
 	case EDEATH://死亡
 		if (mPlayerBgm == true) {
@@ -640,16 +644,10 @@ void CXPlayer::Update()
 		 if (mState != EESCAPE) {
 			  mPosition.mY += mJump;
 		 }
-		//アイテム取得時に武器の当たり判定拡大
-		 if (mpItem) {
-
-			 if (mpItem->mItemCount > 0) {
-				mColSphereSword.mRadius = 7.5f;
-			 }
-		 }
+		 
 		 //吹き飛ぶ
 		 if (mColliderCount > 0) {
-			mColliderCount--;
+			mColliderCount-=0.2f;
 			mPosition = mPosition + mCollisionEnemy * mColliderCount;
 			
 		 }
@@ -761,7 +759,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 											//体力減少
 											mHp--;
 											//無敵時間付与
-											mDamageCount = 30;
+											mDamageCount = 60;
 											//ダメージ時の処理を開始
 											mState = EDAMAGED;
 										}
@@ -777,7 +775,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 						if (o->mTag == CCollider::EBOSSCOLLIDERHEAD) {
 							if (CCollider::Collision(m, o)) {
 								//後ろに下がる
-								mColliderCount = 1.5f;
+								mColliderCount = 0.5f;
 								mCollisionEnemy = mPosition - o->mpParent->mPosition;
 								mCollisionEnemy.mY = 0;
 								mCollisionEnemy = mCollisionEnemy.Normalize();
@@ -793,7 +791,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 									{
 										if (mHp > 0) {
 											//後ろに下がる
-											mColliderCount = 5.0f;
+											mColliderCount = 3.0f;
 											mCollisionEnemy = mPosition - o->mpParent->mPosition;
 											mCollisionEnemy.mY = 0;
 											mCollisionEnemy = mCollisionEnemy.Normalize();
