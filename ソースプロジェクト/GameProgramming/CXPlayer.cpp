@@ -23,16 +23,11 @@
 #define GAUGE_WID_MAXHP 400.0f	//HPゲージの幅の最大値
 #define GAUGE_WID_MAXST 400.0f //スタミナゲージの幅の最大値
 #define GAUGE_WID_MAXSP 300.0f//SPポイントゲージの幅の最大値
-#define GAUGE_LEFT 20	//ゲージ描画時の左端
+#define GAUGE_LEFT 20			//ゲージ描画時の左端
 #define IMAGE_GAUGE "Resource\\png,tga\\Gauge.png"		//ゲージ画像
 #define G 0.1f//重力
 #define G2 1.5f//スペシャル攻撃時の重力
 
-
-int CXPlayer::mSpAttack = SPPOINT_MAX;
-int CXPlayer::mStamina = STAMINA_MAX;
-int CXPlayer::mAttackCount = 0;
-int CXPlayer::mHp = HP_MAX;
 
 extern CSound PlayerFirstAttack;//一回目の攻撃のSE
 extern CSound PlayerSecondAttack;//二回目の攻撃のSE
@@ -48,26 +43,29 @@ CXPlayer* CXPlayer::GetInstance()
 }
 
 CXPlayer::CXPlayer()
-	: mColSphereSword(this, &mMatrix, CVector(-10.0f, 10.0f, 50.0f), 2.5f)//剣のコライダ１
-	, mColSphereFoot(this, &mMatrix, CVector(0.0f, 0.0f, -3.0f), 2.0f)//足付近のコライダ
-	, mColliderSwordSp(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 10.0f)//剣のコライダ２
-	, mColEscapeStopperLine(this, &mMatrix, CVector(0.0f, 5.0f, -3.0f),CVector(0.0f,5.0f,3.0f))//回避時にすり抜けないようにする線分コライダ
-	, mJump(0.0f)
-	, mStep(0.0f)
-	,mSpaceCount1(true)
-	,mSpaceCount2(false)
-	,mSpaceCount3(false)
-	, mDamageCount(0)
+	:mColSphereSword(this, &mMatrix, CVector(-10.0f, 10.0f, 50.0f), 2.5f)//剣のコライダ１
+	,mColSphereFoot(this, &mMatrix, CVector(0.0f, 0.0f, -3.0f), 2.0f)//足付近のコライダ
+	,mColliderSwordSp(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 10.0f)//剣のコライダ２
+	,mColEscapeStopperLine(this, &mMatrix, CVector(0.0f, 5.0f, -3.0f),CVector(0.0f,5.0f,3.0f))//回避時にすり抜けないようにする線分コライダ
+	,mDamageCount(0)
 	,mAnimationCount(0)
+	,mAttackCount(0)
+	,mJump(0.0f)
+	,mStep(0.0f)
 	,mColliderCount(1.0f)
-
 	,mSpeed(0.0f)
 	,mPlayerBgm(true)
-	, mMoveCheck(false)
-	, mAnimationFrameLock(false)
-	, mJumpStopper(true)
+	,mSpaceCount1(true)
+	,mJumpStopper(true)
+	,mGaugeEnabled(true)
+	,mSpaceCount2(false)
+	,mSpaceCount3(false)
+	,mMoveCheck(false)
+	,mAnimationFrameLock(false)
 	,mEffectStopper(false)
-	, mGaugeEnabled(true)
+	,mHp(HP_MAX)
+	,mSpAttack(SPPOINT_MAX)
+	,mStamina(STAMINA_MAX)
 {
 	//タグにプレイヤーを設定します
 	mTag = EPLAYER;
@@ -83,7 +81,11 @@ CXPlayer::CXPlayer()
 	CTaskManager::Get()->Remove(this);//削除して
 	CTaskManager::Get()->Add(this);//追加する
 }
-
+//剣のコライダの座標を取得する
+CVector CXPlayer::GetSwordColPos()
+{
+	return mColSphereSword.mpMatrix->GetPos();	//剣のコライダの座標を返す
+}
 void CXPlayer::Init(CModelX* model)
 {
 	CXCharacter::Init(model);
@@ -100,7 +102,8 @@ void CXPlayer::Init(CModelX* model)
 
 void CXPlayer::Update()
 {
-
+	CSceneGame* tSceneGame = CSceneGame::GetInstance();
+	CCamera* tCamera = CCamera::GetInstance();
 	//処理を行動ごとに分割
 	switch (mState) {
 	case EIDLE:	//待機
@@ -176,6 +179,7 @@ void CXPlayer::Update()
 		}
 		break;
 	case EATTACKSP://攻撃
+		tCamera->mAngleY -= 0.01f;
 		if (mAttackCount>0) {
 		ChangeAnimation(7, false, 100);
 		
@@ -183,16 +187,16 @@ void CXPlayer::Update()
 		break;
 	case EDAMAGED://ダメージ
 
-		if (CSceneGame::mVoiceSwitch == true) {
+		if (tSceneGame->mVoiceSwitch == true) {
 			PlayerDamage.Play();
 		}
 
-		ChangeAnimation(4, false, 10);
+		ChangeAnimation(4, false, 60);
 		break;
 	case EDEATH://死亡
 		if (mPlayerBgm == true) {
-			CSceneGame::mBgmCountCheck = false;
-			CSceneGame::mBgmCount = 5;
+			tSceneGame->mBgmCountCheck = false;
+			tSceneGame->mBgmCount = 5;
 
 			mPlayerBgm = false;
 		}
@@ -218,8 +222,7 @@ void CXPlayer::Update()
 			//エフェクト生成
 			//剣コライダの座標を参照
 			CVector tpos = mColSphereSword.mpMatrix->GetPos();
-			mEffect1 = new CEffect2(CVector(tpos.mX, tpos.mY, tpos.mZ), 3.0f, 3.0f,
-				CEffect2::EFF_ATTACK, 2, 5, 3, true, &mRotation);
+			mEffect1 = new CEffect2(CVector(tpos.mX, tpos.mY, tpos.mZ), 3.0f, 3.0f,CEffect2::EFF_ATTACK, 2, 5, 3, true, &mRotation);
 			mAttackHit = true;
 			mAnimationFrameLock = false;
 		}
@@ -260,7 +263,8 @@ void CXPlayer::Update()
 		if (mAnimationFrameLock == true) {
 			//剣コライダの座標を参照
 			CVector tpos = mColSphereSword.mpMatrix->GetPos();
-     		mEffect2 = new CEffect2(CVector(tpos.mX, tpos.mY, tpos.mZ), 3.0f, 3.0f, CEffect2::EFF_ATTACK2, 3, 5, 3);
+			mEffect2 = new CEffect2(CVector(tpos.mX, tpos.mY, tpos.mZ += 1.0f), 3.0f, 3.0f, CEffect2::EFF_ATTACK2, 3, 5, 3, true, NULL);
+			
 			mAttackHit = true;
 			mAnimationFrameLock = false;
 		}
@@ -307,7 +311,7 @@ void CXPlayer::Update()
 					if (mState == EATTACK3) {
 						//剣コライダの座標を参照
 						CVector tpos = mColSphereSword.mpMatrix->GetPos();
-						mEffect3 = new CEffect2(CVector(tpos.mX, tpos.mY, tpos.mZ), 3.0f, 3.0f, CEffect2::EFF_ATTACK3, 3, 5, 3);
+						mEffect3 = new CEffect2(CVector(tpos.mX, tpos.mY, tpos.mZ), 3.0f, 3.0f, CEffect2::EFF_ATTACK3, 3, 5, 3,true, &mRotation);
 						
 					}
 						mAnimationFrameLock = false;
@@ -324,7 +328,7 @@ void CXPlayer::Update()
 			if (mJump >= -3.0f) {
 				//剣コライダの座標を参照
 				CVector tpos = mColSphereSword.mpMatrix->GetPos();
-				mEffectSp = new CEffect2(CVector(tpos.mX, tpos.mY+1.0f, tpos.mZ), 3.0f, 3.0f, CEffect2::EFF_ATTACKSP, 4, 5, 3);
+				mEffectSp = new CEffect2(CVector(tpos.mX, tpos.mY+1.0f, tpos.mZ), 3.0f, 3.0f, CEffect2::EFF_ATTACKSP, 4, 5, 3, true, &mRotation);
 				if (mJumpStopper == false) {
 				  mJump -= G2;
 				}
@@ -458,7 +462,7 @@ void CXPlayer::Update()
 						if (CKey::Once(VK_LBUTTON))
 						{
 
-							if (CSceneGame::mVoiceSwitch == true) {
+							if (tSceneGame->mVoiceSwitch == true) {
 								PlayerFirstAttack.Play();
 							}
 							mState = EATTACK1;
@@ -476,7 +480,7 @@ void CXPlayer::Update()
 					if (mAttackCount <= 0) {
 						if (CKey::Once(VK_LBUTTON)) {
 
-							if (CSceneGame::mVoiceSwitch == true) {
+							if (tSceneGame->mVoiceSwitch == true) {
 								PlayerSecondAttack.Play();
 							}
 							mState = EATTACK2;
@@ -493,7 +497,7 @@ void CXPlayer::Update()
 					if (mAttackCount <= 0) {
 						if (CKey::Once(VK_LBUTTON)) {
 
-							if (CSceneGame::mVoiceSwitch == true) {
+							if (tSceneGame->mVoiceSwitch == true) {
 								PlayerThirdAttack.Play();
 							}
 							mState = EATTACK3;
@@ -511,7 +515,7 @@ void CXPlayer::Update()
 					if (CKey::Once(VK_RBUTTON)) {
 						if (mAttackCount <= 0) {
 
-							if (CSceneGame::mVoiceSwitch == true) {
+							if (tSceneGame->mVoiceSwitch == true) {
 								PlayerJumpAttack.Play();
 							}
 							mState = EATTACKSP;
@@ -552,7 +556,12 @@ void CXPlayer::Update()
 					}
 				}
 			}
-			
+			if (CKey::Once('C')) {
+				if (Move.Length() != 0.0f) {
+					mState = EDUSH;
+				}
+				
+			}
 		}
 		//移動量正規化　斜め移動が早くなってしまう
 		//ジャンプ時などはY軸を正規化しない
@@ -631,13 +640,10 @@ void CXPlayer::Update()
 		 if (mState != EESCAPE) {
 			  mPosition.mY += mJump;
 		 }
-		//アイテム取得時に武器の当たり判定拡大
-		 if (CItem::mItemCount > 0) {
-			mColSphereSword.mRadius = 7.5f;
-		 }
+		 
 		 //吹き飛ぶ
 		 if (mColliderCount > 0) {
-			mColliderCount--;
+			mColliderCount-=0.2f;
 			mPosition = mPosition + mCollisionEnemy * mColliderCount;
 			
 		 }
@@ -749,7 +755,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 											//体力減少
 											mHp--;
 											//無敵時間付与
-											mDamageCount = 30;
+											mDamageCount = 60;
 											//ダメージ時の処理を開始
 											mState = EDAMAGED;
 										}
@@ -765,7 +771,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 						if (o->mTag == CCollider::EBOSSCOLLIDERHEAD) {
 							if (CCollider::Collision(m, o)) {
 								//後ろに下がる
-								mColliderCount = 1.5f;
+								mColliderCount = 0.5f;
 								mCollisionEnemy = mPosition - o->mpParent->mPosition;
 								mCollisionEnemy.mY = 0;
 								mCollisionEnemy = mCollisionEnemy.Normalize();
@@ -781,7 +787,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 									{
 										if (mHp > 0) {
 											//後ろに下がる
-											mColliderCount = 5.0f;
+											mColliderCount = 3.0f;
 											mCollisionEnemy = mPosition - o->mpParent->mPosition;
 											mCollisionEnemy.mY = 0;
 											mCollisionEnemy = mCollisionEnemy.Normalize();

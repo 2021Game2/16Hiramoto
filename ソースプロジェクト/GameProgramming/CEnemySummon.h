@@ -23,6 +23,7 @@ public:
 	CEnemySummon(const CVector& position, const CVector& rotation, const CVector& scale);
 	//更新処理
 	void Update();
+	void Damage();
 	//衝突処理
 	//Collision(コライダ１、コライダ２）
 	void Collision(CCollider* m, CCollider* o);

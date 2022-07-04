@@ -58,8 +58,9 @@ void CFlag::Collision(CCollider* m, CCollider* o) {
 				if (o->mpParent->mTag == EPLAYER) {
 					if (o->mTag == CCollider::EPLAYERBODY) {
 						if (CCollider::Collision(m, o)) {
-							CSceneGame::mBossSwitch = true;
-							CSceneGame::mBossGaugeSwitch = true;
+							CSceneGame* tSceneGame = CSceneGame::GetInstance();
+							tSceneGame->mBossSwitch = true;
+							tSceneGame->mBossGaugeSwitch = true;
 							mEnabled = false;
 
 						}

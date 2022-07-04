@@ -123,18 +123,7 @@ void CShadowMap::Init(int width, int height, void (*funcRender)(),void(*funcEffe
 	
 	Init();
 
-}/*
-void CShadowMap::Init(int width, int height, void (*funcRender)(), void(*funcEffectRender)(),
-	float shadouCol[], float lightPos[]) 
-{
-	mDepthTextureID = 0;
-	mFb = 0;
-	mTextureHeight = height;
-	mTextureWidth = width;
-	mpRender = funcRender;
-	mpEffectRender = funcEffectRender;
-	
-}*/
+}
 
 void CShadowMap::Render()
 {
@@ -178,12 +167,19 @@ void CShadowMap::Render()
 	//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
 	//CXPlayer* tPlayer = CXPlayer::GetInstance();
 	//if (tPlayer) {
-	mLightPos[0] = 0.0f;
-	mLightPos[1] = 150.0f;
-	mLightPos[2] =  -16.0f;
+	//mLightPos[0] = 0.0f;
+	//mLightPos[1] = 180.0f;
+	//mLightPos[2] =  -50.0f;
 		
 	//}
-	gluLookAt(mLightPos[0], mLightPos[1], mLightPos[2], mLightPos[0] - 1, 0, mLightPos[2] - 1, -63.0, 1.0, -150.0);
+	mLightPos[0] = -40.0f;
+	mLightPos[1] = 120.0f;
+	mLightPos[2] = -140.0f;
+	gluLookAt(mLightPos[0], mLightPos[1], mLightPos[2], 3.0f, 0.0f, -40.0f, 0.0f, 1.0f, 0.0f);
+	//gluLookAt(mLightPos[0], mLightPos[1], mLightPos[2], mLightPos[0] - 1, 0, mLightPos[2] - 1, -63.0, 1.0, -150.0);
+	// gluLookAt(mLightPos[0], mLightPos[1], mLightPos[2], mLightPos[0] - 1, 0, mLightPos[2] - 1, mLightPos[0], 0.0f, mLightPos[2]);
+	// gluLookAt(mLightPos[0], mLightPos[1], mLightPos[2], 3.0f, 0.0f, -40.0f, 0.0,1.0,0.0);
+	
 	// 設定したモデルビュー変換行列を保存しておく //
 	glGetFloatv(GL_MODELVIEW_MATRIX, modelview.mM[0]);
 

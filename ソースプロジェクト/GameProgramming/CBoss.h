@@ -25,63 +25,34 @@ private:
 	CCharacter* mpPlayer;//プレイヤーのポインタ
 	CText mFont;
 	char buf[64];
-	float mJump;
+	bool mBossBgm;
+	bool mBossBgmDeath;
+	bool mColSearchCount;
+	bool mJumpStopper;
 	int mMove;
 	int mMove2;
 	int mBossDamageCount;
 	int mEnemy2StopCount;//プレイヤーのESTOPPERに当たっている間増加
     int mAttackPercent;
 	int mEnemyDamage;
+	int mBossJumpCount;
+	int  mBossColliderCheck;
+	int mAttack4MoveCount;
+	int mAttack4Count;
+	int mAttack4directionCount;
+	int mEffectCount;
+	int mBossAttackMove;
+	float mJump;
 	float mColliderCount;
 	float mGravity;//重力
 	float mTime;//ジャンプする時の時間を計測
-	int mBossJumpCount;
-	bool mBossBgm;
-	bool mBossBgmDeath;
-	int  mBossColliderCheck;
 	float mAttack4MoveX;
 	float mAttack4MoveZ;
-	int mAttack4MoveCount;
-	int mAttack4Count;
 	float mAttack4RotationCount;
-	int mAttack4directionCount;
-	CTexture mImageGauge; //ゲージ画像
-public:
 	float mAttackRotation;
 	float mRotationCount;
-	CCollider mColSearch;//サーチ用コライダ
-	bool mColSearchCount;
-	bool mBossAttackHit;
-	bool mJumpStopper;
-	//モデルデータ
-	static CModel mModel;
-	static CBoss* GetInstance();
-	static CBoss* mpBossInstance;
-	static int mBossAttackCount;
-	 int mHp;//体力
-	int mEffectCount;
-	//コンストラクタ	
-	CBoss();
-	void Init(CModelX* model);
-	//CEnemy2(位置、回転、拡縮）
-	CBoss(const CVector& position, const CVector& rotation, const CVector& scale);
-	//更新処理
-	void Update();
-	void Render2D();
-	//衝突処理
-	//Collision(コライダ１、コライダ２）
-	void Collision(CCollider* m, CCollider* o);
-	void TaskCollision();
-	void Idle();		//待機処理
-	void AutoMove();	//移動処理
-	void Attack();	//攻撃処理
-    void Attack2();
-	void Attack3();
-	void Attack4();
-	void Damaged();		//被弾処理
-	void Death();		//死亡処理
-	
-	//敵の状態
+	CTexture mImageGauge; //ゲージ画像
+						  //敵の状態
 	enum EBossState
 	{
 		EIDLE,		//待機
@@ -94,6 +65,44 @@ public:
 		EDEATH,		//死亡
 		
 	};
+public:
+
 	EBossState mState;
+	CCollider mColSearch;//サーチ用コライダ
+	//モデルデータ
+	static CModel mModel;
+	static CBoss* GetInstance();
+	static CBoss* mpBossInstance;
+	bool mBossAttackHit;
+	
+	 int mHp;//体力
+	 void SetHp(int v) {
+		 if (v < 0) return;//< ここにブレークポイントを置けば誰が犯人なのかわかる
+		 this->mHp = v;
+	 }
+	 int GetHp() {
+		 return mHp;
+	 }
+	//コンストラクタ	
+	CBoss();
+	//CEnemy2(位置、回転、拡縮）
+	CBoss(const CVector& position, const CVector& rotation, const CVector& scale);
+	void Init(CModelX* model);
+	//更新処理
+	void Update();
+	void Render2D();
+	//衝突処理
+	void Collision(CCollider* m, CCollider* o);
+	void TaskCollision();
+	void Idle();		//待機処理
+	void AutoMove();	//移動処理
+	void Attack();	//攻撃処理
+    void Attack2();
+	void Attack3();
+	void Attack4();
+	void Damaged();		//被弾処理
+	void Death();		//死亡処理
+	
+	
 };
 #endif

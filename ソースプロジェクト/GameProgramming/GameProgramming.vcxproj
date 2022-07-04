@@ -107,7 +107,6 @@
     <ClCompile Include="CCollisionManager.cpp" />
     <ClCompile Include="CEffect.cpp" />
     <ClCompile Include="CEffect2.cpp" />
-    <ClCompile Include="CEnemy.cpp" />
     <ClCompile Include="CEnemy2.cpp" />
     <ClCompile Include="CEnemy3.cpp" />
     <ClCompile Include="CEnemySummon.cpp" />
@@ -157,7 +156,6 @@
     <ClInclude Include="CCollisionManager.h" />
     <ClInclude Include="CEffect.h" />
     <ClInclude Include="CEffect2.h" />
-    <ClInclude Include="CEnemy.h" />
     <ClInclude Include="CEnemy2.h" />
     <ClInclude Include="CEnemy3.h" />
     <ClInclude Include="CEnemyManager.h" />

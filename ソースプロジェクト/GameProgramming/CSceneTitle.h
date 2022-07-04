@@ -8,8 +8,10 @@ private:
 		EGAMESTART,		//ゲームスタート
 	};
 	int mSelect;
-
+	float mRecord;
+	CTexture mImageTitle;
 	CTexture mImageButtonBack; //ボタン背景画像
+	CTexture mImageBackground;
 	 bool mSceneChange;
 	 EScene mNextScene;
 public:

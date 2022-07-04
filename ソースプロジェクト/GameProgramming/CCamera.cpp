@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include "CInput.h"
 #include "main.h"
-
+#include"CXPlayer.h"
 #define _USE_MATH_DEFINES
 #include "CUtil.h"
 #include "CTaskManager.h"
@@ -16,6 +16,13 @@ CCamera* Camera;
 #define WIN_CENTRAL_X WINDOW_WIDTH/2 //画面の中央（X軸）
 #define WIN_CENTRAL_Y WINDOW_HEIGHT/2 //画面の中央 （Y軸）
 
+CCamera* CCamera::mpCameraInstance;
+
+//プレイヤーのポインタを返すことで、座標などが参照できるようになる
+CCamera* CCamera::GetInstance()
+{
+	return mpCameraInstance;
+}
 
 void CCamera::Init()
 {
@@ -45,6 +52,7 @@ CCamera::CCamera()
 	mPriority = 100;
 	CTaskManager::Get()->Remove(this);//
 	CTaskManager::Get()->Add(this);//追加する
+	mpCameraInstance = this;
 }
 void CCamera::Set(const CVector &eye, const CVector &center,
 	const CVector &up) {
@@ -53,7 +61,7 @@ void CCamera::Set(const CVector &eye, const CVector &center,
 	mUp = up;
 	mPos = eye;
 	mTarget = center;
-	mAngleX = 0.0f;
+	mAngleX = 100.0f;
 	mAngleY = 1.0f;
 	mDist = DEF_CAMERA_DIST;
 }
@@ -62,50 +70,38 @@ void CCamera::SetTarget(const CVector& target)
 {
 	mTarget = target;
 }
-
-
 void CCamera::Update() {
-
 	static int oldMouseX(0), oldMouseY(0);
 	int mouseX(0), mouseY(0);
 	CInput::GetMousePosW(&mouseX, &mouseY);
-
-
 	float moveX = (float)(oldMouseX - mouseX);
 	float moveY = (float)(oldMouseY - mouseY);
-
-
 	if (mSkip == false) {
 		if (moveX != 0) mAngleX += (moveX * 0.005f);
 		if (moveY != 0) mAngleY += (moveY * 0.005f);
 	}
 	mSkip = false;
-
 	int X = WIN_CENTRAL_X;
 	int Y = WIN_CENTRAL_Y;
 	CInput::SetMousePosW(X, Y);
 	oldMouseX = X;
 	oldMouseY = Y;
-
     /*
 	int wheel = CInput::GetWheelValue();
 	if (wheel != 0) {
 		mDist -= (float)(wheel)*0.5f;
 	}
 	*/
-
 	//Y軸制限 0～3.14が180度範囲
 	if (mAngleY < 0.05f) mAngleY = 0.05f;
 	if (mAngleY > 3.12f) mAngleY = 3.12f;
-
+	
 	mPos.mX = mTarget.mX + (sinf(mAngleX)) * (mDist * sinf(mAngleY));
 	mPos.mY = mTarget.mY + cosf(mAngleY) * mDist;
 	mPos.mZ = mTarget.mZ + (cosf(mAngleX)) * (mDist * sinf(mAngleY));
-
 	mCenter = mTarget;
 	mCenter.mY += DEF_CAMERA_HEAD_ADJUST;//頭上補正
 	mEye = mPos;
-
 	mColliderLine.Set(this, nullptr, mEye, mCenter);
 
 	

@@ -13,43 +13,45 @@
 class CEnemy3 :public CCharacter {
 private:
 
-	CCollider mCollider;
-	CBullet* mpBullet;
-	CVector mPoint;//目標地点
 	
 	int mJump;
 	int mJump2;
-	CText mText;
 	int mMove2;
 	int mColliderCount;
 	int mCount;
 	int mFireCount;
 	int mEnemy3Fry;
-	CVector mCollisionEnemy;
-
 	int mEnemyDamage;
-
+    int mMoveCount;
+    int mHp;//体力
+	CCollider mCollider;
+	CBullet* mpBullet;
+	CVector mPoint;//目標地点
+	CVector mCollisionEnemy;
+	CText mText;
 	CCharacter* mpPlayer;//プレイヤーのポインタ
+
 public:
-int mHp;//体力
 	CCollider mColSearch2;//サーチ用コライダ
 	//モデルデータ
 	static CModel mModel;
-	//コライダ
-	//コンストラクタ	
+	//コンストラクタ
 	CEnemy3();
-	void AutoMove1();
-	void AutoMove2();
-	void Damage();
+	CEnemy3(const CVector& position, const CVector& rotation, const CVector& scale);
+	void Move1();
+	void Move2();
+	void Move3();
+	void Move4();
+	void Move5();
+	//void AutoMove1();
+	//void AutoMove2();
+	//void Damage();
 	void Death();
 	void Attack();
 	void Idle();
-	static int mMoveCount;
-	CEnemy3(const CVector& position, const CVector& rotation, const CVector& scale);
 	//更新処理
 	void Update();
 	//衝突処理
-	//Collision(コライダ１、コライダ２）
 	void Collision(CCollider* m, CCollider* o);
 	void TaskCollision();
 	//敵の状態
@@ -58,6 +60,11 @@ int mHp;//体力
 		EIDLE,		//待機
 		EAUTOMOVE1,	//移動
 		EAUTOMOVE2,
+		EMOVE1,
+		EMOVE2,
+		EMOVE3,
+		EMOVE4,
+		EMOVE5,
 		EATTACK,	//攻撃
 		EDAMAGED,	//被弾
 		EDEATH,		//死亡

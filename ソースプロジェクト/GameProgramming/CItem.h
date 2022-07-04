@@ -12,9 +12,21 @@ private:
 	CCollider mCollider2;
 public:
 	static bool mItemAttackHit;
+
+	static CItem* mpItemInstance;
+	//staticで処理を作る
+	static CItem* GetInstance();
+	
 	//モデルデータ
 	static CModel mModel;
-	static int mItemCount;
+    int mItemCount;
+	void SetItemCount(int v) {
+		if (v < 0)return;
+		mItemCount = v;
+	}
+	int GetItemCount() {
+		return mItemCount;
+	}
 	CItem();
 	//親へのポインタ
 	CCharacter* mpParent;

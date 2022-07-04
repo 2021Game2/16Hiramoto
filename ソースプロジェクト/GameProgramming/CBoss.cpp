@@ -13,8 +13,9 @@
 #define HPCOUNT2 10 //ダメージを受けたときにのけぞりを行う体力の数値
 #define HPCOUNT3 5 //ダメージを受けたときにのけぞりを行う体力の数値
 #define JUMP 5.0f
+#define JUMP2 2.5f
 #define G 0.1f
-#define G2 1.0f
+#define G2 0.2f
 #define PLAYERSPPOINT_MAX 30
 #define GAUGE_WID_MAXHP 700.0f	//HPゲージの幅の最大値
 #define GAUGE_LEFT 20			//ゲージ描画時の左端
@@ -25,7 +26,6 @@
 #define ROTATION 3.6f//攻撃時に回転する量
 #define ROTATIONMIN -0.36f
 #define IMAGE_GAUGE "Resource\\png,tga\\Gauge.png"		//ゲージ画像
-int CBoss::mBossAttackCount = 0;
 
 
  extern CSound BossVoice;
@@ -41,26 +41,27 @@ CModel CBoss::mModel;//モデルデータ作成
 CBoss::CBoss()
 //コライダの設定
 	: mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 20.0f)
-	, mColSphereHead(this, &mMatrix, CVector(0.0f, 1.0f, 5.0f), 3.0f)
-	, mColSphereRightFront(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 2.0f)
-	, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
-	, mColSphereAttack(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 40.0f)
+	, mColSphereHead(this, &mMatrix, CVector(0.0f, 3.0f, 5.0f), 5.0f)
+	//, mColSphereRightFront(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 2.0f)
+	//, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
+	, mColSphereAttack(this, &mMatrix, CVector(0.0f, 0.0f, 10.0f), 10.0f)
 	, mpPlayer(0)
-	, mJump(0.0f)
-	, mEnemyDamage(60)
 	, mMove(0)
 	, mMove2(0)
+	, mBossDamageCount(0)
+	, mBossJumpCount(0)
+	, mBossAttackMove(0)
+	, mEnemyDamage(60)
+	, mJump(0.0f)
 	, mColliderCount(0.0f)
 	, mGravity(0.0f)
 	, mTime(0.0f)
-	, mBossDamageCount(0)
 	, mHp(HP)
 	, mJumpStopper(true)
-	, mBossAttackHit(false)
-	, mColSearchCount(false)
 	, mBossBgm(true)
 	, mBossBgmDeath(true)
-	, mBossJumpCount(0)
+	, mBossAttackHit(false)
+	, mColSearchCount(false)
 	
 {
 
@@ -69,14 +70,15 @@ CBoss::CBoss()
 	mTag = EBOSS;
 	mColSearch.mTag = CCollider::ESEARCH;//タグ設定
 	mColSphereHead.mTag = CCollider::EBOSSCOLLIDERHEAD;
-	mColSphereRightFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
-	mColSphereLeftFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
+	//mColSphereRightFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
+	//mColSphereLeftFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
 	mColSphereAttack.mTag = CCollider::EBOSSCOLLIDERATTACK;
 	mpBossInstance = this;
 	mRotation.mY += 180.0f;
 	mGravity = 0.20f;
 	mState = EIDLE;
 	mColSphereAttack.mRenderEnabled = false;
+	CSceneGame* tSceneGame = CSceneGame::GetInstance();
 }
 
 //CEnemy(位置、回転、拡縮）
@@ -128,9 +130,11 @@ void CBoss::Idle() {
 					break;
 				case(1):
                      mState = EATTACK;
+					 mBossAttackMove = 0;
 					break;
 				case(2):
 					mState = EATTACK2;
+					mBossAttackMove = 0;
 					break;
 				case(3):
 					mJumpStopper = false;
@@ -138,10 +142,15 @@ void CBoss::Idle() {
 					mState = EATTACK3;
 					break;
 				case(4):
-					mRotationCount = ROTATIONBASE;
-					mAttack4Count = 1;
-					mAttack4RotationCount = 0.0f;
-					mState = EATTACK4;
+					if (mColSearch.mRenderEnabled == false) {
+						mRotationCount = ROTATIONBASE;
+						mAttack4Count = 1;
+						mAttack4RotationCount = 0.0f;
+						mState = EATTACK4;
+					}
+					else {
+						mState = EIDLE;
+					}
 					break;
 				}
 
@@ -159,9 +168,11 @@ void CBoss::Idle() {
 }
 //移動処理
 void CBoss::AutoMove() {
+	mPosition.mY -= G;
+	CSceneGame* tSceneGame = CSceneGame::GetInstance();
 	//歩く
 
-	if (CSceneGame::mVoiceSwitch == true) {
+	if (tSceneGame->mVoiceSwitch == true) {
 		BossMove.Play();
 	}
 	//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
@@ -209,6 +220,39 @@ void CBoss::AutoMove() {
 void CBoss::Attack() {
 	//攻撃アニメーション
 	ChangeAnimation(5, false, 80);
+	
+	switch (mBossAttackMove) {
+	case(0):
+		if (mAnimationFrame < 30) {
+
+			mPosition.mZ -= 0.1f;
+		}
+		else {
+			mJump = JUMP2;
+			mBossAttackMove = 1;
+		}
+		break;
+	case(1):
+		if (mAnimationFrame < 60) {
+			mBossAttackHit = true;
+			mPosition.mY += mJump;
+			if (mJump > 0) {
+				mPosition.mZ += mJump;
+			}
+			mJump -= G2;
+		}
+		else {
+			mBossAttackHit = false;
+			mJump = 0.0f;
+		mBossAttackMove = 2;
+
+		}
+		break;
+	case(2):
+			mPosition.mZ -= 0.1f;
+		
+		break;
+	}
 	//攻撃のあとは移動処理に移行
 	if (mAnimationFrame >= mAnimationFrameSize) {
 			mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
@@ -219,14 +263,43 @@ void CBoss::Attack() {
 void CBoss::Attack2() {
 	//攻撃アニメーション
 	ChangeAnimation(6, false, 80);
-	//攻撃のあとは移動処理に移行
+
+	switch (mBossAttackMove) {
+	case(0):
+		if (mAnimationFrame < 30) {
+			mRotation.mY += 4.5f;
+		}
+		else {
+			mBossAttackMove = 1;
+		}
+		break;
+	case(1):
+		mBossAttackHit = true;
+		if (mAnimationFrame < 50) {
+			mRotation.mY -= 9.0f;
+	     }
+		else {
+			mBossAttackMove = 2;
+		}
+		break;
+	case(2):
+		if (mAnimationFrame < 80) {
+			mRotation.mY += 2.0f;
+		}
+		
+			
+		break;
+	}
 	if (mAnimationFrame>=mAnimationFrameSize) {
-		mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
+             mBossAttackHit = false;		
+		     mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
 	}
 }
 void CBoss::Attack3() {
 	ChangeAnimation(8, false, 120);
 	mPosition.mY += mJump;
+	mRotation.mX+=6.0f;
+	mColSphereHead.mRadius = 6.0f;
 	if (mJump > -0.5f) {
 				mJump -= G;
 	}
@@ -239,6 +312,8 @@ void CBoss::Attack3() {
 		if (mAnimationFrame >= mAnimationFrameSize) {	
 			mColSphereAttack.mRenderEnabled = false;
 			mBossAttackHit = false;
+			mRotation.mX = 0.0f;
+			mColSphereHead.mRadius = 3.0f;
 				mState = EIDLE;
 		}
 	}
@@ -363,10 +438,11 @@ void CBoss::Damaged() {
 }
 //死亡処理
 void CBoss::Death() {
+	CSceneGame* tSceneGame = CSceneGame::GetInstance();
 	mColSphereHead.mRadius = 2.0f;                                    
 	if (mBossBgmDeath == true) {
-		CSceneGame::mBgmCountCheck = false;
-		CSceneGame::mBgmCount = 4;
+		tSceneGame->mBgmCountCheck = false;
+		tSceneGame->mBgmCount = 4;
 		mBossBgmDeath = false;
 	}
 	ChangeAnimation(9, false, 250);
@@ -389,6 +465,7 @@ void CBoss::Death() {
 
 //更新処理
 void CBoss::Update() {
+	CSceneGame* tSceneGame = CSceneGame::GetInstance();
 	//処理を行動ごとに分割
 	switch (mState) {
 	case EIDLE:	//待機
@@ -421,8 +498,8 @@ void CBoss::Update() {
 	switch (mAnimationIndex) {
 	case(5):
 		if (mAnimationFrame == 30) {
-			mBossAttackHit = true;
-			if (CSceneGame::mVoiceSwitch == true) {
+			
+			if (tSceneGame->mVoiceSwitch == true) {
 				BossVoice.Play();
 			}
 		}
@@ -436,8 +513,8 @@ void CBoss::Update() {
 		break;
 	case(6):
 		if (mAnimationFrame == 30) {
-			mBossAttackHit = true;
-			if (CSceneGame::mVoiceSwitch == true) {
+			
+			if (tSceneGame->mVoiceSwitch == true) {
 			  BossVoice.Play();
 			}
 		}
@@ -462,12 +539,12 @@ void CBoss::Update() {
 			if (mBossColliderCheck == 1) {
 				CXPlayer* tPlayer = CXPlayer::GetInstance();
 
-				mBossEffect = new CEffect2(tPlayer->mPosition, 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2);
+				mBossEffect = new CEffect2(tPlayer->GetSwordColPos(), 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2, true, &mRotation);
 			}
 			//頭に攻撃されたとき
 			else if (mBossColliderCheck == 2) {
 				CXPlayer* tPlayer = CXPlayer::GetInstance();
-			    mBossEffect=new CEffect2(CVector(tPlayer->mPosition.mX, tPlayer->mPosition.mY+1.0f, tPlayer->mPosition.mZ), 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2);
+			    mBossEffect=new CEffect2(tPlayer->GetSwordColPos(), 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2, true, &mRotation);
 			}
 		}
 	}
@@ -483,6 +560,7 @@ void CBoss::Update() {
 
 //Collision(コライダ１，コライダ２，）
 void CBoss::Collision(CCollider* m, CCollider* o) {
+	CSceneGame* tSceneGame = CSceneGame::GetInstance();
 	//コライダのとき
 	m->mType = CCollider::ESPHERE;
 		//自分がサーチ用のとき
@@ -498,8 +576,8 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 							mColSearchCount = true;
 							if (mColSearch.mRenderEnabled == true) {
 								if (mBossBgm == true) {
-									CSceneGame::mBgmCountCheck = false;
-									CSceneGame::mBgmCount = 3;
+									tSceneGame->mBgmCountCheck = false;
+									tSceneGame->mBgmCount = 3;
 									mBossBgm = false;
 								}
 								mColSearch.mRenderEnabled = false;
@@ -584,11 +662,8 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 						if (mAnimationFrame >= mAnimationFrameSize) {
 							mJumpStopper = true;
 						}
-					 }
-
-					
+				    }	
 				}
-				
 			}
 		}
 		return;
@@ -597,18 +672,21 @@ void CBoss::TaskCollision() {
 	//コライダの優先度変更
 	mColSearch.ChangePriority();
 	mColSphereHead.ChangePriority();
-	mColSphereRightFront.ChangePriority();
-	mColSphereLeftFront.ChangePriority();
+	//mColSphereRightFront.ChangePriority();
+	//mColSphereLeftFront.ChangePriority();
+	mColSphereAttack.ChangePriority();
 	//衝突処理を実行
 
-	CCollisionManager::Get()->Collision(&mColSphereRightFront, COLLISIONRANGE);
-	CCollisionManager::Get()->Collision(&mColSphereLeftFront, COLLISIONRANGE);
+	//CCollisionManager::Get()->Collision(&mColSphereRightFront, COLLISIONRANGE);
+	//CCollisionManager::Get()->Collision(&mColSphereLeftFront, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSphereHead, COLLISIONRANGEFIELD);
 	CCollisionManager::Get()->Collision(&mColSearch, COLLISIONRANGE);
+	CCollisionManager::Get()->Collision(&mColSphereAttack, COLLISIONRANGE);
 }
 
 void CBoss::Render2D()
 {
+	CSceneGame* tSceneGame = CSceneGame::GetInstance();
 	//2D描画開始
 	CUtil::Start2D(0, 800, 0, 600);
 
@@ -616,7 +694,7 @@ void CBoss::Render2D()
 	float hpRate = (float)mHp / (float)HP;
 	//体力ゲージの幅
 	float hpGaugeWid = GAUGE_WID_MAXHP * hpRate;
-	if (CSceneGame::mBossGaugeSwitch == true&&mHp>0) {
+	if (tSceneGame->mBossGaugeSwitch == true&&mHp>0) {
 		mImageGauge.Draw(50, GAUGE_WID_MAXHP, 510, 550, 201, 300, 63, 0);//ゲージ背景
 		mImageGauge.Draw(50, hpGaugeWid, 510, 550, 487, 572, 63, 0);//体力ゲージ
 	}

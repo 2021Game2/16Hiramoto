@@ -15,7 +15,6 @@ public:
 	static bool mItemAttackHit;
 	//モデルデータ
 	static CModel mModel;
-	static int mItemCount;
 	CTarget();
 
 	//CEnemy2(位置、回転、拡縮）
