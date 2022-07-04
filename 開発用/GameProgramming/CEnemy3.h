@@ -38,9 +38,14 @@ public:
 	//コンストラクタ
 	CEnemy3();
 	CEnemy3(const CVector& position, const CVector& rotation, const CVector& scale);
-	void AutoMove1();
-	void AutoMove2();
-	void Damage();
+	void Move1();
+	void Move2();
+	void Move3();
+	void Move4();
+	void Move5();
+	//void AutoMove1();
+	//void AutoMove2();
+	//void Damage();
 	void Death();
 	void Attack();
 	void Idle();
@@ -55,6 +60,11 @@ public:
 		EIDLE,		//待機
 		EAUTOMOVE1,	//移動
 		EAUTOMOVE2,
+		EMOVE1,
+		EMOVE2,
+		EMOVE3,
+		EMOVE4,
+		EMOVE5,
 		EATTACK,	//攻撃
 		EDAMAGED,	//被弾
 		EDEATH,		//死亡

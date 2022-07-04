@@ -15,9 +15,9 @@
 #include"CFade.h"
 #define HP 10
 
-#define ENEMY2COUNT 1 //一度に出せる敵２の数
+#define ENEMY2COUNT 2 //一度に出せる敵２の数
 #define ENEMY2MINCOUNT 4 //敵２を再生成させるときの敵２の数の下限
-#define ENEMY3COUNT 1//一度に出せる敵３の数
+#define ENEMY3COUNT 2//一度に出せる敵３の数
 #define ENEMY3MINCOUNT 4 //敵３を再生成させるときの敵３の数の下限
 
 #define TEX_BUTTON "Resource\\png,tga\\MoveKey.png"
@@ -46,22 +46,6 @@
 #define TEXWIDTH  8192  //テクスチャ幅
 #define TEXHEIGHT  6144  //テクスチャ高さ
 
-//CMatrix Matrix;
-//int CSceneGame::mEnemy2Count = 0;
-//int CSceneGame::mEnemy2CountStopper = ENEMY2COUNT;
-//int CSceneGame::mEnemy3Count = 0;
-//int CSceneGame::mEnemy3CountStopper = ENEMY3COUNT;
-//int CSceneGame::mBgmCount = 1;//BGMの切り替え番号
-//int CSceneGame::mTimeMinute = 0;
-//int CSceneGame::mTimeSecond = 0;
-//bool CSceneGame::mBgmCountCheck = true;//BGMを流すか止めるか分けるフラグ
-//bool CSceneGame::mVoiceSwitch =true;
-//bool CSceneGame::mEnemy2Bgm = true;
-//bool CSceneGame::mBossSwitch = false;
-//bool CSceneGame::mBossGaugeSwitch = false;
-//bool CSceneGame::mSceneCount = false;
-//bool CSceneGame::mGameClear = false;
-//bool CSceneGame::mGameOver = false;
 CSound PlayerFirstAttack;
 CSound PlayerSecondAttack;
 CSound PlayerThirdAttack;
@@ -84,12 +68,12 @@ CSceneGame::CSceneGame()
     ,mSpawn2(0)
 	, mTimeMinute (0)
 	, mTimeSecond (0)
-	, mBgmCount  (1)
+	, mBgmCount  (1)//BGMの切り替え番号
 	, mEnemy3Count (0)
 	, mEnemy2Count (0)
 	, mClearTime(0.0f)
 	, mEnemy2Bgm(true)
-	,mBgmCountCheck2(true)
+	
 	,mBgmStartStopper(true)
 	,mBgmBattleStopper(true)
 	,mBgmBossStopper(true)
@@ -100,7 +84,7 @@ CSceneGame::CSceneGame()
 	, mGameClear (false)
 	, mGameOver (false)
 	, mCountStart(false)
-	, mBgmCountCheck  (true)
+	, mBgmCountCheck  (true)//BGMを流すか止めるか分けるフラグ
 	,mpBoss(NULL)
 	,mpMap(NULL)
 	,mpItem(NULL)
@@ -118,21 +102,7 @@ CSceneGame::CSceneGame()
 
 }
 CSceneGame::~CSceneGame() {
-	/*
-	if (mpBoss) delete mpBoss;
-	if (mpEnemySummon) delete mpEnemySummon;
-	if (mpEnemySummon2) delete mpEnemySummon2;
-	if (mpMap) delete mpMap;
-	if (mpFlag) delete mpFlag;
-	if (mpItem) delete mpItem;
-	if (mpRock) delete mpRock;
-	if (mpTarget) delete mpTarget;
-	for (size_t i; i < mEnemy2List.size(); i++) {
-		delete mEnemy2List[i];
-	}
-	for (size_t i; i < mEnemy3List.size(); i++) {
-		delete mEnemy3List[i];
-	}*/
+	
 	CTaskManager::Destroy();
 }
 void ShadowRender() {
@@ -214,8 +184,8 @@ void CSceneGame::Init()
 	
 	mpItem=new CItem(CVector(-20.0f, 2.0f, -10.0f),
 		CVector(), CVector(1.5f, 1.5f, 1.5f));
-	mpTarget=new CTarget(mpPlayer->mPosition,
-		CVector(), CVector(0.5f, 0.5f, 0.5f));
+	//mpTarget=new CTarget(mpPlayer->mPosition,
+		//CVector(), CVector(0.5f, 0.5f, 0.5f));
 	mpMap = new CMap(CVector(0.0f, -3.325f, 0.0f), CVector(), CVector(1.0f, 1.0f, 1.0f));
 	mpEnemySummon = new CEnemySummon(CVector(-20.0f, -2.0f, -70.0f),
 		CVector(), CVector(0.5f, 0.5f, 0.5f));
@@ -413,7 +383,7 @@ void CSceneGame::Render() {
 	mShadowMap.Render();//影設定
 	//コライダの描画
 	//ここをコメントにするとすべてのコライダ非表示
-	CCollisionManager::Get()->Render();
+	//CCollisionManager::Get()->Render();
 	//2D描画開始
 	CUtil::Start2D(0, 800, 0, 600);
 	char buf[64];

@@ -73,13 +73,145 @@ CEnemy3::CEnemy3(const CVector& position, const CVector& rotation, const CVector
 	CTaskManager::Get()->Remove(this);//削除して
 	CTaskManager::Get()->Add(this);//追加する
 }
+void CEnemy3::Idle() {
 
+	mCount++;
+	//０から６０フレーム
+	if (mCount < 60) {
+		if (mCount >= 0) {
+			mPosition.mY -= 0.1f;
+		}
+	}
+	//６０から１２０フレーム
+	else if (mCount < 120) {
+		mPosition.mY += 0.1f;
+	}
+	else if (mCount >= 120) {
+		mCount = 0;
+		if (mColSearch2.mRenderEnabled == false) {
+			mState = EMOVE1;
+		}
+	}
+}
+void CEnemy3::Move1() {
+	mCount++;
+	if (mCount < 180) {
+		mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
+		//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
+		CXPlayer* tPlayer = CXPlayer::GetInstance();
+		if (mPosition.mY >= tPlayer->mPosition.mY + 5.0f) {
+			mPosition = mPosition + CVector(0.0f, -0.1f, VELOCITY) * mMatrixRotate;
+		}
+		else {
+			if (mPosition.mY <= 30.0f) {
+				mPosition.mY++;
+			}
+		}
+	}
+	else if (mCount >= 180) {
+		mState = EMOVE2;
+		
+		mCount = 0;
+
+	}
+}
+void CEnemy3::Move2() {
+	mCount++;
+	if (mCount < 10) {
+
+		mPosition = mPosition + CVector(3.0f, 2.0f, -1.5f) * mMatrixRotate;
+	}
+	else{
+		mState = EMOVE3;
+		mCount = 0;
+
+	}
+}
+void CEnemy3::Move3() {
+	mCount++;
+	if (mCount < 10) {
+		mPosition = mPosition + CVector(-6.0f, -1.0f, 0.0f) * mMatrixRotate;
+	}
+	else{
+		mState = EMOVE4;
+		mCount = 0;
+
+	}
+}
+void CEnemy3::Move4() {
+	mCount++;
+	if (mCount < 30) {
+		mPosition = mPosition + CVector(1.5f, VELOCITY, 0.5f) * mMatrixRotate;
+	}
+	if (mCount >= 30) {
+		mState = EMOVE1;
+		mCount = 0;
+
+	}
+}
+void CEnemy3::Attack() {
+
+}
+void CEnemy3::Death() {
+	CSceneGame* tSceneGame = CSceneGame::GetInstance();
+	if (mHp <= -70) {
+		mEnabled = false;
+		tSceneGame->mEnemy3Count--;
+		tSceneGame->mEnemy3CountStopper--;
+	}
+	if (mJump > 0) {
+		mJump--;
+	}
+	//吹き飛ぶ(X軸方向）
+	if (mColliderCount > 0) {
+		mColliderCount--;
+
+	}
+	//吹き飛ぶ（Y軸方向）
+	if (mJump2 > 0) {
+		mPosition.mY += mJump;
+		mJump2--;
+	}
+	mHp--;
+	//15フレームごとにエフェクト
+	if (mHp % 15 == 0) {
+		//エフェクト生成
+		new CEffect2(mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2, true, &mRotation);
+	}
+	CTransform::Update();
+}
 //更新処理
 void CEnemy3::Update() {
+	CSceneGame* tSceneGame = CSceneGame::GetInstance();
+	//処理を行動ごとに分割
+	switch (mState) {
+	case EIDLE://浮遊
+		Idle();
+		break;
+	case EMOVE1://移動（まっすぐ移動）
+		Move1();
+		break;
+	case EMOVE2://移動２（右後ろに移動）
+		Move2();
+		break;
+	case EMOVE3://移動３（左に移動）
+		Move3();
+		break;
+	case EMOVE4://移動４（右前に移動（元の位置に戻る）
+		Move4();
+		break;
+	
+	case EATTACK://攻撃
+		Attack();
+		break;
+	
+	case EDEATH://死亡
+		Death();
+		break;
+	}
 	//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
 	CXPlayer* tPlayer = CXPlayer::GetInstance();
-	CSceneGame* tSceneGame = CSceneGame::GetInstance();
-	//if(mPosition.mY<=mpPlayer->mPosition.mY)
+	
 	//左向き（X軸）のベクトルを求める
 	CVector vx = CVector(1.0f, 0.0f, 0.0f) * mMatrixRotate;
 	//上向き（Y軸）のベクトルを求める
@@ -117,123 +249,6 @@ void CEnemy3::Update() {
 	if (r == 0) {
 		mPoint = CVector(tPlayer->mPosition.mX, tPlayer->mPosition.mY+3.0f, tPlayer->mPosition.mZ);
 	}
-	switch (mMoveCount) {
-		//浮遊
-	case(0):
-		//０から６０フレーム
-		if (mCount < 60) {
-			if (mCount >= 0) {
-				mPosition.mY -= 0.1f;
-			}
-		}
-		//６０から１２０フレーム
-		if (mCount < 120) {
-			if (mCount >= 60) {
-				mPosition.mY += 0.1f;
-			}
-		}
-		if (mCount >= 120) {
-			mCount = 0;
-
-			if (mColSearch2.mRenderEnabled == false) {
-				//mMoveCount = 1;
-			}
-		}
-		break;
-		//移動（まっすぐ移動）
-	case(1):
-		if (mCount < 180) {
-			mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
-
-			//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
-			CXPlayer* tPlayer = CXPlayer::GetInstance();
-
-			if (mPosition.mY >= tPlayer->mPosition.mY+5.0f) {
-				mPosition = mPosition + CVector(0.0f, -0.1f, VELOCITY) * mMatrixRotate;
-				
-			}
-			else {
-				if (mPosition.mY <= 30.0f) {
-
-				  mPosition.mY++;
-				}
-			}
-		}
-		if (mCount >= 180) {
-			mMoveCount = 2;
-			mCount = 0;
-
-		}
-		break;
-		//移動２（右後ろに移動）
-	case(2):
-		if (mCount < 10) {
-
-			mPosition = mPosition + CVector(3.0f, 2.0f, -1.5f) * mMatrixRotate;
-		}
-		if (mCount >= 10) {
-			mMoveCount = 3;
-			mCount = 0;
-
-		}
-		break;
-		//移動３（左に移動）
-	case(3):
-		if (mCount <= 10) {
-			mPosition = mPosition + CVector(-6.0f, -1.0f, 0.0f) * mMatrixRotate;
-		}
-		if (mCount >= 10) {
-			mMoveCount = 4;
-			mCount = 0;
-
-		}
-		break;
-		//移動４（右前に移動（元の位置に戻る）
-	case(4):
-		if (mCount < 30) {
-			mPosition = mPosition + CVector(1.5f, VELOCITY, 0.5f) * mMatrixRotate;
-		}
-		if (mCount >= 30) {
-			mMoveCount = 1;
-			mCount = 0;
-
-		}
-		break;
-	}
-
-
-	if (mHp <= 0) {
-
-		//吹き飛ぶ(X軸方向）
-		if (mColliderCount > 0) {
-			mColliderCount--;
-			mPosition = mPosition + mCollisionEnemy * mColliderCount;
-		}
-		//吹き飛ぶ（Y軸方向）
-		if (mJump2 > 0) {
-			mPosition.mY += mJump;
-			mJump2--;
-		}
-
-
-
-		mHp--;
-		//15フレームごとにエフェクト
-		if (mHp % 15 == 0) {
-			//エフェクト生成
-			new CEffect2(mPosition, 1.0f, 1.0f,CEffect2::EFF_EXP, 4, 4, 2, true, &mRotation);
-		}
-		CTransform::Update();
-	}
-	mCount++;
-	if (mHp <= -70) {
-		mEnabled = false;
-		tSceneGame->mEnemy3Count--;
-		tSceneGame->mEnemy3CountStopper--;
-	}
-	if (mJump > 0) {
-		mJump--;
-	}
 	if (mFireCount > 0) {
 		mFireCount--;
 	}
@@ -245,11 +260,12 @@ void CEnemy3::Update() {
 		mEnemy3Fry = 0;
 	}
 	if (tSceneGame->mBossGaugeSwitch == true) {
-		
 		mEnabled = false;
 	}
-	
-
+	if (mColliderCount > 0) {
+		mColliderCount--;
+		mPosition = mPosition + mCollisionEnemy * mColliderCount;
+	}
 }
 //Collision(コライダ１，コライダ２，）
 void CEnemy3::Collision(CCollider* m, CCollider* o) {
@@ -265,7 +281,6 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 					if (o->mTag == CCollider::EPLAYERBODY) {
 						//衝突しているとき
 						if (CCollider::Collision(m, o)) {
-
 							if (mColSearch2.mRenderEnabled == true) {
 								mCount = 0;
 								if (mMoveCount == 0|| mMoveCount == 1) {
@@ -283,17 +298,16 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 	
 	if (m->mTag == CCollider::EENEMY3COLLIDERBODY) {
 		if (o->mType == CCollider::ESPHERE) {
-			//相手が武器のとき、
-			if (o->mpParent->mTag == EPLAYER || o->mpParent->mTag == EITEM) {
-				if (o->mTag == CCollider::EPLAYERSWORD) {
+			//相手が武器のとき
+			switch (o->mpParent->mTag) {
+			case(EPLAYER):
+               if (o->mTag == CCollider::EPLAYERSWORD) {
 					//衝突しているとき
 					if (CCollider::Collision(m, o)) {
 						//親をCXPlayerを元にポインタ化し、変数を参照
 						if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
 						{
-
 							if (((CXPlayer*)(o->mpParent))->mSpAttack < PLAYERSPPOINT_MAX) {
-
 								((CXPlayer*)(o->mpParent))->mSpAttack++;
 							}
 							mColliderCount = COLLIDERCOUNT;
@@ -302,12 +316,27 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 							mCollisionEnemy = mCollisionEnemy.Normalize();
 							mJump = JUMP;
 							mHp--;
+							if (mHp <= 0) {
+
+								mState = EDEATH;
+							}
 						}
 
 					}
-				}
-
-				if (o->mTag == CCollider::EITEMCOLLIDER) {
+			   }
+			   //相手がEPLAYERBODY(プレイヤーの体のコライダ）の時
+		       if (o->mTag == CCollider::EPLAYERBODY) {
+					if (CCollider::Collision(m, o)) {
+			
+						//これ以上前に進めなくなる
+						mColliderCount = 10.0f;
+						mCollisionEnemy = mPosition - o->mpParent->mPosition;
+						mCollisionEnemy = mCollisionEnemy.Normalize();
+					}
+		       }
+				break;
+			case(EITEM):
+				 if (o->mTag == CCollider::EITEMCOLLIDER) {
 					//衝突しているとき
 					if (CCollider::Collision(m, o)) {
 						if (((CItem*)(o->mpParent))->mItemAttackHit == true)
@@ -319,31 +348,32 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 							mCollisionEnemy = mCollisionEnemy.Normalize();
 							mJump = JUMP;
 							mHp--;
+							if (mHp <= 0) {
+
+								mState = EDEATH;
+							}
 						}
 					}
+				 }
+				break;
+			case(EENEMY2):
+				if (o->mTag == CCollider::EENEMY2COLLIDERBODY) {
+					CVector adjust;
+					if (CCollider::CollisionSylinder(o, m, &adjust)) {
+						//衝突しない位置まで戻す
+						mPosition = mPosition + adjust;
+					}
 				}
-			}
-		}
-
-		if (o->mpParent->mTag == EENEMY2) {
-
-			if (o->mTag == CCollider::EENEMY2COLLIDERBODY) {
-				CVector adjust;
-				if (CCollider::CollisionSylinder(o, m, &adjust)) {
-					//衝突しない位置まで戻す
-					mPosition = mPosition + adjust;
-				}
-			}
-		}
-
-		if (o->mpParent->mTag == EENEMY3) {
-
-			if (o->mTag == CCollider::EENEMY3COLLIDERBODY) {
-				CVector adjust;
-				if (CCollider::CollisionSylinder(o, m, &adjust)) {
-					//衝突しない位置まで戻す
-					mPosition = mPosition + adjust;
-				}
+				break;
+			case(EENEMY3):
+				if (o->mTag == CCollider::EENEMY3COLLIDERBODY) {
+					CVector adjust;
+					if (CCollider::CollisionSylinder(o, m, &adjust)) {
+						//衝突しない位置まで戻す
+						mPosition = mPosition + adjust;
+					}
+			    }
+				break;
 			}
 		}
 		if (o->mType == CCollider::ETRIANGLE) {

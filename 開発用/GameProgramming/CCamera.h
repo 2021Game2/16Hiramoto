@@ -47,19 +47,22 @@ public:
 	//void Render();
     void CameraRender();
 	void TaskCollision();
-
+	//staticでポインタを作る
+	static CCamera* mpCameraInstance;
+	//staticで処理を作る
+	static CCamera* GetInstance();
 	void Collision(CCollider* m, CCollider* o);
 	//void CollisionTriangleLine(CCollider* triangle, CCollider* line, CVector* adjust);
 	//ベクトル取得
 	CMatrix GetMat();
 
+	bool mSkip;
 	//スクリーン座標変換
 	//戻り値 表示範囲
 	//pOut 結果格納用
 	//pos 2Dに変換したいワールド座標
 	bool WorldToScreen(CVector* pOut, const CVector& pos);
 
-	bool mSkip;
 };
 
 //カメラの外部参照

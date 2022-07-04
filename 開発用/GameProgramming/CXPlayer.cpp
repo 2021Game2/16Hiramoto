@@ -29,11 +29,6 @@
 #define G2 1.5f//ƒXƒyƒVƒƒƒ‹UŒ‚Žž‚Ìd—Í
 
 
-//int CXPlayer::mSpAttack = SPPOINT_MAX;
-//int CXPlayer::mStamina = STAMINA_MAX;
-//int CXPlayer::mAttackCount = 0;
-//int CXPlayer::mHp = HP_MAX;
-
 extern CSound PlayerFirstAttack;//ˆê‰ñ–Ú‚ÌUŒ‚‚ÌSE
 extern CSound PlayerSecondAttack;//“ñ‰ñ–Ú‚ÌUŒ‚‚ÌSE
 extern CSound PlayerThirdAttack;//ŽO‰ñ–Ú‚ÌUŒ‚‚ÌSE
@@ -108,7 +103,7 @@ void CXPlayer::Init(CModelX* model)
 void CXPlayer::Update()
 {
 	CSceneGame* tSceneGame = CSceneGame::GetInstance();
-
+	CCamera* tCamera = CCamera::GetInstance();
 	//ˆ—‚ðs“®‚²‚Æ‚É•ªŠ„
 	switch (mState) {
 	case EIDLE:	//‘Ò‹@
@@ -184,6 +179,7 @@ void CXPlayer::Update()
 		}
 		break;
 	case EATTACKSP://UŒ‚
+		tCamera->mAngleY -= 0.01f;
 		if (mAttackCount>0) {
 		ChangeAnimation(7, false, 100);
 		

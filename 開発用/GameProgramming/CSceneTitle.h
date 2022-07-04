@@ -11,6 +11,7 @@ private:
 	float mRecord;
 	CTexture mImageTitle;
 	CTexture mImageButtonBack; //ƒ{ƒ^ƒ“”wŒi‰æ‘œ
+	CTexture mImageBackground;
 	 bool mSceneChange;
 	 EScene mNextScene;
 public:
