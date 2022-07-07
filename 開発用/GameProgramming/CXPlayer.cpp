@@ -15,7 +15,7 @@
 #define ATTACKCOUNT3 40
 #define JUMP 5.0f//スペシャル攻撃時のジャンプ力
 #define STEP  20.0f //攻撃時少し前進
-#define STEP2 40.0f //回避行動時少し前進
+#define STEP2 400.0f //回避行動時少し前進
 #define STAMINA 400 //スタミナ
 #define HP_MAX 10	//体力最大値
 #define STAMINA_MAX 1000 //スタミナ最大値
@@ -46,7 +46,7 @@ CXPlayer::CXPlayer()
 	:mColSphereSword(this, &mMatrix, CVector(-10.0f, 10.0f, 50.0f), 2.5f)//剣のコライダ１
 	,mColSphereFoot(this, &mMatrix, CVector(0.0f, 0.0f, -3.0f), 2.0f)//足付近のコライダ
 	,mColliderSwordSp(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 10.0f)//剣のコライダ２
-	,mColEscapeStopperLine(this, &mMatrix, CVector(0.0f, 5.0f, -3.0f),CVector(0.0f,5.0f,3.0f))//回避時にすり抜けないようにする線分コライダ
+	,mColEscapeStopperLine(this, &mMatrix, CVector(0.0f, 3.0f, -1.0f),CVector(0.0f,3.0f,1.0f))//回避時にすり抜けないようにする線分コライダ
 	,mDamageCount(0)
 	,mAnimationCount(0)
 	,mAttackCount(0)
@@ -63,7 +63,8 @@ CXPlayer::CXPlayer()
 	,mMoveCheck(false)
 	,mAnimationFrameLock(false)
 	,mEffectStopper(false)
-	,mHp(HP_MAX)
+	,mAttackSp(false)
+	,mHp(0)
 	,mSpAttack(SPPOINT_MAX)
 	,mStamina(STAMINA_MAX)
 {
@@ -94,6 +95,7 @@ void CXPlayer::Init(CModelX* model)
 	mColSphereSword.mpMatrix = &mpCombinedMatrix[22];
 	//3Dモデルの足のボーンに場所に合わせる
 	mColSphereFoot.mpMatrix = &mpCombinedMatrix[2];
+	mColEscapeStopperLine.mpMatrix = &mpCombinedMatrix[2];
 	//待機状態から始まる
 	mState = EIDLE;
 	//最初は表示させない
@@ -152,7 +154,7 @@ void CXPlayer::Update()
 		ChangeAnimation(1, true, 10);
 		//回転（回避してるように見える）
 		if (mRotation.mX!=360.0f) {
-			mRotation.mX += 36.0f;
+		   mRotation.mX += 36.0f;
 		}
 		else if(mAnimationFrame >= mAnimationFrameSize){
          mState = EMOVE;//待機状態に移行
@@ -311,7 +313,7 @@ void CXPlayer::Update()
 					if (mState == EATTACK3) {
 						//剣コライダの座標を参照
 						CVector tpos = mColSphereSword.mpMatrix->GetPos();
-						mEffect3 = new CEffect2(CVector(tpos.mX, tpos.mY, tpos.mZ), 3.0f, 3.0f, CEffect2::EFF_ATTACK3, 3, 5, 3,true, &mRotation);
+						mEffect3 = new CEffect2(CVector(tpos.mX, tpos.mY, tpos.mZ), 3.0f, 3.0f, CEffect2::EFF_ATTACK3, 3, 5, 3,false, &mRotation);
 						
 					}
 						mAnimationFrameLock = false;
@@ -328,7 +330,7 @@ void CXPlayer::Update()
 			if (mJump >= -3.0f) {
 				//剣コライダの座標を参照
 				CVector tpos = mColSphereSword.mpMatrix->GetPos();
-				mEffectSp = new CEffect2(CVector(tpos.mX, tpos.mY+1.0f, tpos.mZ), 3.0f, 3.0f, CEffect2::EFF_ATTACKSP, 4, 5, 3, true, &mRotation);
+				mEffectSp = new CEffect2(CVector(tpos.mX, tpos.mY+1.0f, tpos.mZ), 3.0f, 3.0f, CEffect2::EFF_ATTACKSP, 4, 5, 3, false, &mRotation);
 				if (mJumpStopper == false) {
 				  mJump -= G2;
 				}
@@ -337,6 +339,8 @@ void CXPlayer::Update()
 	    }
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
+		    mAttackSp =false;
+			tCamera->mAngleY = 1.3f;
 			mAttackHit = false;
 			mColliderSwordSp.mRenderEnabled = false;
 
@@ -394,11 +398,16 @@ void CXPlayer::Update()
 				mAnimationCount = 5;//0になるまでアニメーションを変更できない
 				mMoveCheck = true;
 				if (CKey::Push('C')) {
-					if (mStamina > -1) {
-						speed = 0.5f;//スピード倍
-					}
-					else {
-						speed = 0.2f;//スピード1/2
+					if (mState == EDUSH) {
+
+
+						if (mStamina > -1) {
+
+							speed = 0.5f;//スピード倍
+						}
+						else {
+							speed = 0.2f;//スピード1/2
+						}
 					}
 				}
 
@@ -410,11 +419,13 @@ void CXPlayer::Update()
 				mAnimationCount = 5;//0になるまでアニメーションを変更できない
 				mMoveCheck = true;
 				if (CKey::Push('C')) {
-					if (mStamina > -1) {
-						speed = 0.5f;//スピード倍
-					}
-					else {
-						speed = 0.2f;//スピード1/2
+					if (mState == EDUSH) {
+						if (mStamina > -1) {
+							speed = 0.5f;//スピード倍
+						}
+						else {
+							speed = 0.2f;//スピード1/2
+						}
 					}
 				}
 			}
@@ -425,12 +436,14 @@ void CXPlayer::Update()
 				mAnimationCount = 5;//0になるまでアニメーションを変更できない
 				mMoveCheck = true;
 				if (CKey::Push('C')) {
-					if (mStamina > -1) {
-						speed = 0.5f;//スピード倍
-					}
+					if (mState == EDUSH) {
+						if (mStamina > -1) {
+							speed = 0.5f;//スピード倍
+						}
 
-					else {
-						speed = 0.2f;//スピード1/2
+						else {
+							speed = 0.2f;//スピード1/2
+						}
 					}
 				}
 
@@ -442,11 +455,13 @@ void CXPlayer::Update()
 				mAnimationCount = 5;//0になるまでアニメーションを変更できない
 				mMoveCheck = true;
 				if (CKey::Push('C')) {
-					if (mStamina > -1) {
-						speed = 0.5f;//スピード倍
-					}
-					else {
-						speed = 0.2f;//スピード1/2
+					if (mState == EDUSH) {
+						if (mStamina > -1) {
+							speed = 0.5f;//スピード倍
+						}
+						else {
+							speed = 0.2f;//スピード1/2
+						}
 					}
 				}
 			}
@@ -519,6 +534,7 @@ void CXPlayer::Update()
 								PlayerJumpAttack.Play();
 							}
 							mState = EATTACKSP;
+							mAttackSp=true;
 							mJump = JUMP;//ジャンプ力を代入
 							mSpAttack -= 30;//特殊攻撃のゲージ減少
 							mAnimationCount = 200;//0になるまでアニメーションが変わらない
@@ -532,7 +548,6 @@ void CXPlayer::Update()
 			if (Move.Length() != 0.0f) {
 				//Cキーを押すと回避行動
 				if (CKey::Once('C')) {
-					
 					if (mState != EATTACKSP) {
 						if (mAttackCount <= 0) {
 							if (mDamageCount <= 0) {
@@ -604,17 +619,20 @@ void CXPlayer::Update()
 			 mAnimationCount--;
 	     }
 		 //アニメーションが終わるたびに攻撃モーション最初から
-		 if (mAnimationCount <= 0) {
-			 mSpaceCount1 = true;
-			 mSpaceCount2 = false;
-			 mSpaceCount3 = false;
+		 if (mState != EATTACK1 && mState != EATTACK2 && mState != EATTACK3) {
+			 if (mAttackCount <= 0) {
+				 mSpaceCount1 = true;
+				 mSpaceCount2 = false;
+				 mSpaceCount3 = false;
+			 }
+
 		 }
 		 //スタミナ回復
 		 if (mStamina < STAMINA_MAX) {
 			mStamina++;
 		 }
 		 if (mSpAttack > SPPOINT_MAX) {
-		  mSpAttack = SPPOINT_MAX;
+		    mSpAttack = SPPOINT_MAX;
 		 }
 		 //攻撃アニメーション中
 		 if (mAttackCount > 0) {
@@ -652,7 +670,9 @@ void CXPlayer::Update()
 	    Camera->SetTarget(mPosition);
 	    CXCharacter::Update();
 }
-
+void CXPlayer::SpAttackPoint() {
+	mSpAttack++;
+}
 void CXPlayer::Collision(CCollider* m, CCollider* o) {
 
 	//自身のコライダの設定
@@ -666,17 +686,10 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 			if (m->mTag == CColliderLine::EPLAYERESCAPESTOPPER) {//相手のコライダが三角コライダの場合
 				//親が三角コライダ
 				if (o->mType == CCollider::ETRIANGLE) {
-					//親が三角コライダ
-					//左向き（X軸）のベクトルを求める
-					CVector vx = CVector(1.0f, 0.0f, 0.0f) * mMatrixRotate;
-					//上向き（Y軸）のベクトルを求める
-					CVector vy = CVector(0.0f, 1.0f, 0.0f) * mMatrixRotate;
-					//前方向（Z軸）のベクトルを求める
-					CVector vz = CVector(0.0f, 0.0f, 1.0f) * mMatrixRotate;
-					vz.Normalize();
+					
 					CVector adjust;//調整用ベクトル
-					if (CCollider::CollisionTriangleSphere(o, m, &adjust)) {
-					//	mColEscapeStopperLine.line(NULL, NULL, sv, ev);
+					if (CCollider::CollisionTriangleLine(o, m, &adjust)) {
+				
 						if (mState == EESCAPE) {
 							
 							//位置の更新（mPosition+adjust)
@@ -693,7 +706,6 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 		}
 		break;
 	case CCollider::ESPHERE:
-
 		//親がプレイヤー
 		if (m->mpParent->mTag == EPLAYER) {
 			//プレイヤーの体部分
@@ -701,7 +713,6 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 				//親が三角コライダ
 				if (o->mType == CCollider::ETRIANGLE) {
 					//親が三角コライダ
-
 		            //左向き（X軸）のベクトルを求める
 					CVector vx = CVector(1.0f, 0.0f, 0.0f) * mMatrixRotate;
 					//上向き（Y軸）のベクトルを求める
@@ -709,7 +720,6 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 					//前方向（Z軸）のベクトルを求める
 					CVector vz = CVector(0.0f, 0.0f, 1.0f) * mMatrixRotate;
 					vz.Normalize();
-
 						CVector adjust;//調整用ベクトル
 						if (CCollider::CollisionTriangleSphere(o, m, &adjust)) {
 								if (mState != EESCAPE) {
@@ -815,10 +825,12 @@ void CXPlayer::TaskCollision() {
 	mColSphereSword.ChangePriority();
 	mColSphereFoot.ChangePriority();
 	mColliderSwordSp.ChangePriority();
+	mColEscapeStopperLine.ChangePriority();
 	//衝突処理を実行
 	CCollisionManager::Get()->Collision(&mColliderSwordSp, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSphereFoot, COLLISIONRANGEFIELD);
 	CCollisionManager::Get()->Collision(&mColSphereSword, COLLISIONRANGE);
+	CCollisionManager::Get()->Collision(&mColEscapeStopperLine, COLLISIONRANGE);
 }
 void CXPlayer::Render2D()
 {

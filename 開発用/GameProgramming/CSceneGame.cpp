@@ -19,7 +19,7 @@
 #define ENEMY2MINCOUNT 4 //ìGÇQÇçƒê∂ê¨Ç≥ÇπÇÈÇ∆Ç´ÇÃìGÇQÇÃêîÇÃâ∫å¿
 #define ENEMY3COUNT 2//àÍìxÇ…èoÇπÇÈìGÇRÇÃêî
 #define ENEMY3MINCOUNT 4 //ìGÇRÇçƒê∂ê¨Ç≥ÇπÇÈÇ∆Ç´ÇÃìGÇRÇÃêîÇÃâ∫å¿
-
+#define HP_MAX 10	//ëÃóÕç≈ëÂíl
 #define TEX_BUTTON "Resource\\png,tga\\MoveKey.png"
 #define TEX_BUTTON2 "Resource\\png,tga\\CKey.png"
 #define TEX_BUTTON3 "Resource\\png,tga\\Mouse.png"
@@ -181,33 +181,26 @@ void CSceneGame::Init()
 	CRes::sBoss.SeparateAnimationSet(0, 478, 500, "growl");
 	CRes::sBoss.SeparateAnimationSet(0, 500, 550, "death - 02");
 	CRes::sBoss.SeparateAnimationSet(0, 565, 650, "death - 03");
-	
 	mpItem=new CItem(CVector(-20.0f, 2.0f, -10.0f),
 		CVector(), CVector(1.5f, 1.5f, 1.5f));
-	//mpTarget=new CTarget(mpPlayer->mPosition,
-		//CVector(), CVector(0.5f, 0.5f, 0.5f));
+	mpTarget=new CTarget(mpPlayer->mPosition,
+		CVector(), CVector(0.5f, 0.5f, 0.5f));
 	mpMap = new CMap(CVector(0.0f, -3.325f, 0.0f), CVector(), CVector(1.0f, 1.0f, 1.0f));
 	mpEnemySummon = new CEnemySummon(CVector(-20.0f, -2.0f, -70.0f),
 		CVector(), CVector(0.5f, 0.5f, 0.5f));
 	mpEnemySummon2 = new CEnemySummon(CVector(6.0f, 14.0f, 20.0f),
 		CVector(), CVector(0.5f, 0.5f, 0.5f));
-
 	mpRock = new CRock(CVector(0.0f, 0.0f, -100.0f),
 		CVector(0.0f, 180.0f, 0.0f), CVector(0.5f, 0.5f, 0.5f));
-	
 	mpFlag = new CFlag(CVector(56.0f, 11.0f, 26.0f),
 		CVector(), CVector(10.5f, 10.5f, 10.5f));
-	
 	float shadowColor[] = { 0.4f, 0.4f, 0.4f, 0.2f };  //âeÇÃêF
 	float lightPos[] = { 50.0f, 160.0f, 50.0f };  //åıåπÇÃà íu
-
-	mpPlayer->mHp = HP;
-	mpPlayer->mGaugeEnabled = true;
 	mBgmCount = 1;
-	if (mpEnemy2) mpEnemy2->mEnabled = true;
-
-	
-	if(mpEnemy3)mpEnemy3->mEnabled = true;
+	mpPlayer->SetHp(HP);
+	mpPlayer->SetGaugeEnabled(true);
+	if (mpEnemy2) mpEnemy2->SetEnabled(true);
+	if (mpEnemy3)mpEnemy3->SetEnabled(true);
 	mShadowMap.Init(TEXWIDTH, TEXHEIGHT, ShadowRender,ShadowEffectRender, shadowColor, lightPos);//âeÇÃèâä˙âª
 	
 	CEffect2::TexPreLoad();
@@ -221,20 +214,16 @@ void CSceneGame::BgmBattle() {
 				mBgmBattle.Repeat();
 				mBgmBattleStopper = false;
 			}
-		
 		}
-
 	}
 }
 void CSceneGame::BgmBoss() {
-
 	if (mVoiceSwitch == true) {
 		if (mBgmCountCheck == true) {
 			if (mBgmBossStopper==true) {
 				mBgmBossBattle.Repeat();
 				mBgmBossStopper = false;
-			}
-				
+			}	
 		}
 	}
 }
@@ -246,17 +235,14 @@ void CSceneGame::BgmGameOver() {
 				mBgmOverStopper = false;
 			}
 		}
-		
 	}
 }
 void CSceneGame::BgmGameClear() {
-
 	if (mVoiceSwitch == true) {
 		if (mBgmCountCheck == true) {
 			if (mBgmClearStopper == true) {
 				mBgmGameClear.Repeat();
 				mBgmClearStopper = false;
-
 			}
 		}
 	}
@@ -336,7 +322,7 @@ void CSceneGame::Update() {
 		if (mEnemy3Count < mEnemy3CountStopper) {
 			//ÇQïbÇ≤Ç∆Ç…ê∂ê¨
 			if (mSpawn2 <= 0) {
-				mpEnemy3 = new CEnemy3(mpEnemySummon2->mPosition, CVector(0.0f, 0.0f, 0.0f),
+				mpEnemy3 = new CEnemy3(CVector(mpEnemySummon2->mPosition.mX, mpEnemySummon2->mPosition.mY+30.0f, mpEnemySummon2->mPosition.mZ), CVector(0.0f, 0.0f, 0.0f),
 					CVector(1000.5f, 1000.5f, 1000.5f));
 
 				//push_back  å≥ÇÕìØÇ∂ÉNÉâÉXÇ©ÇÁÇæÇ™ï ÅXÇÃÉ|ÉCÉìÉ^ê∂ê¨
@@ -383,34 +369,12 @@ void CSceneGame::Render() {
 	mShadowMap.Render();//âeê›íË
 	//ÉRÉâÉCÉ_ÇÃï`âÊ
 	//Ç±Ç±ÇÉRÉÅÉìÉgÇ…Ç∑ÇÈÇ∆Ç∑Ç◊ÇƒÇÃÉRÉâÉCÉ_îÒï\é¶
-	//CCollisionManager::Get()->Render();
+	CCollisionManager::Get()->Render();
 	//2Dï`âÊäJén
 	CUtil::Start2D(0, 800, 0, 600);
 	char buf[64];
 	if (mpBoss) {
-
-
 		if (mpBoss->mHp > 0 || mpPlayer->mHp > 0) {
-			//éûä‘Åiï™Åj
-			if (mTimeMinute < 10) {
-				sprintf(buf, "0%d:", mTimeMinute);
-				mFont.DrawString(buf, 700, 500, 8, 16);
-			}
-			else {
-				sprintf(buf, "%d:", mTimeMinute);
-				mFont.DrawString(buf, 700, 500, 8, 16);
-			}
-
-			//éûä‘ÅiïbÅj
-			if (mTimeSecond < 10) {
-				sprintf(buf, "0%d", mTimeSecond);
-				mFont.DrawString(buf, 740, 500, 8, 16);
-			}
-			else {
-				sprintf(buf, "%d", mTimeSecond);
-				mFont.DrawString(buf, 740, 500, 8, 16);
-			}
-
 		}
 
 		else if (mpBoss->mHp <= 0) {
@@ -427,7 +391,7 @@ void CSceneGame::Render() {
 			mFont.DrawString(buf, 300, 200, 16, 32);
 			if (CKey::Once(VK_LBUTTON)) {
 				mBgmCountCheck = false;
-				mpItem->mItemCount = 0;
+				mpItem->SetItemCount(0);
 				mEnemy2Count = 0;
 				mEnemy3Count = 0;
 				mNextScene = CScene::ETITLE;
@@ -451,7 +415,7 @@ void CSceneGame::Render() {
 		mFont.DrawString(buf, 300, 200, 16, 32);
 		if (CKey::Once(VK_LBUTTON)) {
 			mBgmCountCheck = false;
-			mpItem->mItemCount = 0;
+			mpItem->SetItemCount(0);
 			mEnemy2Count = 0;
 			mEnemy3Count = 0;
 			mNextScene = CScene::ETITLE;

@@ -34,42 +34,43 @@ private:
 	//キャラクタのインスタンス
 	CXPlayer* mpPlayer;//プレイヤー
 	CRock*mpRock;//周りの岩
-	CMap* mpMap;
+	CMap* mpMap;//フィールド
 	CFlag* mpFlag;//旗
 	//敵のインスタンス
 	CEnemy2* mpEnemy2;//敵２
 	CEnemy3* mpEnemy3;//敵３
 	CEnemySummon* mpEnemySummon;//敵２の生成場所
 	CEnemySummon* mpEnemySummon2;//敵３の生成場所
-	CTarget* mpTarget;
-	CItem* mpItem;
+	CTarget* mpTarget;//目的地の方向を示す矢印
+	CItem* mpItem;//ハンマー
 	CBoss* mpBoss;//ボス
 	//マップのインスタンス
-	CModel mModelC5;
-	CShadowMap mShadowMap;
-	EScene mNextScene;
+	
+	CShadowMap mShadowMap;//シャドウマップ（影）
+	EScene mNextScene;//次のシーンの設定
 	clock_t mStartTime, mEndTime; //計測開始時刻、計測終了時刻
-	CTexture mImageMouse;
-	CTexture mImageMoveKey;
-	CTexture mImageCkey;
-	CTexture mImageWork;
-	CTexture mImageDush;
-    CSound mBgmStart;
-	CSound mBgmBattle;
-	CSound mBgmBossBattle;
-	CSound mBgmGameClear;
-	CSound mBgmGameOver;	
+	CTexture mImageMouse;//マウスのテクスチャ
+	CTexture mImageMoveKey;//移動キー（ASWD）のテクスチャ
+	CTexture mImageCkey;//Cキーのテクスチャ
+	CTexture mImageWork;//歩いている人のテクスチャ
+	CTexture mImageDush;//走っている人のテクスチャ
+    CSound mBgmStart;//最初のBGM
+	CSound mBgmBattle;//敵と戦っているときのBGM
+	CSound mBgmBossBattle;//ボスと戦っているときのBGM
+	CSound mBgmGameClear;//ゲームクリア時のBGM
+	CSound mBgmGameOver;//ゲームオーバー時のBGM
 	std::vector<CEnemy2*> mEnemy2List;//Enemy2専用の部屋を作る
-	std::vector<CEnemy3*> mEnemy3List;
-	 int mSpawn;//敵が生成されるまでの時間
-	 int mSpawn2;
+	std::vector<CEnemy3*> mEnemy3List;//Enemy3専用の部屋を作る
+	 int mSpawn;//敵2が生成されるまでの時間
+	 int mSpawn2;//敵3が生成されるまでの時間
 	 int mTimeCount;
-	 bool mSceneChange;
-	 bool mBgmStartStopper;
-	 bool mBgmBattleStopper;
-	 bool mBgmBossStopper;
-	 bool mBgmOverStopper;
-	 bool mBgmClearStopper;
+	 bool mSceneChange;//シーンの切り替え
+
+	 bool mBgmStartStopper;//BGMを止める
+	 bool mBgmBattleStopper;//BGMを止める
+	 bool mBgmBossStopper;//BGMを止める
+	 bool mBgmOverStopper;//BGMを止める
+	 bool mBgmClearStopper;//BGMを止める
 	 bool mBgmCountCheck2;//BGMが連続で再生しないようにするフラグ
 	 bool mGameClear;
 	 bool mGameOver;

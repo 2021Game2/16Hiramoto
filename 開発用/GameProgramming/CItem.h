@@ -20,9 +20,9 @@ public:
 	//モデルデータ
 	static CModel mModel;
     int mItemCount;
-	void SetItemCount(int v) {
-		if (v < 0)return;
-		mItemCount = v;
+	void SetItemCount(int ItemCount) {
+		if (ItemCount < 0)return;
+		mItemCount = ItemCount;
 	}
 	int GetItemCount() {
 		return mItemCount;

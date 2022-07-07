@@ -23,7 +23,7 @@ public:
 	CVector mUp;
 	CColliderLine mColliderLine;
 	CMatrix mMatrix;
-	//CColliderLine mLineCamera;
+	
 
 	//重複するがカメラ制御用
 	CVector mPos;		//位置

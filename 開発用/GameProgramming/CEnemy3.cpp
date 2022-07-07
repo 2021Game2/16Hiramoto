@@ -14,8 +14,8 @@
 #define DAMAGEEFFECT "Resource\\png,tga\\exp.tga"
 #define HP 1
 #define VELOCITY 0.25f //行動１
-#define VELOCITY1  -0.1f//行動１
-#define COLLIDERCOUNT 5.0
+#define COLLIDERCOUNT 5.0f
+#define COLLIDERCOUNT2 1.5f
 #define VELOCITY2 0.1f
 #define VELOCITY3 0.2f
 #define JUMP 4.0f
@@ -42,10 +42,11 @@ CEnemy3::CEnemy3()
 	,mEnemy3Fry(0)
 	,mEnemyDamage(60)
 	,mHp(HP)
+	, mState(EIDLE)
 {
 	mRotation.mY += 90.0f;
 	mTag = EENEMY3;
-	mState = EIDLE;
+	
 	//モデルが無いときは読み込む
 	if (mModel.mTriangles.size() == 0) {
 		mModel.Load(OBJ, MTL);
@@ -79,12 +80,12 @@ void CEnemy3::Idle() {
 	//０から６０フレーム
 	if (mCount < 60) {
 		if (mCount >= 0) {
-			mPosition.mY -= 0.1f;
+			mPosition.mY -= 0.5f;
 		}
 	}
 	//６０から１２０フレーム
 	else if (mCount < 120) {
-		mPosition.mY += 0.1f;
+		mPosition.mY += 0.5f;
 	}
 	else if (mCount >= 120) {
 		mCount = 0;
@@ -176,7 +177,7 @@ void CEnemy3::Death() {
 	//15フレームごとにエフェクト
 	if (mHp % 15 == 0) {
 		//エフェクト生成
-		new CEffect2(mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2, true, &mRotation);
+		new CEffect2(mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2, false, &mRotation);
 	}
 	CTransform::Update();
 }
@@ -308,7 +309,8 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 						if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
 						{
 							if (((CXPlayer*)(o->mpParent))->mSpAttack < PLAYERSPPOINT_MAX) {
-								((CXPlayer*)(o->mpParent))->mSpAttack++;
+
+								((CXPlayer*)(o->mpParent))->CXPlayer::SpAttackPoint();
 							}
 							mColliderCount = COLLIDERCOUNT;
 							mCollisionEnemy = mPosition - o->mpParent->mPosition;
@@ -317,7 +319,6 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 							mJump = JUMP;
 							mHp--;
 							if (mHp <= 0) {
-
 								mState = EDEATH;
 							}
 						}
@@ -370,7 +371,7 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 					CVector adjust;
 					if (CCollider::CollisionSylinder(o, m, &adjust)) {
 						//衝突しない位置まで戻す
-						mPosition = mPosition + adjust;
+					mPosition = mPosition + adjust;
 					}
 			    }
 				break;
@@ -400,5 +401,5 @@ void CEnemy3::TaskCollision() {
 	mCollider.ChangePriority();
 	//衝突処理を実行
 	CCollisionManager::Get()->Collision(&mColSearch2, COLLISIONRANGE);
-	CCollisionManager::Get()->Collision(&mCollider, COLLISIONRANGEFIELD);
+	CCollisionManager::Get()->Collision(&mCollider, COLLISIONRANGE);
 }

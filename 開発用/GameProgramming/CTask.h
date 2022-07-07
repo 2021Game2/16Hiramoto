@@ -10,6 +10,10 @@ public:
 	CTask *mpPrev;//前のポインタ
 	int mPriority;	//優先度
 	bool mEnabled;	//有効フラグ
+
+	void SetEnabled(bool Enabled) {
+		mEnabled = Enabled;
+	}
 	bool mRenderEnabled;//表示フラグ
 
 	bool mIsEffectTask; //エフェクト管理フラグ
