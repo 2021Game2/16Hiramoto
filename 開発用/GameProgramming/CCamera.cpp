@@ -61,8 +61,9 @@ void CCamera::Set(const CVector &eye, const CVector &center,
 	mUp = up;
 	mPos = eye;
 	mTarget = center;
-	mAngleX = 100.0f;
-	mAngleY = 1.0f;
+	mAngleX = 3.50f;//カメラ横アングル
+	mAngleY = 1.0f;//カメラ縦アングル
+
 	mDist = DEF_CAMERA_DIST;
 }
 
@@ -96,8 +97,8 @@ void CCamera::Update() {
 	int wheel = CInput::GetWheelValue();
 	if (wheel != 0) {
 		mDist -= (float)(wheel)*0.5f;
-	}
-	*/
+	}*/
+	mDist = 8.0f;//カメラ奥行き（正の数で離れて負の数で近づく）
 	//Y軸制限 0～3.14が180度範囲
 	if (mAngleY < 0.05f) mAngleY = 0.05f;
 	if (mAngleY > 3.12f) mAngleY = 3.12f;

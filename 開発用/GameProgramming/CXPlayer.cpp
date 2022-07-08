@@ -15,7 +15,7 @@
 #define ATTACKCOUNT3 40
 #define JUMP 5.0f//スペシャル攻撃時のジャンプ力
 #define STEP  20.0f //攻撃時少し前進
-#define STEP2 400.0f //回避行動時少し前進
+#define STEP2 40.0f //回避行動時少し前進
 #define STAMINA 400 //スタミナ
 #define HP_MAX 10	//体力最大値
 #define STAMINA_MAX 1000 //スタミナ最大値
@@ -24,9 +24,11 @@
 #define GAUGE_WID_MAXST 400.0f //スタミナゲージの幅の最大値
 #define GAUGE_WID_MAXSP 300.0f//SPポイントゲージの幅の最大値
 #define GAUGE_LEFT 20			//ゲージ描画時の左端
+#define STEPG 0.9f
 #define IMAGE_GAUGE "Resource\\png,tga\\Gauge.png"		//ゲージ画像
 #define G 0.1f//重力
 #define G2 1.5f//スペシャル攻撃時の重力
+#define G3 0.01f
 
 
 extern CSound PlayerFirstAttack;//一回目の攻撃のSE
@@ -46,7 +48,7 @@ CXPlayer::CXPlayer()
 	:mColSphereSword(this, &mMatrix, CVector(-10.0f, 10.0f, 50.0f), 2.5f)//剣のコライダ１
 	,mColSphereFoot(this, &mMatrix, CVector(0.0f, 0.0f, -3.0f), 2.0f)//足付近のコライダ
 	,mColliderSwordSp(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 10.0f)//剣のコライダ２
-	,mColEscapeStopperLine(this, &mMatrix, CVector(0.0f, 3.0f, -1.0f),CVector(0.0f,3.0f,1.0f))//回避時にすり抜けないようにする線分コライダ
+	,mColEscapeStopperLine(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f),CVector(0.0f,0.0f,0.0f))//回避時にすり抜けないようにする線分コライダ
 	,mDamageCount(0)
 	,mAnimationCount(0)
 	,mAttackCount(0)
@@ -57,6 +59,7 @@ CXPlayer::CXPlayer()
 	,mPlayerBgm(true)
 	,mSpaceCount1(true)
 	,mJumpStopper(true)
+	, mEscapeFlg(true)
 	,mGaugeEnabled(true)
 	,mSpaceCount2(false)
 	,mSpaceCount3(false)
@@ -150,6 +153,11 @@ void CXPlayer::Update()
 		break;
 		//回避
 	case EESCAPE:
+		if (mEscapeFlg = true) {
+			mEscapeFlg = false;
+			mStep = STEP2;
+
+		}
 		mAttackHit = false;
 		ChangeAnimation(1, true, 10);
 		//回転（回避してるように見える）
@@ -158,6 +166,7 @@ void CXPlayer::Update()
 		}
 		else if(mAnimationFrame >= mAnimationFrameSize){
          mState = EMOVE;//待機状態に移行
+		 mEscapeFlg = true;
 		 //回転値を元に戻す
 		 mRotation.mX = 0.0f;
 		}
@@ -485,6 +494,7 @@ void CXPlayer::Update()
 							mSpaceCount2 = true;
 							mAttackCount = ATTACKCOUNT1;//攻撃のアニメーションがループしないように
 							mAnimationCount = 50;//0になるまでアニメーションが変わらない
+							//mMoveAttack.Normalize();
 							mStep = STEP;
 						}
 
@@ -554,7 +564,6 @@ void CXPlayer::Update()
 								mState = EESCAPE;
 								mAnimationCount = 20;
 								mDamageCount = 40;//無敵時間
-								mStep = STEP2;//ジャンプ力を代入
 								mStamina -= 20;//スタミナ使用
 							}
 						}
@@ -610,8 +619,12 @@ void CXPlayer::Update()
 		
              mPosition += Move;
 		}
+		Move = Move * mMoveAttack;
+		mMoveAttack.mZ * mStep;
+		mStep* STEPG;
 		//回避行動時の移動量(だんだん遅くなる）
 		 if (mStep > 0) {
+			 Move.mZ += mStep;
 				mStep--;
 		 }
 
@@ -649,7 +662,7 @@ void CXPlayer::Update()
 		 }
 		 //マップに接触していない間ずっと重力がかかる
 		 if (mState != EATTACKSP) {
-			 if (mJumpStopper == false) {
+			if (mJumpStopper == false) {
 				 if (mJump >= -0.1) {
 				   mJump -= G;
 				 }
@@ -663,9 +676,12 @@ void CXPlayer::Update()
 		 if (mColliderCount > 0) {
 			mColliderCount-=0.2f;
 			mPosition = mPosition + mCollisionEnemy * mColliderCount;
-			
+		 
 		 }
-		 mColEscapeStopperLine.Set(this, &mMatrix, CVector(0.0f, 3.0f, -3.0f), CVector(0.0f, 3.0f, 3.0f));
+		 mColEscapeStopperLine.Set(this, &mMatrix, CVector(0.0f, 0.0f, -2.0f), CVector(0.0f, 0.0f,0.0f));
+		 if (mState == EESCAPE) {
+			 mPosition.mY -= G3;
+		 }
 	    //注視点設定
 	    Camera->SetTarget(mPosition);
 	    CXCharacter::Update();
@@ -689,18 +705,13 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 					
 					CVector adjust;//調整用ベクトル
 					if (CCollider::CollisionTriangleLine(o, m, &adjust)) {
-				
-						if (mState == EESCAPE) {
-							
+					    if (mState == EESCAPE) {
 							//位置の更新（mPosition+adjust)
 							mPosition = mPosition + adjust;
 							//行列の更新
 							CTransform::Update();
 						}
-						
 					}
-					
-
 				}
 			}
 		}

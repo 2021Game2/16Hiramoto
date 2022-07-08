@@ -369,7 +369,7 @@ void CSceneGame::Render() {
 	mShadowMap.Render();//影設定
 	//コライダの描画
 	//ここをコメントにするとすべてのコライダ非表示
-	CCollisionManager::Get()->Render();
+	//CCollisionManager::Get()->Render();
 	//2D描画開始
 	CUtil::Start2D(0, 800, 0, 600);
 	char buf[64];

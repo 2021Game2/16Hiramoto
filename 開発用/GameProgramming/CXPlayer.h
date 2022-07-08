@@ -32,6 +32,9 @@ public:
 	};
 
 private:
+	CVector mMoveAttack;
+	CVector mMoveEscape;
+
 	CTexture mImageGauge; //ゲージ画像
 	int mAnimationCount;//アニメーションが途中で変わらないようにする
 	int mDamageCount;//ダメージを受けた直後の無敵時間
@@ -48,6 +51,7 @@ private:
 	float mColliderCount;//吹き飛ばされた時の初速度
 	float mJump;//ジャンプする時の初速度
 	float mStep;//攻撃時、少し前進
+	float mEscapeFlg;
 	 int mStamina;//スタミナの数値
 	 void SetStamina(int stamina) {
 		 this->mStamina = stamina;

@@ -21,7 +21,7 @@ CEnemy2::CEnemy2()
 //ÉRÉâÉCÉ_ÇÃê›íË
 	:mColSphereRight(this,&mMatrix, CVector(1.5f, 3.0f, 0.5f), 2.0f)
 	,mColSphereLeft(this,&mMatrix,  CVector(-1.0f, 0.5f, 0.0f), 2.0f)
-	,mColSphereBody(this,&mMatrix,  CVector(0.0f,2.0f,0.0f),1.5f)
+	,mColSphereBody(this,&mMatrix,  CVector(0.0f,3.0f,0.0f),2.0f)
 	,mMove(0)
 	,mEnemyVoice(0)
 	,mDamageCount(0)

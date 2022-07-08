@@ -608,6 +608,7 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 									{
 										if (m->mTag == CCollider::EBOSSCOLLIDERATTACK) mBossColliderCheck = 1;
 										else if (m->mTag == CCollider::EBOSSCOLLIDERHEAD) mBossColliderCheck = 2;
+										if (mColSearch.mRenderEnabled == true) mColSearch.mRenderEnabled == false;
 										//爆発エフェクト秒数付与
 										mEffectCount = 60;
 										if (mHp > 0) {
