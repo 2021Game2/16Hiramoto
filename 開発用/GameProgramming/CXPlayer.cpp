@@ -619,9 +619,9 @@ void CXPlayer::Update()
 		
              mPosition += Move;
 		}
-		Move = Move * mMoveAttack;
-		mMoveAttack.mZ * mStep;
-		mStep* STEPG;
+		//Move = Move * mMoveAttack;
+		//mMoveAttack.mZ * mStep;
+		//mStep* STEPG;
 		//‰ñ”ðs“®Žž‚ÌˆÚ“®—Ê(‚¾‚ñ‚¾‚ñ’x‚­‚È‚éj
 		 if (mStep > 0) {
 			 Move.mZ += mStep;
