@@ -46,7 +46,6 @@ private:
 	float mJump;
 	float mJumpZ;
 	float mColliderCount;
-	float mGravity;//重力
 	float mTime;//ジャンプする時の時間を計測
 	float mAttack4MoveX;
 	float mAttack4MoveZ;

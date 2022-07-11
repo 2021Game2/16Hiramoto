@@ -16,6 +16,11 @@ private:
 	int mEffectCount;
 public:
 	int mHp;
+	void SetHp(int hp) {
+		if (hp < 0) return;
+		this->mHp = hp;
+	}
+
 	//モデルデータ
 	static CModel mModel;
 	CEnemySummon();

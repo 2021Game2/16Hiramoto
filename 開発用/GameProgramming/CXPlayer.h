@@ -120,6 +120,7 @@ public:
 	void Init(CModelX* model);
 	void Update();
 	void SpAttackPoint();
+	void SpAttackPoint2();
 	void Collision(CCollider* m, CCollider* o);
 	void Render2D();
 };

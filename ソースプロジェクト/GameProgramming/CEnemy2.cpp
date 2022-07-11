@@ -16,12 +16,12 @@
  extern CSound Enemy2Voice;
 CModel CEnemy2::mModel;//モデルデータ作成
 //デフォルトコンストラクタ
-//敵（サソリ）v
+//敵（サソリ）
 CEnemy2::CEnemy2()
 //コライダの設定
 	:mColSphereRight(this,&mMatrix, CVector(1.5f, 3.0f, 0.5f), 2.0f)
 	,mColSphereLeft(this,&mMatrix,  CVector(-1.0f, 0.5f, 0.0f), 2.0f)
-	,mColSphereBody(this,&mMatrix,  CVector(0.0f,2.0f,0.0f),1.5f)
+	,mColSphereBody(this,&mMatrix,  CVector(0.0f,3.0f,0.0f),2.0f)
 	,mMove(0)
 	,mEnemyVoice(0)
 	,mDamageCount(0)
@@ -153,7 +153,7 @@ void CEnemy2::Damaged() {
 	//爆発エフェクト付与
 	if (mEffectCount % 15 == 0) {
 		//エフェクト生成
-		new CEffect2(mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2, true, &mRotation);
+		new CEffect2(mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2, false, &mRotation);
 	}
 	//ヒットバック（X,Z軸)
 	if (mColliderCount > 0) {
@@ -181,7 +181,7 @@ void CEnemy2::Death() {
 		//15フレームごとにエフェクト
 		if (mEffectCount % 15 == 0) {
 			//エフェクト生成
-			new CEffect2(mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2, true, &mRotation);
+			new CEffect2(mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2, false, &mRotation);
 		}
 		CTransform::Update();
 	}
@@ -279,14 +279,17 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 						{//ヒットバック＆ダメージを受ける
 							if (mDamageCount <= 0) {
 								//プレイヤーのジャンプ攻撃必要ポイント増加
-								((CXPlayer*)(o->mpParent))->mSpAttack++;
+
+								if (((CXPlayer*)(o->mpParent))->mSpAttack < PLAYERSPPOINT_MAX) {
+									((CXPlayer*)(o->mpParent))->CXPlayer::SpAttackPoint();
+								}
 								mEffectCount = 0;
 								//体力減少 
 								mHp--;
 								//ヒットバック付与 
+								//HPが０のとき以外は前後左右に吹っ飛ぶ
 								mColliderCount = 3.0f;
 								mCollisionEnemy = mPosition - o->mpParent->mPosition;
-								//HPが０のとき以外は前後左右に吹っ飛ぶ
 								mCollisionEnemy.mY = 0;
 								mCollisionEnemy = mCollisionEnemy.Normalize();
 								
@@ -317,10 +320,8 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 
 								((CXPlayer*)(o->mpParent))->mSpAttack++;
 							}
-
 								mEffectCount = 0;
 								//体力減少 
-								
 								mHp = 0;
 								//ヒットバック付与 
 								mColliderCount = 1.5f;

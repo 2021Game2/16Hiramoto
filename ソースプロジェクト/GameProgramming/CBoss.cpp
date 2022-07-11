@@ -42,8 +42,8 @@ CBoss::CBoss()
 //コライダの設定
 	: mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 20.0f)
 	, mColSphereHead(this, &mMatrix, CVector(0.0f, 3.0f, 5.0f), 5.0f)
-	//, mColSphereRightFront(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 2.0f)
-	//, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
+	, mColSphereRightFront(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 2.0f)
+	, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
 	, mColSphereAttack(this, &mMatrix, CVector(0.0f, 0.0f, 10.0f), 10.0f)
 	, mpPlayer(0)
 	, mMove(0)
@@ -229,17 +229,20 @@ void CBoss::Attack() {
 		}
 		else {
 			mJump = JUMP2;
+			mJumpZ = JUMP2;
 			mBossAttackMove = 1;
+			
 		}
 		break;
 	case(1):
 		if (mAnimationFrame < 60) {
+			mJumpCount = CVector(0.0f, mJump, mJumpZ) * mMatrixRotate;
 			mBossAttackHit = true;
-			mPosition.mY += mJump;
-			if (mJump > 0) {
-				mPosition.mZ += mJump;
-			}
+			mPosition += mJumpCount;
 			mJump -= G2;
+			if (mJumpZ > 0) {
+				mJumpZ -= G2;
+			}
 		}
 		else {
 			mBossAttackHit = false;
@@ -293,6 +296,7 @@ void CBoss::Attack2() {
 	if (mAnimationFrame>=mAnimationFrameSize) {
              mBossAttackHit = false;		
 		     mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
+			 
 	}
 }
 void CBoss::Attack3() {
@@ -452,7 +456,7 @@ void CBoss::Death() {
 		//15フレームごとにエフェクト
 		if (mHp % 15 == 0) {
 			//エフェクト生成
-			new CEffect2(mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2);
+			new CEffect2(mPosition, 10.0f, 10.0f, CEffect2::EFF_EXP, 4, 4, 2);
 		}
 		CTransform::Update();
 	}
@@ -539,12 +543,12 @@ void CBoss::Update() {
 			if (mBossColliderCheck == 1) {
 				CXPlayer* tPlayer = CXPlayer::GetInstance();
 
-				mBossEffect = new CEffect2(tPlayer->GetSwordColPos(), 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2, true, &mRotation);
+				mBossEffect = new CEffect2(tPlayer->GetSwordColPos(), 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2,false, &mRotation);
 			}
 			//頭に攻撃されたとき
 			else if (mBossColliderCheck == 2) {
 				CXPlayer* tPlayer = CXPlayer::GetInstance();
-			    mBossEffect=new CEffect2(tPlayer->GetSwordColPos(), 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2, true, &mRotation);
+			    mBossEffect=new CEffect2(tPlayer->GetSwordColPos(), 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2, false, &mRotation);
 			}
 		}
 	}
@@ -608,7 +612,8 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 										mEffectCount = 60;
 										if (mHp > 0) {
 											if (((CXPlayer*)(o->mpParent))->mSpAttack < PLAYERSPPOINT_MAX) {
-												((CXPlayer*)(o->mpParent))->mSpAttack++;
+
+												((CXPlayer*)(o->mpParent))->CXPlayer::SpAttackPoint();
 											}
 											//30％減るごとにのけぞる
 											if (mHp == HPCOUNT1 || mHp == HPCOUNT2 || mHp == HPCOUNT3) {
@@ -672,13 +677,13 @@ void CBoss::TaskCollision() {
 	//コライダの優先度変更
 	mColSearch.ChangePriority();
 	mColSphereHead.ChangePriority();
-	//mColSphereRightFront.ChangePriority();
-	//mColSphereLeftFront.ChangePriority();
+	mColSphereRightFront.ChangePriority();
+	mColSphereLeftFront.ChangePriority();
 	mColSphereAttack.ChangePriority();
 	//衝突処理を実行
 
-	//CCollisionManager::Get()->Collision(&mColSphereRightFront, COLLISIONRANGE);
-	//CCollisionManager::Get()->Collision(&mColSphereLeftFront, COLLISIONRANGE);
+	CCollisionManager::Get()->Collision(&mColSphereRightFront, COLLISIONRANGE);
+	CCollisionManager::Get()->Collision(&mColSphereLeftFront, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSphereHead, COLLISIONRANGEFIELD);
 	CCollisionManager::Get()->Collision(&mColSearch, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSphereAttack, COLLISIONRANGE);

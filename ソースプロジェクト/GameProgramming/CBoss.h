@@ -22,6 +22,7 @@ private:
 	CCollider mColSphereAttack;
 	CEffect2* mBossEffect;
 	CVector mCollisionEnemy;
+	CVector mJumpCount;
 	CCharacter* mpPlayer;//プレイヤーのポインタ
 	CText mFont;
 	char buf[64];
@@ -43,6 +44,7 @@ private:
 	int mEffectCount;
 	int mBossAttackMove;
 	float mJump;
+	float mJumpZ;
 	float mColliderCount;
 	float mGravity;//重力
 	float mTime;//ジャンプする時の時間を計測
@@ -76,9 +78,9 @@ public:
 	bool mBossAttackHit;
 	
 	 int mHp;//体力
-	 void SetHp(int v) {
-		 if (v < 0) return;//< ここにブレークポイントを置けば誰が犯人なのかわかる
-		 this->mHp = v;
+	 void SetHp(int hp) {
+		 if (hp < 0) return;
+		 this->mHp = hp;
 	 }
 	 int GetHp() {
 		 return mHp;

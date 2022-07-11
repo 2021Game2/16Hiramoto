@@ -12,11 +12,10 @@
 #define HPCOUNT1 15 //ダメージを受けたときにのけぞりを行う体力の数値
 #define HPCOUNT2 10 //ダメージを受けたときにのけぞりを行う体力の数値
 #define HPCOUNT3 5 //ダメージを受けたときにのけぞりを行う体力の数値
-#define JUMP 5.0f
-#define JUMP2 2.5f
-#define G 0.1f
-#define G2 0.2f
-#define PLAYERSPPOINT_MAX 30
+#define JUMP 5.0f //ジャンプ攻撃時のジャンプ力
+#define JUMP2 2.5f //ひっかき攻撃時のジャンプ力
+#define G 0.1f //重力
+#define G2  0.2f //ひっかき攻撃時の重力
 #define GAUGE_WID_MAXHP 700.0f	//HPゲージの幅の最大値
 #define GAUGE_LEFT 20			//ゲージ描画時の左端
 #define ATTACKSELECT 4  //攻撃の種類
@@ -54,7 +53,6 @@ CBoss::CBoss()
 	, mEnemyDamage(60)
 	, mJump(0.0f)
 	, mColliderCount(0.0f)
-	, mGravity(0.0f)
 	, mTime(0.0f)
 	, mHp(HP)
 	, mJumpStopper(true)
@@ -65,8 +63,8 @@ CBoss::CBoss()
 	
 {
 
-	mImageGauge.Load(IMAGE_GAUGE);
-	mGravity = 0.20f;
+	mImageGauge.Load(IMAGE_GAUGE);//体力ゲージのテクスチャ
+	
 	mTag = EBOSS;
 	mColSearch.mTag = CCollider::ESEARCH;//タグ設定
 	mColSphereHead.mTag = CCollider::EBOSSCOLLIDERHEAD;
@@ -74,10 +72,9 @@ CBoss::CBoss()
 	//mColSphereLeftFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
 	mColSphereAttack.mTag = CCollider::EBOSSCOLLIDERATTACK;
 	mpBossInstance = this;
-	mRotation.mY += 180.0f;
-	mGravity = 0.20f;
-	mState = EIDLE;
-	mColSphereAttack.mRenderEnabled = false;
+	mRotation.mY += 180.0f;//後ろを向いておく
+	mState = EIDLE;//最初は待機状態
+	mColSphereAttack.mRenderEnabled = false;//最初は表示させない
 	CSceneGame* tSceneGame = CSceneGame::GetInstance();
 }
 
@@ -102,23 +99,24 @@ void CBoss::Init(CModelX* model)
 {
 	CXCharacter::Init(model);
 	//合成行列の設定
-	//頭
+	//頭のコライダ
 	mColSphereHead.mpMatrix = &mpCombinedMatrix[6];
+	//ジャンプ攻撃をするときのコライダ
 	mColSphereAttack.mpMatrix = &mpCombinedMatrix[6];
     mColSphereRightFront.mpMatrix = &mpCombinedMatrix[12];//右前足
 	mColSphereLeftFront.mpMatrix = &mpCombinedMatrix[19];//左前足
-	mState = EATTACK2;
-
+	
 
 }
-//待機処理
+//待機状態
 void CBoss::Idle() {
-	mPosition.mY -= G;
-	//30溜まるまで待機のアニメーション
+	mPosition.mY -= G;//重力をかける
+	//mMoveが120溜まるまで待機のアニメーション
 	ChangeAnimation(8, true, 60);
 	mMove++;
+
 	if (mMove >= 120) {
-		//30溜まった状態でアニメーションが終わると攻撃処理に移行
+		//120溜まった状態でアニメーションが終わると攻撃処理に移行
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
 			int num = rand() % ATTACKSELECT + 1;
@@ -216,7 +214,7 @@ void CBoss::AutoMove() {
 	}
 	
 }
-//攻撃処理
+//攻撃処理(ひっかき攻撃）
 void CBoss::Attack() {
 	//攻撃アニメーション
 	ChangeAnimation(5, false, 80);
@@ -256,13 +254,13 @@ void CBoss::Attack() {
 		
 		break;
 	}
-	//攻撃のあとは移動処理に移行
+	//攻撃のあとは待機状態に移行
 	if (mAnimationFrame >= mAnimationFrameSize) {
-			mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
+			mMove = 0;//攻撃のアニメーションのあとは待機のアニメーションに切り替わる
 	}
 
 }
-//攻撃処理
+//攻撃処理2（なぎばらい）
 void CBoss::Attack2() {
 	//攻撃アニメーション
 	ChangeAnimation(6, false, 80);
@@ -295,37 +293,40 @@ void CBoss::Attack2() {
 	}
 	if (mAnimationFrame>=mAnimationFrameSize) {
              mBossAttackHit = false;		
-		     mMove = 0;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
+		     mMove = 0;//攻撃のアニメーションのあとは待機のアニメーションに切り替わる
 			 
 	}
 }
+//攻撃処理３（ジャンプ攻撃）
 void CBoss::Attack3() {
 	ChangeAnimation(8, false, 120);
-	mPosition.mY += mJump;
-	mRotation.mX+=6.0f;
-	mColSphereHead.mRadius = 6.0f;
+	mPosition.mY += mJump;//ジャンプ
+	mRotation.mX+=6.0f;//回転
+	mColSphereHead.mRadius = 6.0f;//地面から落ちないようにコライダーを大きく
 	if (mJump > -0.5f) {
-				mJump -= G;
+				mJump -= G;//重力
 	}
     else if (mJump >= -2.5f) {
-		mColSphereAttack.mRenderEnabled = true;
-		mBossAttackHit = true;
-			mJump -= G2;
+		mColSphereAttack.mRenderEnabled = true;//コライダーを表示
+		mBossAttackHit = true;//攻撃判定を有効
+			mJump -= G2;//飛び上がるときよりも重力を大きく
 	}
+	//着地したら攻撃判定を解除し、待機処理に
 	if (mJumpStopper == true) {
 		if (mAnimationFrame >= mAnimationFrameSize) {	
 			mColSphereAttack.mRenderEnabled = false;
 			mBossAttackHit = false;
 			mRotation.mX = 0.0f;
-			mColSphereHead.mRadius = 3.0f;
+			mColSphereHead.mRadius = 3.0f;//コライダーの半径をもとに戻す
 				mState = EIDLE;
 		}
 	}
 	
 }
+//攻撃処理４（回転攻撃）
 void CBoss::Attack4() {
 	
-		mPosition.mY -= G;
+		mPosition.mY -= G;//重力をかける
 	
 	ChangeAnimation(6, false, 2000);
 	switch (mAttack4Count) {
@@ -612,10 +613,10 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 										//爆発エフェクト秒数付与
 										mEffectCount = 60;
 										if (mHp > 0) {
-											if (((CXPlayer*)(o->mpParent))->mSpAttack < PLAYERSPPOINT_MAX) {
+											
 
-												((CXPlayer*)(o->mpParent))->CXPlayer::SpAttackPoint();
-											}
+												((CXPlayer*)(o->mpParent))->CXPlayer::SpAttackPoint2();
+											
 											//30％減るごとにのけぞる
 											if (mHp == HPCOUNT1 || mHp == HPCOUNT2 || mHp == HPCOUNT3) {
 												mColliderCount = 10;

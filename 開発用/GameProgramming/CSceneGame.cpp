@@ -17,7 +17,7 @@
 
 #define ENEMY2COUNT 2 //ˆê“x‚Éo‚¹‚é“G‚Q‚Ì”
 #define ENEMY2MINCOUNT 4 //“G‚Q‚ğÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚Q‚Ì”‚Ì‰ºŒÀ
-#define ENEMY3COUNT 2//ˆê“x‚Éo‚¹‚é“G‚R‚Ì”
+#define ENEMY3COUNT 1//ˆê“x‚Éo‚¹‚é“G‚R‚Ì”
 #define ENEMY3MINCOUNT 4 //“G‚R‚ğÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚R‚Ì”‚Ì‰ºŒÀ
 #define HP_MAX 10	//‘Ì—ÍÅ‘å’l
 #define TEX_BUTTON "Resource\\png,tga\\MoveKey.png"
@@ -79,7 +79,7 @@ CSceneGame::CSceneGame()
 	,mBgmBossStopper(true)
     ,mBgmOverStopper(true)
     ,mBgmClearStopper(true)
-	, mVoiceSwitch(false)//falseF‰¹º‚È‚µ trueF‰¹º‚ ‚è
+	, mVoiceSwitch(true)//falseF‰¹º‚È‚µ trueF‰¹º‚ ‚è
 	, mBossGaugeSwitch(false)
 	, mGameClear (false)
 	, mGameOver (false)
@@ -369,7 +369,7 @@ void CSceneGame::Render() {
 	mShadowMap.Render();//‰eİ’è
 	//ƒRƒ‰ƒCƒ_‚Ì•`‰æ
 	//‚±‚±‚ğƒRƒƒ“ƒg‚É‚·‚é‚Æ‚·‚×‚Ä‚ÌƒRƒ‰ƒCƒ_”ñ•\¦
-	CCollisionManager::Get()->Render();
+	//CCollisionManager::Get()->Render();
 	//2D•`‰æŠJn
 	CUtil::Start2D(0, 800, 0, 600);
 	char buf[64];

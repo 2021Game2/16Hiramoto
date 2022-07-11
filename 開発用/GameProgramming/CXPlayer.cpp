@@ -689,6 +689,9 @@ void CXPlayer::Update()
 void CXPlayer::SpAttackPoint() {
 	mSpAttack++;
 }
+void CXPlayer::SpAttackPoint2() {
+	mSpAttack+=2;
+}
 void CXPlayer::Collision(CCollider* m, CCollider* o) {
 
 	//自身のコライダの設定

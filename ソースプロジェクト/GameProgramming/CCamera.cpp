@@ -61,8 +61,9 @@ void CCamera::Set(const CVector &eye, const CVector &center,
 	mUp = up;
 	mPos = eye;
 	mTarget = center;
-	mAngleX = 100.0f;
-	mAngleY = 1.0f;
+	mAngleX = 3.50f;//カメラ横アングル
+	mAngleY = 1.0f;//カメラ縦アングル
+
 	mDist = DEF_CAMERA_DIST;
 }
 
@@ -76,9 +77,15 @@ void CCamera::Update() {
 	CInput::GetMousePosW(&mouseX, &mouseY);
 	float moveX = (float)(oldMouseX - mouseX);
 	float moveY = (float)(oldMouseY - mouseY);
+	//マウスカーソルが動いた方向にカメラの原点をあわせる
 	if (mSkip == false) {
-		if (moveX != 0) mAngleX += (moveX * 0.005f);
-		if (moveY != 0) mAngleY += (moveY * 0.005f);
+
+		//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
+		CXPlayer* tPlayer = CXPlayer::GetInstance();
+		if (tPlayer->mAttackSp ==false){
+			if (moveX != 0) mAngleX += (moveX * 0.005f);
+		    if (moveY != 0) mAngleY += (moveY * 0.005f);
+	    }
 	}
 	mSkip = false;
 	int X = WIN_CENTRAL_X;
@@ -90,8 +97,8 @@ void CCamera::Update() {
 	int wheel = CInput::GetWheelValue();
 	if (wheel != 0) {
 		mDist -= (float)(wheel)*0.5f;
-	}
-	*/
+	}*/
+	mDist = 8.0f;//カメラ奥行き（正の数で離れて負の数で近づく）
 	//Y軸制限 0～3.14が180度範囲
 	if (mAngleY < 0.05f) mAngleY = 0.05f;
 	if (mAngleY > 3.12f) mAngleY = 3.12f;
