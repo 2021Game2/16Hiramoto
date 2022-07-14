@@ -38,7 +38,7 @@ private:
 	CTexture mImageGauge; //ゲージ画像
 	int mAnimationCount;//アニメーションが途中で変わらないようにする
 	int mDamageCount;//ダメージを受けた直後の無敵時間
-	
+	bool mDamageVoise;
 	bool mPlayerBgm;//ゲームオーバー時のBGMを流すフラグ
 	bool mAnimationFrameLock;
 	bool mMoveCheck;//ダッシュかダッシュじゃないか

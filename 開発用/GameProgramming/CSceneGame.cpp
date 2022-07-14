@@ -15,7 +15,7 @@
 #include"CFade.h"
 #define HP 10
 
-#define ENEMY2COUNT 2 //一度に出せる敵２の数
+#define ENEMY2COUNT 5//一度に出せる敵２の数
 #define ENEMY2MINCOUNT 4 //敵２を再生成させるときの敵２の数の下限
 #define ENEMY3COUNT 1//一度に出せる敵３の数
 #define ENEMY3MINCOUNT 4 //敵３を再生成させるときの敵３の数の下限
@@ -62,39 +62,36 @@ CSceneGame* CSceneGame::GetInstance()
 {
 	return mpSceneGameInstance;
 }
-CSceneGame::CSceneGame() 
-	:mTimeCount(0)
-	,mSpawn(0)
-    ,mSpawn2(0)
-	, mTimeMinute (0)
-	, mTimeSecond (0)
-	, mBgmCount  (1)//BGMの切り替え番号
-	, mEnemy3Count (0)
-	, mEnemy2Count (0)
-	, mClearTime(0.0f)
-	, mEnemy2Bgm(true)
+CSceneGame::CSceneGame()
+	:mSpawn(0)//敵２の生成感覚
+    ,mSpawn2(0)//敵３の生成感覚
 	
-	,mBgmStartStopper(true)
-	,mBgmBattleStopper(true)
-	,mBgmBossStopper(true)
-    ,mBgmOverStopper(true)
-    ,mBgmClearStopper(true)
-	, mVoiceSwitch(true)//false：音声なし true：音声あり
-	, mBossGaugeSwitch(false)
-	, mGameClear (false)
-	, mGameOver (false)
-	, mCountStart(false)
-	, mBgmCountCheck  (true)//BGMを流すか止めるか分けるフラグ
-	,mpBoss(NULL)
-	,mpMap(NULL)
-	,mpItem(NULL)
-	,mpTarget(NULL)
-	,mpFlag(NULL)
-	,mpRock(NULL)
-	,mpEnemySummon(NULL)
-	,mpEnemySummon2(NULL)
-	,mpEnemy2(NULL)
-	,mpEnemy3(NULL)
+	, mBgmCount  (1)//BGMの切り替え番号
+	, mEnemy2Count (0)//今生成されている敵2の数
+	, mEnemy3Count (0)//今生成されている敵3の数
+	, mClearTime(0.0f)
+	, mEnemy2Bgm(true)//戦闘BGMを再生させるフラグ
+	,mBgmStartStopper(true)//BGMを止める
+	,mBgmBattleStopper(true)//BGMを止める
+	,mBgmBossStopper(true)//BGMを止める
+    ,mBgmOverStopper(true)//BGMを止める
+    ,mBgmClearStopper(true)//BGMを止める
+	, mVoiceSwitch(false)//false：音声なし true：音声あり
+	, mBossGaugeSwitch(false)//ボスの体力ゲージを表示させるフラグ
+	, mGameClear (false)//ゲームクリアのフラグ
+	, mGameOver (false)//ゲームオーバーのフラグ
+	, mCountStart(false)//タイム計測開始のフラグ
+	, mBgmCountCheck  (true)//BGMを流したり止めたりするフラグ
+	,mpBoss(NULL)//ボス
+	,mpMap(NULL)//マップ
+	,mpItem(NULL)//アイテム
+	,mpTarget(NULL)//矢印
+	,mpFlag(NULL)//旗
+	,mpRock(NULL)//フィールド
+	,mpEnemySummon(NULL)//敵２の生成場所
+	,mpEnemySummon2(NULL)//敵３の生成場所
+	,mpEnemy2(NULL)//敵２
+	,mpEnemy3(NULL)//敵３
 	, mEnemy3CountStopper (ENEMY3COUNT)
 	, mEnemy2CountStopper (ENEMY2COUNT)
 	, mBossSwitch(false)
@@ -183,8 +180,9 @@ void CSceneGame::Init()
 	CRes::sBoss.SeparateAnimationSet(0, 565, 650, "death - 03");
 	mpItem=new CItem(CVector(-20.0f, 2.0f, -10.0f),
 		CVector(), CVector(1.5f, 1.5f, 1.5f));
+	/*
 	mpTarget=new CTarget(mpPlayer->mPosition,
-		CVector(), CVector(0.5f, 0.5f, 0.5f));
+		CVector(), CVector(0.5f, 0.5f, 0.5f));*/
 	mpMap = new CMap(CVector(0.0f, -3.325f, 0.0f), CVector(), CVector(1.0f, 1.0f, 1.0f));
 	mpEnemySummon = new CEnemySummon(CVector(-20.0f, -2.0f, -70.0f),
 		CVector(), CVector(0.5f, 0.5f, 0.5f));
@@ -194,6 +192,10 @@ void CSceneGame::Init()
 		CVector(0.0f, 180.0f, 0.0f), CVector(0.5f, 0.5f, 0.5f));
 	mpFlag = new CFlag(CVector(56.0f, 11.0f, 26.0f),
 		CVector(), CVector(10.5f, 10.5f, 10.5f));
+
+	mpBossStage = new CBossStage(CVector(0.0f, 200.0f, -100.0f),
+		CVector(0.0f, 180.0f, 0.0f), CVector(0.5f, 0.5f, 0.5f));
+	
 	float shadowColor[] = { 0.4f, 0.4f, 0.4f, 0.2f };  //影の色
 	float lightPos[] = { 50.0f, 160.0f, 50.0f };  //光源の位置
 	mBgmCount = 1;
@@ -256,6 +258,7 @@ void CSceneGame::Update() {
 		//新しく作る
 		mpBoss = new CBoss(CVector(0.0f, 10.0f, 0.0f),
 			CVector(0.0f, 0.0f, 0.0f), CVector(0.5f, 0.5f, 0.5f));
+		
 		//読み込ませる
 		mpBoss->Init(&CRes::sBoss);
 		//ボスの配置
@@ -268,6 +271,8 @@ void CSceneGame::Update() {
 		break;
 	case 3:
 		BgmBoss();
+		mpBossStage->mPosition.mY = 0.0f;
+
 		break;
 	case 4:
 		BgmGameClear();
@@ -276,18 +281,7 @@ void CSceneGame::Update() {
 		BgmGameOver();
 		break;
 	}
-	if (mpBoss) {
-		if (mpBoss->mHp > 0) {
-			mTimeCount++;
-			if (mTimeCount % 60 == 0) {
-				mTimeSecond++;
-			}
-			if (mTimeSecond == 60) {
-				mTimeMinute++;
-				mTimeSecond = 0;
-			}
-		}
-	}
+	
 	//敵の生成間隔
 	if (mSpawn >= 0) {
 		mSpawn--;
@@ -354,6 +348,7 @@ void CSceneGame::Update() {
 				mScene = mNextScene;
 			}
 		}
+
 	//更新
 	CTaskManager::Get()->Update();
 	//衝突処理(総当り）
@@ -425,12 +420,12 @@ void CSceneGame::Render() {
 		}
 	}
 	else {
-
+		/*
 		mImageMouse.Draw(570, 770, 0, 170, 0, 500, 500, 0);
 		mImageMoveKey.Draw(0, 100, 50, 200, 0, 500, 500, 0);
 		mImageCkey.Draw(120, 200, 60, 210, 0, 500, 500, 0);
 		mImageWork.Draw(0, 100, 0, 100, 0, 250, 250, 0);
-		mImageDush.Draw(120, 190, 20, 100, 0, 200, 210, 0);
+		mImageDush.Draw(120, 190, 20, 100, 0, 200, 210, 0);*/
 	}
 	//2Dの描画終了
 	CUtil::End2D();

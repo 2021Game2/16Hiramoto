@@ -112,10 +112,10 @@ void CBoss::Init(CModelX* model)
 void CBoss::Idle() {
 	mPosition.mY -= G;//重力をかける
 	//mMoveが120溜まるまで待機のアニメーション
-	ChangeAnimation(8, true, 60);
+	ChangeAnimation(8, true, 120);
 	mMove++;
 
-	if (mMove >= 120) {
+	if (mMove >= 240) {
 		//120溜まった状態でアニメーションが終わると攻撃処理に移行
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
@@ -124,20 +124,41 @@ void CBoss::Idle() {
 				mAttackPercent = num;
 				switch (mAttackPercent) {
 				case(0):
-					mState = EIDLE;
+					if (mColSearch.mRenderEnabled == false) {
+						mState = EIDLE;
+					}
+					else {
+						mState = EAUTOMOVE;
+					}
 					break;
 				case(1):
-                     mState = EATTACK;
-					 mBossAttackMove = 0;
+					if (mColSearch.mRenderEnabled == false) {
+						mState = EATTACK;
+						mBossAttackMove = 0;
+					}
+					else {
+						mState = EIDLE;
+					}
 					break;
 				case(2):
-					mState = EATTACK2;
-					mBossAttackMove = 0;
+					if (mColSearch.mRenderEnabled == false) {
+						mState = EATTACK2;
+						mBossAttackMove = 0;
+					}
+					else {
+						mState = EIDLE;
+					}
 					break;
 				case(3):
+					if (mColSearch.mRenderEnabled == false) {
 					mJumpStopper = false;
 					mJump = JUMP;
 					mState = EATTACK3;
+					}
+					else {
+					 mState = EIDLE;
+
+					}
 					break;
 				case(4):
 					if (mColSearch.mRenderEnabled == false) {
@@ -346,9 +367,7 @@ void CBoss::Attack4() {
 		break;
 	case(2):
 		mAttack4MoveCount++;
-		mPosition.mX+=mAttack4MoveX;
-		mPosition.mZ += mAttack4MoveZ;
-		
+		mPosition += CVector(mAttack4MoveX, 0.0f, mAttack4MoveZ) * mMatrixRotate;
 			switch (mAttack4directionCount) {
 			case(1)://X+Z+
 				
@@ -538,25 +557,32 @@ void CBoss::Update() {
 		mBossDamageCount--;
 	}
 	if (mBossDamageCount > 0) {
-		if (mEffectCount % 15 == 0) {
+		if (mEffectCount % 10 == 0) {
 			//エフェクト生成
 			//足に攻撃されたとき
-			if (mBossColliderCheck == 1) {
+			//if (mBossColliderCheck == 1) {
 				CXPlayer* tPlayer = CXPlayer::GetInstance();
 
-				mBossEffect = new CEffect2(tPlayer->GetSwordColPos(), 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2,false, &mRotation);
-			}
+				mBossEffect = new CEffect2(tPlayer->GetSwordColPos(), 0.5f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2,false, &mRotation);
+			//}
 			//頭に攻撃されたとき
-			else if (mBossColliderCheck == 2) {
+			/*else if (mBossColliderCheck == 2) {
 				CXPlayer* tPlayer = CXPlayer::GetInstance();
 			    mBossEffect=new CEffect2(tPlayer->GetSwordColPos(), 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2, false, &mRotation);
-			}
+			}*/
 		}
 	}
 	if (mHp <= 0 && mState != EDEATH) {
 		mState = EDEATH;
 	}
-	
+	if (mColSearch.mRenderEnabled == false) {
+		if (mBossBgm == true) {
+			tSceneGame->mBgmCountCheck = false;
+			tSceneGame->mBossBattleStage = true;
+			tSceneGame->mBgmCount = 3;
+			mBossBgm = false;
+		}
+	}
 	mEffectCount--;
 	
 	
@@ -579,14 +605,7 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 						if (CCollider::Collision(m, o)) {
 							//ポインタをプレイヤーに設定
 							mColSearchCount = true;
-							if (mColSearch.mRenderEnabled == true) {
-								if (mBossBgm == true) {
-									tSceneGame->mBgmCountCheck = false;
-									tSceneGame->mBgmCount = 3;
-									mBossBgm = false;
-								}
-								mColSearch.mRenderEnabled = false;
-							}
+							if (mColSearch.mRenderEnabled == true) mColSearch.mRenderEnabled = false;
 						}
 					}
 				}
@@ -607,9 +626,9 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 									//親をCXPlayerを元にポインタ化し、変数を参照
 									if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
 									{
-										if (m->mTag == CCollider::EBOSSCOLLIDERATTACK) mBossColliderCheck = 1;
-										else if (m->mTag == CCollider::EBOSSCOLLIDERHEAD) mBossColliderCheck = 2;
-										if (mColSearch.mRenderEnabled == true) mColSearch.mRenderEnabled == false;
+										//if (m->mTag == CCollider::EBOSSCOLLIDERATTACK) mBossColliderCheck = 1;
+										//else if (m->mTag == CCollider::EBOSSCOLLIDERHEAD) mBossColliderCheck = 2;
+										if (mColSearch.mRenderEnabled == true) mColSearch.mRenderEnabled = false;
 										//爆発エフェクト秒数付与
 										mEffectCount = 60;
 										if (mHp > 0) {
@@ -628,7 +647,6 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 											}
 
 											mHp--;
-											mColSearch.mRenderEnabled = false;
 											mBossDamageCount = 30;
 
 										}

@@ -38,7 +38,6 @@ private:
 public:
 	unsigned int mEnemyLevel;
 	float mEnemyHpPercent;
-	bool mMoveCount;
 	int mHp;//体力
 	bool mEnemy2AttackHit;
 	//モデルデータ

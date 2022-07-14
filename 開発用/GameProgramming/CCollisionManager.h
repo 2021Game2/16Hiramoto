@@ -4,8 +4,8 @@
 #include "CTaskManager.h"
 #include "CCollider.h"
 
-#define COLLISIONRANGEFIELD 30 //衝突処理範囲より離れているコライダは衝突処理しない
-#define COLLISIONRANGE 5
+#define COLLISIONRANGEFIELD 20 //衝突処理範囲より離れているコライダは衝突処理しない
+#define COLLISIONRANGE 2
 class CCollisionManager : public CTaskManager
 {
 	//マネージャのインスタンス

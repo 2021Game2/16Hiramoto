@@ -18,12 +18,12 @@
 #define COLLIDERCOUNT2 1.5f
 #define VELOCITY2 0.1f
 #define VELOCITY3 0.2f
+#define FIRECOUNT 20	//発射間隔
+
 #define JUMP 4.0f
 #define G 0.1f
 #define PLAYERSPPOINT_MAX 30
-
- extern CSound Enemy3Fry;
-
+extern CSound Enemy3Fry;
 CModel CEnemy3::mModel;//モデルデータ作成
 //デフォルトコンストラクタ
 //敵（ハチ）
@@ -42,7 +42,7 @@ CEnemy3::CEnemy3()
 	,mEnemy3Fry(0)
 	,mEnemyDamage(60)
 	,mHp(HP)
-	, mState(EIDLE)
+	,mState(EIDLE)
 {
 	mRotation.mY += 90.0f;
 	mTag = EENEMY3;
@@ -97,6 +97,7 @@ void CEnemy3::Idle() {
 void CEnemy3::Move1() {
 	mCount++;
 	if (mCount < 180) {
+		CEnemy3::Attack();
 		mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
 		//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
 		CXPlayer* tPlayer = CXPlayer::GetInstance();
@@ -151,7 +152,17 @@ void CEnemy3::Move4() {
 	}
 }
 void CEnemy3::Attack() {
-
+	if (mFireCount == 0) {
+		//弾を発射
+		mFireCount = FIRECOUNT;
+		CBullet* bullet = new CBullet();
+		bullet->mTag = EBULLETENEMY;
+		bullet->Set(0.1f, 0.5f);
+		bullet->mPosition =
+			CVector(0.0f, 0.0f, 10.0f) * mMatrix;
+		bullet->mRotation = mRotation;
+		bullet->Update();
+	}
 }
 void CEnemy3::Death() {
 	CSceneGame* tSceneGame = CSceneGame::GetInstance();
@@ -267,6 +278,7 @@ void CEnemy3::Update() {
 		mColliderCount--;
 		mPosition = mPosition + mCollisionEnemy * mColliderCount;
 	}
+
 }
 //Collision(コライダ１，コライダ２，）
 void CEnemy3::Collision(CCollider* m, CCollider* o) {

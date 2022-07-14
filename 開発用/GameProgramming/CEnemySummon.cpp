@@ -60,7 +60,8 @@ void CEnemySummon::Update() {
 void CEnemySummon::Damage() {
 	if (mEffectCount % 15 == 0) {
 		//エフェクト生成
-		new CEffect2(mPosition, 5.0f, 5.0f, CEffect2::EFF_EXP, 4, 4, 2);
+		CXPlayer* tPlayer = CXPlayer::GetInstance();
+		new CEffect2(tPlayer->GetSwordColPos(), 5.0f, 5.0f, CEffect2::EFF_EXP, 4, 4, 2);
 	}
 }
 //Collision(コライダ１、コライダ２）

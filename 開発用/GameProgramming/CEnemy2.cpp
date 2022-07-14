@@ -31,7 +31,6 @@ CEnemy2::CEnemy2()
 	,mJump(0.0f)
 	,mColliderCount(0.0f)
 	,mEnemyHpPercent(1.0f)
-	,mMoveCount(false)
 	,mEnemy2AttackHit(false)
 	,mHp(HP)
 	
@@ -73,9 +72,9 @@ void CEnemy2::Init(CModelX* model)
 //待機処理
 void CEnemy2::Idle() {
 	    //60溜まるまで待機のアニメーション
-		ChangeAnimation(8, true, 60);
+		ChangeAnimation(8, false, 60);
 		mMove++;
-		if (mMove >= 300) {
+		if (mMove >= 180) {
 			//60溜まった状態でアニメーションが終わると攻撃処理に移行
 			if (mAnimationFrame >= mAnimationFrameSize)
 			{
@@ -84,9 +83,9 @@ void CEnemy2::Idle() {
 		}
 		//60溜まる前にアニメーションが終わったら移動処理に移行
 	    else if (mAnimationFrame >= mAnimationFrameSize) {
-			if (mMoveCount == true) {
+			
              mState = EAUTOMOVE;
-			}
+			
 		}
 }		
 //移動処理

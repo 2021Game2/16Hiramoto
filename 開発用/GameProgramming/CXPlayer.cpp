@@ -15,9 +15,10 @@
 #define ATTACKCOUNT3 40
 #define JUMP 5.0f//スペシャル攻撃時のジャンプ力
 #define STEP  20.0f //攻撃時少し前進
-#define STEP2 40.0f //回避行動時少し前進
+#define STEP2 0.2f //回避行動時少し前進
 #define STAMINA 400 //スタミナ
 #define HP_MAX 10	//体力最大値
+#define STOPPER 0.1f
 #define STAMINA_MAX 1000 //スタミナ最大値
 #define SPPOINT_MAX 30 //SPポイント最大値
 #define GAUGE_WID_MAXHP 400.0f	//HPゲージの幅の最大値
@@ -158,6 +159,10 @@ void CXPlayer::Update()
 			mStep = STEP2;
 
 		}
+		mPosition += CVector(0.0f, 0.0f, mStep)*mMatrixRotate;
+			if (mStep > 0.0f) {
+				mStep -= STOPPER;
+			}
 		mAttackHit = false;
 		ChangeAnimation(1, true, 10);
 		//回転（回避してるように見える）
@@ -199,7 +204,11 @@ void CXPlayer::Update()
 	case EDAMAGED://ダメージ
 
 		if (tSceneGame->mVoiceSwitch == true) {
-			PlayerDamage.Play();
+			if (mDamageVoise == true) {
+
+			  PlayerDamage.Play();
+			  mDamageVoise = false;
+			}
 		}
 
 		ChangeAnimation(4, false, 60);
@@ -772,7 +781,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 									{
 										if (mHp > 0) {
 											//後ろに下がる
-											mColliderCount = 5.0f;
+											mColliderCount = 2.0f;
 											mCollisionEnemy = mPosition - o->mpParent->mPosition;
 											mCollisionEnemy.mY = 0;
 											mCollisionEnemy = mCollisionEnemy.Normalize();
@@ -781,6 +790,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 											//無敵時間付与
 											mDamageCount = 60;
 											//ダメージ時の処理を開始
+											mDamageVoise = true;
 											mState = EDAMAGED;
 										}
 									}
@@ -820,6 +830,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 											//無敵時間付与
 											mDamageCount = 30;
 											//ダメージ時の処理開始
+											mDamageVoise = true;
 											mState = EDAMAGED;
 										}
 									}
@@ -863,7 +874,7 @@ void CXPlayer::Render2D()
 	float spGaugeWid = GAUGE_WID_MAXSP * spRate;
 
 	if (mGaugeEnabled==true) {
-		
+		/*
 		mImageGauge.Draw(20, GAUGE_WID_MAXHP, 500, 510, 201, 300, 63, 0);//ゲージ背景
 		mImageGauge.Draw(20, hpGaugeWid, 500, 510, 0, 99, 63, 0);//体力ゲージ
 
@@ -872,6 +883,7 @@ void CXPlayer::Render2D()
 
 		mImageGauge.Draw(20, GAUGE_WID_MAXSP, 480, 490, 201, 300, 63, 0);//ゲージ背景
 		mImageGauge.Draw(20, spGaugeWid, 480, 490, 401, 486, 63, 0);//SPゲージ
+		*/
 	}
 
 	CUtil::End2D();
