@@ -193,8 +193,8 @@ void CSceneGame::Init()
 	mpFlag = new CFlag(CVector(56.0f, 11.0f, 26.0f),
 		CVector(), CVector(10.5f, 10.5f, 10.5f));
 
-	mpBossStage = new CBossStage(CVector(0.0f, 200.0f, -100.0f),
-		CVector(0.0f, 180.0f, 0.0f), CVector(0.5f, 0.5f, 0.5f));
+	mpBossStage = new CBossStage(CVector(-70.0f, 200.0f, -80.0f),
+		CVector(0.0f, 200.0f, 0.0f), CVector(0.5f, 0.5f, 0.5f));
 	
 	float shadowColor[] = { 0.4f, 0.4f, 0.4f, 0.2f };  //âeÇÃêF
 	float lightPos[] = { 50.0f, 160.0f, 50.0f };  //åıåπÇÃà íu
