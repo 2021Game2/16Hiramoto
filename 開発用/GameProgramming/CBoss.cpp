@@ -23,7 +23,9 @@
 #define ROTATIONCOUNT 36.0f//回転攻撃の際、アニメーションの終了と回転の終了をあわせる
 #define ROTATIONCOUNTM -36.0f
 #define ROTATION 3.6f//攻撃時に回転する量
-#define ROTATIONMIN -0.36f
+#define ROTATIONMIN -0.036f
+#define ROTATIONMIN2 -0.1f
+#define ROTATIONBEFOREATTACK -3.6f
 #define IMAGE_GAUGE "Resource\\png,tga\\Gauge.png"		//ゲージ画像
 
 
@@ -112,10 +114,10 @@ void CBoss::Init(CModelX* model)
 void CBoss::Idle() {
 	mPosition.mY -= G;//重力をかける
 	//mMoveが120溜まるまで待機のアニメーション
-	ChangeAnimation(8, true, 120);
+	ChangeAnimation(8, true, 60);
 	mMove++;
 
-	if (mMove >= 240) {
+	if (mMove >= 120) {
 		//120溜まった状態でアニメーションが終わると攻撃処理に移行
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
@@ -190,7 +192,6 @@ void CBoss::AutoMove() {
 	mPosition.mY -= G;
 	CSceneGame* tSceneGame = CSceneGame::GetInstance();
 	//歩く
-
 	if (tSceneGame->mVoiceSwitch == true) {
 		BossMove.Play();
 	}
@@ -230,7 +231,6 @@ void CBoss::AutoMove() {
 				//ESEARCHに衝突してポインタに設定した
 				//プレイヤーの座標を記録
 				mPoint = tPlayer->mPosition;
-		
 		}
 	}
 	
@@ -239,7 +239,6 @@ void CBoss::AutoMove() {
 void CBoss::Attack() {
 	//攻撃アニメーション
 	ChangeAnimation(5, false, 80);
-	
 	switch (mBossAttackMove) {
 	case(0):
 		if (mAnimationFrame < 30) {
@@ -249,8 +248,7 @@ void CBoss::Attack() {
 		else {
 			mJump = JUMP2;
 			mJumpZ = JUMP2;
-			mBossAttackMove = 1;
-			
+			mBossAttackMove = 1;	
 		}
 		break;
 	case(1):
@@ -266,7 +264,7 @@ void CBoss::Attack() {
 		else {
 			mBossAttackHit = false;
 			mJump = 0.0f;
-		mBossAttackMove = 2;
+		    mBossAttackMove = 2;
 
 		}
 		break;
@@ -353,7 +351,7 @@ void CBoss::Attack4() {
 	switch (mAttack4Count) {
 	case(1):
 		if (mAttack4RotationCount > -90.0f) {
-			mAttackRotation = ROTATIONMIN;
+			mAttackRotation = ROTATIONBEFOREATTACK;
 			mRotation.mY += mAttackRotation;
 			mAttack4RotationCount += mAttackRotation;
 		}
@@ -366,8 +364,9 @@ void CBoss::Attack4() {
 		}
 		break;
 	case(2):
+		mBossAttackHit = true;//攻撃判定を有効
 		mAttack4MoveCount++;
-		mPosition += CVector(mAttack4MoveX, 0.0f, mAttack4MoveZ) * mMatrixRotate;
+		mPosition += CVector(mAttack4MoveX, 0.0f, mAttack4MoveZ) ;
 			switch (mAttack4directionCount) {
 			case(1)://X+Z+
 				
@@ -404,40 +403,40 @@ void CBoss::Attack4() {
 				}
 				break;
 			}
-		
+		//回転
 		mRotation.mY += mAttackRotation;
+		//回転値Yが増えるごとに増加
 		mAttack4RotationCount += mAttackRotation;
+		//だんだん早くなる
 		if (mAttackRotation < ROTATIONCOUNT) {
 			mAttackRotation += ROTATION;
 		}
-		else if (mAttack4RotationCount >= ROTATIONBASE) {
-			mAttack4directionCount = 0;
+		//減速開始
+		 if (mAttack4RotationCount >= ROTATIONBASE) {
+			 //移動しない
+			//mAttack4directionCount = 0;
+			//減速処理
 			mAttack4Count = 3;
 		}
 		break;
 	case(3):
-		if (mAttack4RotationCount > 720.0f) {
-			if (mAttackRotation > ROTATIONCOUNTM) {
-				mAttackRotation -= ROTATION;
-			}
+		//減速
+		//1フレーム４５°回転までは大きく減速
+		if (mAttackRotation > 45.0f) {
+			mAttackRotation += ROTATIONMIN2;
 			mRotation.mY += mAttackRotation;
-			mAttack4RotationCount += mAttackRotation;
 		}
-		else if (mAttack4RotationCount > 0.0f) {
-			if (mAttackRotation > ROTATIONMIN) {
-				mAttackRotation += ROTATIONMIN;
-			}
-				mRotation.mY += mAttackRotation;
-				mAttack4RotationCount += mAttackRotation;
+		else if (mAttackRotation > 0.0f) {
+			mAttackRotation = ROTATIONMIN;
+			mRotation.mY += mAttackRotation;
 		}
-	    else if (mAttack4RotationCount <= 0.0f) {
+		else if (mAttackRotation <= 0.0f) {
 			mAnimationFrame = mAnimationFrameSize;
 			mAttack4RotationCount = 0.0f;
 			mAttackRotation = 0.0f;
 			mAttack4Count = 0;
 			mBossAttackHit = false;
 			mState = EIDLE;
-			
 		}
 
 		break;
@@ -619,23 +618,19 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 				if (o->mpParent->mTag == EPLAYER) {
 					//相手が武器のとき
 					//剣とハンマー（アイテム）
-					if (o->mTag == CCollider::EPLAYERSWORD || o->mpParent->mTag == EITEM) {
-						//衝突しているとき
+					switch(o->mTag) {
+					case CCollider::EPLAYERSWORD:
+                            //衝突しているとき
 							if (CCollider::Collision(m, o)) {
 								if (mBossDamageCount <= 0) {
 									//親をCXPlayerを元にポインタ化し、変数を参照
 									if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
 									{
-										//if (m->mTag == CCollider::EBOSSCOLLIDERATTACK) mBossColliderCheck = 1;
-										//else if (m->mTag == CCollider::EBOSSCOLLIDERHEAD) mBossColliderCheck = 2;
 										if (mColSearch.mRenderEnabled == true) mColSearch.mRenderEnabled = false;
 										//爆発エフェクト秒数付与
 										mEffectCount = 60;
 										if (mHp > 0) {
-											
-
-												((CXPlayer*)(o->mpParent))->CXPlayer::SpAttackPoint2();
-											
+											((CXPlayer*)(o->mpParent))->CXPlayer::SpAttackPoint2();
 											//30％減るごとにのけぞる
 											if (mHp == HPCOUNT1 || mHp == HPCOUNT2 || mHp == HPCOUNT3) {
 												mColliderCount = 10;
@@ -645,21 +640,55 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 												mState = EDAMAGED;
 
 											}
-
 											mHp--;
+											if (((CXPlayer*)(o->mpParent))->mAttackSp == true) {
+												mBossDamageCount = 3;
+											}
+											else {
 											mBossDamageCount = 30;
+
+											}
 
 										}
 
 									}
 								}
 							}
-						
-					}
-					//相手がESTOPPERの時
-					if (o->mTag == CCollider::EPLAYERBODY) {
+						break;
+					case CCollider::EITEMCOLLIDER:
+						//衝突しているとき
 
-						if (CCollider::Collision(m, o)) {
+						if (((CXPlayer*)(o->mpParent))->mAttackHit == false) {
+
+
+							if (CCollider::Collision(m, o)) {
+								if (mBossDamageCount <= 0) {
+									if (mColSearch.mRenderEnabled == true) mColSearch.mRenderEnabled = false;
+									//爆発エフェクト秒数付与
+									mEffectCount = 60;
+									if (mHp > 0) {
+										((CXPlayer*)(o->mpParent))->CXPlayer::SpAttackPoint2();
+
+										//30％減るごとにのけぞる
+										if (mHp == HPCOUNT1 || mHp == HPCOUNT2 || mHp == HPCOUNT3) {
+											mColliderCount = 10;
+											mCollisionEnemy = mPosition - o->mpParent->mPosition;
+											mCollisionEnemy.mY = 0;
+											mCollisionEnemy = mCollisionEnemy.Normalize();
+											mState = EDAMAGED;
+
+										}
+
+										mHp--;
+										mBossDamageCount = 30;
+
+									}
+								}
+							}
+						}
+						break;
+					case CCollider::EPLAYERBODY:
+                        if (CCollider::Collision(m, o)) {
 							
 									if (mState ==EAUTOMOVE) {
 										if (mHp > 0) {
@@ -670,7 +699,9 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 							mCollisionEnemy = mPosition - o->mpParent->mPosition;
 							mCollisionEnemy = mCollisionEnemy.Normalize();
 						}
+						break;
 					}
+					
 				}
 			}
 		}

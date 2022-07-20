@@ -25,10 +25,14 @@ CEnemy2::CEnemy2()
 	,mMove(0)
 	,mEnemyVoice(0)
 	,mDamageCount(0)
-	,mEnemyLevel(0)
+	, mEnemy2StopCount(0)
+	, mEffectCount(0)
 	,mEnemyDamage(60)
 	,mTime(0.0f)
 	,mJump(0.0f)
+	, mRotationCount(0.0f)
+	, mPlayerMarkingX(0.0f)
+	, mPlayerMarkingZ(0.0f)
 	,mColliderCount(0.0f)
 	,mEnemyHpPercent(1.0f)
 	,mEnemy2AttackHit(false)
@@ -37,7 +41,9 @@ CEnemy2::CEnemy2()
 {
 	mTag = EENEMY2;
 	mColSphereRight.mTag= CCollider::EENEMY2COLLIDERATTACK;
+	mColSphereRight.mRenderEnabled = false;
 	mColSphereLeft.mTag= CCollider::EENEMY2COLLIDERATTACK;
+	mColSphereLeft.mRenderEnabled = false;
 	mColSphereBody.mTag = CCollider::EENEMY2COLLIDERBODY;
 }
 
@@ -56,7 +62,6 @@ CEnemy2::CEnemy2(const CVector& position, const CVector& rotation, const CVector
 	mPriority = 1;
 	CTaskManager::Get()->Remove(this);//削除して
 	CTaskManager::Get()->Add(this);//追加する
-	
 	mEnabled = true;
 }
 
@@ -72,7 +77,7 @@ void CEnemy2::Init(CModelX* model)
 //待機処理
 void CEnemy2::Idle() {
 	    //60溜まるまで待機のアニメーション
-		ChangeAnimation(8, false, 60);
+		ChangeAnimation(8, true, 60);
 		mMove++;
 		if (mMove >= 180) {
 			//60溜まった状態でアニメーションが終わると攻撃処理に移行
@@ -129,12 +134,15 @@ void CEnemy2::AutoMove() {
 }	
 //攻撃処理
 void CEnemy2::Attack() {
+	mColSphereRight.mRenderEnabled = true;
+	mColSphereLeft.mRenderEnabled = true;
 	    //攻撃アニメーション
 		ChangeAnimation(4, false, 120);
 		if (mAnimationFrame >= mAnimationFrameSize) {
 			mMove = 0;
 			mState = EAUTOMOVE;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
-        
+			mColSphereRight.mRenderEnabled = false;
+			mColSphereLeft.mRenderEnabled = false;
 		}
 }	
 //ダメージ処理
@@ -278,7 +286,6 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 						{//ヒットバック＆ダメージを受ける
 							if (mDamageCount <= 0) {
 								//プレイヤーのジャンプ攻撃必要ポイント増加
-
 								if (((CXPlayer*)(o->mpParent))->mSpAttack < PLAYERSPPOINT_MAX) {
 									((CXPlayer*)(o->mpParent))->CXPlayer::SpAttackPoint();
 								}
@@ -291,17 +298,13 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 								mCollisionEnemy = mPosition - o->mpParent->mPosition;
 								mCollisionEnemy.mY = 0;
 								mCollisionEnemy = mCollisionEnemy.Normalize();
-								
 							    //ダメージ処理に移行
 								if (mHp > 0) {
-
 								  mState = EDAMAGED;
-
 								}
 								else if (mHp <= 0) {
 									mJump = JUMP;
 									mState = EDEATH;
-
 								}
 							}
 						}
@@ -325,14 +328,11 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 								//ヒットバック付与 
 								mColliderCount = 1.5f;
 								mCollisionEnemy = mPosition - o->mpParent->mPosition;
-								//HPが０のとき以外は前後左右に吹っ飛ぶ
+								//HPが0のとき以外は前後左右に吹っ飛ぶ
 								mCollisionEnemy.mY = 0;
 								mCollisionEnemy = mCollisionEnemy.Normalize();
-								//ダメージ処理に移行
-								if (mHp > 0) {
-									mState = EDAMAGED;
-								}
-								else if (mHp <= 0) {
+								
+							    if (mHp <= 0) {
 									mJump = JUMP;
 									mState = EDEATH;
 								}

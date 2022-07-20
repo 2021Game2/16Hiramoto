@@ -18,9 +18,9 @@
 #define COLLIDERCOUNT2 1.5f
 #define VELOCITY2 0.1f
 #define VELOCITY3 0.2f
-#define FIRECOUNT 20	//発射間隔
+#define FIRECOUNT 1	//発射間隔
 
-#define JUMP 4.0f
+#define JUMP 2.0f
 #define G 0.1f
 #define PLAYERSPPOINT_MAX 30
 extern CSound Enemy3Fry;
@@ -42,11 +42,11 @@ CEnemy3::CEnemy3()
 	,mEnemy3Fry(0)
 	,mEnemyDamage(60)
 	,mHp(HP)
-	,mState(EIDLE)
+	
 {
 	mRotation.mY += 90.0f;
 	mTag = EENEMY3;
-	
+	mState = EIDLE;
 	//モデルが無いときは読み込む
 	if (mModel.mTriangles.size() == 0) {
 		mModel.Load(OBJ, MTL);
@@ -78,16 +78,16 @@ void CEnemy3::Idle() {
 
 	mCount++;
 	//０から６０フレーム
-	if (mCount < 60) {
-		if (mCount >= 0) {
+	if (mCount < 20) {
+		
 			mPosition.mY -= 0.5f;
-		}
+		
 	}
 	//６０から１２０フレーム
-	else if (mCount < 120) {
+	else if (mCount < 40) {
 		mPosition.mY += 0.5f;
 	}
-	else if (mCount >= 120) {
+	else if (mCount >= 40) {
 		mCount = 0;
 		if (mColSearch2.mRenderEnabled == false) {
 			mState = EMOVE1;
@@ -97,7 +97,7 @@ void CEnemy3::Idle() {
 void CEnemy3::Move1() {
 	mCount++;
 	if (mCount < 180) {
-		CEnemy3::Attack();
+		
 		mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
 		//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
 		CXPlayer* tPlayer = CXPlayer::GetInstance();
@@ -151,45 +151,38 @@ void CEnemy3::Move4() {
 
 	}
 }
-void CEnemy3::Attack() {
-	if (mFireCount == 0) {
-		//弾を発射
-		mFireCount = FIRECOUNT;
-		CBullet* bullet = new CBullet();
-		bullet->mTag = EBULLETENEMY;
-		bullet->Set(0.1f, 0.5f);
-		bullet->mPosition =
-			CVector(0.0f, 0.0f, 10.0f) * mMatrix;
-		bullet->mRotation = mRotation;
-		bullet->Update();
-	}
-}
+
 void CEnemy3::Death() {
 	CSceneGame* tSceneGame = CSceneGame::GetInstance();
-	if (mHp <= -70) {
+	
+	
+	//15フレームごとにエフェクト
+	if (mEffectCount % 15 == 0) {
+		//エフェクト生成
+		new CEffect2(mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2, false, &mRotation);
+	}
+	//体力がなくなったら
+	if (mHp <= 0) {
+		//mTimeとmJumpに整数が代入され、吹っ飛ぶようになる
+		mPosition.mY += mJump;
+		if (mJump >= -0.5f) {
+			mJump -= G;
+		}
+		mHp--;	
+		CTransform::Update();
+	}
+	//吹き飛ぶ（X,Z軸)
+	if (mColliderCount > 0) {
+		mColliderCount--;
+		mPosition.mX = mPosition.mX + mCollisionEnemy.mX * mColliderCount;
+		mPosition.mZ = mPosition.mZ + mCollisionEnemy.mZ * mColliderCount;
+	}
+	if (mHp <= -120) {
 		mEnabled = false;
 		tSceneGame->mEnemy3Count--;
 		tSceneGame->mEnemy3CountStopper--;
 	}
-	if (mJump > 0) {
-		mJump--;
-	}
-	//吹き飛ぶ(X軸方向）
-	if (mColliderCount > 0) {
-		mColliderCount--;
-
-	}
-	//吹き飛ぶ（Y軸方向）
-	if (mJump2 > 0) {
-		mPosition.mY += mJump;
-		mJump2--;
-	}
-	mHp--;
-	//15フレームごとにエフェクト
-	if (mHp % 15 == 0) {
-		//エフェクト生成
-		new CEffect2(mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2, false, &mRotation);
-	}
+	
 	CTransform::Update();
 }
 //更新処理
@@ -211,10 +204,6 @@ void CEnemy3::Update() {
 		break;
 	case EMOVE4://移動４（右前に移動（元の位置に戻る）
 		Move4();
-		break;
-	
-	case EATTACK://攻撃
-		Attack();
 		break;
 	
 	case EDEATH://死亡
@@ -279,6 +268,7 @@ void CEnemy3::Update() {
 		mPosition = mPosition + mCollisionEnemy * mColliderCount;
 	}
 
+	mEffectCount--;
 }
 //Collision(コライダ１，コライダ２，）
 void CEnemy3::Collision(CCollider* m, CCollider* o) {
@@ -321,7 +311,6 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 						if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
 						{
 							if (((CXPlayer*)(o->mpParent))->mSpAttack < PLAYERSPPOINT_MAX) {
-
 								((CXPlayer*)(o->mpParent))->CXPlayer::SpAttackPoint();
 							}
 							mColliderCount = COLLIDERCOUNT;
@@ -349,25 +338,36 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 		       }
 				break;
 			case(EITEM):
-				 if (o->mTag == CCollider::EITEMCOLLIDER) {
+				if (o->mTag == CCollider::EITEMCOLLIDER) {
 					//衝突しているとき
-					if (CCollider::Collision(m, o)) {
+				if (CCollider::Collision(m, o)) {
+						//プレイヤーの当たり判定が有効なとき
+						//親をCXPlayerを元にポインタ化し、変数を参照
 						if (((CItem*)(o->mpParent))->mItemAttackHit == true)
-						{
+						{//ヒットバック＆ダメージを受ける
+								//プレイヤーのジャンプ攻撃必要ポイント増加
+							if (((CXPlayer*)(o->mpParent))->mSpAttack < PLAYERSPPOINT_MAX) {
 
-							mColliderCount = COLLIDERCOUNT;
+								((CXPlayer*)(o->mpParent))->mSpAttack++;
+							}
+							mEffectCount = 0;
+							//体力減少 
+							mHp = 0;
+							//ヒットバック付与 
+							mColliderCount = 1.5f;
 							mCollisionEnemy = mPosition - o->mpParent->mPosition;
+							//HPが0のとき以外は前後左右に吹っ飛ぶ
 							mCollisionEnemy.mY = 0;
 							mCollisionEnemy = mCollisionEnemy.Normalize();
-							mJump = JUMP;
-							mHp--;
-							if (mHp <= 0) {
 
+							if (mHp <= 0) {
+								mJump = JUMP;
 								mState = EDEATH;
 							}
+
 						}
 					}
-				 }
+				}
 				break;
 			case(EENEMY2):
 				if (o->mTag == CCollider::EENEMY2COLLIDERBODY) {
@@ -398,7 +398,6 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 				{
 						//衝突しない位置まで戻す
 						//mPosition = mPosition + adjust;
-					
 				}
 			}
 			

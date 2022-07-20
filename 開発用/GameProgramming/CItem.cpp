@@ -5,7 +5,6 @@
 #include"CItem.h"
 #define OBJ "Resource\\3DModel\\Weapon\\Weapon.obj"
 #define MTL "Resource\\3DModel\\Weapon\\Weapon.mtl"
-//int CItem::mItemCount = 0;
 bool CItem::mItemAttackHit = false;
 CModel CItem::mModel;//モデルデータ作成
 CItem* CItem::mpItemInstance;
@@ -46,6 +45,7 @@ void CItem::Update() {
 	CXPlayer* tPlayer = CXPlayer::GetInstance();
 	//取得すると武器になってプレイヤーの周りを回る
 	if (mItemCount > 0) {
+		mTag = EPLAYER;
 	     mItemCount--;
 		 mItemAttackHit = true;
 		if (mRotation.mX < 90.0f) {

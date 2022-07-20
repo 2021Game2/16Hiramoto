@@ -23,6 +23,7 @@ private:
 	int mEnemy3Fry;
 	int mEnemyDamage;
     int mMoveCount;
+	int mEffectCount;//エフェクトを表示させる時間
     int mHp;//体力
 	CCollider mCollider;
 	CBullet* mpBullet;
@@ -47,7 +48,6 @@ public:
 	//void AutoMove2();
 	//void Damage();
 	void Death();
-	void Attack();
 	void Idle();
 	//更新処理
 	void Update();
@@ -58,14 +58,11 @@ public:
 	enum EEnemy3State
 	{
 		EIDLE,		//待機
-		EAUTOMOVE1,	//移動
-		EAUTOMOVE2,
-		EMOVE1,
-		EMOVE2,
-		EMOVE3,
-		EMOVE4,
-		EMOVE5,
-		EATTACK,	//攻撃
+		EMOVE1,//移動１
+		EMOVE2,//移動２
+		EMOVE3,//移動３
+		EMOVE4,//移動４
+		EMOVE5,//移動５
 		EDAMAGED,	//被弾
 		EDEATH,		//死亡
 	};

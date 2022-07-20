@@ -91,6 +91,8 @@
       <AdditionalDependencies>glew32.lib;glfw3_mt.lib;glut32.lib;soil.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
+      <OutputFile>$(OutDir)CreatureHunter$(TargetExt)</OutputFile>
+      <ProgramDatabaseFile>$(OutDir)CreatureHunter.pdb</ProgramDatabaseFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

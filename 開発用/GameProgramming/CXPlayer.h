@@ -53,20 +53,9 @@ private:
 	float mStep;//攻撃時、少し前進
 	float mEscapeFlg;
 	 int mStamina;//スタミナの数値
-	 void SetStamina(int stamina) {
-		 this->mStamina = stamina;
-	 }
-	 int GetStamina() {
-		 return mStamina;
-	 }
+	
 	 int mAttackCount;//攻撃のアニメーションが何度も再生されないように
-	 void SetAttackCount(int attackCount) {
-		
-		 this->mAttackCount = attackCount;
-	 }
-	 int GetAttackCount() {
-		 return mAttackCount;
-	 }
+	 
 	CBoss* mpBoss;
 	CEffect2* mEffect1;
 	CEffect2* mEffect2;
@@ -81,6 +70,7 @@ private:
 	CTexture mTexture;
 	
 public:
+	
 	bool mAttackSp;
 	CCollider mColSphereSword;	//剣コライダ
 	EPLAYERState mState;

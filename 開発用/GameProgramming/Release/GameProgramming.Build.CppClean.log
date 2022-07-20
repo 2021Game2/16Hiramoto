@@ -1,5 +1,4 @@
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\vc142.pdb
-c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\ckey.obj
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\citem.obj
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\cinput.obj
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\cfade.obj
@@ -16,10 +15,10 @@ c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hi
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\ccharacter.obj
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\ccamera.obj
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\cbullet.obj
+c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\cbossstage.obj
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\cboss.obj
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\cbillboard2.obj
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\cbillboard.obj
-c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\ctransform.obj
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\ctexture.obj
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\ctext.obj
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\ctaskmanager.obj
@@ -39,6 +38,7 @@ c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hi
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\cmatrix.obj
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\cmaterial.obj
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\cmap.obj
+c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\ckey.obj
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\main.obj
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\cxplayer.obj
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\cxcharacter.obj
@@ -46,6 +46,11 @@ c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hi
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\cutil.obj
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\ctriangle.obj
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\cflag.obj
+c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\ctransform.obj
+c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\release\gameprogramming.exe
+c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\gameprogramming.ipdb
+c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\gameprogramming.iobj
+c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\release\gameprogramming.pdb
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\gameprogramming.tlog\cl.command.1.tlog
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\gameprogramming.tlog\cl.read.1.tlog
 c:\users\hiram\onedrive\デスクトップ\git\git\ゲーム制作３．１\16hiramoto\開発用\gameprogramming\release\gameprogramming.tlog\cl.write.1.tlog

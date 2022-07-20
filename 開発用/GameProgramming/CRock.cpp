@@ -22,7 +22,7 @@ CRock::CRock(const CVector& position, const CVector& rotation, const CVector& sc
 	mPriority = 2;
 	CTaskManager::Get()->Remove(this);//削除して
 	CTaskManager::Get()->Add(this);//追加する
-	 CTransform::Update();//行列の更新
+	CTransform::Update();//行列の更新
 	 
 	//モデルのポインタ設定
 	mpModel = &mModel;

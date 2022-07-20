@@ -14,16 +14,15 @@
 #include"CFlag.h"
 #include"CFade.h"
 #define HP 10
-
-#define ENEMY2COUNT 5//ˆê“x‚Éo‚¹‚é“G‚Q‚Ì”
-#define ENEMY2MINCOUNT 4 //“G‚Q‚ğÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚Q‚Ì”‚Ì‰ºŒÀ
+#define ENEMY2COUNT 2//ˆê“x‚Éo‚¹‚é“G‚Q‚Ì”
+#define ENEMY2MINCOUNT 1 //“G‚Q‚ğÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚Q‚Ì”‚Ì‰ºŒÀ
 #define ENEMY3COUNT 1//ˆê“x‚Éo‚¹‚é“G‚R‚Ì”
-#define ENEMY3MINCOUNT 4 //“G‚R‚ğÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚R‚Ì”‚Ì‰ºŒÀ
+#define ENEMY3MINCOUNT 0 //“G‚R‚ğÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚R‚Ì”‚Ì‰ºŒÀ
 #define HP_MAX 10	//‘Ì—ÍÅ‘å’l
 #define TEX_BUTTON "Resource\\png,tga\\MoveKey.png"
 #define TEX_BUTTON2 "Resource\\png,tga\\CKey.png"
 #define TEX_BUTTON3 "Resource\\png,tga\\Mouse.png"
-#define TEX_DUSH "Resource\\png,tga\\Dush.png"
+#define TEX_DUSH  "Resource\\png,tga\\Dush.png"
 #define TEX_WORK "Resource\\png,tga\\Work.png"
 #define BGMSTART "Resource\\BGM\\BGMSTART.wav" //BGM
 #define BGMBATTLE "Resource\\BGM\\BGMBATTLE.wav" //ƒoƒgƒ‹’†‚ÌBGM
@@ -65,7 +64,6 @@ CSceneGame* CSceneGame::GetInstance()
 CSceneGame::CSceneGame()
 	:mSpawn(0)//“G‚Q‚Ì¶¬Š´Šo
     ,mSpawn2(0)//“G‚R‚Ì¶¬Š´Šo
-	
 	, mBgmCount  (1)//BGM‚ÌØ‚è‘Ö‚¦”Ô†
 	, mEnemy2Count (0)//¡¶¬‚³‚ê‚Ä‚¢‚é“G2‚Ì”
 	, mEnemy3Count (0)//¡¶¬‚³‚ê‚Ä‚¢‚é“G3‚Ì”
@@ -76,7 +74,7 @@ CSceneGame::CSceneGame()
 	,mBgmBossStopper(true)//BGM‚ğ~‚ß‚é
     ,mBgmOverStopper(true)//BGM‚ğ~‚ß‚é
     ,mBgmClearStopper(true)//BGM‚ğ~‚ß‚é
-	, mVoiceSwitch(false)//falseF‰¹º‚È‚µ trueF‰¹º‚ ‚è
+	, mVoiceSwitch(true)//falseF‰¹º‚È‚µ trueF‰¹º‚ ‚è
 	, mBossGaugeSwitch(false)//ƒ{ƒX‚Ì‘Ì—ÍƒQ[ƒW‚ğ•\¦‚³‚¹‚éƒtƒ‰ƒO
 	, mGameClear (false)//ƒQ[ƒ€ƒNƒŠƒA‚Ìƒtƒ‰ƒO
 	, mGameOver (false)//ƒQ[ƒ€ƒI[ƒo[‚Ìƒtƒ‰ƒO
@@ -180,9 +178,9 @@ void CSceneGame::Init()
 	CRes::sBoss.SeparateAnimationSet(0, 565, 650, "death - 03");
 	mpItem=new CItem(CVector(-20.0f, 2.0f, -10.0f),
 		CVector(), CVector(1.5f, 1.5f, 1.5f));
-	/*
+	
 	mpTarget=new CTarget(mpPlayer->mPosition,
-		CVector(), CVector(0.5f, 0.5f, 0.5f));*/
+		CVector(), CVector(0.5f, 0.5f, 0.5f));
 	mpMap = new CMap(CVector(0.0f, -3.325f, 0.0f), CVector(), CVector(1.0f, 1.0f, 1.0f));
 	mpEnemySummon = new CEnemySummon(CVector(-20.0f, -2.0f, -70.0f),
 		CVector(), CVector(0.5f, 0.5f, 0.5f));
@@ -311,7 +309,11 @@ void CSceneGame::Update() {
 		mEnemy2CountStopper = ENEMY2COUNT;
 	 }
 	    
-	if (mpEnemySummon2->mHp > 0) {
+	//“G‚ªˆê’è‚Ì”Œ¸‚é‚Ü‚ÅÄ¶¬‚µ‚È‚¢
+	 if (mEnemy3CountStopper <= ENEMY3MINCOUNT) {
+		mEnemy3CountStopper = ENEMY3COUNT;
+	 }
+	 if (mpEnemySummon2->mHp > 0) {
 		//mEnemy3CountStopper‚Éİ’è‚µ‚½”‚¾‚¯“G‚ğ¶¬
 		if (mEnemy3Count < mEnemy3CountStopper) {
 			//‚Q•b‚²‚Æ‚É¶¬
@@ -327,10 +329,6 @@ void CSceneGame::Update() {
 		}
 	}
 
-	//“G‚ªˆê’è‚Ì”Œ¸‚é‚Ü‚ÅÄ¶¬‚µ‚È‚¢
-	 if (mEnemy3CountStopper <= ENEMY3MINCOUNT) {
-		mEnemy3CountStopper = ENEMY3COUNT;
-	}
 	//ƒGƒXƒP[ƒvƒL[‚ÅI—¹
 	if (CKey::Push(VK_ESCAPE)) {
 		exit(0);
@@ -368,37 +366,38 @@ void CSceneGame::Render() {
 	//2D•`‰æŠJn
 	CUtil::Start2D(0, 800, 0, 600);
 	char buf[64];
+	
 	if (mpBoss) {
-		if (mpBoss->mHp > 0 || mpPlayer->mHp > 0) {
-		}
-
-		else if (mpBoss->mHp <= 0) {
-			
-			//ƒNƒŠƒAŠÔ‚ğ‹L˜^
-			mClearTime = (float)(mEndTime - mStartTime) / 1000;
+		if (mpBoss->mHp <= 0) {
 			mGameClear = true;
-			mpPlayer->mGaugeEnabled = false;
-			mBossGaugeSwitch = false;
-			sprintf(buf, "GAMECLEAR");
-			mFont.DrawString(buf, 300, 300, 16, 32);
-
-			sprintf(buf, "PLEASE CLICK");
-			mFont.DrawString(buf, 300, 200, 16, 32);
-			if (CKey::Once(VK_LBUTTON)) {
-				mBgmCountCheck = false;
-				mpItem->SetItemCount(0);
-				mEnemy2Count = 0;
-				mEnemy3Count = 0;
-				mNextScene = CScene::ETITLE;
-				mSceneChange = true;
-				CFade::SetFade(CFade::FADE_OUT);
-			}
 		}
+
 		if (mBossGaugeSwitch == true && mpBoss->mHp > 0) {
 			sprintf(buf, "BOSS");
 			mFont.DrawString(buf, 300, 570, 32, 16);
 		}
 	}
+	if (mGameClear == true) {
+		mpBossStage->mEnabled = false;
+		//ƒNƒŠƒAŠÔ‚ğ‹L˜^
+		mClearTime = (float)(mEndTime - mStartTime) / 1000;
+		mpPlayer->mGaugeEnabled = false;
+		mBossGaugeSwitch = false;
+		sprintf(buf, "GAMECLEAR");
+		mFont.DrawString(buf, 300, 300, 16, 32);
+		sprintf(buf, "PLEASE CLICK");
+		mFont.DrawString(buf, 300, 200, 16, 32);
+		if (CKey::Once(VK_LBUTTON)) {
+			mBgmCountCheck = false;
+			mpItem->SetItemCount(0);
+			mEnemy2Count = 0;
+			mEnemy3Count = 0;
+			mNextScene = CScene::ETITLE;
+			mSceneChange = true;
+			CFade::SetFade(CFade::FADE_OUT);
+		}
+	}
+	
 	if (mpPlayer->mHp <= 0) {
 		mGameOver = true;
 		mpPlayer->mGaugeEnabled = false;
@@ -419,13 +418,13 @@ void CSceneGame::Render() {
 
 		}
 	}
-	else {
-		/*
+	if(mGameClear != true&&mGameOver!=true){
+		
 		mImageMouse.Draw(570, 770, 0, 170, 0, 500, 500, 0);
 		mImageMoveKey.Draw(0, 100, 50, 200, 0, 500, 500, 0);
 		mImageCkey.Draw(120, 200, 60, 210, 0, 500, 500, 0);
-		mImageWork.Draw(0, 100, 0, 100, 0, 250, 250, 0);
-		mImageDush.Draw(120, 190, 20, 100, 0, 200, 210, 0);*/
+		mImageWork.Draw(0, 100, 0, 100, 0, 250, 240, 0);
+		mImageDush.Draw(120, 190, 20, 100, 0, 200, 210, 0);
 	}
 	//2D‚Ì•`‰æI—¹
 	CUtil::End2D();

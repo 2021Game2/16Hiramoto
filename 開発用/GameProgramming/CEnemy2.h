@@ -26,8 +26,7 @@ private:
 	float mJump;//ダメージを受けたときに飛び上がる
 	float mColliderCount;//ヒットバックさせる量
 	float mTime;//ジャンプする時の時間を計測
-	bool mEnemy2Bgm;
-	bool mEnemy2BgmStopper;
+	
 	
 	CCollider mColSphereRight;//右ハサミのコライダ
 	CCollider mColSphereLeft;//左ハサミのコライダ
@@ -36,7 +35,6 @@ private:
 	CCharacter* mpPlayer;//プレイヤーのポインタ
 	
 public:
-	unsigned int mEnemyLevel;
 	float mEnemyHpPercent;
 	int mHp;//体力
 	bool mEnemy2AttackHit;

@@ -2,15 +2,15 @@
 #include "CCollisionManager.h"
 
 CBullet::CBullet()
-: mLife(300)
-, mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 1.1f)
+: mLife(3000)
+, mCollider(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 10.1f)
 {}
 
 //幅と奥行きの設定
 //Set(幅, 奥行)
 void CBullet::Set(float w, float d) {
 	//スケール設定
-	mScale = CVector(2.0f, 1.0f, 2.0f);
+	mScale = CVector(2.0f, 2.0f, 2.0f);
 	//三角形の頂点設定→3
 	mT.SetVertex(CVector(w, 0.0f, 0.0f), CVector(0.0f, 0.0f, -d), CVector(-w, 0.0f, 0.0f));
 	//三角形の法線設定
@@ -20,7 +20,8 @@ void CBullet::Set(float w, float d) {
 //更新
 void CBullet::Update() {
 	//生存時間の判定
-	if (mLife-- > 0) {
+	if (mLife > 0) {
+		mLife--;
 		CTransform::Update();
 		//位置更新
 		mPosition = CVector(0.0f, 0.0f, 1.0f) * mMatrix;
@@ -52,7 +53,6 @@ void CBullet::Collision(CCollider *m, CCollider *o) {
 
 	
 
-	return;
 
 	if (m->mType == CCollider::ESPHERE) {
 		if( o->mType == CCollider::ESPHERE)
