@@ -154,8 +154,6 @@ void CEnemy3::Move4() {
 
 void CEnemy3::Death() {
 	CSceneGame* tSceneGame = CSceneGame::GetInstance();
-	
-	
 	//15フレームごとにエフェクト
 	if (mEffectCount % 15 == 0) {
 		//エフェクト生成
@@ -205,7 +203,6 @@ void CEnemy3::Update() {
 	case EMOVE4://移動４（右前に移動（元の位置に戻る）
 		Move4();
 		break;
-	
 	case EDEATH://死亡
 		Death();
 		break;
@@ -245,7 +242,7 @@ void CEnemy3::Update() {
 		mRotation.mX += 3.0f;
 	}
 	CTransform::Update();//行列更新
-	int r = rand() % 30; //rand()は整数の乱数を返す
+	int r = rand() % 10; //rand()は整数の乱数を返す
 	//%180は１８０で割った余りを求める
 	if (r == 0) {
 		mPoint = CVector(tPlayer->mPosition.mX, tPlayer->mPosition.mY+3.0f, tPlayer->mPosition.mZ);

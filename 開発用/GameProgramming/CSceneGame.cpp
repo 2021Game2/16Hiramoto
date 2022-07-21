@@ -74,7 +74,7 @@ CSceneGame::CSceneGame()
 	,mBgmBossStopper(true)//BGMを止める
     ,mBgmOverStopper(true)//BGMを止める
     ,mBgmClearStopper(true)//BGMを止める
-	, mVoiceSwitch(true)//false：音声なし true：音声あり
+	, mVoiceSwitch(false)//false：音声なし true：音声あり
 	, mBossGaugeSwitch(false)//ボスの体力ゲージを表示させるフラグ
 	, mGameClear (false)//ゲームクリアのフラグ
 	, mGameOver (false)//ゲームオーバーのフラグ

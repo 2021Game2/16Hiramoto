@@ -15,7 +15,7 @@
 #define ATTACKCOUNT3 40
 #define JUMP 5.0f//スペシャル攻撃時のジャンプ力
 #define STEP  20.0f //攻撃時少し前進
-#define STEP2 0.2f //回避行動時少し前進
+#define STEP2 -0.2f //回避行動時少し前進
 #define STAMINA 400 //スタミナ
 #define HP_MAX 10	//体力最大値
 #define STOPPER 0.1f
@@ -29,7 +29,7 @@
 #define IMAGE_GAUGE "Resource\\png,tga\\Gauge.png"		//ゲージ画像
 #define G 0.1f//重力
 #define G2 1.5f//スペシャル攻撃時の重力
-#define G3 1.11f
+#define G3 0.2f
 
 
 extern CSound PlayerFirstAttack;//一回目の攻撃のSE
@@ -46,17 +46,19 @@ CXPlayer* CXPlayer::GetInstance()
 }
 
 CXPlayer::CXPlayer()
-	:mColSphereSword(this, &mMatrix, CVector(-10.0f, 10.0f, 50.0f), 2.5f)//剣のコライダ１
-	,mColSphereFoot(this, &mMatrix, CVector(0.0f, 0.0f, -3.0f), 2.0f)//足付近のコライダ
-	,mColliderSwordSp(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 10.0f)//剣のコライダ２
+	:mColSphereSword(this, &mMatrix, CVector(-10.0f, 10.0f, 50.0f), 2.5f)//剣の当たり判定１
+	,mColliderSwordSp(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 10.0f)//剣の当たり判定２
+	,mColSphereFoot(this, &mMatrix, CVector(0.0f, 0.0f, -3.0f), 2.0f)//足付近の当たり判定
 	,mColEscapeStopperLine(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f),CVector(0.0f,0.0f,0.0f))//回避時にすり抜けないようにする線分コライダ
 	,mDamageCount(0)
 	,mAnimationCount(0)
 	,mAttackCount(0)
+	,mHp(0)
 	,mJump(0.0f)
 	,mStep(0.0f)
 	,mColliderCount(1.0f)
 	,mSpeed(0.0f)
+	, mMoveRecord(0.0f,0.0f,0.0f)
 	,mPlayerBgm(true)
 	,mSpaceCount1(true)
 	,mJumpStopper(true)
@@ -70,18 +72,18 @@ CXPlayer::CXPlayer()
 	,mAnimationFrameLock(false)
 	,mEffectStopper(false)
 	,mAttackSp(false)
-	,mHp(0)
 	,mSpAttack(SPPOINT_MAX)
 	,mStamina(STAMINA_MAX)
 {
 	//タグにプレイヤーを設定
 	mTag = EPLAYER;
-	mColSphereSword.mTag = CCollider::EPLAYERSWORD;
-	mColliderSwordSp.mTag = CCollider::EPLAYERSWORD;
-	mColSphereFoot.mTag = CCollider::EPLAYERBODY;
-	mColEscapeStopperLine.mTag = CColliderLine::EPLAYERESCAPESTOPPER;
+	mColSphereSword.mTag = CCollider::EPLAYERSWORD;//剣のコライダのタグ
+	mColliderSwordSp.mTag = CCollider::EPLAYERSWORD;//剣のコライダのタグ
+	mColSphereFoot.mTag = CCollider::EPLAYERBODY;//プレイヤーの体のタグ
+	mColEscapeStopperLine.mTag = CColliderLine::EPLAYERESCAPESTOPPER;//回避時に使われるタグ
 	//this＝プレイヤーそのもの
 	mpPlayerInstance = this;
+	//体力ゲージなどのテクスチャ
 	mImageGauge.Load(IMAGE_GAUGE);
 	//優先度を１に変更する
 	mPriority = 1;
@@ -112,6 +114,22 @@ void CXPlayer::Update()
 {
 	CSceneGame* tSceneGame = CSceneGame::GetInstance();
 	CCamera* tCamera = CCamera::GetInstance();
+
+	//カメラ視点移動　通称無双移動
+	//カメラの左右と前後のベクトルを取得
+	CVector SideVec = Camera->GetMat().GetXVec();
+	CVector FrontVec = Camera->GetMat().GetZVec();
+	//高さ移動はカットする
+	SideVec.mY = 0.0f;
+	FrontVec.mY = 0.0f;
+	//正規化する
+	SideVec.Normalize();
+	FrontVec.Normalize();
+	float speed = 0.15f;
+	CVector Move(0, 0, 0);
+	//移動量正規化　斜め移動が早くなってしまう
+	//ジャンプ時などはY軸を正規化しない
+	Move.Normalize();
 	//処理を行動ごとに分割
 	switch (mState) {
 	case EIDLE:	//待機
@@ -139,7 +157,7 @@ void CXPlayer::Update()
 	case EDUSH://ダッシュ
 		//攻撃判定なし
         mAttackHit = false;
-		
+		ChangeAnimation(1, true, 30);
 		if (CKey::Push('C')) {
         mStamina -= 2;//スタミナ減少
 		}
@@ -147,27 +165,26 @@ void CXPlayer::Update()
 		else {
 			mState = EMOVE;
 		}
-			ChangeAnimation(1, true, 30);
-
-			//アニメーションの終了を待たずに待機状態に移行
-			if (mAnimationCount <= 0) {	
-				mState = EIDLE;
-			}
+		//アニメーションの終了を待たずに待機状態に移行
+		if (mAnimationCount <= 0) {	
+			mState = EIDLE;
+		}
 		break;
 		//回避
 	case EESCAPE:
-		mColEscapeStopperLine.mRotation.mX = 0.0f;
-		if (mEscapeFlg = true) {
-			mEscapeFlg = false;
-			mStep = STEP2;
-
-		}
-		mPosition += CVector(0.0f, 0.0f, mStep)*mMatrixRotate;
-			if (mStep > 0.0f) {
-				mStep -= STOPPER;
-			}
 		mAttackHit = false;
 		ChangeAnimation(1, true, 10);
+		//少し前進
+		mStep=STEP2;
+		mPosition.mY = mMoveRecord.mY;
+		//if (mEscapeFlg = true) {
+			//mEscapeFlg = false;
+			
+
+		//}
+			if (mStep > 0.0f) {
+				//mStep -= STOPPER;
+			}
 		//回転（回避してるように見える）
 		if (mRotation.mX!=360.0f) {
 		   mRotation.mX += 36.0f;
@@ -395,18 +412,6 @@ void CXPlayer::Update()
 	if (mAnimationFrameLock == true) {
 		mAnimationFrame--;
 	}
-		//カメラ視点移動　通称無双移動
-		//カメラの左右と前後のベクトルを取得
-		CVector SideVec = Camera->GetMat().GetXVec();
-		CVector FrontVec = Camera->GetMat().GetZVec();
-		//高さ移動はカットする
-		SideVec.mY = 0.0f;
-		FrontVec.mY = 0.0f;
-		//正規化する
-		SideVec.Normalize();
-		FrontVec.Normalize();
-		float speed = 0.15f;
-		CVector Move(0, 0, 0);
 		if (mHp > 0) {
 
 
@@ -593,9 +598,6 @@ void CXPlayer::Update()
 			}
 			
 		}
-		//移動量正規化　斜め移動が早くなってしまう
-		//ジャンプ時などはY軸を正規化しない
-		Move.Normalize();
 		//平行移動量
 		//設定した移動量になるまで加速
 		if (mSpeed < speed) {
@@ -621,7 +623,7 @@ void CXPlayer::Update()
 			mRotation.mY -= tCheck.turn * turnspeed;
 		}
 		//移動
-		if (mState == EMOVE||mState==EDUSH||mState==EATTACKSP||mStep > 0) {
+		if (mState == EMOVE||mState==EDUSH||mState==EATTACKSP||mState==EESCAPE||mStep>0) {
 		
              mPosition += Move;
 		}
@@ -673,20 +675,16 @@ void CXPlayer::Update()
 		 }
 		 if (mState != EESCAPE) {
 			  mPosition.mY += mJump;
+			  //回避直前の座標を記録しておくことで回避の際に飛び上がらなくなる
+			  mMoveRecord = mPosition;
 		 }
-		 
 		 //吹き飛ぶ
 		 if (mColliderCount > 0) {
 			mColliderCount-=0.2f;
 			mPosition = mPosition + mCollisionEnemy * mColliderCount;
 		 
 		 }
-         if (mState == EESCAPE) {
-			 mPosition.mY -= G3;
-		 }
-		 else {
-			 mColEscapeStopperLine.Set(this, &mMatrix, CVector(0.0f, 2.0f, -2.0f), CVector(0.0f, 2.0f, 2.0f));
-		 }
+		 mColEscapeStopperLine.Set(this, &mMatrix, CVector(0.0f, 2.0f, -2.0f), CVector(0.0f, 2.0f, 3.0f));
 	    //注視点設定
 	    Camera->SetTarget(mPosition);
 	    CXCharacter::Update();

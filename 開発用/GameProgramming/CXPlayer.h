@@ -34,6 +34,7 @@ public:
 private:
 	CVector mMoveAttack;
 	CVector mMoveEscape;
+	CVector mMoveRecord;
 
 	CTexture mImageGauge; //ゲージ画像
 	int mAnimationCount;//アニメーションが途中で変わらないようにする
@@ -65,6 +66,7 @@ private:
 	//コライダの宣言
 	CCollider  mColSphereFoot;//ダメージが通る当たり判定
 	CCollider mColliderSwordSp;//ジャンプ攻撃時の武器の当たり判定
+	CCollider mColSphereSword;	//剣コライダ
 	CColliderLine mColEscapeStopperLine;
     CVector mCollisionEnemy;//プレイヤーと敵のコライダーの位置の差
 	CTexture mTexture;
@@ -72,7 +74,6 @@ private:
 public:
 	
 	bool mAttackSp;
-	CCollider mColSphereSword;	//剣コライダ
 	EPLAYERState mState;
 	bool mGaugeEnabled;
 	void SetGaugeEnabled(bool GaugeEnabled) {
