@@ -276,6 +276,7 @@ void CBoss::Attack() {
 	//攻撃のあとは待機状態に移行
 	if (mAnimationFrame >= mAnimationFrameSize) {
 			mMove = 0;//攻撃のアニメーションのあとは待機のアニメーションに切り替わる
+			mState = EAUTOMOVE;
 	}
 
 }
@@ -313,7 +314,7 @@ void CBoss::Attack2() {
 	if (mAnimationFrame>=mAnimationFrameSize) {
              mBossAttackHit = false;		
 		     mMove = 0;//攻撃のアニメーションのあとは待機のアニメーションに切り替わる
-			 
+			 mState = EAUTOMOVE;
 	}
 }
 //攻撃処理３（ジャンプ攻撃）
@@ -337,7 +338,7 @@ void CBoss::Attack3() {
 			mBossAttackHit = false;
 			mRotation.mX = 0.0f;
 			mColSphereHead.mRadius = 3.0f;//コライダーの半径をもとに戻す
-				mState = EIDLE;
+				mState = EAUTOMOVE;
 		}
 	}
 	
@@ -422,21 +423,21 @@ void CBoss::Attack4() {
 	case(3):
 		//減速
 		//1フレーム４５°回転までは大きく減速
-		if (mAttackRotation > 45.0f) {
-			mAttackRotation += ROTATIONMIN2;
+		if (mAttackRotation > 0.0f) {
+			mAttackRotation += ROTATIONMIN;
 			mRotation.mY += mAttackRotation;
 		}
 		else if (mAttackRotation > 0.0f) {
-			mAttackRotation = ROTATIONMIN;
-			mRotation.mY += mAttackRotation;
+			//mAttackRotation = ROTATIONMIN;
+			//mRotation.mY += mAttackRotation;
 		}
-		else if (mAttackRotation <= 0.0f) {
+		 if (mAttackRotation <= 0.0f) {
 			mAnimationFrame = mAnimationFrameSize;
 			mAttack4RotationCount = 0.0f;
 			mAttackRotation = 0.0f;
 			mAttack4Count = 0;
 			mBossAttackHit = false;
-			mState = EIDLE;
+			mState = EAUTOMOVE;
 		}
 
 		break;
@@ -515,13 +516,11 @@ void CBoss::Update() {
 	case EDEATH://死亡
 		Death();
 		break;
-		
 	}
 	//アニメーションの種類
 	switch (mAnimationIndex) {
 	case(5):
 		if (mAnimationFrame == 30) {
-			
 			if (tSceneGame->mVoiceSwitch == true) {
 				BossVoice.Play();
 			}
@@ -530,13 +529,12 @@ void CBoss::Update() {
 		{
 			mBossAttackHit = false;
 			if (mState != EATTACK3) {
-			  mState = EIDLE;
+			
 			}
 		}
 		break;
 	case(6):
 		if (mAnimationFrame == 30) {
-			
 			if (tSceneGame->mVoiceSwitch == true) {
 			  BossVoice.Play();
 			}
@@ -544,11 +542,10 @@ void CBoss::Update() {
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
 			mBossAttackHit = false;
-			mState = EIDLE;
+			
 		}
 		break;
 	}
-		
 	if (mAttackPercent >= 10) {
 		mAttackPercent = 0;
 	}
@@ -558,17 +555,8 @@ void CBoss::Update() {
 	if (mBossDamageCount > 0) {
 		if (mEffectCount % 10 == 0) {
 			//エフェクト生成
-			//足に攻撃されたとき
-			//if (mBossColliderCheck == 1) {
 				CXPlayer* tPlayer = CXPlayer::GetInstance();
-
-				mBossEffect = new CEffect2(tPlayer->GetSwordColPos(), 0.5f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2,false, &mRotation);
-			//}
-			//頭に攻撃されたとき
-			/*else if (mBossColliderCheck == 2) {
-				CXPlayer* tPlayer = CXPlayer::GetInstance();
-			    mBossEffect=new CEffect2(tPlayer->GetSwordColPos(), 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2, false, &mRotation);
-			}*/
+				mBossEffect = new CEffect2(tPlayer->GetSwordColPos(), 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2,false, &mRotation);
 		}
 	}
 	if (mHp <= 0 && mState != EDEATH) {
@@ -583,8 +571,6 @@ void CBoss::Update() {
 		}
 	}
 	mEffectCount--;
-	
-	
 	CXCharacter::Update();
 }
 
@@ -628,7 +614,7 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 									{
 										if (mColSearch.mRenderEnabled == true) mColSearch.mRenderEnabled = false;
 										//爆発エフェクト秒数付与
-										mEffectCount = 60;
+										mEffectCount = 5;
 										if (mHp > 0) {
 											((CXPlayer*)(o->mpParent))->CXPlayer::SpAttackPoint2();
 											//30％減るごとにのけぞる
@@ -638,7 +624,6 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 												mCollisionEnemy.mY = 0;
 												mCollisionEnemy = mCollisionEnemy.Normalize();
 												mState = EDAMAGED;
-
 											}
 											mHp--;
 											if (((CXPlayer*)(o->mpParent))->mAttackSp == true) {
@@ -646,29 +631,22 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 											}
 											else {
 											mBossDamageCount = 30;
-
 											}
-
 										}
-
 									}
 								}
 							}
 						break;
 					case CCollider::EITEMCOLLIDER:
 						//衝突しているとき
-
 						if (((CXPlayer*)(o->mpParent))->mAttackHit == false) {
-
-
 							if (CCollider::Collision(m, o)) {
 								if (mBossDamageCount <= 0) {
 									if (mColSearch.mRenderEnabled == true) mColSearch.mRenderEnabled = false;
 									//爆発エフェクト秒数付与
-									mEffectCount = 60;
+									mEffectCount = 5;
 									if (mHp > 0) {
 										((CXPlayer*)(o->mpParent))->CXPlayer::SpAttackPoint2();
-
 										//30％減るごとにのけぞる
 										if (mHp == HPCOUNT1 || mHp == HPCOUNT2 || mHp == HPCOUNT3) {
 											mColliderCount = 10;
@@ -678,7 +656,6 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 											mState = EDAMAGED;
 
 										}
-
 										mHp--;
 										mBossDamageCount = 30;
 

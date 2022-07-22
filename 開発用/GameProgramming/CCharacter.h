@@ -31,7 +31,7 @@ public:
 		EBOSS,
 		EMAP,
 		EFIELD,
-		
+		EBOSSSTAGE,
 	};
 	ETag mTag;
 	CModel *mpModel; //モデルのポインタ

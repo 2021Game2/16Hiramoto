@@ -97,7 +97,6 @@ void CEnemy3::Idle() {
 void CEnemy3::Move1() {
 	mCount++;
 	if (mCount < 180) {
-		
 		mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
 		//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
 		CXPlayer* tPlayer = CXPlayer::GetInstance();
@@ -236,10 +235,14 @@ void CEnemy3::Update() {
 		mRotation.mY -= 3.0f;//右へ回転
 	}
 	if (dy > margin) {
-		mRotation.mX -= 3.0f;
+		if (mRotation.mX > -30.0f) {
+		    mRotation.mX -= 3.0f;//上へ回転
+		}
 	}
-	else if (dy < -margin) {
-		mRotation.mX += 3.0f;
+	else if (dy < -margin) {//下へ回転
+		if (mRotation.mX < 30.0f) {
+			mRotation.mX += 3.0f;
+		}
 	}
 	CTransform::Update();//行列更新
 	int r = rand() % 10; //rand()は整数の乱数を返す
@@ -265,6 +268,7 @@ void CEnemy3::Update() {
 		mPosition = mPosition + mCollisionEnemy * mColliderCount;
 	}
 
+	
 	mEffectCount--;
 }
 //Collision(コライダ１，コライダ２，）

@@ -22,7 +22,7 @@ CBossStage::CBossStage(const CVector& position, const CVector& rotation, const C
 		mModel.Load(OBJ, MTL);
 	}
 	mColliderMesh.Set(this, &mMatrix, &mModel);//モデルをコライダにする
-	mTag = EROCK;
+	mTag = EBOSSSTAGE;
 }
 void CBossStage::Update() {
 	//CCharacterの更新

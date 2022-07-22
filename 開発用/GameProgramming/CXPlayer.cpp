@@ -123,13 +123,13 @@ void CXPlayer::Update()
 	SideVec.mY = 0.0f;
 	FrontVec.mY = 0.0f;
 	//正規化する
-	SideVec.Normalize();
-	FrontVec.Normalize();
+     SideVec=SideVec.Normalize();
+	FrontVec=FrontVec.Normalize();
 	float speed = 0.15f;
 	CVector Move(0, 0, 0);
 	//移動量正規化　斜め移動が早くなってしまう
 	//ジャンプ時などはY軸を正規化しない
-	Move.Normalize();
+	Move =Move.Normalize();
 	//処理を行動ごとに分割
 	switch (mState) {
 	case EIDLE:	//待機
@@ -209,12 +209,11 @@ void CXPlayer::Update()
 		break;
 	case EATTACK3://攻撃3
 		if (mAttackCount>ATTACKCOUNT3/2) {
-		
 		ChangeAnimation(7, false, 30);
-		
-		}
+	}
 		break;
 	case EATTACKSP://スペシャル攻撃
+		mDamageCount = 10;
 		tCamera->mAngleY -= 0.01f;
 		if (mAttackCount>0) {
 		ChangeAnimation(7, false, 100);
@@ -420,6 +419,8 @@ void CXPlayer::Update()
 			{
 				//左方向に移動
 				Move -= SideVec;
+
+				
 				mAnimationCount = 5;//0になるまでアニメーションを変更できない
 				mMoveCheck = true;
 				if (CKey::Push('C')) {
@@ -440,7 +441,8 @@ void CXPlayer::Update()
 			//右
 			else if (CKey::Push('D'))
 			{
-				Move += SideVec;
+					Move += SideVec;
+				
 				mAnimationCount = 5;//0になるまでアニメーションを変更できない
 				mMoveCheck = true;
 				if (CKey::Push('C')) {
@@ -457,7 +459,8 @@ void CXPlayer::Update()
 			//前
 			if (CKey::Push('W'))
 			{
-				Move += FrontVec;
+					Move += FrontVec;
+				
 				mAnimationCount = 5;//0になるまでアニメーションを変更できない
 				mMoveCheck = true;
 				if (CKey::Push('C')) {
@@ -476,7 +479,8 @@ void CXPlayer::Update()
 			//後ろ
 			else if (CKey::Push('S'))
 			{
-				Move -= FrontVec;
+					Move -= FrontVec;
+				
 				mAnimationCount = 5;//0になるまでアニメーションを変更できない
 				mMoveCheck = true;
 				if (CKey::Push('C')) {
@@ -588,15 +592,12 @@ void CXPlayer::Update()
 				//動いているかつCキーを押していなければ移動
 				//これを入れていないとEIDLEからEMOVEにいかない
 				else {
-
 					if (mState == EIDLE) {
 						mAnimationCount = 1;
 						mState = EMOVE;
-
 					}
 				}
 			}
-			
 		}
 		//平行移動量
 		//設定した移動量になるまで加速
@@ -624,7 +625,6 @@ void CXPlayer::Update()
 		}
 		//移動
 		if (mState == EMOVE||mState==EDUSH||mState==EATTACKSP||mState==EESCAPE||mStep>0) {
-		
              mPosition += Move;
 		}
 		//回避行動時の移動量(だんだん遅くなる）
@@ -643,7 +643,6 @@ void CXPlayer::Update()
 				 mSpaceCount2 = false;
 				 mSpaceCount3 = false;
 			 }
-
 		 }
 		 //スタミナ回復
 		 if (mStamina < STAMINA_MAX) {
@@ -660,7 +659,6 @@ void CXPlayer::Update()
 		 if (mDamageCount > 0) {
 			 mDamageCount--;
 		 }
-
 		 //死亡
 		 if (mHp <= 0) {
 			 mState = EDEATH;
@@ -671,7 +669,7 @@ void CXPlayer::Update()
 				 if (mJump >= -0.1) {
 				   mJump -= G;
 				 }
-			 }
+			}
 		 }
 		 if (mState != EESCAPE) {
 			  mPosition.mY += mJump;
@@ -682,12 +680,11 @@ void CXPlayer::Update()
 		 if (mColliderCount > 0) {
 			mColliderCount-=0.2f;
 			mPosition = mPosition + mCollisionEnemy * mColliderCount;
-		 
 		 }
 		 mColEscapeStopperLine.Set(this, &mMatrix, CVector(0.0f, 2.0f, -2.0f), CVector(0.0f, 2.0f, 3.0f));
-	    //注視点設定
-	    Camera->SetTarget(mPosition);
-	    CXCharacter::Update();
+	     //注視点設定
+	     Camera->SetTarget(mPosition);
+	     CXCharacter::Update();
 }
 //ザコ敵を攻撃したとき
 void CXPlayer::SpAttackPoint() {
@@ -698,7 +695,6 @@ void CXPlayer::SpAttackPoint2() {
 	mSpAttack+=2;
 }
 void CXPlayer::Collision(CCollider* m, CCollider* o) {
-
 	//自身のコライダの設定
 	switch (m->mType) {
 	case CCollider::ELINE:
@@ -708,7 +704,6 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 			if (m->mTag == CColliderLine::EPLAYERESCAPESTOPPER) {//相手のコライダが三角コライダの場合
 				//親が三角コライダ
 				if (o->mType == CCollider::ETRIANGLE) {
-					
 					CVector adjust;//調整用ベクトル
 					if (CCollider::CollisionTriangleLine(o, m, &adjust)) {
 					    if (mState == EESCAPE) {
@@ -729,11 +724,9 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 			if (m->mTag == CCollider::EPLAYERBODY) {//相手のコライダが三角コライダの場合
 				//親が三角コライダ
 				if (o->mType == CCollider::ETRIANGLE) {
-					
 						CVector adjust;//調整用ベクトル
 						if (CCollider::CollisionTriangleSphere(o, m, &adjust)) {
 								if (mState != EESCAPE) {
-
 									mJumpStopper = true;
 									mJump =0;
 									if (mAnimationIndex == 8) {
@@ -756,7 +749,6 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 					if (o->mpParent->mTag == EENEMY2) {
 						//敵の攻撃部位との衝突判定
 						if (o->mTag == CCollider::EENEMY2COLLIDERATTACK) {
-
 							CVector adjust;//調整用ベクトル
 							if (CCollider::Collision(m, o)) {
 								//ダメージが入ったあとの無敵時間が０のとき

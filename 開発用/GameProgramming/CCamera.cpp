@@ -106,6 +106,7 @@ void CCamera::Update() {
 	mPos.mX = mTarget.mX + (sinf(mAngleX)) * (mDist * sinf(mAngleY));
 	mPos.mY = mTarget.mY + cosf(mAngleY) * mDist;
 	mPos.mZ = mTarget.mZ + (cosf(mAngleX)) * (mDist * sinf(mAngleY));
+
 	mCenter = mTarget;
 	mCenter.mY += DEF_CAMERA_HEAD_ADJUST;//ì™è„ï‚ê≥
 	mEye = mPos;
