@@ -114,22 +114,17 @@ void CXPlayer::Update()
 {
 	CSceneGame* tSceneGame = CSceneGame::GetInstance();
 	CCamera* tCamera = CCamera::GetInstance();
-
 	//カメラ視点移動　通称無双移動
 	//カメラの左右と前後のベクトルを取得
-	CVector SideVec = Camera->GetMat().GetXVec();
-	CVector FrontVec = Camera->GetMat().GetZVec();
-	//高さ移動はカットする
-	SideVec.mY = 0.0f;
-	FrontVec.mY = 0.0f;
-	//正規化する
-     SideVec=SideVec.Normalize();
-	FrontVec=FrontVec.Normalize();
-	float speed = 0.15f;
-	CVector Move(0, 0, 0);
-	//移動量正規化　斜め移動が早くなってしまう
-	//ジャンプ時などはY軸を正規化しない
-	Move =Move.Normalize();
+		CVector SideVec = Camera->GetMat().GetXVec();
+		CVector FrontVec = Camera->GetMat().GetZVec();
+		CVector Move(0, 0, 0);
+		float speed = 0.15f;
+		//高さ移動はカットする
+		SideVec.mY = 0.0f;
+		FrontVec.mY = 0.0f;
+
+	
 	//処理を行動ごとに分割
 	switch (mState) {
 	case EIDLE:	//待機
@@ -599,6 +594,15 @@ void CXPlayer::Update()
 				}
 			}
 		}
+		
+		//正規化する
+		SideVec = SideVec.Normalize();
+		FrontVec = FrontVec.Normalize();
+		
+		
+		//移動量正規化　斜め移動が早くなってしまう
+		//ジャンプ時などはY軸を正規化しない
+		Move = Move.Normalize();
 		//平行移動量
 		//設定した移動量になるまで加速
 		if (mSpeed < speed) {
