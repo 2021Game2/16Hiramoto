@@ -2,7 +2,6 @@
 #define CBOSS_H
 //キャラクタクラスのインクルード
 #include"CCharacter.h"
-
 #include "CXCharacter.h"
 //コライダクラスのインクルード
 #include"CCollider.h"
@@ -13,6 +12,20 @@
 /*エネミークラス
 キャラクタクラスを継承	*/
 class CBoss :public CXCharacter {
+public:
+//敵の状態
+	enum EBossState
+	{
+		EIDLE,		//待機
+		EAUTOMOVE,	//移動
+		EATTACK,	//攻撃
+        EATTACK2,
+		EATTACK3,
+		EATTACK4,
+		EDAMAGED,	//被弾
+		EDEATH,		//死亡
+		
+	};
 private:
     CText mText;
 	CVector mPoint;//目標地点
@@ -53,37 +66,23 @@ private:
 	float mAttackRotation;
 	float mRotationCount;
 	CTexture mImageGauge; //ゲージ画像
-						  //敵の状態
-	enum EBossState
-	{
-		EIDLE,		//待機
-		EAUTOMOVE,	//移動
-		EATTACK,	//攻撃
-        EATTACK2,
-		EATTACK3,
-		EATTACK4,
-		EDAMAGED,	//被弾
-		EDEATH,		//死亡
-		
-	};
+	CCollider mColSearch;//サーチ用コライダ
+	bool mBossAttackHit;
+	
+	 int mHp;//体力
 public:
 
 	EBossState mState;
-	CCollider mColSearch;//サーチ用コライダ
 	//モデルデータ
 	static CModel mModel;
 	static CBoss* GetInstance();
 	static CBoss* mpBossInstance;
-	bool mBossAttackHit;
-	
-	 int mHp;//体力
-	 void SetHp(int hp) {
-		 if (hp < 0) return;
-		 this->mHp = hp;
-	 }
-	 int GetHp() {
+	bool GetBossAttackHit() {
+		return mBossAttackHit;
+	}
+	int GetHp() {
 		 return mHp;
-	 }
+	}
 	//コンストラクタ	
 	CBoss();
 	//CEnemy2(位置、回転、拡縮）

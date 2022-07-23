@@ -37,7 +37,7 @@ void CTarget::Update() {
 	CXPlayer* tPlayer = CXPlayer::GetInstance();
 	CBoss* tBoss = CBoss::GetInstance();
 	CFlag* tFlag = CFlag::GetInstance();
-	if (tPlayer->mHp > 0) {
+	if (tPlayer->GetHp() > 0) {
 		mPosition.mX = tPlayer->mPosition.mX;
 		mPosition.mY = tPlayer->mPosition.mY + 4.0f;
 		mPosition.mZ = tPlayer->mPosition.mZ - 1.0f;

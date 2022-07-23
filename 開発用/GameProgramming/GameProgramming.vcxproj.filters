@@ -287,9 +287,6 @@
     <ClInclude Include="CEnemy3.h">
       <Filter>ヘッダー ファイル\Base\敵関係</Filter>
     </ClInclude>
-    <ClInclude Include="CEnemyManager.h">
-      <Filter>ヘッダー ファイル\Base\敵関係</Filter>
-    </ClInclude>
     <ClInclude Include="CEnemySummon.h">
       <Filter>ヘッダー ファイル\Base\敵関係</Filter>
     </ClInclude>

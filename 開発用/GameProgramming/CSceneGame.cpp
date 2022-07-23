@@ -74,7 +74,7 @@ CSceneGame::CSceneGame()
 	,mBgmBossStopper(true)//BGMを止める
     ,mBgmOverStopper(true)//BGMを止める
     ,mBgmClearStopper(true)//BGMを止める
-	, mVoiceSwitch(false)//false：音声なし true：音声あり
+	, mVoiceSwitch(true)//false：音声なし true：音声あり
 	, mBossGaugeSwitch(false)//ボスの体力ゲージを表示させるフラグ
 	, mGameClear (false)//ゲームクリアのフラグ
 	, mGameOver (false)//ゲームオーバーのフラグ
@@ -288,7 +288,7 @@ void CSceneGame::Update() {
 	if (mSpawn2 >= 0) {
 		mSpawn2--;
 	}
-	if (mpEnemySummon->mHp > 0) {
+	if (mpEnemySummon->GetHp() > 0) {
 		//mEnemy2CountStopperに設定した数だけ敵を生成
 		if (mEnemy2Count < mEnemy2CountStopper) {
 			//２秒ごとに生成
@@ -313,7 +313,7 @@ void CSceneGame::Update() {
 	 if (mEnemy3CountStopper <= ENEMY3MINCOUNT) {
 		mEnemy3CountStopper = ENEMY3COUNT;
 	 }
-	 if (mpEnemySummon2->mHp > 0) {
+	 if (mpEnemySummon2->GetHp() > 0) {
 		//mEnemy3CountStopperに設定した数だけ敵を生成
 		if (mEnemy3Count < mEnemy3CountStopper) {
 			//２秒ごとに生成
@@ -368,11 +368,11 @@ void CSceneGame::Render() {
 	char buf[64];
 	
 	if (mpBoss) {
-		if (mpBoss->mHp <= 0) {
+		if (mpBoss->GetHp() <= 0) {
 			mGameClear = true;
 		}
 
-		if (mBossGaugeSwitch == true && mpBoss->mHp > 0) {
+		if (mBossGaugeSwitch == true && mpBoss->GetHp() > 0) {
 			sprintf(buf, "BOSS");
 			mFont.DrawString(buf, 300, 570, 32, 16);
 		}
@@ -381,7 +381,7 @@ void CSceneGame::Render() {
 		mpBossStage->mEnabled = false;
 		//クリア時間を記録
 		mClearTime = (float)(mEndTime - mStartTime) / 1000;
-		mpPlayer->mGaugeEnabled = false;
+		mpPlayer->SetGaugeEnabled(false);
 		mBossGaugeSwitch = false;
 		sprintf(buf, "GAMECLEAR");
 		mFont.DrawString(buf, 300, 300, 16, 32);
@@ -398,9 +398,9 @@ void CSceneGame::Render() {
 		}
 	}
 	
-	if (mpPlayer->mHp <= 0) {
+	if (mpPlayer->GetHp() <= 0) {
 		mGameOver = true;
-		mpPlayer->mGaugeEnabled = false;
+		mpPlayer->SetGaugeEnabled(false) ;
 		mBossGaugeSwitch = false;
 		sprintf(buf, "GAMEOVER");
 		mFont.DrawString(buf, 300, 300, 16, 32);

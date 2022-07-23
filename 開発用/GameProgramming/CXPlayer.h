@@ -32,13 +32,17 @@ public:
 	};
 
 private:
-	CVector mMoveAttack;
-	CVector mMoveEscape;
-	CVector mMoveRecord;
-
-	CTexture mImageGauge; //ゲージ画像
 	int mAnimationCount;//アニメーションが途中で変わらないようにする
 	int mDamageCount;//ダメージを受けた直後の無敵時間
+	int mStamina;//スタミナの数値
+	int mAttackCount;//攻撃のアニメーションが何度も再生されないように
+    int mSpAttack;//ジャンプ攻撃をするためのゲージ
+    int mHp;//体力
+	float mSpeed;//移動時のスピード
+	float mColliderCount;//吹き飛ばされた時の初速度
+	float mJump;//ジャンプする時の初速度
+	float mStep;//攻撃時、少し前進
+	float mEscapeFlg;
 	bool mDamageVoise;
 	bool mPlayerBgm;//ゲームオーバー時のBGMを流すフラグ
 	bool mAnimationFrameLock;
@@ -48,50 +52,44 @@ private:
 	bool mSpaceCount3;//３回目の攻撃のフラグ
 	bool mEffectStopper;//エフェクトを表示させるために一時的にアニメーションを止める
 	bool mJumpStopper;//SP攻撃落下時の重力
-	float mSpeed;//移動時のスピード
-	float mColliderCount;//吹き飛ばされた時の初速度
-	float mJump;//ジャンプする時の初速度
-	float mStep;//攻撃時、少し前進
-	float mEscapeFlg;
-	 int mStamina;//スタミナの数値
-	
-	 int mAttackCount;//攻撃のアニメーションが何度も再生されないように
-	 
-	CBoss* mpBoss;
-	CEffect2* mEffect1;
-	CEffect2* mEffect2;
-	CEffect2* mEffect3;
-	CEffect2* mEffectSp;
-	CItem* mpItem;
+	bool mAttackSp;
+    bool mAttackHit;
+	bool mGaugeEnabled;
+	CVector mMoveAttack;
+	CVector mMoveEscape;
+	CVector mMoveRecord;
+    CVector mCollisionEnemy;//プレイヤーと敵のコライダーの位置の差
+	CTexture mImageGauge; //ゲージ画像
+	CTexture mTexture;
 	//コライダの宣言
 	CCollider  mColSphereFoot;//ダメージが通る当たり判定
 	CCollider mColliderSwordSp;//ジャンプ攻撃時の武器の当たり判定
 	CCollider mColSphereSword;	//剣コライダ
 	CColliderLine mColEscapeStopperLine;
-    CVector mCollisionEnemy;//プレイヤーと敵のコライダーの位置の差
-	CTexture mTexture;
-	
+	CItem* mpItem;
+	CBoss* mpBoss;
+	CEffect2* mEffect1;
+	CEffect2* mEffect2;
+	CEffect2* mEffect3;
+	CEffect2* mEffectSp;
 public:
-	
-	bool mAttackSp;
 	EPLAYERState mState;
-	bool mGaugeEnabled;
+	bool GetAttackSp() {
+		return mAttackSp;
+	}
 	void SetGaugeEnabled(bool GaugeEnabled) {
 		mGaugeEnabled = GaugeEnabled;
 	}
-    bool mAttackHit;
-    int mSpAttack;//ジャンプ攻撃をするためのゲージ
-
+	bool GetAttackHit() {
+		return mAttackHit;
+	}
 	void SetSpAttack(int SpAttack) {
-		
 		this->mSpAttack = SpAttack;
 	}
 	int GetSpAttack() {
 		return mSpAttack;
 	}
-    int mHp;//体力
 	void SetHp(int Hp) {
-		
 		this->mHp = Hp;
 	}
 	int GetHp() {

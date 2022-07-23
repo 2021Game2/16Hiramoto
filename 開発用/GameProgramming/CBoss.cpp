@@ -610,7 +610,7 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 							if (CCollider::Collision(m, o)) {
 								if (mBossDamageCount <= 0) {
 									//親をCXPlayerを元にポインタ化し、変数を参照
-									if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
+									if (((CXPlayer*)(o->mpParent))->GetAttackHit()==true)
 									{
 										if (mColSearch.mRenderEnabled == true) mColSearch.mRenderEnabled = false;
 										//爆発エフェクト秒数付与
@@ -626,7 +626,7 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 												mState = EDAMAGED;
 											}
 											mHp--;
-											if (((CXPlayer*)(o->mpParent))->mAttackSp == true) {
+											if (((CXPlayer*)(o->mpParent))->GetAttackSp() == true) {
 												mBossDamageCount = 3;
 											}
 											else {
@@ -639,7 +639,7 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 						break;
 					case CCollider::EITEMCOLLIDER:
 						//衝突しているとき
-						if (((CXPlayer*)(o->mpParent))->mAttackHit == false) {
+						if (((CXPlayer*)(o->mpParent))->GetAttackHit() == false) {
 							if (CCollider::Collision(m, o)) {
 								if (mBossDamageCount <= 0) {
 									if (mColSearch.mRenderEnabled == true) mColSearch.mRenderEnabled = false;

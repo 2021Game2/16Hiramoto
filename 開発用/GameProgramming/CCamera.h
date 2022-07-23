@@ -52,7 +52,6 @@ public:
 	//static‚Åˆ—‚ğì‚é
 	static CCamera* GetInstance();
 	void Collision(CCollider* m, CCollider* o);
-	//void CollisionTriangleLine(CCollider* triangle, CCollider* line, CVector* adjust);
 	//ƒxƒNƒgƒ‹æ“¾
 	CMatrix GetMat();
 

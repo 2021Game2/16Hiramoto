@@ -74,7 +74,7 @@ void CEnemySummon::Collision(CCollider* m, CCollider* o) {
 						//衝突しているとき
 						if (CCollider::Collision(m, o)) {
 							//プレイヤーの当たり判定が有効なとき
-							if (((CXPlayer*)(o->mpParent))->mAttackHit == true) {
+							if (((CXPlayer*)(o->mpParent))->GetAttackHit() == true) {
 								if (mDamageCount <= 0) {
 									//爆発エフェクト付与
 									 CEnemySummon::Damage();

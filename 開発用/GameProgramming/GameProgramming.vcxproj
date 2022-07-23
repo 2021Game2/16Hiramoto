@@ -163,7 +163,6 @@
     <ClInclude Include="CEffect2.h" />
     <ClInclude Include="CEnemy2.h" />
     <ClInclude Include="CEnemy3.h" />
-    <ClInclude Include="CEnemyManager.h" />
     <ClInclude Include="CEnemySummon.h" />
     <ClInclude Include="CFade.h" />
     <ClInclude Include="CInput.h" />

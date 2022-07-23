@@ -34,7 +34,6 @@ CEnemy2::CEnemy2()
 	, mPlayerMarkingX(0.0f)
 	, mPlayerMarkingZ(0.0f)
 	,mColliderCount(0.0f)
-	,mEnemyHpPercent(1.0f)
 	,mEnemy2AttackHit(false)
 	,mHp(HP)
 	
@@ -282,11 +281,11 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 					if (CCollider::Collision(m, o)) {
 						//プレイヤーの当たり判定が有効なとき
 						//親をCXPlayerを元にポインタ化し、変数を参照
-						if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
+						if (((CXPlayer*)(o->mpParent))->GetAttackHit() == true)
 						{//ヒットバック＆ダメージを受ける
 							if (mDamageCount <= 0) {
 								//プレイヤーのジャンプ攻撃必要ポイント増加
-								if (((CXPlayer*)(o->mpParent))->mSpAttack < PLAYERSPPOINT_MAX) {
+								if (((CXPlayer*)(o->mpParent))->GetSpAttack() < PLAYERSPPOINT_MAX) {
 									((CXPlayer*)(o->mpParent))->CXPlayer::SpAttackPoint();
 								}
 								mEffectCount = 0;
@@ -318,9 +317,9 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 						if (((CItem*)(o->mpParent))->mItemAttackHit == true)
 						{//ヒットバック＆ダメージを受ける
 								//プレイヤーのジャンプ攻撃必要ポイント増加
-							if (((CXPlayer*)(o->mpParent))->mSpAttack < PLAYERSPPOINT_MAX) {
+							if (((CXPlayer*)(o->mpParent))->GetSpAttack() < PLAYERSPPOINT_MAX) {
 
-								((CXPlayer*)(o->mpParent))->mSpAttack++;
+								((CXPlayer*)(o->mpParent))->SpAttackPoint();
 							}
 								mEffectCount = 0;
 								//体力減少 

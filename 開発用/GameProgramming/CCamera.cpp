@@ -82,7 +82,7 @@ void CCamera::Update() {
 
 		//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
 		CXPlayer* tPlayer = CXPlayer::GetInstance();
-		if (tPlayer->mAttackSp ==false){
+		if (tPlayer->GetAttackSp() ==false){
 			if (moveX != 0) mAngleX += (moveX * 0.005f);
 		    if (moveY != 0) mAngleY += (moveY * 0.005f);
 	    }

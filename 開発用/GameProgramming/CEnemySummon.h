@@ -8,11 +8,10 @@ private:
 	CCollider mCollider;
 	int mDamageCount;
 	int mEffectCount;
-public:
 	int mHp;
-	void SetHp(int hp) {
-		if (hp < 0) return;
-		this->mHp = hp;
+public:
+	int GetHp() {
+		return mHp;
 	}
 	//モデルデータ
 	static CModel mModel;

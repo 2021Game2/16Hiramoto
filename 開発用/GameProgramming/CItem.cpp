@@ -5,7 +5,6 @@
 #include"CItem.h"
 #define OBJ "Resource\\3DModel\\Weapon\\Weapon.obj"
 #define MTL "Resource\\3DModel\\Weapon\\Weapon.mtl"
-bool CItem::mItemAttackHit = false;
 CModel CItem::mModel;//モデルデータ作成
 CItem* CItem::mpItemInstance;
 //プレイヤーのポインタを返すことで、座標などが参照できるようになる
@@ -33,6 +32,7 @@ CItem::CItem()
 	: mCollider(this, &mMatrix, CVector(0.0f, 3.0f, 0.0f), 6.0f)
 	, mCollider2(this, &mMatrix, CVector(0.0f, 3.0f, 0.0f), 6.0f)
 	, mItemCount(0)
+	,mItemAttackHit(false)
 {
 	//モデルのポインタ設定
 	mpModel = &mModel;

@@ -7,8 +7,8 @@
 class CBossStage : public CCharacter {
 private:
 
-public:
 	CColliderMesh mColliderMesh;//岩の３Dモデルのコライダ
+public:
 	//モデルデータ
 	static CModel mModel;
 	//コライダ

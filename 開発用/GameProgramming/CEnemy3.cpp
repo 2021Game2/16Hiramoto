@@ -309,9 +309,9 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 					//衝突しているとき
 					if (CCollider::Collision(m, o)) {
 						//親をCXPlayerを元にポインタ化し、変数を参照
-						if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
+						if (((CXPlayer*)(o->mpParent))->GetAttackHit() == true)
 						{
-							if (((CXPlayer*)(o->mpParent))->mSpAttack < PLAYERSPPOINT_MAX) {
+							if (((CXPlayer*)(o->mpParent))->GetSpAttack() < PLAYERSPPOINT_MAX) {
 								((CXPlayer*)(o->mpParent))->CXPlayer::SpAttackPoint();
 							}
 							mColliderCount = COLLIDERCOUNT;
@@ -347,9 +347,9 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 						if (((CItem*)(o->mpParent))->mItemAttackHit == true)
 						{//ヒットバック＆ダメージを受ける
 								//プレイヤーのジャンプ攻撃必要ポイント増加
-							if (((CXPlayer*)(o->mpParent))->mSpAttack < PLAYERSPPOINT_MAX) {
+							if (((CXPlayer*)(o->mpParent))->GetSpAttack() < PLAYERSPPOINT_MAX) {
 
-								((CXPlayer*)(o->mpParent))->mSpAttack++;
+								((CXPlayer*)(o->mpParent))->SpAttackPoint();
 							}
 							mEffectCount = 0;
 							//体力減少 

@@ -25,7 +25,6 @@
 #define GAUGE_WID_MAXST 400.0f //スタミナゲージの幅の最大値
 #define GAUGE_WID_MAXSP 300.0f//SPポイントゲージの幅の最大値
 #define GAUGE_LEFT 20	//ゲージ描画時の左端
-#define STEPG 0.9f
 #define IMAGE_GAUGE "Resource\\png,tga\\Gauge.png"		//ゲージ画像
 #define G 0.1f//重力
 #define G2 1.5f//スペシャル攻撃時の重力
@@ -209,7 +208,6 @@ void CXPlayer::Update()
 		break;
 	case EATTACKSP://スペシャル攻撃
 		mDamageCount = 10;
-		tCamera->mAngleY -= 0.01f;
 		if (mAttackCount>0) {
 		ChangeAnimation(7, false, 100);
 		
@@ -327,7 +325,9 @@ void CXPlayer::Update()
 		if (mJump >= -0.1f) {
 			mJump -= G;
 		}
-
+		if (mState == EATTACKSP) {
+		tCamera->mAngleY -= 0.01f;
+		}
 		//アニメーションのロックが外れているとき
 		if (mAnimationFrameLock == false) {
 			//エフェクトのストッパーが外れているとき
@@ -360,6 +360,10 @@ void CXPlayer::Update()
 	case(8):
 		if (mState == EATTACKSP) {
 			if (mJump >= -3.0f) {
+
+				if (tCamera->mAngleY <= 1.0f) {
+					tCamera->mAngleY += 0.1f;
+				}
 				//剣コライダの座標を参照
 				CVector tpos = mColSphereSword.mpMatrix->GetPos();
 				mEffectSp = new CEffect2(CVector(tpos.mX, tpos.mY+1.0f, tpos.mZ), 3.0f, 3.0f, CEffect2::EFF_ATTACKSP, 4, 5, 3, false, &mRotation);
@@ -371,8 +375,9 @@ void CXPlayer::Update()
 	    }
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
-		    mAttackSp =false;
-			tCamera->mAngleY = 1.3f;
+			if (mState == EATTACKSP) {
+		        mAttackSp =false;
+			}
 			mAttackHit = false;
 			mColliderSwordSp.mRenderEnabled = false;
 
@@ -407,8 +412,6 @@ void CXPlayer::Update()
 		mAnimationFrame--;
 	}
 		if (mHp > 0) {
-
-
 			//左
 			if (CKey::Push('A'))
 			{
@@ -418,12 +421,12 @@ void CXPlayer::Update()
 				
 				mAnimationCount = 5;//0になるまでアニメーションを変更できない
 				mMoveCheck = true;
-				if (CKey::Push('C')) {
+				if (mState == EATTACKSP) {
+							speed = 1.0f;
+				}
+				else if (CKey::Push('C')) {
 					if (mState == EDUSH) {
-
-
 						if (mStamina > -1) {
-
 							speed = 0.5f;//スピード倍
 						}
 						else {
@@ -431,34 +434,37 @@ void CXPlayer::Update()
 						}
 					}
 				}
-
 			}
 			//右
 			else if (CKey::Push('D'))
 			{
 					Move += SideVec;
-				
 				mAnimationCount = 5;//0になるまでアニメーションを変更できない
 				mMoveCheck = true;
-				if (CKey::Push('C')) {
-					if (mState == EDUSH) {
-						if (mStamina > -1) {
-							speed = 0.5f;//スピード倍
+				if (mState == EATTACKSP) {
+					speed = 1.0f;
+				}
+				else if (CKey::Push('C')) {
+						if (mState == EDUSH) {
+							if (mStamina > -1) {
+								speed = 0.5f;//スピード倍
+							}
+							else {
+								speed = 0.2f;//スピード1/2
+							}
 						}
-						else {
-							speed = 0.2f;//スピード1/2
-						}
-					}
 				}
 			}
 			//前
 			if (CKey::Push('W'))
 			{
-					Move += FrontVec;
-				
+				Move += FrontVec;
 				mAnimationCount = 5;//0になるまでアニメーションを変更できない
 				mMoveCheck = true;
-				if (CKey::Push('C')) {
+				if (mState == EATTACKSP) {
+					speed = 1.0f;
+				}
+				else if (CKey::Push('C')) {
 					if (mState == EDUSH) {
 						if (mStamina > -1) {
 							speed = 0.5f;//スピード倍
@@ -475,10 +481,12 @@ void CXPlayer::Update()
 			else if (CKey::Push('S'))
 			{
 					Move -= FrontVec;
-				
 				mAnimationCount = 5;//0になるまでアニメーションを変更できない
 				mMoveCheck = true;
-				if (CKey::Push('C')) {
+				if (mState == EATTACKSP) {
+					speed = 1.0f;
+				}
+				else if (CKey::Push('C')) {
 					if (mState == EDUSH) {
 						if (mStamina > -1) {
 							speed = 0.5f;//スピード倍
@@ -489,9 +497,7 @@ void CXPlayer::Update()
 					}
 				}
 			}
-
 			//１→２→３→１   攻撃の順番がループ
-
 		   //回避行動中じゃないとき
 			if (mState != EESCAPE) {
 				//攻撃１が使えるとき
@@ -605,6 +611,7 @@ void CXPlayer::Update()
 		Move = Move.Normalize();
 		//平行移動量
 		//設定した移動量になるまで加速
+		
 		if (mSpeed < speed) {
 			mSpeed += 0.01f;
 		}
@@ -612,7 +619,9 @@ void CXPlayer::Update()
 		else {
 			mSpeed -= 0.01f;
 		}
-         Move = Move*mSpeed;
+		if (mState != EATTACK1 || mState != EATTACK2 || mState != EATTACK3) {
+			Move = Move * mSpeed;
+		}
 		//3次元ベクトル計算で算出したほうが正確だが計算量を懸念する場合は擬似計算で軽量化
 		//擬似ベクトル計算
 		Check tCheck = CUtil::GetCheck2D(Move.mX,Move.mZ,0,0, mRotation.mY*(M_PI/180.0f));
@@ -633,7 +642,8 @@ void CXPlayer::Update()
 		}
 		//回避行動時の移動量(だんだん遅くなる）
 		 if (mStep > 0) {
-			 Move.mZ += mStep;
+			
+		    Move= Move * mStep;
 				mStep-=1.0f;
 		 }
 
@@ -733,9 +743,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 								if (mState != EESCAPE) {
 									mJumpStopper = true;
 									mJump =0;
-									if (mAnimationIndex == 8) {
-										mAnimationFrame += 2;
-									}
+									
 									//位置の更新（mPosition+adjust)
 									mPosition = mPosition + adjust;
 									//行列の更新
@@ -758,7 +766,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 								//ダメージが入ったあとの無敵時間が０のとき
 								if (mDamageCount == 0&&mState!=EESCAPE) {
 									//敵の攻撃判定が適用されている間
-									if (((CEnemy2*)(o->mpParent))->mEnemy2AttackHit == true)
+									if (((CEnemy2*)(o->mpParent))->GetEnemy2AttackHit() == true)
 									{
 										if (mHp > 0) {
 											//後ろに下がる
@@ -798,7 +806,7 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 								//ダメージが入ったあとの無敵時間
 								if (mDamageCount == 0&&mState != EESCAPE) {
 									//敵の攻撃判定が適用されている間
-									if (((CBoss*)(o->mpParent))->mBossAttackHit == true)
+									if (((CBoss*)(o->mpParent))->GetBossAttackHit() == true)
 									{
 										if (mHp > 0) {
 											//後ろに下がる
