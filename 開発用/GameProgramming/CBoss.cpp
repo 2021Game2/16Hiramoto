@@ -23,7 +23,7 @@
 #define ROTATIONCOUNT 36.0f//‰ñ“]UŒ‚‚ÌÛAƒAƒjƒ[ƒVƒ‡ƒ“‚ÌI—¹‚Æ‰ñ“]‚ÌI—¹‚ð‚ ‚í‚¹‚é
 #define ROTATIONCOUNTM -36.0f
 #define ROTATION 3.6f//UŒ‚Žž‚É‰ñ“]‚·‚é—Ê
-#define ROTATIONMIN -0.036f
+#define ROTATIONMIN -0.36f
 #define ROTATIONMIN2 -0.1f
 #define ROTATIONBEFOREATTACK -3.6f
 #define IMAGE_GAUGE "Resource\\png,tga\\Gauge.png"		//ƒQ[ƒW‰æ‘œ
@@ -422,14 +422,9 @@ void CBoss::Attack4() {
 		break;
 	case(3):
 		//Œ¸‘¬
-		//1ƒtƒŒ[ƒ€‚S‚T‹‰ñ“]‚Ü‚Å‚Í‘å‚«‚­Œ¸‘¬
 		if (mAttackRotation > 0.0f) {
 			mAttackRotation += ROTATIONMIN;
 			mRotation.mY += mAttackRotation;
-		}
-		else if (mAttackRotation > 0.0f) {
-			//mAttackRotation = ROTATIONMIN;
-			//mRotation.mY += mAttackRotation;
 		}
 		 if (mAttackRotation <= 0.0f) {
 			mAnimationFrame = mAnimationFrameSize;
