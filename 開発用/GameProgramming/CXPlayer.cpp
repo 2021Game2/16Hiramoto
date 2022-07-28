@@ -66,7 +66,6 @@ CXPlayer::CXPlayer()
 	,mGaugeEnabled(true)
 	,mSpaceCount2(false)
 	,mSpaceCount3(false)
-	,mMoveCheck(false)
 	, mDamageVoise(false)
 	,mAnimationFrameLock(false)
 	,mEffectStopper(false)
@@ -144,7 +143,7 @@ void CXPlayer::Update()
 			 }
 			 //アニメーションの終了を待たずに待機状態に移行
 			if (mAnimationCount <= 0) {
-				mMoveCheck = false;
+				
 				mState = EIDLE;
 		    }
 		break;
@@ -171,21 +170,12 @@ void CXPlayer::Update()
 		//少し前進
 		mStep=STEP2;
 		mPosition.mY = mMoveRecord.mY;
-		//if (mEscapeFlg = true) {
-			//mEscapeFlg = false;
-			
-
-		//}
-			if (mStep > 0.0f) {
-				//mStep -= STOPPER;
-			}
 		//回転（回避してるように見える）
 		if (mRotation.mX!=360.0f) {
 		   mRotation.mX += 36.0f;
 		}
 		else if(mAnimationFrame >= mAnimationFrameSize){
-         mState = EMOVE;//歩行状態に移行
-		 mEscapeFlg = true;
+         mState = EDUSH;//歩行状態に移行
 		 //回転値を元に戻す
 		 mRotation.mX = 0.0f;
 		}
@@ -326,7 +316,7 @@ void CXPlayer::Update()
 			mJump -= G;
 		}
 		if (mState == EATTACKSP) {
-		tCamera->mAngleY -= 0.01f;
+		tCamera->mAngleY -= 0.03f;
 		}
 		//アニメーションのロックが外れているとき
 		if (mAnimationFrameLock == false) {
@@ -417,42 +407,35 @@ void CXPlayer::Update()
 			{
 				//左方向に移動
 				Move -= SideVec;
-
-				
 				mAnimationCount = 5;//0になるまでアニメーションを変更できない
-				mMoveCheck = true;
 				if (mState == EATTACKSP) {
 							speed = 1.0f;
 				}
 				else if (CKey::Push('C')) {
-					if (mState == EDUSH) {
 						if (mStamina > -1) {
 							speed = 0.5f;//スピード倍
 						}
 						else {
 							speed = 0.2f;//スピード1/2
-						}
-					}
+					    }
 				}
 			}
 			//右
 			else if (CKey::Push('D'))
 			{
-					Move += SideVec;
+				Move += SideVec;
 				mAnimationCount = 5;//0になるまでアニメーションを変更できない
-				mMoveCheck = true;
 				if (mState == EATTACKSP) {
 					speed = 1.0f;
 				}
 				else if (CKey::Push('C')) {
-						if (mState == EDUSH) {
 							if (mStamina > -1) {
 								speed = 0.5f;//スピード倍
 							}
 							else {
 								speed = 0.2f;//スピード1/2
 							}
-						}
+						
 				}
 			}
 			//前
@@ -460,20 +443,17 @@ void CXPlayer::Update()
 			{
 				Move += FrontVec;
 				mAnimationCount = 5;//0になるまでアニメーションを変更できない
-				mMoveCheck = true;
 				if (mState == EATTACKSP) {
 					speed = 1.0f;
 				}
 				else if (CKey::Push('C')) {
-					if (mState == EDUSH) {
 						if (mStamina > -1) {
 							speed = 0.5f;//スピード倍
 						}
-
 						else {
 							speed = 0.2f;//スピード1/2
 						}
-					}
+					
 				}
 
 			}
@@ -482,19 +462,17 @@ void CXPlayer::Update()
 			{
 					Move -= FrontVec;
 				mAnimationCount = 5;//0になるまでアニメーションを変更できない
-				mMoveCheck = true;
 				if (mState == EATTACKSP) {
 					speed = 1.0f;
 				}
 				else if (CKey::Push('C')) {
-					if (mState == EDUSH) {
 						if (mStamina > -1) {
 							speed = 0.5f;//スピード倍
 						}
 						else {
 							speed = 0.2f;//スピード1/2
 						}
-					}
+				
 				}
 			}
 			//１→２→３→１   攻撃の順番がループ
@@ -643,7 +621,7 @@ void CXPlayer::Update()
 		//回避行動時の移動量(だんだん遅くなる）
 		 if (mStep > 0) {
 			
-		    Move= Move * mStep;
+		    Move = Move * mStep;
 				mStep-=1.0f;
 		 }
 

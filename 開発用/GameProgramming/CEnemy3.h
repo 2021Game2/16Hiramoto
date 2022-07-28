@@ -24,7 +24,7 @@ public:
 		EDEATH,		//死亡
 	};
 private:
-	int mJump;
+	float mJump;
 	int mJump2;
 	int mMove2;
 	int mColliderCount;
@@ -35,6 +35,8 @@ private:
     int mMoveCount;
 	int mEffectCount;//エフェクトを表示させる時間
     int mHp;//体力
+	int mStopCount;
+	bool mDeathSwitch;
 	CCollider mCollider;
 	CBullet* mpBullet;
 	CVector mPoint;//目標地点

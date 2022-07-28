@@ -183,7 +183,7 @@ void CEnemy2::Death() {
 		if (mJump >= -0.5f) {
 			mJump -= G;
 		}
-		mHp--;
+		
 		//15フレームごとにエフェクト
 		if (mEffectCount % 15 == 0) {
 			//エフェクト生成
@@ -198,11 +198,12 @@ void CEnemy2::Death() {
 		mPosition.mZ = mPosition.mZ + mCollisionEnemy.mZ * mColliderCount;
 	}
 	//しばらく経ったら消去
-	if (mHp <= -120) {
-		mEnabled = false;
+	if (mHp <= -300) {
+		  mEnabled = false;
+		  tSceneGame->mEnemy2Count --;
+		  tSceneGame->mEnemy2CountStopper--;
 
-		tSceneGame->mEnemy2Count --;
-		tSceneGame->mEnemy2CountStopper--;
+		
 	}
 }		
 
@@ -274,7 +275,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 
 		if (o->mType == CCollider::ESPHERE) {
 
-			if (o->mpParent->mTag == EPLAYER|| o->mpParent->mTag == EITEM) {
+			if (o->mpParent->mTag == EPLAYER) {
 				//相手がプレイヤーの武器のとき
 				if (o->mTag == CCollider::EPLAYERSWORD) {
 					//衝突しているとき
@@ -285,8 +286,10 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 						{//ヒットバック＆ダメージを受ける
 							if (mDamageCount <= 0) {
 								//プレイヤーのジャンプ攻撃必要ポイント増加
-								if (((CXPlayer*)(o->mpParent))->GetSpAttack() < PLAYERSPPOINT_MAX) {
-									((CXPlayer*)(o->mpParent))->CXPlayer::SpAttackPoint();
+
+								CXPlayer* tPlayer = CXPlayer::GetInstance();
+								if (tPlayer->GetSpAttack() < PLAYERSPPOINT_MAX) {
+									tPlayer->CXPlayer::SpAttackPoint();
 								}
 								mEffectCount = 0;
 								//体力減少 
@@ -317,13 +320,17 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 						if (((CItem*)(o->mpParent))->mItemAttackHit == true)
 						{//ヒットバック＆ダメージを受ける
 								//プレイヤーのジャンプ攻撃必要ポイント増加
-							if (((CXPlayer*)(o->mpParent))->GetSpAttack() < PLAYERSPPOINT_MAX) {
+							CXPlayer* tPlayer = CXPlayer::GetInstance();
+							if (tPlayer->GetSpAttack() < PLAYERSPPOINT_MAX) {
 
-								((CXPlayer*)(o->mpParent))->SpAttackPoint();
+							  tPlayer->SpAttackPoint();
 							}
 								mEffectCount = 0;
 								//体力減少 
-								mHp = 0;
+								if (mState != EDEATH) {
+								 mHp = 0;
+								 mState = EDEATH;
+								}
 								//ヒットバック付与 
 								mColliderCount = 1.5f;
 								mCollisionEnemy = mPosition - o->mpParent->mPosition;
@@ -333,7 +340,6 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 								
 							    if (mHp <= 0) {
 									mJump = JUMP;
-									mState = EDEATH;
 								}
 							
 						}
@@ -344,7 +350,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 					if (CCollider::Collision(m, o)) {
 						//EIDLE（待機状態）
 						if (mState != EATTACK) {
-							if (mState != EIDLE) {
+							if (mState != EDEATH) {
 								mState = EIDLE;
 							}
 
@@ -366,6 +372,9 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 			//adjust、、、調整値
 				if (CCollider::CollisionTriangleSphere(o, m, &adjust))
 				{
+					if (mState == EDEATH) {
+						mHp--;
+					}
 						//衝突しない位置まで戻す
 						mPosition = mPosition + adjust;
 				}

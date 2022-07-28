@@ -33,15 +33,17 @@ CEnemy3::CEnemy3()
 	,mColSearch2(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f),70.0f)
 	,mpPlayer(0)
 	,mMoveCount (0)
-	,mJump(0)
 	,mJump2(0)
 	,mMove2(0)
 	,mColliderCount(0)
 	,mCount(0)
 	,mFireCount(0)
 	,mEnemy3Fry(0)
+	,mStopCount(0)
 	,mEnemyDamage(60)
+	,mJump(0.0f)
 	,mHp(HP)
+	, mDeathSwitch(false)
 	
 {
 	mRotation.mY += 90.0f;
@@ -153,20 +155,22 @@ void CEnemy3::Move4() {
 
 void CEnemy3::Death() {
 	CSceneGame* tSceneGame = CSceneGame::GetInstance();
-	//15フレームごとにエフェクト
-	if (mEffectCount % 15 == 0) {
-		//エフェクト生成
-		new CEffect2(mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2, false, &mRotation);
-	}
+	
 	//体力がなくなったら
 	if (mHp <= 0) {
 		//mTimeとmJumpに整数が代入され、吹っ飛ぶようになる
 		mPosition.mY += mJump;
-		if (mJump >= -0.5f) {
+		if (mJump >= -1.0f) {
 			mJump -= G;
 		}
-		mHp--;	
+			//15フレームごとにエフェクト
+		if (mEffectCount % 15 == 0) {
+			//エフェクト生成
+			new CEffect2(mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2, false, &mRotation);
+		}
+
 		CTransform::Update();
+
 	}
 	//吹き飛ぶ（X,Z軸)
 	if (mColliderCount > 0) {
@@ -174,13 +178,15 @@ void CEnemy3::Death() {
 		mPosition.mX = mPosition.mX + mCollisionEnemy.mX * mColliderCount;
 		mPosition.mZ = mPosition.mZ + mCollisionEnemy.mZ * mColliderCount;
 	}
-	if (mHp <= -120) {
+	if (mHp <= -300) {
+		
 		mEnabled = false;
 		tSceneGame->mEnemy3Count--;
 		tSceneGame->mEnemy3CountStopper--;
+
+		
 	}
 	
-	CTransform::Update();
 }
 //更新処理
 void CEnemy3::Update() {
@@ -244,7 +250,7 @@ void CEnemy3::Update() {
 			mRotation.mX += 3.0f;
 		}
 	}
-	CTransform::Update();//行列更新
+
 	int r = rand() % 10; //rand()は整数の乱数を返す
 	//%180は１８０で割った余りを求める
 	if (r == 0) {
@@ -270,6 +276,8 @@ void CEnemy3::Update() {
 
 	
 	mEffectCount--;
+
+	CTransform::Update();
 }
 //Collision(コライダ１，コライダ２，）
 void CEnemy3::Collision(CCollider* m, CCollider* o) {
@@ -314,13 +322,16 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 							if (((CXPlayer*)(o->mpParent))->GetSpAttack() < PLAYERSPPOINT_MAX) {
 								((CXPlayer*)(o->mpParent))->CXPlayer::SpAttackPoint();
 							}
+
+							mEffectCount = 0;
 							mColliderCount = COLLIDERCOUNT;
 							mCollisionEnemy = mPosition - o->mpParent->mPosition;
 							mCollisionEnemy.mY = 0;
 							mCollisionEnemy = mCollisionEnemy.Normalize();
-							mJump = JUMP;
-							mHp--;
+							
+							mHp--; 
 							if (mHp <= 0) {
+								mJump = JUMP;
 								mState = EDEATH;
 							}
 						}
@@ -330,40 +341,43 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 			   //相手がEPLAYERBODY(プレイヤーの体のコライダ）の時
 		       if (o->mTag == CCollider::EPLAYERBODY) {
 					if (CCollider::Collision(m, o)) {
-			
-						//これ以上前に進めなくなる
-						mColliderCount = 10.0f;
-						mCollisionEnemy = mPosition - o->mpParent->mPosition;
-						mCollisionEnemy = mCollisionEnemy.Normalize();
+						mStopCount++;
+						if (mStopCount>=120) {
+							mStopCount = 0;
+							//これ以上前に進めなくなる
+							mColliderCount = 10.0f;
+							mCollisionEnemy = mPosition - o->mpParent->mPosition;
+							mCollisionEnemy = mCollisionEnemy.Normalize();
+
+					    }
 					}
 		       }
-				break;
-			case(EITEM):
+				
 				if (o->mTag == CCollider::EITEMCOLLIDER) {
 					//衝突しているとき
-				if (CCollider::Collision(m, o)) {
+					if (CCollider::Collision(m, o)) {
 						//プレイヤーの当たり判定が有効なとき
 						//親をCXPlayerを元にポインタ化し、変数を参照
 						if (((CItem*)(o->mpParent))->mItemAttackHit == true)
 						{//ヒットバック＆ダメージを受ける
 								//プレイヤーのジャンプ攻撃必要ポイント増加
 							if (((CXPlayer*)(o->mpParent))->GetSpAttack() < PLAYERSPPOINT_MAX) {
-
 								((CXPlayer*)(o->mpParent))->SpAttackPoint();
 							}
 							mEffectCount = 0;
 							//体力減少 
-							mHp = 0;
+							if (mState != EDEATH) {
+								mHp = 0;
+								mState = EDEATH;
+							}
 							//ヒットバック付与 
 							mColliderCount = 1.5f;
 							mCollisionEnemy = mPosition - o->mpParent->mPosition;
 							//HPが0のとき以外は前後左右に吹っ飛ぶ
 							mCollisionEnemy.mY = 0;
 							mCollisionEnemy = mCollisionEnemy.Normalize();
-
 							if (mHp <= 0) {
 								mJump = JUMP;
-								mState = EDEATH;
 							}
 
 						}
@@ -395,10 +409,17 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 				CVector adjust;//調整値
 				//三角コライダと球コライダの衝突判定
 				//adjust、、、調整値
-				if (CCollider::CollisionTriangleSphere(o, m, &adjust))
-				{
+				if (mState == EDEATH) {
+					if (CCollider::CollisionTriangleSphere(o, m, &adjust))
+					{
+						mHp--;
+						
+						
 						//衝突しない位置まで戻す
-						//mPosition = mPosition + adjust;
+						mPosition = mPosition + adjust;
+					}
+					
+
 				}
 			}
 			

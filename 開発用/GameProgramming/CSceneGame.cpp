@@ -45,6 +45,9 @@
 #define TEXWIDTH  8192  //テクスチャ幅
 #define TEXHEIGHT  6144  //テクスチャ高さ
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 CSound PlayerFirstAttack;
 CSound PlayerSecondAttack;
 CSound PlayerThirdAttack;
@@ -74,7 +77,7 @@ CSceneGame::CSceneGame()
 	,mBgmBossStopper(true)//BGMを止める
     ,mBgmOverStopper(true)//BGMを止める
     ,mBgmClearStopper(true)//BGMを止める
-	, mVoiceSwitch(true)//false：音声なし true：音声あり
+	, mVoiceSwitch(false)//false：音声なし true：音声あり
 	, mBossGaugeSwitch(false)//ボスの体力ゲージを表示させるフラグ
 	, mGameClear (false)//ゲームクリアのフラグ
 	, mGameOver (false)//ゲームオーバーのフラグ
@@ -93,6 +96,12 @@ CSceneGame::CSceneGame()
 	, mEnemy3CountStopper (ENEMY3COUNT)
 	, mEnemy2CountStopper (ENEMY2COUNT)
 	, mBossSwitch(false)
+	, mBossStageCenter(CVector(29.0f,11.0f,83.0f))
+	, mBossStageEnd(CVector(mBossStageCenter.mX+50.0f, mBossStageCenter.mY, mBossStageCenter.mZ))
+	, mBossStageLengthX(0.0f)
+	, mBossStageLengthZ(0.0f)
+	, mBossStageLengthSum(0.0f)
+	, mBossStageCircle(0.0f)
 {
 
 }
@@ -178,7 +187,6 @@ void CSceneGame::Init()
 	CRes::sBoss.SeparateAnimationSet(0, 565, 650, "death - 03");
 	mpItem=new CItem(CVector(-20.0f, 2.0f, -10.0f),
 		CVector(), CVector(1.5f, 1.5f, 1.5f));
-	
 	mpTarget=new CTarget(mpPlayer->mPosition,
 		CVector(), CVector(0.5f, 0.5f, 0.5f));
 	mpMap = new CMap(CVector(0.0f, -3.325f, 0.0f), CVector(), CVector(1.0f, 1.0f, 1.0f));
@@ -201,8 +209,17 @@ void CSceneGame::Init()
 	mpPlayer->SetGaugeEnabled(true);
 	if (mpEnemy2) mpEnemy2->SetEnabled(true);
 	if (mpEnemy3)mpEnemy3->SetEnabled(true);
+
+	//ベクトルの成分の計算方法を短縮
+	//本来は√(X1-X2)^2+(Z1-Z2)^2
+	// 円の計算でまた２乗するので√を使わずに済む
+	mBossStageLengthX = pow((mBossStageEnd.mX - mBossStageCenter.mX), 2);
+	mBossStageLengthZ = pow((mBossStageEnd.mZ - mBossStageCenter.mZ), 2);
+	mBossStageLengthSum = mBossStageLengthX + mBossStageLengthZ;
+	//πr^2←２乗もいらない
+	mBossStageCircle = M_PI * mBossStageLengthSum;
+
 	mShadowMap.Init(TEXWIDTH, TEXHEIGHT, ShadowRender,ShadowEffectRender, shadowColor, lightPos);//影の初期化
-	
 	CEffect2::TexPreLoad();
 }
 
@@ -248,6 +265,7 @@ void CSceneGame::BgmGameClear() {
 	}
 }
 void CSceneGame::Update() {
+	
 	if (mCountStart == false) {
 		mCountStart = true;
 		mStartTime = clock(); //計測開始時刻を入れる
@@ -318,8 +336,8 @@ void CSceneGame::Update() {
 		if (mEnemy3Count < mEnemy3CountStopper) {
 			//２秒ごとに生成
 			if (mSpawn2 <= 0) {
-				mpEnemy3 = new CEnemy3(CVector(mpEnemySummon2->mPosition.mX, mpEnemySummon2->mPosition.mY+30.0f, mpEnemySummon2->mPosition.mZ), CVector(0.0f, 0.0f, 0.0f),
-					CVector(1000.5f, 1000.5f, 1000.5f));
+				mpEnemy3 = new CEnemy3(CVector(mpEnemySummon2->mPosition.mX, mpEnemySummon2->mPosition.mY+20.0f, mpEnemySummon2->mPosition.mZ), CVector(0.0f, 0.0f, 0.0f),
+				CVector(1000.5f, 1000.5f, 1000.5f));
 
 				//push_back  元は同じクラスからだが別々のポインタ生成
 				mEnemy3List.push_back(mpEnemy3);//管理リストに入れる
@@ -366,21 +384,26 @@ void CSceneGame::Render() {
 	//2D描画開始
 	CUtil::Start2D(0, 800, 0, 600);
 	char buf[64];
-	
+	//ボスがいるとき
 	if (mpBoss) {
+		//ボスが死ぬと
 		if (mpBoss->GetHp() <= 0) {
 			mGameClear = true;
 		}
-
+		//ボスが生きている間
 		if (mBossGaugeSwitch == true && mpBoss->GetHp() > 0) {
 			sprintf(buf, "BOSS");
 			mFont.DrawString(buf, 300, 570, 32, 16);
 		}
 	}
+	//クリアすると
 	if (mGameClear == true) {
+		mpTarget->mEnabled = false;
+		//壁をなくす
 		mpBossStage->mEnabled = false;
 		//クリア時間を記録
 		mClearTime = (float)(mEndTime - mStartTime) / 1000;
+		//プレイヤー関係のゲージ非表示
 		mpPlayer->SetGaugeEnabled(false);
 		mBossGaugeSwitch = false;
 		sprintf(buf, "GAMECLEAR");
@@ -397,7 +420,35 @@ void CSceneGame::Render() {
 			CFade::SetFade(CFade::FADE_OUT);
 		}
 	}
-	
+
+	if (mpPlayer->mPosition.mX > 0.0f) {
+		sprintf(buf, "X:%f", mpPlayer->mPosition.mX);
+		mFont.DrawString(buf, 20, 200, 8, 16);
+	}
+	else {
+		sprintf(buf, "X:M%f", mpPlayer->mPosition.mX);
+
+		mFont.DrawString(buf, 20, 200, 8, 16);
+	}
+	if (mpPlayer->mPosition.mY > 0.0f) {
+
+		sprintf(buf, "Y:%f", mpPlayer->mPosition.mY);
+
+		mFont.DrawString(buf, 20, 250, 8, 16);
+	}
+	else {
+		sprintf(buf, "Y:M%f", mpPlayer->mPosition.mY);
+		mFont.DrawString(buf, 20, 250, 8, 16);
+	}
+	if (mpPlayer->mPosition.mZ > 0.0f) {
+		sprintf(buf, "Z:%f", mpPlayer->mPosition.mZ);
+		mFont.DrawString(buf, 20, 300, 8, 16);
+	}
+	else {
+		sprintf(buf, "Z:M%f", mpPlayer->mPosition.mZ);
+		mFont.DrawString(buf, 20, 300, 8, 16);
+
+	}
 	if (mpPlayer->GetHp() <= 0) {
 		mGameOver = true;
 		mpPlayer->SetGaugeEnabled(false) ;

@@ -36,6 +36,7 @@ private:
 	float mJump;//ダメージを受けたときに飛び上がる
 	float mColliderCount;//ヒットバックさせる量
 	float mTime;//ジャンプする時の時間を計測
+	bool mDeathSwitch;
 	bool mEnemy2AttackHit;
 	CVector mCollisionEnemy;
 	CVector mPoint;//目標地点

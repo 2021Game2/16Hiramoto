@@ -83,12 +83,20 @@ private:
 	 static CSceneGame* mpSceneGameInstance;
 	
 public: 
+	CVector mBossStageCenter;
+	CVector mBossStageEnd;
+	float mBossStageLengthX;//ボスの行動範囲のX軸の長さ
+	float mBossStageLengthZ;//ボスの行動範囲のZ軸の長さ
+	float mBossStageLengthSum;//ボスの行動範囲の半径
+	float mBossStageCircle;//ボスの行動可能範囲
 	 float mClearTime;
 	 bool mEnemy2Bgm;
 	 bool mBgmCountCheck;
 	 bool mVoiceSwitch;//BGM SEのオンオフ切り替え 
 	 bool mBossSwitch;
-     bool mBossGaugeSwitch;//BGMを流すか止めるか分けるフラグ
+     //ボス関係のゲージの表示・非表示
+	 //ボスの生成、削除の切り替え時に利用
+     bool mBossGaugeSwitch;
 	 bool mBossBattleStage;
 	 int mBgmCount;
 	void SetBgmCount(int v) {

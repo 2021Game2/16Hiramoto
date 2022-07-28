@@ -33,16 +33,22 @@ private:
 	CCollider mColSphereRightFront;
 	CCollider mColSphereLeftFront;
 	CCollider mColSphereAttack;
+	CCollider mColSearch;//サーチ用コライダ
 	CEffect2* mBossEffect;
 	CVector mCollisionEnemy;
 	CVector mJumpCount;
 	CCharacter* mpPlayer;//プレイヤーのポインタ
 	CText mFont;
+	CTexture mImageGauge; //ゲージ画像
 	char buf[64];
 	bool mBossBgm;
 	bool mBossBgmDeath;
 	bool mColSearchCount;
 	bool mJumpStopper;
+	bool mBossGaugeSwitch;
+	bool mBossStopper;
+	bool mBossAttackHit;
+	int mHp;//体力
 	int mMove;
 	int mMove2;
 	int mBossDamageCount;
@@ -50,12 +56,13 @@ private:
     int mAttackPercent;
 	int mEnemyDamage;
 	int mBossJumpCount;
-	int  mBossColliderCheck;
+	int mBossColliderCheck;
 	int mAttack4MoveCount;
 	int mAttack4Count;
 	int mAttack4directionCount;
 	int mEffectCount;
 	int mBossAttackMove;
+	int mBossPositionLengthCount;//ボスの行動範囲を計測
 	float mJump;
 	float mJumpZ;
 	float mColliderCount;
@@ -65,11 +72,10 @@ private:
 	float mAttack4RotationCount;
 	float mAttackRotation;
 	float mRotationCount;
-	CTexture mImageGauge; //ゲージ画像
-	CCollider mColSearch;//サーチ用コライダ
-	bool mBossAttackHit;
-	
-	 int mHp;//体力
+	float mBossPositionLengthX;//ボスの行動範囲のX軸
+	float mBossPositionLengthZ;//ボスの行動範囲のZ軸
+	float mBossPositionLengthSum;//ボスの行動範囲の半径
+	float mBossCircle;//ボスの行動範囲
 public:
 
 	EBossState mState;
@@ -94,14 +100,14 @@ public:
 	//衝突処理
 	void Collision(CCollider* m, CCollider* o);
 	void TaskCollision();
-	void Idle();		//待機処理
-	void AutoMove();	//移動処理
-	void Attack();	//攻撃処理
-    void Attack2();
-	void Attack3();
-	void Attack4();
-	void Damaged();		//被弾処理
-	void Death();		//死亡処理
+	void Idle();//待機処理
+	void AutoMove();//移動処理
+	void Attack();//攻撃処理1
+    void Attack2();//攻撃処理2
+	void Attack3();//攻撃処理3
+	void Attack4();//攻撃処理4
+	void Damaged();//被弾処理
+	void Death();//死亡処理
 	
 	
 };

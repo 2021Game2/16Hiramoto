@@ -46,7 +46,6 @@ private:
 	bool mDamageVoise;
 	bool mPlayerBgm;//ゲームオーバー時のBGMを流すフラグ
 	bool mAnimationFrameLock;
-	bool mMoveCheck;//ダッシュかダッシュじゃないか
 	bool mSpaceCount1;//1回目の攻撃のフラグ
 	bool mSpaceCount2;//２回目の攻撃のフラグ
 	bool mSpaceCount3;//３回目の攻撃のフラグ
