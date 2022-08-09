@@ -43,6 +43,8 @@ private:
 	CCollider mColSphereRight;//右ハサミのコライダ
 	CCollider mColSphereLeft;//左ハサミのコライダ
 	CCollider mColSphereBody;//体のコライダ
+
+	CColliderLine mColliderLine;
 	CCharacter* mpPlayer;//プレイヤーのポインタ
 	
 public:

@@ -230,9 +230,7 @@ void CEnemy3::Update() {
 	float dy = vp.Dot(vy);
 	//前ベクトルとの内積を求める
 	float dz = vp.Dot(vz);
-	
 	float margin = 0.1f;
-
 	//左右方向へ回転
 	if (dx > margin) {
 		mRotation.mY += 3.0f;//左へ回転
@@ -250,7 +248,6 @@ void CEnemy3::Update() {
 			mRotation.mX += 3.0f;
 		}
 	}
-
 	int r = rand() % 10; //rand()は整数の乱数を返す
 	//%180は１８０で割った余りを求める
 	if (r == 0) {
@@ -273,10 +270,7 @@ void CEnemy3::Update() {
 		mColliderCount--;
 		mPosition = mPosition + mCollisionEnemy * mColliderCount;
 	}
-
-	
 	mEffectCount--;
-
 	CTransform::Update();
 }
 //Collision(コライダ１，コライダ２，）
@@ -322,7 +316,13 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 							if (((CXPlayer*)(o->mpParent))->GetSpAttack() < PLAYERSPPOINT_MAX) {
 								((CXPlayer*)(o->mpParent))->CXPlayer::SpAttackPoint();
 							}
-
+							CXPlayer* tPlayer = CXPlayer::GetInstance();
+							if (tPlayer->GetAttackSp() == true) {
+								if (mState != EDEATH) {
+									mHp = 0;
+									mState = EDEATH;
+								}
+							}
 							mEffectCount = 0;
 							mColliderCount = COLLIDERCOUNT;
 							mCollisionEnemy = mPosition - o->mpParent->mPosition;
@@ -413,19 +413,12 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 					if (CCollider::CollisionTriangleSphere(o, m, &adjust))
 					{
 						mHp--;
-						
-						
 						//衝突しない位置まで戻す
 						mPosition = mPosition + adjust;
 					}
-					
-
 				}
 			}
-			
 		}
-		
-		
 	}
 	return;
 }

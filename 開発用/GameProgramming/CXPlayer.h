@@ -72,6 +72,7 @@ private:
 	CEffect2* mEffect3;
 	CEffect2* mEffectSp;
 public:
+	
 	EPLAYERState mState;
 	bool GetAttackSp() {
 		return mAttackSp;

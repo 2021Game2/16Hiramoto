@@ -14,10 +14,10 @@
 #include"CFlag.h"
 #include"CFade.h"
 #define HP 10
-#define ENEMY2COUNT 2//ˆê“x‚Éo‚¹‚é“G‚Q‚Ì”
+#define ENEMY2COUNT 3//ˆê“x‚Éo‚¹‚é“G‚Q‚Ì”
 #define ENEMY2MINCOUNT 1 //“G‚Q‚ðÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚Q‚Ì”‚Ì‰ºŒÀ
 #define ENEMY3COUNT 1//ˆê“x‚Éo‚¹‚é“G‚R‚Ì”
-#define ENEMY3MINCOUNT 0 //“G‚R‚ðÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚R‚Ì”‚Ì‰ºŒÀ
+#define ENEMY3MINCOUNT 1 //“G‚R‚ðÄ¶¬‚³‚¹‚é‚Æ‚«‚Ì“G‚R‚Ì”‚Ì‰ºŒÀ
 #define HP_MAX 10	//‘Ì—ÍÅ‘å’l
 #define TEX_BUTTON "Resource\\png,tga\\MoveKey.png"
 #define TEX_BUTTON2 "Resource\\png,tga\\CKey.png"
@@ -77,7 +77,7 @@ CSceneGame::CSceneGame()
 	,mBgmBossStopper(true)//BGM‚ðŽ~‚ß‚é
     ,mBgmOverStopper(true)//BGM‚ðŽ~‚ß‚é
     ,mBgmClearStopper(true)//BGM‚ðŽ~‚ß‚é
-	, mVoiceSwitch(false)//falseF‰¹º‚È‚µ trueF‰¹º‚ ‚è
+	, mVoiceSwitch(true)//falseF‰¹º‚È‚µ trueF‰¹º‚ ‚è
 	, mBossGaugeSwitch(false)//ƒ{ƒX‚Ì‘Ì—ÍƒQ[ƒW‚ð•\Ž¦‚³‚¹‚éƒtƒ‰ƒO
 	, mGameClear (false)//ƒQ[ƒ€ƒNƒŠƒA‚Ìƒtƒ‰ƒO
 	, mGameOver (false)//ƒQ[ƒ€ƒI[ƒo[‚Ìƒtƒ‰ƒO
@@ -97,7 +97,7 @@ CSceneGame::CSceneGame()
 	, mEnemy2CountStopper (ENEMY2COUNT)
 	, mBossSwitch(false)
 	, mBossStageCenter(CVector(29.0f,11.0f,83.0f))
-	, mBossStageEnd(CVector(mBossStageCenter.mX+50.0f, mBossStageCenter.mY, mBossStageCenter.mZ))
+	, mBossStageEnd(CVector(mBossStageCenter.mX+40.0f, mBossStageCenter.mY, mBossStageCenter.mZ))
 	, mBossStageLengthX(0.0f)
 	, mBossStageLengthZ(0.0f)
 	, mBossStageLengthSum(0.0f)
@@ -106,7 +106,6 @@ CSceneGame::CSceneGame()
 
 }
 CSceneGame::~CSceneGame() {
-	
 	CTaskManager::Destroy();
 }
 void ShadowRender() {
@@ -317,7 +316,7 @@ void CSceneGame::Update() {
 				mEnemy2List.push_back(mpEnemy2);//ŠÇ—ƒŠƒXƒg‚É“ü‚ê‚é
 				mpEnemy2->Init(&CRes::sScorp);
 				mEnemy2Count++;
-				mSpawn = 60;
+				mSpawn = 30;
 			}
 		}
 	}
@@ -342,7 +341,7 @@ void CSceneGame::Update() {
 				//push_back  Œ³‚Í“¯‚¶ƒNƒ‰ƒX‚©‚ç‚¾‚ª•ÊX‚Ìƒ|ƒCƒ“ƒ^¶¬
 				mEnemy3List.push_back(mpEnemy3);//ŠÇ—ƒŠƒXƒg‚É“ü‚ê‚é
 				mEnemy3Count++;
-				mSpawn2 = 120;
+				mSpawn2 = 30;
 			}
 		}
 	}
@@ -380,7 +379,7 @@ void CSceneGame::Render() {
 	mShadowMap.Render();//‰eÝ’è
 	//ƒRƒ‰ƒCƒ_‚Ì•`‰æ
 	//‚±‚±‚ðƒRƒƒ“ƒg‚É‚·‚é‚Æ‚·‚×‚Ä‚ÌƒRƒ‰ƒCƒ_”ñ•\Ž¦
-	//CCollisionManager::Get()->Render();
+	CCollisionManager::Get()->Render();
 	//2D•`‰æŠJŽn
 	CUtil::Start2D(0, 800, 0, 600);
 	char buf[64];
@@ -423,30 +422,30 @@ void CSceneGame::Render() {
 
 	if (mpPlayer->mPosition.mX > 0.0f) {
 		sprintf(buf, "X:%f", mpPlayer->mPosition.mX);
-		mFont.DrawString(buf, 20, 200, 8, 16);
+		//mFont.DrawString(buf, 20, 200, 8, 16);
 	}
 	else {
 		sprintf(buf, "X:M%f", mpPlayer->mPosition.mX);
 
-		mFont.DrawString(buf, 20, 200, 8, 16);
+		//mFont.DrawString(buf, 20, 200, 8, 16);
 	}
 	if (mpPlayer->mPosition.mY > 0.0f) {
 
 		sprintf(buf, "Y:%f", mpPlayer->mPosition.mY);
 
-		mFont.DrawString(buf, 20, 250, 8, 16);
+		//mFont.DrawString(buf, 20, 250, 8, 16);
 	}
 	else {
 		sprintf(buf, "Y:M%f", mpPlayer->mPosition.mY);
-		mFont.DrawString(buf, 20, 250, 8, 16);
+		//mFont.DrawString(buf, 20, 250, 8, 16);
 	}
 	if (mpPlayer->mPosition.mZ > 0.0f) {
 		sprintf(buf, "Z:%f", mpPlayer->mPosition.mZ);
-		mFont.DrawString(buf, 20, 300, 8, 16);
+		//mFont.DrawString(buf, 20, 300, 8, 16);
 	}
 	else {
 		sprintf(buf, "Z:M%f", mpPlayer->mPosition.mZ);
-		mFont.DrawString(buf, 20, 300, 8, 16);
+		//mFont.DrawString(buf, 20, 300, 8, 16);
 
 	}
 	if (mpPlayer->GetHp() <= 0) {

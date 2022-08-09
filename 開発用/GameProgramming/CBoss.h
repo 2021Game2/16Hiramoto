@@ -9,6 +9,7 @@
 #include"CEffect2.h"
 #include"CSound.h"
 #include"CTexture.h"
+#include"CColliderLine.h"
 /*エネミークラス
 キャラクタクラスを継承	*/
 class CBoss :public CXCharacter {
@@ -34,9 +35,11 @@ private:
 	CCollider mColSphereLeftFront;
 	CCollider mColSphereAttack;
 	CCollider mColSearch;//サーチ用コライダ
+	CColliderLine mColliderLine;
 	CEffect2* mBossEffect;
 	CVector mCollisionEnemy;
 	CVector mJumpCount;
+	CVector mMoveRecord;
 	CCharacter* mpPlayer;//プレイヤーのポインタ
 	CText mFont;
 	CTexture mImageGauge; //ゲージ画像

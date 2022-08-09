@@ -22,6 +22,7 @@ CEnemy2::CEnemy2()
 	:mColSphereRight(this,&mMatrix, CVector(1.5f, 3.0f, 0.5f), 2.0f)
 	,mColSphereLeft(this,&mMatrix,  CVector(-1.0f, 0.5f, 0.0f), 2.0f)
 	,mColSphereBody(this,&mMatrix,  CVector(0.0f,3.0f,0.0f),2.0f)
+	//, mColliderLine(this, &mMatrix, CVector(0.0f, 15.0f, 0.0f), CVector(0.0f, -5.0f, 0.0f))
 	,mMove(0)
 	,mEnemyVoice(0)
 	,mDamageCount(0)
@@ -44,6 +45,7 @@ CEnemy2::CEnemy2()
 	mColSphereLeft.mTag= CCollider::EENEMY2COLLIDERATTACK;
 	mColSphereLeft.mRenderEnabled = false;
 	mColSphereBody.mTag = CCollider::EENEMY2COLLIDERBODY;
+	//mColliderLine.mTag=CCollider::ENEMYCOLLIDERLINE;
 }
 
 //CEnemy(位置、回転、拡縮）
@@ -198,7 +200,7 @@ void CEnemy2::Death() {
 		mPosition.mZ = mPosition.mZ + mCollisionEnemy.mZ * mColliderCount;
 	}
 	//しばらく経ったら消去
-	if (mHp <= -300) {
+	if (mHp <= -240) {
 		  mEnabled = false;
 		  tSceneGame->mEnemy2Count --;
 		  tSceneGame->mEnemy2CountStopper--;
@@ -253,7 +255,12 @@ void CEnemy2::Update() {
 		}
 		mEnemyVoice = 0;
 	}
-
+	if (mPosition.mY < -100.0f) {
+		if (mState != EDEATH) {
+			mHp = -240;
+			mState = EDEATH;
+		}
+	}
 	if (mState != EDAMAGED) {
 		mDamageCount = 0;
 	}
@@ -261,7 +268,7 @@ void CEnemy2::Update() {
 		
 		mEnabled = false;
 	}
-
+	mColliderLine.Set(this, &mMatrix, CVector(0.0f, 2.0f, 0.0f), CVector(0.0f, -2.0f, 0.0f));
 	mEffectCount--;
 	CXCharacter::Update();
 }
@@ -290,6 +297,12 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 								CXPlayer* tPlayer = CXPlayer::GetInstance();
 								if (tPlayer->GetSpAttack() < PLAYERSPPOINT_MAX) {
 									tPlayer->CXPlayer::SpAttackPoint();
+								}
+								if (tPlayer->GetAttackSp() == true) {
+									if (mState != EDEATH) {
+										mHp = 0;
+										mState = EDEATH;
+									}
 								}
 								mEffectCount = 0;
 								//体力減少 
@@ -405,6 +418,6 @@ void CEnemy2::TaskCollision() {
 	//衝突処理を実行
 	CCollisionManager::Get()->Collision(&mColSphereRight, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSphereLeft, COLLISIONRANGE);
-	CCollisionManager::Get()->Collision(&mColSphereBody, COLLISIONRANGEFIELD);
+	CCollisionManager::Get()->Collision(&mColSphereBody, COLLISIONRANGE);
 	
 }

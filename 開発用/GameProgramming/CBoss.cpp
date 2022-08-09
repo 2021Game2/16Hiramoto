@@ -43,10 +43,11 @@ CModel CBoss::mModel;//モデルデータ作成
 CBoss::CBoss()
 //コライダの設定
 	: mColSearch(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 20.0f)
-	, mColSphereHead(this, &mMatrix, CVector(0.0f, 3.0f, 5.0f), 5.0f)
+	, mColSphereHead(this, &mMatrix, CVector(0.0f, 3.0f, 5.0f), 2.0f)
 	, mColSphereRightFront(this, &mMatrix, CVector(0.0f, -2.0f, 0.0f), 2.0f)
 	, mColSphereLeftFront(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f), 2.0f)
 	, mColSphereAttack(this, &mMatrix, CVector(0.0f, 0.0f, 10.0f), 10.0f)
+	, mColliderLine(this, &mMatrix, CVector(0.0f, 15.0f, 0.0f), CVector(0.0f, -5.0f,0.0f))
 	, mpPlayer(0)
 	, mMove(0)
 	, mMove2(0)
@@ -68,11 +69,13 @@ CBoss::CBoss()
 	, mBossBgmDeath(true)
 	, mBossAttackHit(false)
 	, mColSearchCount(false)
+	, mMoveRecord(0.0f,0.0f,0.0f)
 {
 	mImageGauge.Load(IMAGE_GAUGE);//体力ゲージのテクスチャ
 	mTag = EBOSS;
 	mColSearch.mTag = CCollider::ESEARCH;//タグ設定
 	mColSphereHead.mTag = CCollider::EBOSSCOLLIDERHEAD;
+	mColliderLine.mTag = CCollider::EBOSSLINE;
 	//mColSphereRightFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
 	//mColSphereLeftFront.mTag = CCollider::EBOSSCOLLIDERATTACK;
 	mColSphereAttack.mTag = CCollider::EBOSSCOLLIDERATTACK;
@@ -130,10 +133,10 @@ void CBoss::Idle() {
 				switch (mAttackPercent) {
 				case(0):
 					if (mColSearch.mRenderEnabled == false) {
-						mState = EIDLE;
+						mState = EAUTOMOVE;
 					}
 					else {
-						mState = EAUTOMOVE;
+						mState = EIDLE;
 					}
 					break;
 				case(1):
@@ -181,7 +184,7 @@ void CBoss::Idle() {
 			
 		}
 	}
-	//30溜まる前にアニメーションが終わったら移動処理に移行
+	//120溜まる前にアニメーションが終わったら移動処理に移行
 	else if (mAnimationFrame >= mAnimationFrameSize) {
 		if (mColSearch.mRenderEnabled == false) {
 	    	mState = EAUTOMOVE;
@@ -230,10 +233,13 @@ void CBoss::AutoMove() {
 	int r = rand() % 30; //rand()は整数の乱数を返す
 	//%180は１８０で割った余りを求める
 	if (mColSearch.mRenderEnabled == false) {
-		if (r == 0) {
-				//ESEARCHに衝突してポインタに設定した
-				//プレイヤーの座標を記録
-				mPoint = tPlayer->mPosition;
+		if (mBossStopper == false) {
+			if (r == 0) {
+					//ESEARCHに衝突してポインタに設定した
+					//プレイヤーの座標を記録
+					mPoint = tPlayer->mPosition;
+			}
+
 		}
 	}
 	
@@ -342,6 +348,7 @@ void CBoss::Attack3() {
 			mBossAttackHit = false;
 			mRotation.mX = 0.0f;
 			mColSphereHead.mRadius = 3.0f;//コライダーの半径をもとに戻す
+			mMove = 0;
 			mState = EAUTOMOVE;
 		}
 	}
@@ -432,6 +439,7 @@ void CBoss::Attack4() {
 			mAttackRotation = 0.0f;
 			mAttack4Count = 0;
 			mBossAttackHit = false;
+			mMove = 0;
 			mState = EAUTOMOVE;
 		}
 		break;
@@ -445,7 +453,8 @@ void CBoss::Damaged() {
 	}
 	else {
     //ダメージのあとは移動処理
-	mState = EIDLE;
+		mMove = 0;
+	mState = EAUTOMOVE;
 	}
 	if (mColliderCount > 0) {
 		mColliderCount--;
@@ -481,6 +490,9 @@ void CBoss::Death() {
 
 //更新処理
 void CBoss::Update() {
+	if (mState == EATTACK4||mState == EAUTOMOVE) {
+	  mPosition.mY = 11.0f;
+	}
 	CSceneGame* tSceneGame = CSceneGame::GetInstance();
 	//ボスがステージの範囲外に出ないように
 	mBossPositionLengthCount++;
@@ -501,9 +513,16 @@ void CBoss::Update() {
 	mBossPositionLengthX = pow((mPosition.mX - tSceneGame->mBossStageCenter.mX), 2);
 	mBossPositionLengthZ = pow((mPosition.mZ - tSceneGame->mBossStageCenter.mZ), 2);
 	if (mBossStopper == true) {
-		//反転させる
-		mRotation.mY += 180.0f;
-		mBossStopper = false;
+		if (mBossPositionLengthCount % 60 == 0) {
+			mPoint = tSceneGame->mBossStageCenter;
+			if (mState == EATTACK4) {
+				mAttack4MoveZ * -1;
+				mAttack4MoveX * -1;
+			}
+		}
+	}
+	if (mBossStopper == false) {
+		mMoveRecord = mPosition;
 	}
 	//処理を行動ごとに分割
 	switch (mState) {
@@ -582,6 +601,7 @@ void CBoss::Update() {
 		}
 	}
 	mEffectCount--;
+	mColliderLine.Set(this, &mMatrix, CVector(0.0f, 15.0f, 5.0f), CVector(0.0f, -5.0f, 0.0f));
 	CXCharacter::Update();
 }
 
@@ -692,12 +712,12 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 				}
 			}
 		}
-		if (m->mTag == CCollider::EBOSSCOLLIDERHEAD) {
+		if (m->mTag == CCollider::EBOSSLINE) {
 			if (o->mType == CCollider::ETRIANGLE) {
 				CVector adjust;//調整値
 				//三角コライダと球コライダの衝突判定
 				//adjust、、、調整値	
-				if (CCollider::CollisionTriangleSphere(o, m, &adjust))
+				if (CCollider::CollisionTriangleLine(o, m, &adjust))
 				{
 					mPosition = mPosition + adjust;
 					if (mState == EATTACK3) {
@@ -717,13 +737,13 @@ void CBoss::TaskCollision() {
 	mColSphereRightFront.ChangePriority();
 	mColSphereLeftFront.ChangePriority();
 	mColSphereAttack.ChangePriority();
+	mColliderLine.ChangePriority();
 	//衝突処理を実行
 
-	CCollisionManager::Get()->Collision(&mColSphereRightFront, COLLISIONRANGE);
-	CCollisionManager::Get()->Collision(&mColSphereLeftFront, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSphereHead, COLLISIONRANGEFIELD);
 	CCollisionManager::Get()->Collision(&mColSearch, COLLISIONRANGE);
 	CCollisionManager::Get()->Collision(&mColSphereAttack, COLLISIONRANGE);
+	CCollisionManager::Get()->Collision(&mColliderLine, COLLISIONRANGE);
 }
 
 void CBoss::Render2D()

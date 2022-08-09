@@ -14,7 +14,7 @@
 #define ATTACKCOUNT2 20
 #define ATTACKCOUNT3 40
 #define JUMP 5.0f//スペシャル攻撃時のジャンプ力
-#define STEP  20.0f //攻撃時少し前進
+#define STEP  2.0f //攻撃時少し前進
 #define STEP2 -0.2f //回避行動時少し前進
 #define STAMINA 400 //スタミナ
 #define HP_MAX 10	//体力最大値
@@ -495,6 +495,7 @@ void CXPlayer::Update()
 							mAnimationCount = 50;//0になるまでアニメーションが変わらない
 							
 							mStep = STEP;
+							mSpeed = mStep;
 						}
 
 					}
@@ -513,6 +514,7 @@ void CXPlayer::Update()
 							mAttackCount = ATTACKCOUNT2;//攻撃のアニメーションがループしないように
 							mAnimationCount = 50;//0になるまでアニメーションが変わらない
 							mStep = STEP;
+							mSpeed = mStep;
 						}
 					}
 				}
@@ -530,6 +532,7 @@ void CXPlayer::Update()
 							mSpaceCount1 = true;//１回目の攻撃のフラグ
 							mAttackCount = ATTACKCOUNT3;//攻撃のアニメーションがループしないように
 							mStep = STEP;//ジャンプ力を代入
+							mSpeed = mStep;
 						}
 					}
 				}
@@ -587,19 +590,7 @@ void CXPlayer::Update()
 		//移動量正規化　斜め移動が早くなってしまう
 		//ジャンプ時などはY軸を正規化しない
 		Move = Move.Normalize();
-		//平行移動量
-		//設定した移動量になるまで加速
 		
-		if (mSpeed < speed) {
-			mSpeed += 0.01f;
-		}
-		//減速
-		else {
-			mSpeed -= 0.01f;
-		}
-		if (mState != EATTACK1 || mState != EATTACK2 || mState != EATTACK3) {
-			Move = Move * mSpeed;
-		}
 		//3次元ベクトル計算で算出したほうが正確だが計算量を懸念する場合は擬似計算で軽量化
 		//擬似ベクトル計算
 		Check tCheck = CUtil::GetCheck2D(Move.mX,Move.mZ,0,0, mRotation.mY*(M_PI/180.0f));
@@ -614,17 +605,29 @@ void CXPlayer::Update()
 		if (tCheck.cross < 0.0f) {
 			mRotation.mY -= tCheck.turn * turnspeed;
 		}
+		//平行移動量
+		//設定した移動量になるまで加速
+		if (mSpeed < speed) {
+			mSpeed += 0.01f;
+		}
+		//減速
+		else {
+			mSpeed -= 0.01f;
+		}
+		//攻撃中以外の場合のみ適用
+		if (mState != EATTACK1 || mState != EATTACK2 || mState != EATTACK3) {
+			Move = Move * mSpeed;
+		}
 		//移動
 		if (mState == EMOVE||mState==EDUSH||mState==EATTACKSP||mState==EESCAPE||mStep>0) {
              mPosition += Move;
 		}
-		//回避行動時の移動量(だんだん遅くなる）
+		//攻撃時の移動量(移動時と違い、早く、短距離を移動）
 		 if (mStep > 0) {
-			
 		    Move = Move * mStep;
-				mStep-=1.0f;
+			mStep-=0.3f;
 		 }
-
+		 //アニメーションが変わるまで減少
 		 if (mAnimationCount > 0) {
 			 mAnimationCount--;
 	     }
@@ -640,6 +643,7 @@ void CXPlayer::Update()
 		 if (mStamina < STAMINA_MAX) {
 			mStamina++;
 		 }
+		 //上限に達すると増えなくなる
 		 if (mSpAttack > SPPOINT_MAX) {
 		    mSpAttack = SPPOINT_MAX;
 		 }
@@ -764,6 +768,13 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 								}
 							}
 						}
+							if (o->mTag == CCollider::EENEMY2COLLIDERBODY) {
+								CVector adjust;
+								if (CCollider::CollisionSylinder(o, m, &adjust)) {
+									//衝突しない位置まで戻す
+									mPosition = mPosition + adjust;
+								}
+							}
 					}
 					//親がボス
 					else if (o->mpParent->mTag == EBOSS) {
