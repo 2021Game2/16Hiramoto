@@ -51,6 +51,7 @@ private:
 	bool mBossGaugeSwitch;
 	bool mBossStopper;
 	bool mBossAttackHit;
+	int mBossMoveVoice;
 	int mHp;//‘Ì—Í
 	int mMove;
 	int mMove2;

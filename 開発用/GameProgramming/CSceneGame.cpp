@@ -379,7 +379,7 @@ void CSceneGame::Render() {
 	mShadowMap.Render();//影設定
 	//コライダの描画
 	//ここをコメントにするとすべてのコライダ非表示
-	CCollisionManager::Get()->Render();
+	//CCollisionManager::Get()->Render();
 	//2D描画開始
 	CUtil::Start2D(0, 800, 0, 600);
 	char buf[64];
@@ -420,34 +420,6 @@ void CSceneGame::Render() {
 		}
 	}
 
-	if (mpPlayer->mPosition.mX > 0.0f) {
-		sprintf(buf, "X:%f", mpPlayer->mPosition.mX);
-		//mFont.DrawString(buf, 20, 200, 8, 16);
-	}
-	else {
-		sprintf(buf, "X:M%f", mpPlayer->mPosition.mX);
-
-		//mFont.DrawString(buf, 20, 200, 8, 16);
-	}
-	if (mpPlayer->mPosition.mY > 0.0f) {
-
-		sprintf(buf, "Y:%f", mpPlayer->mPosition.mY);
-
-		//mFont.DrawString(buf, 20, 250, 8, 16);
-	}
-	else {
-		sprintf(buf, "Y:M%f", mpPlayer->mPosition.mY);
-		//mFont.DrawString(buf, 20, 250, 8, 16);
-	}
-	if (mpPlayer->mPosition.mZ > 0.0f) {
-		sprintf(buf, "Z:%f", mpPlayer->mPosition.mZ);
-		//mFont.DrawString(buf, 20, 300, 8, 16);
-	}
-	else {
-		sprintf(buf, "Z:M%f", mpPlayer->mPosition.mZ);
-		//mFont.DrawString(buf, 20, 300, 8, 16);
-
-	}
 	if (mpPlayer->GetHp() <= 0) {
 		mGameOver = true;
 		mpPlayer->SetGaugeEnabled(false) ;

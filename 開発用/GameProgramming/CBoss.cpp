@@ -51,6 +51,7 @@ CBoss::CBoss()
 	, mpPlayer(0)
 	, mMove(0)
 	, mMove2(0)
+	, mBossMoveVoice(0)
 	, mBossDamageCount(0)
 	, mBossJumpCount(0)
 	, mBossAttackMove(0)
@@ -199,7 +200,10 @@ void CBoss::AutoMove() {
 	CSceneGame* tSceneGame = CSceneGame::GetInstance();
 	//歩く
 	if (tSceneGame->mVoiceSwitch == true) {
+		if (mBossMoveVoice <= 0) {
 		BossMove.Play();
+		mBossMoveVoice = 60;
+		}
 	}
 	//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
 	CXPlayer* tPlayer = CXPlayer::GetInstance();
@@ -589,6 +593,10 @@ void CBoss::Update() {
 				mBossEffect = new CEffect2(tPlayer->GetSwordColPos(), 3.0f, 3.0f, CEffect2::EFF_EXP, 4, 4, 2,false, &mRotation);
 		}
 	}
+	if (mBossMoveVoice > 0) {
+	mBossMoveVoice--;
+
+	}
 	if (mHp <= 0 && mState != EDEATH) {
 		mState = EDEATH;
 	}
@@ -601,7 +609,13 @@ void CBoss::Update() {
 		}
 	}
 	mEffectCount--;
+	if (mHp > 0) {
 	mColliderLine.Set(this, &mMatrix, CVector(0.0f, 15.0f, 5.0f), CVector(0.0f, -5.0f, 0.0f));
+	}
+	else {
+
+	mColliderLine.Set(this, &mMatrix, CVector(0.0f, 15.0f, 5.0f), CVector(0.0f, 5.0f, 0.0f));
+	}
 	CXCharacter::Update();
 }
 
@@ -720,6 +734,7 @@ void CBoss::Collision(CCollider* m, CCollider* o) {
 				if (CCollider::CollisionTriangleLine(o, m, &adjust))
 				{
 					mPosition = mPosition + adjust;
+					
 					if (mState == EATTACK3) {
 						if (mAnimationFrame >= mAnimationFrameSize) {
 							mJumpStopper = true;

@@ -14,7 +14,7 @@
 #define ATTACKCOUNT2 20
 #define ATTACKCOUNT3 40
 #define JUMP 5.0f//スペシャル攻撃時のジャンプ力
-#define STEP  2.0f //攻撃時少し前進
+#define STEP  1.0f //攻撃時少し前進
 #define STEP2 -0.2f //回避行動時少し前進
 #define STAMINA 400 //スタミナ
 #define HP_MAX 10	//体力最大値
@@ -36,7 +36,6 @@ extern CSound PlayerSecondAttack;//二回目の攻撃のSE
 extern CSound PlayerThirdAttack;//三回目の攻撃のSE
 extern CSound PlayerJumpAttack;//スペシャル攻撃のSE
 extern CSound PlayerDamage;//ダメージのSE
-
 CXPlayer* CXPlayer::mpPlayerInstance;
 //プレイヤーのポインタを返すことで、座標などが参照できるようになる
 CXPlayer* CXPlayer::GetInstance()
