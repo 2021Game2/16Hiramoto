@@ -11,12 +11,11 @@ public:
 	
 	//モデルデータ
 	static CModel mModel;
-	
+	static CFlag* GetInstance();
+	static CFlag* mpFlagInstance;
 	//コライダ
 	CFlag(const CVector& position, const CVector& rotation, const CVector& scale);
 	CFlag();
-	static CFlag* GetInstance();
-	static CFlag* mpFlagInstance;
 	//更新処理
 	void Update();
 	//衝突処理

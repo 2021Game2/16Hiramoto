@@ -1,26 +1,18 @@
 #ifndef CENEMYSUMMON_H
 #define CENEMYSUMMON_H
-
-
-
 #include"CCharacter.h"
 #include"CCollider.h"
-
 class CEnemySummon:public CCharacter {
 private:
-
 	//コライダ
 	CCollider mCollider;
-	
 	int mDamageCount;
 	int mEffectCount;
-public:
 	int mHp;
-	void SetHp(int hp) {
-		if (hp < 0) return;
-		this->mHp = hp;
+public:
+	int GetHp() {
+		return mHp;
 	}
-
 	//モデルデータ
 	static CModel mModel;
 	CEnemySummon();
@@ -33,11 +25,6 @@ public:
 	//Collision(コライダ１、コライダ２）
 	void Collision(CCollider* m, CCollider* o);
 	void TaskCollision();
-	
 };
-
-
-
-
 #endif
 

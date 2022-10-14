@@ -79,23 +79,24 @@ CEnemy3::CEnemy3(const CVector& position, const CVector& rotation, const CVector
 void CEnemy3::Idle() {
 
 	mCount++;
-	//０から６０フレーム
+	//0から20フレーム
 	if (mCount < 20) {
-		
 			mPosition.mY -= 0.5f;
-		
 	}
-	//６０から１２０フレーム
+	//20から40フレーム
 	else if (mCount < 40) {
 		mPosition.mY += 0.5f;
 	}
 	else if (mCount >= 40) {
 		mCount = 0;
+		//プレイヤーが近くにいれば行動パターン変更
 		if (mColSearch2.mRenderEnabled == false) {
 			mState = EMOVE1;
 		}
 	}
 }
+//動き1
+//プレイヤーに近づく
 void CEnemy3::Move1() {
 	mCount++;
 	if (mCount < 180) {
@@ -118,18 +119,20 @@ void CEnemy3::Move1() {
 
 	}
 }
+//動き2
+//右後ろに移動
 void CEnemy3::Move2() {
 	mCount++;
 	if (mCount < 10) {
-
 		mPosition = mPosition + CVector(3.0f, 2.0f, -1.5f) * mMatrixRotate;
 	}
 	else{
 		mState = EMOVE3;
 		mCount = 0;
-
 	}
 }
+//動き3
+//左に移動
 void CEnemy3::Move3() {
 	mCount++;
 	if (mCount < 10) {
@@ -138,9 +141,10 @@ void CEnemy3::Move3() {
 	else{
 		mState = EMOVE4;
 		mCount = 0;
-
 	}
 }
+//動き4
+//元の位置に戻る
 void CEnemy3::Move4() {
 	mCount++;
 	if (mCount < 30) {
@@ -152,13 +156,11 @@ void CEnemy3::Move4() {
 
 	}
 }
-
+//死亡
 void CEnemy3::Death() {
 	CSceneGame* tSceneGame = CSceneGame::GetInstance();
-	
 	//体力がなくなったら
 	if (mHp <= 0) {
-		//mTimeとmJumpに整数が代入され、吹っ飛ぶようになる
 		mPosition.mY += mJump;
 		if (mJump >= -1.0f) {
 			mJump -= G;
@@ -168,9 +170,7 @@ void CEnemy3::Death() {
 			//エフェクト生成
 			new CEffect2(mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2, false, &mRotation);
 		}
-
 		CTransform::Update();
-
 	}
 	//吹き飛ぶ（X,Z軸)
 	if (mColliderCount > 0) {
@@ -179,12 +179,9 @@ void CEnemy3::Death() {
 		mPosition.mZ = mPosition.mZ + mCollisionEnemy.mZ * mColliderCount;
 	}
 	if (mHp <= -300) {
-		
 		mEnabled = false;
 		tSceneGame->mEnemy3Count--;
 		tSceneGame->mEnemy3CountStopper--;
-
-		
 	}
 	
 }
@@ -405,10 +402,12 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 			}
 		}
 		if (o->mType == CCollider::ETRIANGLE) {
+			 //プレイヤーが近くにいる場合
 			if (mMoveCount == 1) {
 				CVector adjust;//調整値
 				//三角コライダと球コライダの衝突判定
 				//adjust、、、調整値
+				//体力が0のとき
 				if (mState == EDEATH) {
 					if (CCollider::CollisionTriangleSphere(o, m, &adjust))
 					{

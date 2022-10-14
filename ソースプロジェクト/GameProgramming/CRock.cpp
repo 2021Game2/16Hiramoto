@@ -22,7 +22,7 @@ CRock::CRock(const CVector& position, const CVector& rotation, const CVector& sc
 	mPriority = 2;
 	CTaskManager::Get()->Remove(this);//削除して
 	CTaskManager::Get()->Add(this);//追加する
-	 CTransform::Update();//行列の更新
+	CTransform::Update();//行列の更新
 	 
 	//モデルのポインタ設定
 	mpModel = &mModel;
@@ -34,19 +34,9 @@ CRock::CRock(const CVector& position, const CVector& rotation, const CVector& sc
     mTag = EROCK;
 }
 void CRock::Collision(CCollider* m, CCollider* o) {
-	m->mpParent->mTag = EROCK;
 
 }
 void CRock::Update() {
-
-	//左向き（X軸）のベクトルを求める
-	CVector vx = CVector(1.0f, 0.0f, 0.0f) * mMatrixRotate;
-	//上向き（Y軸）のベクトルを求める
-	CVector vy = CVector(0.0f, 1.0f, 0.0f) * mMatrixRotate;
-	//前方向（Z軸）のベクトルを求める
-	CVector vz = CVector(0.0f, 0.0f, 1.0f) * mMatrixRotate;
-
-
 	//CCharacterの更新
 	CTransform::Update();
 }
@@ -54,7 +44,4 @@ void CRock::Update() {
 void CRock::Render() {
 	//親の描画処理
 	CCharacter::Render();
-}
-void CRock::TaskCollision() {
-	
 }

@@ -18,12 +18,12 @@
 #define COLLIDERCOUNT2 1.5f
 #define VELOCITY2 0.1f
 #define VELOCITY3 0.2f
-#define JUMP 4.0f
+#define FIRECOUNT 1	//発射間隔
+
+#define JUMP 2.0f
 #define G 0.1f
 #define PLAYERSPPOINT_MAX 30
-
- extern CSound Enemy3Fry;
-
+extern CSound Enemy3Fry;
 CModel CEnemy3::mModel;//モデルデータ作成
 //デフォルトコンストラクタ
 //敵（ハチ）
@@ -33,20 +33,22 @@ CEnemy3::CEnemy3()
 	,mColSearch2(this, &mMatrix, CVector(0.0f, 0.0f, 0.0f),70.0f)
 	,mpPlayer(0)
 	,mMoveCount (0)
-	,mJump(0)
 	,mJump2(0)
 	,mMove2(0)
 	,mColliderCount(0)
 	,mCount(0)
 	,mFireCount(0)
 	,mEnemy3Fry(0)
+	,mStopCount(0)
 	,mEnemyDamage(60)
+	,mJump(0.0f)
 	,mHp(HP)
-	, mState(EIDLE)
+	, mDeathSwitch(false)
+	
 {
 	mRotation.mY += 90.0f;
 	mTag = EENEMY3;
-	
+	mState = EIDLE;
 	//モデルが無いときは読み込む
 	if (mModel.mTriangles.size() == 0) {
 		mModel.Load(OBJ, MTL);
@@ -78,16 +80,16 @@ void CEnemy3::Idle() {
 
 	mCount++;
 	//０から６０フレーム
-	if (mCount < 60) {
-		if (mCount >= 0) {
+	if (mCount < 20) {
+		
 			mPosition.mY -= 0.5f;
-		}
+		
 	}
 	//６０から１２０フレーム
-	else if (mCount < 120) {
+	else if (mCount < 40) {
 		mPosition.mY += 0.5f;
 	}
-	else if (mCount >= 120) {
+	else if (mCount >= 40) {
 		mCount = 0;
 		if (mColSearch2.mRenderEnabled == false) {
 			mState = EMOVE1;
@@ -150,36 +152,41 @@ void CEnemy3::Move4() {
 
 	}
 }
-void CEnemy3::Attack() {
 
-}
 void CEnemy3::Death() {
 	CSceneGame* tSceneGame = CSceneGame::GetInstance();
-	if (mHp <= -70) {
+	
+	//体力がなくなったら
+	if (mHp <= 0) {
+		//mTimeとmJumpに整数が代入され、吹っ飛ぶようになる
+		mPosition.mY += mJump;
+		if (mJump >= -1.0f) {
+			mJump -= G;
+		}
+			//15フレームごとにエフェクト
+		if (mEffectCount % 15 == 0) {
+			//エフェクト生成
+			new CEffect2(mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2, false, &mRotation);
+		}
+
+		CTransform::Update();
+
+	}
+	//吹き飛ぶ（X,Z軸)
+	if (mColliderCount > 0) {
+		mColliderCount--;
+		mPosition.mX = mPosition.mX + mCollisionEnemy.mX * mColliderCount;
+		mPosition.mZ = mPosition.mZ + mCollisionEnemy.mZ * mColliderCount;
+	}
+	if (mHp <= -300) {
+		
 		mEnabled = false;
 		tSceneGame->mEnemy3Count--;
 		tSceneGame->mEnemy3CountStopper--;
-	}
-	if (mJump > 0) {
-		mJump--;
-	}
-	//吹き飛ぶ(X軸方向）
-	if (mColliderCount > 0) {
-		mColliderCount--;
 
+		
 	}
-	//吹き飛ぶ（Y軸方向）
-	if (mJump2 > 0) {
-		mPosition.mY += mJump;
-		mJump2--;
-	}
-	mHp--;
-	//15フレームごとにエフェクト
-	if (mHp % 15 == 0) {
-		//エフェクト生成
-		new CEffect2(mPosition, 1.0f, 1.0f, CEffect2::EFF_EXP, 4, 4, 2, false, &mRotation);
-	}
-	CTransform::Update();
+	
 }
 //更新処理
 void CEnemy3::Update() {
@@ -201,11 +208,6 @@ void CEnemy3::Update() {
 	case EMOVE4://移動４（右前に移動（元の位置に戻る）
 		Move4();
 		break;
-	
-	case EATTACK://攻撃
-		Attack();
-		break;
-	
 	case EDEATH://死亡
 		Death();
 		break;
@@ -239,13 +241,17 @@ void CEnemy3::Update() {
 		mRotation.mY -= 3.0f;//右へ回転
 	}
 	if (dy > margin) {
-		mRotation.mX -= 3.0f;
+		if (mRotation.mX > -30.0f) {
+		    mRotation.mX -= 3.0f;//上へ回転
+		}
 	}
-	else if (dy < -margin) {
-		mRotation.mX += 3.0f;
+	else if (dy < -margin) {//下へ回転
+		if (mRotation.mX < 30.0f) {
+			mRotation.mX += 3.0f;
+		}
 	}
-	CTransform::Update();//行列更新
-	int r = rand() % 30; //rand()は整数の乱数を返す
+
+	int r = rand() % 10; //rand()は整数の乱数を返す
 	//%180は１８０で割った余りを求める
 	if (r == 0) {
 		mPoint = CVector(tPlayer->mPosition.mX, tPlayer->mPosition.mY+3.0f, tPlayer->mPosition.mZ);
@@ -267,6 +273,11 @@ void CEnemy3::Update() {
 		mColliderCount--;
 		mPosition = mPosition + mCollisionEnemy * mColliderCount;
 	}
+
+	
+	mEffectCount--;
+
+	CTransform::Update();
 }
 //Collision(コライダ１，コライダ２，）
 void CEnemy3::Collision(CCollider* m, CCollider* o) {
@@ -306,19 +317,21 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 					//衝突しているとき
 					if (CCollider::Collision(m, o)) {
 						//親をCXPlayerを元にポインタ化し、変数を参照
-						if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
+						if (((CXPlayer*)(o->mpParent))->GetAttackHit() == true)
 						{
-							if (((CXPlayer*)(o->mpParent))->mSpAttack < PLAYERSPPOINT_MAX) {
-
+							if (((CXPlayer*)(o->mpParent))->GetSpAttack() < PLAYERSPPOINT_MAX) {
 								((CXPlayer*)(o->mpParent))->CXPlayer::SpAttackPoint();
 							}
+
+							mEffectCount = 0;
 							mColliderCount = COLLIDERCOUNT;
 							mCollisionEnemy = mPosition - o->mpParent->mPosition;
 							mCollisionEnemy.mY = 0;
 							mCollisionEnemy = mCollisionEnemy.Normalize();
-							mJump = JUMP;
-							mHp--;
+							
+							mHp--; 
 							if (mHp <= 0) {
+								mJump = JUMP;
 								mState = EDEATH;
 							}
 						}
@@ -328,34 +341,48 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 			   //相手がEPLAYERBODY(プレイヤーの体のコライダ）の時
 		       if (o->mTag == CCollider::EPLAYERBODY) {
 					if (CCollider::Collision(m, o)) {
-			
-						//これ以上前に進めなくなる
-						mColliderCount = 10.0f;
-						mCollisionEnemy = mPosition - o->mpParent->mPosition;
-						mCollisionEnemy = mCollisionEnemy.Normalize();
+						mStopCount++;
+						if (mStopCount>=120) {
+							mStopCount = 0;
+							//これ以上前に進めなくなる
+							mColliderCount = 10.0f;
+							mCollisionEnemy = mPosition - o->mpParent->mPosition;
+							mCollisionEnemy = mCollisionEnemy.Normalize();
+
+					    }
 					}
 		       }
-				break;
-			case(EITEM):
-				 if (o->mTag == CCollider::EITEMCOLLIDER) {
+				
+				if (o->mTag == CCollider::EITEMCOLLIDER) {
 					//衝突しているとき
 					if (CCollider::Collision(m, o)) {
+						//プレイヤーの当たり判定が有効なとき
+						//親をCXPlayerを元にポインタ化し、変数を参照
 						if (((CItem*)(o->mpParent))->mItemAttackHit == true)
-						{
-
-							mColliderCount = COLLIDERCOUNT;
-							mCollisionEnemy = mPosition - o->mpParent->mPosition;
-							mCollisionEnemy.mY = 0;
-							mCollisionEnemy = mCollisionEnemy.Normalize();
-							mJump = JUMP;
-							mHp--;
-							if (mHp <= 0) {
-
+						{//ヒットバック＆ダメージを受ける
+								//プレイヤーのジャンプ攻撃必要ポイント増加
+							if (((CXPlayer*)(o->mpParent))->GetSpAttack() < PLAYERSPPOINT_MAX) {
+								((CXPlayer*)(o->mpParent))->SpAttackPoint();
+							}
+							mEffectCount = 0;
+							//体力減少 
+							if (mState != EDEATH) {
+								mHp = 0;
 								mState = EDEATH;
 							}
+							//ヒットバック付与 
+							mColliderCount = 1.5f;
+							mCollisionEnemy = mPosition - o->mpParent->mPosition;
+							//HPが0のとき以外は前後左右に吹っ飛ぶ
+							mCollisionEnemy.mY = 0;
+							mCollisionEnemy = mCollisionEnemy.Normalize();
+							if (mHp <= 0) {
+								mJump = JUMP;
+							}
+
 						}
 					}
-				 }
+				}
 				break;
 			case(EENEMY2):
 				if (o->mTag == CCollider::EENEMY2COLLIDERBODY) {
@@ -382,11 +409,17 @@ void CEnemy3::Collision(CCollider* m, CCollider* o) {
 				CVector adjust;//調整値
 				//三角コライダと球コライダの衝突判定
 				//adjust、、、調整値
-				if (CCollider::CollisionTriangleSphere(o, m, &adjust))
-				{
+				if (mState == EDEATH) {
+					if (CCollider::CollisionTriangleSphere(o, m, &adjust))
+					{
+						mHp--;
+						
+						
 						//衝突しない位置まで戻す
-						//mPosition = mPosition + adjust;
+						mPosition = mPosition + adjust;
+					}
 					
+
 				}
 			}
 			

@@ -2,7 +2,6 @@
 #define CBOSS_H
 //キャラクタクラスのインクルード
 #include"CCharacter.h"
-
 #include "CXCharacter.h"
 //コライダクラスのインクルード
 #include"CCollider.h"
@@ -13,48 +12,8 @@
 /*エネミークラス
 キャラクタクラスを継承	*/
 class CBoss :public CXCharacter {
-private:
-    CText mText;
-	CVector mPoint;//目標地点
-	CCollider mColSphereHead;
-	CCollider mColSphereRightFront;
-	CCollider mColSphereLeftFront;
-	CCollider mColSphereAttack;
-	CEffect2* mBossEffect;
-	CVector mCollisionEnemy;
-	CVector mJumpCount;
-	CCharacter* mpPlayer;//プレイヤーのポインタ
-	CText mFont;
-	char buf[64];
-	bool mBossBgm;
-	bool mBossBgmDeath;
-	bool mColSearchCount;
-	bool mJumpStopper;
-	int mMove;
-	int mMove2;
-	int mBossDamageCount;
-	int mEnemy2StopCount;//プレイヤーのESTOPPERに当たっている間増加
-    int mAttackPercent;
-	int mEnemyDamage;
-	int mBossJumpCount;
-	int  mBossColliderCheck;
-	int mAttack4MoveCount;
-	int mAttack4Count;
-	int mAttack4directionCount;
-	int mEffectCount;
-	int mBossAttackMove;
-	float mJump;
-	float mJumpZ;
-	float mColliderCount;
-	float mGravity;//重力
-	float mTime;//ジャンプする時の時間を計測
-	float mAttack4MoveX;
-	float mAttack4MoveZ;
-	float mAttack4RotationCount;
-	float mAttackRotation;
-	float mRotationCount;
-	CTexture mImageGauge; //ゲージ画像
-						  //敵の状態
+public:
+//敵の状態
 	enum EBossState
 	{
 		EIDLE,		//待機
@@ -67,24 +26,69 @@ private:
 		EDEATH,		//死亡
 		
 	};
+private:
+    CText mText;
+	CVector mPoint;//目標地点
+	CCollider mColSphereHead;
+	CCollider mColSphereRightFront;
+	CCollider mColSphereLeftFront;
+	CCollider mColSphereAttack;
+	CCollider mColSearch;//サーチ用コライダ
+	CEffect2* mBossEffect;
+	CVector mCollisionEnemy;
+	CVector mJumpCount;
+	CCharacter* mpPlayer;//プレイヤーのポインタ
+	CText mFont;
+	CTexture mImageGauge; //ゲージ画像
+	char buf[64];
+	bool mBossBgm;
+	bool mBossBgmDeath;
+	bool mColSearchCount;
+	bool mJumpStopper;
+	bool mBossGaugeSwitch;
+	bool mBossStopper;
+	bool mBossAttackHit;
+	int mHp;//体力
+	int mMove;
+	int mMove2;
+	int mBossDamageCount;
+	int mEnemy2StopCount;//プレイヤーのESTOPPERに当たっている間増加
+    int mAttackPercent;
+	int mEnemyDamage;
+	int mBossJumpCount;
+	int mBossColliderCheck;
+	int mAttack4MoveCount;
+	int mAttack4Count;
+	int mAttack4directionCount;
+	int mEffectCount;
+	int mBossAttackMove;
+	int mBossPositionLengthCount;//ボスの行動範囲を計測
+	float mJump;
+	float mJumpZ;
+	float mColliderCount;
+	float mTime;//ジャンプする時の時間を計測
+	float mAttack4MoveX;
+	float mAttack4MoveZ;
+	float mAttack4RotationCount;
+	float mAttackRotation;
+	float mRotationCount;
+	float mBossPositionLengthX;//ボスの行動範囲のX軸
+	float mBossPositionLengthZ;//ボスの行動範囲のZ軸
+	float mBossPositionLengthSum;//ボスの行動範囲の半径
+	float mBossCircle;//ボスの行動範囲
 public:
 
 	EBossState mState;
-	CCollider mColSearch;//サーチ用コライダ
 	//モデルデータ
 	static CModel mModel;
 	static CBoss* GetInstance();
 	static CBoss* mpBossInstance;
-	bool mBossAttackHit;
-	
-	 int mHp;//体力
-	 void SetHp(int hp) {
-		 if (hp < 0) return;
-		 this->mHp = hp;
-	 }
-	 int GetHp() {
+	bool GetBossAttackHit() {
+		return mBossAttackHit;
+	}
+	int GetHp() {
 		 return mHp;
-	 }
+	}
 	//コンストラクタ	
 	CBoss();
 	//CEnemy2(位置、回転、拡縮）
@@ -96,14 +100,14 @@ public:
 	//衝突処理
 	void Collision(CCollider* m, CCollider* o);
 	void TaskCollision();
-	void Idle();		//待機処理
-	void AutoMove();	//移動処理
-	void Attack();	//攻撃処理
-    void Attack2();
-	void Attack3();
-	void Attack4();
-	void Damaged();		//被弾処理
-	void Death();		//死亡処理
+	void Idle();//待機処理
+	void AutoMove();//移動処理
+	void Attack();//攻撃処理1
+    void Attack2();//攻撃処理2
+	void Attack3();//攻撃処理3
+	void Attack4();//攻撃処理4
+	void Damaged();//被弾処理
+	void Death();//死亡処理
 	
 	
 };

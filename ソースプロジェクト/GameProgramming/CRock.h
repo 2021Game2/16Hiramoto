@@ -8,6 +8,7 @@ class CRock : public CCharacter {
 private:
 
 public:
+
 	CColliderMesh mColliderMesh;//岩の３Dモデルのコライダ
 	//モデルデータ
 	static CModel mModel;
@@ -16,9 +17,7 @@ public:
 	//更新処理
 	void Update();
 	//衝突処理
-
 	void Collision(CCollider* m, CCollider* o);
-	void TaskCollision();
 	void Render();
 };
 #endif

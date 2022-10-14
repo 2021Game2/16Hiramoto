@@ -60,7 +60,8 @@ void CEnemySummon::Update() {
 void CEnemySummon::Damage() {
 	if (mEffectCount % 15 == 0) {
 		//エフェクト生成
-		new CEffect2(mPosition, 5.0f, 5.0f, CEffect2::EFF_EXP, 4, 4, 2);
+		CXPlayer* tPlayer = CXPlayer::GetInstance();
+		new CEffect2(tPlayer->GetSwordColPos(), 5.0f, 5.0f, CEffect2::EFF_EXP, 4, 4, 2);
 	}
 }
 //Collision(コライダ１、コライダ２）
@@ -73,7 +74,7 @@ void CEnemySummon::Collision(CCollider* m, CCollider* o) {
 						//衝突しているとき
 						if (CCollider::Collision(m, o)) {
 							//プレイヤーの当たり判定が有効なとき
-							if (((CXPlayer*)(o->mpParent))->mAttackHit == true) {
+							if (((CXPlayer*)(o->mpParent))->GetAttackHit() == true) {
 								if (mDamageCount <= 0) {
 									//爆発エフェクト付与
 									 CEnemySummon::Damage();

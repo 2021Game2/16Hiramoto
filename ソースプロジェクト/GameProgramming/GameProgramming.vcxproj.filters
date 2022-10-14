@@ -210,6 +210,9 @@
     <ClCompile Include="CShadowMap.cpp">
       <Filter>ソース ファイル\Base\サウンド,エフェクト,テクスチャ</Filter>
     </ClCompile>
+    <ClCompile Include="CBossStage.cpp">
+      <Filter>ソース ファイル\Base\マップ</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -282,9 +285,6 @@
       <Filter>ヘッダー ファイル\Base\敵関係</Filter>
     </ClInclude>
     <ClInclude Include="CEnemy3.h">
-      <Filter>ヘッダー ファイル\Base\敵関係</Filter>
-    </ClInclude>
-    <ClInclude Include="CEnemyManager.h">
       <Filter>ヘッダー ファイル\Base\敵関係</Filter>
     </ClInclude>
     <ClInclude Include="CEnemySummon.h">
@@ -364,6 +364,9 @@
     </ClInclude>
     <ClInclude Include="CShadowMap.h">
       <Filter>ヘッダー ファイル\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="CBossStage.h">
+      <Filter>ヘッダー ファイル\Base\マップ</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

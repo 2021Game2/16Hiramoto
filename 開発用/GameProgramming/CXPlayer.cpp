@@ -362,6 +362,12 @@ void CXPlayer::Update()
 			  mColliderSwordSp.mRenderEnabled = true;
 		    }
 	    }
+		if (mAnimationFrame >= mAnimationFrameSize/10) {
+			if (mState == EATTACK3) {
+		    	mAttackHit = false;
+
+			}
+		}
 		if (mAnimationFrame >= mAnimationFrameSize)
 		{
 			if (mState == EATTACKSP) {
@@ -471,7 +477,6 @@ void CXPlayer::Update()
 						else {
 							speed = 0.2f;//ƒXƒs[ƒh1/2
 						}
-				
 				}
 			}
 			//‚P¨‚Q¨‚R¨‚P   UŒ‚‚Ì‡”Ô‚ªƒ‹[ƒv
@@ -774,6 +779,34 @@ void CXPlayer::Collision(CCollider* m, CCollider* o) {
 									mPosition = mPosition + adjust;
 								}
 							}
+					}
+					//e‚ª“G‚R
+					else if (o->mpParent->mTag == EENEMY3) {
+						//ƒ{ƒX‚ÌUŒ‚•”ˆÊ‚Æ‚ÌÕ“Ë”»’è
+						if (o->mTag == CCollider::EENEMY3COLLIDERBODY) {
+							if (CCollider::Collision(m, o)) {
+								//ƒ_ƒ[ƒW‚ª“ü‚Á‚½‚ ‚Æ‚Ì–³“GŽžŠÔ
+								if (mDamageCount == 0 && mState != EESCAPE) {
+									if (((CEnemy3*)(o->mpParent))->GetHp() > 0) {
+
+										if (mHp > 0) {
+											//Œã‚ë‚É‰º‚ª‚é
+											mColliderCount = 1.0f;
+											mCollisionEnemy = mPosition - o->mpParent->mPosition;
+											mCollisionEnemy.mY = 0;
+											mCollisionEnemy = mCollisionEnemy.Normalize();
+											//‘Ì—ÍŒ¸­
+											mHp--;
+											//–³“GŽžŠÔ•t—^
+											mDamageCount = 30;
+											//ƒ_ƒ[ƒWŽž‚Ìˆ—ŠJŽn
+											mDamageVoise = true;
+											mState = EDAMAGED;
+										}
+									}
+								}
+							}
+						}
 					}
 					//e‚ªƒ{ƒX
 					else if (o->mpParent->mTag == EBOSS) {

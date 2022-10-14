@@ -37,7 +37,7 @@ void CTarget::Update() {
 	CXPlayer* tPlayer = CXPlayer::GetInstance();
 	CBoss* tBoss = CBoss::GetInstance();
 	CFlag* tFlag = CFlag::GetInstance();
-	if (tPlayer->mHp > 0) {
+	if (tPlayer->GetHp() > 0) {
 		mPosition.mX = tPlayer->mPosition.mX;
 		mPosition.mY = tPlayer->mPosition.mY + 4.0f;
 		mPosition.mZ = tPlayer->mPosition.mZ - 1.0f;
@@ -47,7 +47,7 @@ void CTarget::Update() {
 	else {
 		mEnabled = false;
 	}
-	mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
+	//mPosition = mPosition + CVector(0.0f, 0.0f, VELOCITY) * mMatrixRotate;
 	//左向き（X軸）のベクトルを求める
 	CVector vx = CVector(1.0f, 0.0f, 0.0f) * mMatrixRotate;
 	//上向き（Y軸）のベクトルを求める
@@ -61,30 +61,43 @@ void CTarget::Update() {
 	float dx = vp.Dot(vx);
 	float dy = vp.Dot(vy);
 	float margin = 0.1f;
+	float margin3 = 3.0f;
 	float margin2 = 1.0f;
 	float marginX = 0.7f;
 	//左右方向へ回転
 	if (dx > margin) {
 		if (dx > margin2) {
+			if (dx > margin3) {
+				mRotation.mY += 3.0f;//左へ回転
+			}
 			mRotation.mY += 1.0f;//左へ回転
 		}
 		mRotation.mY += 0.1f;//左へ回転
 
 	}
 	else if (dx < -margin) {
-		if (dx < -margin2) {
+	   if (dx < -margin2) {
+			if (dx < -margin3) {
+				mRotation.mY -= 3.0f;
+			}
 			mRotation.mY -= 1.0f;
-		}
+	   }
 		mRotation.mY -= 0.1f;//右へ回転
 	}
 	if (dy > marginX) {
 		if (dy > margin2) {
+			if (dy > margin3) {
+				mRotation.mX -= 3.0f;
+			}
 			mRotation.mX -= 1.0f;
 		}
 		mRotation.mX -= 0.1f;
 	}
 	else if (dy < -marginX) {
 		if(dy < -margin2){
+			if (dy < -margin3) {
+				mRotation.mX += 3.0f;
+			}
 			mRotation.mX += 1.0f;
          }
 		mRotation.mX += 0.1f;
@@ -92,10 +105,10 @@ void CTarget::Update() {
 	
 	if (tSceneGame->mBossGaugeSwitch == true) {
 
-		mPoint = tBoss->mPosition;
+		mPoint = CVector(tBoss->mPosition.mX, tBoss->mPosition.mY+3.0f, tBoss->mPosition.mZ);
 	}
 	else {
-		mPoint = tFlag->mPosition;
+		mPoint = CVector(tFlag->mPosition.mX, tFlag->mPosition.mY + 4.0f , tFlag->mPosition.mZ);
 	}
 	//CCharacterの更新
 	CTransform::Update();

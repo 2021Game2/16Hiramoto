@@ -25,20 +25,24 @@ CEnemy2::CEnemy2()
 	,mMove(0)
 	,mEnemyVoice(0)
 	,mDamageCount(0)
-	,mEnemyLevel(0)
+	, mEnemy2StopCount(0)
+	, mEffectCount(0)
 	,mEnemyDamage(60)
 	,mTime(0.0f)
 	,mJump(0.0f)
+	, mRotationCount(0.0f)
+	, mPlayerMarkingX(0.0f)
+	, mPlayerMarkingZ(0.0f)
 	,mColliderCount(0.0f)
-	,mEnemyHpPercent(1.0f)
-	,mMoveCount(false)
 	,mEnemy2AttackHit(false)
 	,mHp(HP)
 	
 {
 	mTag = EENEMY2;
 	mColSphereRight.mTag= CCollider::EENEMY2COLLIDERATTACK;
+	mColSphereRight.mRenderEnabled = false;
 	mColSphereLeft.mTag= CCollider::EENEMY2COLLIDERATTACK;
+	mColSphereLeft.mRenderEnabled = false;
 	mColSphereBody.mTag = CCollider::EENEMY2COLLIDERBODY;
 }
 
@@ -57,7 +61,6 @@ CEnemy2::CEnemy2(const CVector& position, const CVector& rotation, const CVector
 	mPriority = 1;
 	CTaskManager::Get()->Remove(this);//削除して
 	CTaskManager::Get()->Add(this);//追加する
-	
 	mEnabled = true;
 }
 
@@ -75,7 +78,7 @@ void CEnemy2::Idle() {
 	    //60溜まるまで待機のアニメーション
 		ChangeAnimation(8, true, 60);
 		mMove++;
-		if (mMove >= 300) {
+		if (mMove >= 180) {
 			//60溜まった状態でアニメーションが終わると攻撃処理に移行
 			if (mAnimationFrame >= mAnimationFrameSize)
 			{
@@ -84,9 +87,9 @@ void CEnemy2::Idle() {
 		}
 		//60溜まる前にアニメーションが終わったら移動処理に移行
 	    else if (mAnimationFrame >= mAnimationFrameSize) {
-			if (mMoveCount == true) {
+			
              mState = EAUTOMOVE;
-			}
+			
 		}
 }		
 //移動処理
@@ -130,12 +133,15 @@ void CEnemy2::AutoMove() {
 }	
 //攻撃処理
 void CEnemy2::Attack() {
+	mColSphereRight.mRenderEnabled = true;
+	mColSphereLeft.mRenderEnabled = true;
 	    //攻撃アニメーション
 		ChangeAnimation(4, false, 120);
 		if (mAnimationFrame >= mAnimationFrameSize) {
 			mMove = 0;
 			mState = EAUTOMOVE;//攻撃のアニメーションのあとは移動のアニメーションに切り替わる
-        
+			mColSphereRight.mRenderEnabled = false;
+			mColSphereLeft.mRenderEnabled = false;
 		}
 }	
 //ダメージ処理
@@ -177,7 +183,7 @@ void CEnemy2::Death() {
 		if (mJump >= -0.5f) {
 			mJump -= G;
 		}
-		mHp--;
+		
 		//15フレームごとにエフェクト
 		if (mEffectCount % 15 == 0) {
 			//エフェクト生成
@@ -192,11 +198,12 @@ void CEnemy2::Death() {
 		mPosition.mZ = mPosition.mZ + mCollisionEnemy.mZ * mColliderCount;
 	}
 	//しばらく経ったら消去
-	if (mHp <= -120) {
-		mEnabled = false;
+	if (mHp <= -300) {
+		  mEnabled = false;
+		  tSceneGame->mEnemy2Count --;
+		  tSceneGame->mEnemy2CountStopper--;
 
-		tSceneGame->mEnemy2Count --;
-		tSceneGame->mEnemy2CountStopper--;
+		
 	}
 }		
 
@@ -268,20 +275,21 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 
 		if (o->mType == CCollider::ESPHERE) {
 
-			if (o->mpParent->mTag == EPLAYER|| o->mpParent->mTag == EITEM) {
+			if (o->mpParent->mTag == EPLAYER) {
 				//相手がプレイヤーの武器のとき
 				if (o->mTag == CCollider::EPLAYERSWORD) {
 					//衝突しているとき
 					if (CCollider::Collision(m, o)) {
 						//プレイヤーの当たり判定が有効なとき
 						//親をCXPlayerを元にポインタ化し、変数を参照
-						if (((CXPlayer*)(o->mpParent))->mAttackHit == true)
+						if (((CXPlayer*)(o->mpParent))->GetAttackHit() == true)
 						{//ヒットバック＆ダメージを受ける
 							if (mDamageCount <= 0) {
 								//プレイヤーのジャンプ攻撃必要ポイント増加
 
-								if (((CXPlayer*)(o->mpParent))->mSpAttack < PLAYERSPPOINT_MAX) {
-									((CXPlayer*)(o->mpParent))->CXPlayer::SpAttackPoint();
+								CXPlayer* tPlayer = CXPlayer::GetInstance();
+								if (tPlayer->GetSpAttack() < PLAYERSPPOINT_MAX) {
+									tPlayer->CXPlayer::SpAttackPoint();
 								}
 								mEffectCount = 0;
 								//体力減少 
@@ -292,17 +300,13 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 								mCollisionEnemy = mPosition - o->mpParent->mPosition;
 								mCollisionEnemy.mY = 0;
 								mCollisionEnemy = mCollisionEnemy.Normalize();
-								
 							    //ダメージ処理に移行
 								if (mHp > 0) {
-
 								  mState = EDAMAGED;
-
 								}
 								else if (mHp <= 0) {
 									mJump = JUMP;
 									mState = EDEATH;
-
 								}
 							}
 						}
@@ -316,26 +320,26 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 						if (((CItem*)(o->mpParent))->mItemAttackHit == true)
 						{//ヒットバック＆ダメージを受ける
 								//プレイヤーのジャンプ攻撃必要ポイント増加
-							if (((CXPlayer*)(o->mpParent))->mSpAttack < PLAYERSPPOINT_MAX) {
+							CXPlayer* tPlayer = CXPlayer::GetInstance();
+							if (tPlayer->GetSpAttack() < PLAYERSPPOINT_MAX) {
 
-								((CXPlayer*)(o->mpParent))->mSpAttack++;
+							  tPlayer->SpAttackPoint();
 							}
 								mEffectCount = 0;
 								//体力減少 
-								mHp = 0;
+								if (mState != EDEATH) {
+								 mHp = 0;
+								 mState = EDEATH;
+								}
 								//ヒットバック付与 
 								mColliderCount = 1.5f;
 								mCollisionEnemy = mPosition - o->mpParent->mPosition;
-								//HPが０のとき以外は前後左右に吹っ飛ぶ
+								//HPが0のとき以外は前後左右に吹っ飛ぶ
 								mCollisionEnemy.mY = 0;
 								mCollisionEnemy = mCollisionEnemy.Normalize();
-								//ダメージ処理に移行
-								if (mHp > 0) {
-									mState = EDAMAGED;
-								}
-								else if (mHp <= 0) {
+								
+							    if (mHp <= 0) {
 									mJump = JUMP;
-									mState = EDEATH;
 								}
 							
 						}
@@ -346,7 +350,7 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 					if (CCollider::Collision(m, o)) {
 						//EIDLE（待機状態）
 						if (mState != EATTACK) {
-							if (mState != EIDLE) {
+							if (mState != EDEATH) {
 								mState = EIDLE;
 							}
 
@@ -368,6 +372,9 @@ void CEnemy2::Collision(CCollider* m, CCollider* o) {
 			//adjust、、、調整値
 				if (CCollider::CollisionTriangleSphere(o, m, &adjust))
 				{
+					if (mState == EDEATH) {
+						mHp--;
+					}
 						//衝突しない位置まで戻す
 						mPosition = mPosition + adjust;
 				}

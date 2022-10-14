@@ -14,7 +14,7 @@ public:
 	void SetEnabled(bool Enabled) {
 		mEnabled = Enabled;
 	}
-	bool mRenderEnabled;//表示フラグ
+	bool mRenderEnabled=true;//表示フラグ
 
 	bool mIsEffectTask; //エフェクト管理フラグ
 	//デフォルトコンストラクタ

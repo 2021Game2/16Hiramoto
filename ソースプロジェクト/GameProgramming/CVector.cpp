@@ -46,9 +46,15 @@ float CVector::Dot(const CVector &v) {
 	return mX*v.mX + mY*v.mY + mZ * v.mZ;
 }
 
+#define EPS 1.0e-6f
 CVector CVector::Normalize() {
 	//ベクトルの大きさで割ったベクトルを返す（長さ1のベクトル）
-	return *this * (1.0f / Length());
+	float length = Length();
+	if (length < EPS) {
+		CVector ZeroVec;
+		return ZeroVec;
+	}
+	return *this * (1.0f / length);
 }
 //外積
 CVector CVector::Cross(const CVector &v) {

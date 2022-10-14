@@ -6,6 +6,7 @@
 #include "CBillBoard2.h"
 #include "CSound.h"
 #include "CMap.h"
+#include"CBossStage.h"
 #include"CEnemySummon.h"
 #include"CEnemy2.h"
 #include"CBillBoard2.h"
@@ -34,6 +35,7 @@ private:
 	//キャラクタのインスタンス
 	CXPlayer* mpPlayer;//プレイヤー
 	CRock*mpRock;//周りの岩
+	CBossStage* mpBossStage;
 	CMap* mpMap;//フィールド
 	CFlag* mpFlag;//旗
 	//敵のインスタンス
@@ -63,7 +65,7 @@ private:
 	std::vector<CEnemy3*> mEnemy3List;//Enemy3専用の部屋を作る
 	 int mSpawn;//敵2が生成されるまでの時間
 	 int mSpawn2;//敵3が生成されるまでの時間
-	 int mTimeCount;
+	
 	 bool mSceneChange;//シーンの切り替え
 
 	 bool mBgmStartStopper;//BGMを止める
@@ -75,19 +77,27 @@ private:
 	 bool mGameClear;
 	 bool mGameOver;
 	 bool mCountStart; //クリア時間計測開始用
-
 	
 	 int mTimeMinute; 
 	 //staticでポインタを作る
 	 static CSceneGame* mpSceneGameInstance;
 	
 public: 
+	CVector mBossStageCenter;
+	CVector mBossStageEnd;
+	float mBossStageLengthX;//ボスの行動範囲のX軸の長さ
+	float mBossStageLengthZ;//ボスの行動範囲のZ軸の長さ
+	float mBossStageLengthSum;//ボスの行動範囲の半径
+	float mBossStageCircle;//ボスの行動可能範囲
 	 float mClearTime;
 	 bool mEnemy2Bgm;
 	 bool mBgmCountCheck;
 	 bool mVoiceSwitch;//BGM SEのオンオフ切り替え 
 	 bool mBossSwitch;
-     bool mBossGaugeSwitch;//BGMを流すか止めるか分けるフラグ
+     //ボス関係のゲージの表示・非表示
+	 //ボスの生成、削除の切り替え時に利用
+     bool mBossGaugeSwitch;
+	 bool mBossBattleStage;
 	 int mBgmCount;
 	void SetBgmCount(int v) {
 		if (v < 0) return;//< ここにブレークポイントを置けば誰が犯人なのかわかる
@@ -113,9 +123,9 @@ public:
 		return mEnemy2Count;
 	}
 	int mEnemy3Count;//今生成されている敵3の数
-	void SetEnemy3Count(int v) {
-		if (v < 0) return;//< ここにブレークポイントを置けば誰が犯人なのかわかる
-		this->mEnemy3Count = v;
+	void SetEnemy3Count(int Enemy3Count) {
+		if (Enemy3Count < 0) return;//< ここにブレークポイントを置けば誰が犯人なのかわかる
+		this->mEnemy3Count = Enemy3Count;
 	}
 	int GetEnemy3Count() {
 		return mEnemy3Count;

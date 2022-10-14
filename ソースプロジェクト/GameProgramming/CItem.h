@@ -7,36 +7,29 @@
 #include"CXPlayer.h"
 class CItem : public CCharacter {
 private:
+    int mItemCount;
 	//コライダ
 	CCollider mCollider;
 	CCollider mCollider2;
+	CCharacter* mpParent;//親へのポインタ
+	CCharacter* mpPlayer;//プレイヤーのポインタ
 public:
-	static bool mItemAttackHit;
-
+	void SetItemCount(int ItemCount) {
+		mItemCount = ItemCount;
+	}
+	 bool mItemAttackHit;
 	static CItem* mpItemInstance;
 	//staticで処理を作る
 	static CItem* GetInstance();
-	
 	//モデルデータ
 	static CModel mModel;
-    int mItemCount;
-	void SetItemCount(int ItemCount) {
-		if (ItemCount < 0)return;
-		mItemCount = ItemCount;
-	}
-	int GetItemCount() {
-		return mItemCount;
-	}
+	
 	CItem();
-	//親へのポインタ
-	CCharacter* mpParent;
-	CCharacter* mpPlayer;//プレイヤーのポインタ
-	//CEnemy2(位置、回転、拡縮）
+	//CItem(位置、回転、拡縮）
 	CItem(const CVector& position, const CVector& rotation, const CVector& scale);
 	//更新処理
 	void Update();
 	//衝突処理
-	//Collision(コライダ１、コライダ２）
 	void Collision(CCollider* m, CCollider* o);
 	void TaskCollision();
 	

@@ -45,6 +45,9 @@ private:
 	CCharacter* mpPlayer;//プレイヤーのポインタ
 	CCollider mColSearch2;//サーチ用コライダ
 public:
+	int GetHp() {
+		return mHp;
+	}
 	//モデルデータ
 	static CModel mModel;
 	//コンストラクタ

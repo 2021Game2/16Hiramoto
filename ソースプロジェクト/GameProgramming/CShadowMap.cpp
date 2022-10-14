@@ -6,7 +6,7 @@
 #include "CShadowMap.h"
 #include "CMatrix.h"
 #include"CXPlayer.h"
-
+#include"CSceneGame.h"
 
 CShadowMap::CShadowMap()
 	: mDepthTextureID(0)
@@ -166,19 +166,21 @@ void CShadowMap::Render()
 
 	//CXPlayerを使ったポインタにプレイヤーの情報を返す処理をさせる(CXPlayerの中の処理なのでポインタを作る必要あり）
 	//CXPlayer* tPlayer = CXPlayer::GetInstance();
-	//if (tPlayer) {
-	//mLightPos[0] = 0.0f;
-	//mLightPos[1] = 180.0f;
-	//mLightPos[2] =  -50.0f;
-		
-	//}
+	CSceneGame* tSceneGame = CSceneGame::GetInstance();
+	if (tSceneGame->mBgmCount == 3) {
+		mLightPos[0] = 4.0f;
+		mLightPos[1] = 150.0f;
+		mLightPos[2] = 34.0f;
+		gluLookAt(mLightPos[0], mLightPos[1], mLightPos[2], mLightPos[0] - 1, 0, mLightPos[2] - 1,36.0f, 1.0f, 150.0f);
+	}
+	else {
 	mLightPos[0] = -40.0f;
 	mLightPos[1] = 120.0f;
 	mLightPos[2] = -140.0f;
 	gluLookAt(mLightPos[0], mLightPos[1], mLightPos[2], 3.0f, 0.0f, -40.0f, 0.0f, 1.0f, 0.0f);
-	//gluLookAt(mLightPos[0], mLightPos[1], mLightPos[2], mLightPos[0] - 1, 0, mLightPos[2] - 1, -63.0, 1.0, -150.0);
-	// gluLookAt(mLightPos[0], mLightPos[1], mLightPos[2], mLightPos[0] - 1, 0, mLightPos[2] - 1, mLightPos[0], 0.0f, mLightPos[2]);
-	// gluLookAt(mLightPos[0], mLightPos[1], mLightPos[2], 3.0f, 0.0f, -40.0f, 0.0,1.0,0.0);
+	
+
+	}
 	
 	// 設定したモデルビュー変換行列を保存しておく //
 	glGetFloatv(GL_MODELVIEW_MATRIX, modelview.mM[0]);

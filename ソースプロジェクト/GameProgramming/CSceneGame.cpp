@@ -14,16 +14,15 @@
 #include"CFlag.h"
 #include"CFade.h"
 #define HP 10
-
-#define ENEMY2COUNT 2 //一度に出せる敵２の数
-#define ENEMY2MINCOUNT 4 //敵２を再生成させるときの敵２の数の下限
-#define ENEMY3COUNT 2//一度に出せる敵３の数
-#define ENEMY3MINCOUNT 4 //敵３を再生成させるときの敵３の数の下限
+#define ENEMY2COUNT 2//一度に出せる敵２の数
+#define ENEMY2MINCOUNT 1 //敵２を再生成させるときの敵２の数の下限
+#define ENEMY3COUNT 1//一度に出せる敵３の数
+#define ENEMY3MINCOUNT 0 //敵３を再生成させるときの敵３の数の下限
 #define HP_MAX 10	//体力最大値
 #define TEX_BUTTON "Resource\\png,tga\\MoveKey.png"
 #define TEX_BUTTON2 "Resource\\png,tga\\CKey.png"
 #define TEX_BUTTON3 "Resource\\png,tga\\Mouse.png"
-#define TEX_DUSH "Resource\\png,tga\\Dush.png"
+#define TEX_DUSH  "Resource\\png,tga\\Dush.png"
 #define TEX_WORK "Resource\\png,tga\\Work.png"
 #define BGMSTART "Resource\\BGM\\BGMSTART.wav" //BGM
 #define BGMBATTLE "Resource\\BGM\\BGMBATTLE.wav" //バトル中のBGM
@@ -46,6 +45,9 @@
 #define TEXWIDTH  8192  //テクスチャ幅
 #define TEXHEIGHT  6144  //テクスチャ高さ
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 CSound PlayerFirstAttack;
 CSound PlayerSecondAttack;
 CSound PlayerThirdAttack;
@@ -62,42 +64,44 @@ CSceneGame* CSceneGame::GetInstance()
 {
 	return mpSceneGameInstance;
 }
-CSceneGame::CSceneGame() 
-	:mTimeCount(0)
-	,mSpawn(0)
-    ,mSpawn2(0)
-	, mTimeMinute (0)
-	, mTimeSecond (0)
+CSceneGame::CSceneGame()
+	:mSpawn(0)//敵２の生成感覚
+    ,mSpawn2(0)//敵３の生成感覚
 	, mBgmCount  (1)//BGMの切り替え番号
-	, mEnemy3Count (0)
-	, mEnemy2Count (0)
+	, mEnemy2Count (0)//今生成されている敵2の数
+	, mEnemy3Count (0)//今生成されている敵3の数
 	, mClearTime(0.0f)
-	, mEnemy2Bgm(true)
-	
-	,mBgmStartStopper(true)
-	,mBgmBattleStopper(true)
-	,mBgmBossStopper(true)
-    ,mBgmOverStopper(true)
-    ,mBgmClearStopper(true)
+	, mEnemy2Bgm(true)//戦闘BGMを再生させるフラグ
+	,mBgmStartStopper(true)//BGMを止める
+	,mBgmBattleStopper(true)//BGMを止める
+	,mBgmBossStopper(true)//BGMを止める
+    ,mBgmOverStopper(true)//BGMを止める
+    ,mBgmClearStopper(true)//BGMを止める
 	, mVoiceSwitch(false)//false：音声なし true：音声あり
-	, mBossGaugeSwitch(false)
-	, mGameClear (false)
-	, mGameOver (false)
-	, mCountStart(false)
-	, mBgmCountCheck  (true)//BGMを流すか止めるか分けるフラグ
-	,mpBoss(NULL)
-	,mpMap(NULL)
-	,mpItem(NULL)
-	,mpTarget(NULL)
-	,mpFlag(NULL)
-	,mpRock(NULL)
-	,mpEnemySummon(NULL)
-	,mpEnemySummon2(NULL)
-	,mpEnemy2(NULL)
-	,mpEnemy3(NULL)
+	, mBossGaugeSwitch(false)//ボスの体力ゲージを表示させるフラグ
+	, mGameClear (false)//ゲームクリアのフラグ
+	, mGameOver (false)//ゲームオーバーのフラグ
+	, mCountStart(false)//タイム計測開始のフラグ
+	, mBgmCountCheck  (true)//BGMを流したり止めたりするフラグ
+	,mpBoss(NULL)//ボス
+	,mpMap(NULL)//マップ
+	,mpItem(NULL)//アイテム
+	,mpTarget(NULL)//矢印
+	,mpFlag(NULL)//旗
+	,mpRock(NULL)//フィールド
+	,mpEnemySummon(NULL)//敵２の生成場所
+	,mpEnemySummon2(NULL)//敵３の生成場所
+	,mpEnemy2(NULL)//敵２
+	,mpEnemy3(NULL)//敵３
 	, mEnemy3CountStopper (ENEMY3COUNT)
 	, mEnemy2CountStopper (ENEMY2COUNT)
 	, mBossSwitch(false)
+	, mBossStageCenter(CVector(29.0f,11.0f,83.0f))
+	, mBossStageEnd(CVector(mBossStageCenter.mX+50.0f, mBossStageCenter.mY, mBossStageCenter.mZ))
+	, mBossStageLengthX(0.0f)
+	, mBossStageLengthZ(0.0f)
+	, mBossStageLengthSum(0.0f)
+	, mBossStageCircle(0.0f)
 {
 
 }
@@ -194,6 +198,10 @@ void CSceneGame::Init()
 		CVector(0.0f, 180.0f, 0.0f), CVector(0.5f, 0.5f, 0.5f));
 	mpFlag = new CFlag(CVector(56.0f, 11.0f, 26.0f),
 		CVector(), CVector(10.5f, 10.5f, 10.5f));
+
+	mpBossStage = new CBossStage(CVector(-70.0f, 200.0f, -80.0f),
+		CVector(0.0f, 200.0f, 0.0f), CVector(0.5f, 0.5f, 0.5f));
+	
 	float shadowColor[] = { 0.4f, 0.4f, 0.4f, 0.2f };  //影の色
 	float lightPos[] = { 50.0f, 160.0f, 50.0f };  //光源の位置
 	mBgmCount = 1;
@@ -201,8 +209,17 @@ void CSceneGame::Init()
 	mpPlayer->SetGaugeEnabled(true);
 	if (mpEnemy2) mpEnemy2->SetEnabled(true);
 	if (mpEnemy3)mpEnemy3->SetEnabled(true);
+
+	//ベクトルの成分の計算方法を短縮
+	//本来は√(X1-X2)^2+(Z1-Z2)^2
+	// 円の計算でまた２乗するので√を使わずに済む
+	mBossStageLengthX = pow((mBossStageEnd.mX - mBossStageCenter.mX), 2);
+	mBossStageLengthZ = pow((mBossStageEnd.mZ - mBossStageCenter.mZ), 2);
+	mBossStageLengthSum = mBossStageLengthX + mBossStageLengthZ;
+	//πr^2←２乗もいらない
+	mBossStageCircle = M_PI * mBossStageLengthSum;
+
 	mShadowMap.Init(TEXWIDTH, TEXHEIGHT, ShadowRender,ShadowEffectRender, shadowColor, lightPos);//影の初期化
-	
 	CEffect2::TexPreLoad();
 }
 
@@ -248,6 +265,7 @@ void CSceneGame::BgmGameClear() {
 	}
 }
 void CSceneGame::Update() {
+	
 	if (mCountStart == false) {
 		mCountStart = true;
 		mStartTime = clock(); //計測開始時刻を入れる
@@ -256,6 +274,7 @@ void CSceneGame::Update() {
 		//新しく作る
 		mpBoss = new CBoss(CVector(0.0f, 10.0f, 0.0f),
 			CVector(0.0f, 0.0f, 0.0f), CVector(0.5f, 0.5f, 0.5f));
+		
 		//読み込ませる
 		mpBoss->Init(&CRes::sBoss);
 		//ボスの配置
@@ -268,6 +287,8 @@ void CSceneGame::Update() {
 		break;
 	case 3:
 		BgmBoss();
+		mpBossStage->mPosition.mY = 0.0f;
+
 		break;
 	case 4:
 		BgmGameClear();
@@ -276,18 +297,7 @@ void CSceneGame::Update() {
 		BgmGameOver();
 		break;
 	}
-	if (mpBoss) {
-		if (mpBoss->mHp > 0) {
-			mTimeCount++;
-			if (mTimeCount % 60 == 0) {
-				mTimeSecond++;
-			}
-			if (mTimeSecond == 60) {
-				mTimeMinute++;
-				mTimeSecond = 0;
-			}
-		}
-	}
+	
 	//敵の生成間隔
 	if (mSpawn >= 0) {
 		mSpawn--;
@@ -296,7 +306,7 @@ void CSceneGame::Update() {
 	if (mSpawn2 >= 0) {
 		mSpawn2--;
 	}
-	if (mpEnemySummon->mHp > 0) {
+	if (mpEnemySummon->GetHp() > 0) {
 		//mEnemy2CountStopperに設定した数だけ敵を生成
 		if (mEnemy2Count < mEnemy2CountStopper) {
 			//２秒ごとに生成
@@ -317,13 +327,17 @@ void CSceneGame::Update() {
 		mEnemy2CountStopper = ENEMY2COUNT;
 	 }
 	    
-	if (mpEnemySummon2->mHp > 0) {
+	//敵が一定の数減るまで再生成しない
+	 if (mEnemy3CountStopper <= ENEMY3MINCOUNT) {
+		mEnemy3CountStopper = ENEMY3COUNT;
+	 }
+	 if (mpEnemySummon2->GetHp() > 0) {
 		//mEnemy3CountStopperに設定した数だけ敵を生成
 		if (mEnemy3Count < mEnemy3CountStopper) {
 			//２秒ごとに生成
 			if (mSpawn2 <= 0) {
-				mpEnemy3 = new CEnemy3(CVector(mpEnemySummon2->mPosition.mX, mpEnemySummon2->mPosition.mY+30.0f, mpEnemySummon2->mPosition.mZ), CVector(0.0f, 0.0f, 0.0f),
-					CVector(1000.5f, 1000.5f, 1000.5f));
+				mpEnemy3 = new CEnemy3(CVector(mpEnemySummon2->mPosition.mX, mpEnemySummon2->mPosition.mY+20.0f, mpEnemySummon2->mPosition.mZ), CVector(0.0f, 0.0f, 0.0f),
+				CVector(1000.5f, 1000.5f, 1000.5f));
 
 				//push_back  元は同じクラスからだが別々のポインタ生成
 				mEnemy3List.push_back(mpEnemy3);//管理リストに入れる
@@ -333,10 +347,6 @@ void CSceneGame::Update() {
 		}
 	}
 
-	//敵が一定の数減るまで再生成しない
-	 if (mEnemy3CountStopper <= ENEMY3MINCOUNT) {
-		mEnemy3CountStopper = ENEMY3COUNT;
-	}
 	//エスケープキーで終了
 	if (CKey::Push(VK_ESCAPE)) {
 		exit(0);
@@ -354,6 +364,7 @@ void CSceneGame::Update() {
 				mScene = mNextScene;
 			}
 		}
+
 	//更新
 	CTaskManager::Get()->Update();
 	//衝突処理(総当り）
@@ -373,40 +384,74 @@ void CSceneGame::Render() {
 	//2D描画開始
 	CUtil::Start2D(0, 800, 0, 600);
 	char buf[64];
+	//ボスがいるとき
 	if (mpBoss) {
-		if (mpBoss->mHp > 0 || mpPlayer->mHp > 0) {
-		}
-
-		else if (mpBoss->mHp <= 0) {
-			
-			//クリア時間を記録
-			mClearTime = (float)(mEndTime - mStartTime) / 1000;
+		//ボスが死ぬと
+		if (mpBoss->GetHp() <= 0) {
 			mGameClear = true;
-			mpPlayer->mGaugeEnabled = false;
-			mBossGaugeSwitch = false;
-			sprintf(buf, "GAMECLEAR");
-			mFont.DrawString(buf, 300, 300, 16, 32);
-
-			sprintf(buf, "PLEASE CLICK");
-			mFont.DrawString(buf, 300, 200, 16, 32);
-			if (CKey::Once(VK_LBUTTON)) {
-				mBgmCountCheck = false;
-				mpItem->SetItemCount(0);
-				mEnemy2Count = 0;
-				mEnemy3Count = 0;
-				mNextScene = CScene::ETITLE;
-				mSceneChange = true;
-				CFade::SetFade(CFade::FADE_OUT);
-			}
 		}
-		if (mBossGaugeSwitch == true && mpBoss->mHp > 0) {
+		//ボスが生きている間
+		if (mBossGaugeSwitch == true && mpBoss->GetHp() > 0) {
 			sprintf(buf, "BOSS");
 			mFont.DrawString(buf, 300, 570, 32, 16);
 		}
 	}
-	if (mpPlayer->mHp <= 0) {
+	//クリアすると
+	if (mGameClear == true) {
+		mpTarget->mEnabled = false;
+		//壁をなくす
+		mpBossStage->mEnabled = false;
+		//クリア時間を記録
+		mClearTime = (float)(mEndTime - mStartTime) / 1000;
+		//プレイヤー関係のゲージ非表示
+		mpPlayer->SetGaugeEnabled(false);
+		mBossGaugeSwitch = false;
+		sprintf(buf, "GAMECLEAR");
+		mFont.DrawString(buf, 300, 300, 16, 32);
+		sprintf(buf, "PLEASE CLICK");
+		mFont.DrawString(buf, 300, 200, 16, 32);
+		if (CKey::Once(VK_LBUTTON)) {
+			mBgmCountCheck = false;
+			mpItem->SetItemCount(0);
+			mEnemy2Count = 0;
+			mEnemy3Count = 0;
+			mNextScene = CScene::ETITLE;
+			mSceneChange = true;
+			CFade::SetFade(CFade::FADE_OUT);
+		}
+	}
+
+	if (mpPlayer->mPosition.mX > 0.0f) {
+		sprintf(buf, "X:%f", mpPlayer->mPosition.mX);
+		mFont.DrawString(buf, 20, 200, 8, 16);
+	}
+	else {
+		sprintf(buf, "X:M%f", mpPlayer->mPosition.mX);
+
+		mFont.DrawString(buf, 20, 200, 8, 16);
+	}
+	if (mpPlayer->mPosition.mY > 0.0f) {
+
+		sprintf(buf, "Y:%f", mpPlayer->mPosition.mY);
+
+		mFont.DrawString(buf, 20, 250, 8, 16);
+	}
+	else {
+		sprintf(buf, "Y:M%f", mpPlayer->mPosition.mY);
+		mFont.DrawString(buf, 20, 250, 8, 16);
+	}
+	if (mpPlayer->mPosition.mZ > 0.0f) {
+		sprintf(buf, "Z:%f", mpPlayer->mPosition.mZ);
+		mFont.DrawString(buf, 20, 300, 8, 16);
+	}
+	else {
+		sprintf(buf, "Z:M%f", mpPlayer->mPosition.mZ);
+		mFont.DrawString(buf, 20, 300, 8, 16);
+
+	}
+	if (mpPlayer->GetHp() <= 0) {
 		mGameOver = true;
-		mpPlayer->mGaugeEnabled = false;
+		mpPlayer->SetGaugeEnabled(false) ;
 		mBossGaugeSwitch = false;
 		sprintf(buf, "GAMEOVER");
 		mFont.DrawString(buf, 300, 300, 16, 32);
@@ -424,12 +469,12 @@ void CSceneGame::Render() {
 
 		}
 	}
-	else {
-
+	if(mGameClear != true&&mGameOver!=true){
+		
 		mImageMouse.Draw(570, 770, 0, 170, 0, 500, 500, 0);
 		mImageMoveKey.Draw(0, 100, 50, 200, 0, 500, 500, 0);
 		mImageCkey.Draw(120, 200, 60, 210, 0, 500, 500, 0);
-		mImageWork.Draw(0, 100, 0, 100, 0, 250, 250, 0);
+		mImageWork.Draw(0, 100, 0, 100, 0, 250, 240, 0);
 		mImageDush.Draw(120, 190, 20, 100, 0, 200, 210, 0);
 	}
 	//2Dの描画終了
